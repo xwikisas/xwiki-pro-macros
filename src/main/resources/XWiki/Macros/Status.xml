@@ -465,13 +465,13 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
       <defaultValue/>
     </property>
     <property>
-      <description>The color of the status(text color and background color). The following colors are available: "Blue", "Green", "Grey", "Purple", "Red" and "Yellow". Default: "Grey".</description>
+      <description>The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").</description>
     </property>
     <property>
       <mandatory/>
     </property>
     <property>
-      <name>color</name>
+      <name>title</name>
     </property>
   </object>
   <object>
@@ -531,13 +531,13 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
       <defaultValue/>
     </property>
     <property>
-      <description>The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").</description>
+      <description>The color of the status(text color and background color). The following colors are available: "Blue", "Green", "Grey", "Purple", "Red" and "Yellow". Default: "Grey".</description>
     </property>
     <property>
       <mandatory/>
     </property>
     <property>
-      <name>title</name>
+      <name>colour</name>
     </property>
   </object>
   <object>
