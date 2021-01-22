@@ -363,7 +363,6 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
     <property>
       <code>{{velocity}}
 #set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
-#set ($defaultColors = ['Grey', 'Red', 'Purple', 'Yellow', 'Green', 'Blue'])
 #set ($color = $xcontext.macro.params.colour)
 #if (!$color)
   #set ($color = 'Grey')
