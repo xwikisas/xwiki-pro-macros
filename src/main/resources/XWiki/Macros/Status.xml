@@ -39,14 +39,15 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>Insert a colored label in the text to highlight the status of an item.
+  <content>{{velocity}}
+$services.localization.render('rendering.macro.status.description')
 
 == Parameters ==
 
 |=Name|=Description|=Default
-|colour|The color of the status(text color and background color). The following colors are available: **Blue**, **Green**, **Grey**, **Purple**, **Red** and **Yellow**.|Grey
-|title|The text of the status. If not specified, the color name will be displayed.|Colour value(e.g.:Grey)
-|subtle|The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with **true** or **false**|false
+|colour|$services.localization.render('rendering.macro.status.parameter.colour.description')|Grey
+|title|$services.localization.render('rendering.macro.status.parameter.title.description')|Colour value(e.g.:Grey)
+|subtle|$services.localization.render('rendering.macro.status.parameter.subtle.description')|false
 
 == Examples ==
 
@@ -60,7 +61,9 @@ Add a new status macro.{{status title="Improvement" colour="Green"/}}
 
 {{code}}{{status title="Bug" colour="Red" subtle="true"/}}{{/code}}
 
-{{status title="Bug" colour="Red" subtle="true"/}}</content>
+{{status title="Bug" colour="Red" subtle="true"/}}
+{{/velocity}}
+</content>
   <object>
     <name>XWiki.Macros.Status</name>
     <number>0</number>
@@ -168,51 +171,51 @@ Add a new status macro.{{status title="Improvement" colour="Green"/}}
 @whiteColor: #ffffff;
 @lightenRatio: 60%;
 
-.blueStatus {
+.blueStatus.subtle {
   color: @blueStatus;
   background-color: lighten(@blueStatus, @lightenRatio);
 }
-.blueStatus.subtle {
+.blueStatus {
   color: @whiteColor;
   background-color: @blueStatus;
 }
-.greenStatus {
+.greenStatus.subtle {
   color: @greenStatus;
   background-color: lighten(@greenStatus, @lightenRatio);
 }
-.greenStatus.subtle {
+.greenStatus {
   color: @whiteColor;
   background-color: @greenStatus;
 }
-.greyStatus {
+.greyStatus.subtle {
   color: @greyStatus;
   background-color: lighten(@greyStatus, @lightenRatio);
 }
-.greyStatus.subtle {
+.greyStatus {
   color: @whiteColor;
   background-color: @greyStatus;
 }
-.purpleStatus {
+.purpleStatus.subtle {
   color: @purpleStatus;
   background-color: lighten(@purpleStatus, @lightenRatio);
 }
-.purpleStatus.subtle {
+.purpleStatus {
   color: @whiteColor;
   background-color: @purpleStatus;
 }
-.redStatus {
+.redStatus.subtle {
   color: @redStatus;
   background-color: lighten(@redStatus, @lightenRatio);
 }
-.redStatus.subtle {
+.redStatus {
   color: @whiteColor;
   background-color: @redStatus;
 }
-.yellowStatus {
+.yellowStatus.subtle {
   color: @yellowStatus;
   background-color: lighten(@yellowStatus, @lightenRatio);
 }
-.yellowStatus.subtle {
+.yellowStatus {
   color: @whiteColor;
   background-color: @yellowStatus;
 }

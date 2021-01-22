@@ -47,7 +47,7 @@ rendering.macro.status.parameter.colour.description=The color of the status(text
 rendering.macro.status.parameter.title.name=Title
 rendering.macro.status.parameter.title.description=The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").
 rendering.macro.status.parameter.subtle.name=Subtle
-rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false".</content>
+rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
