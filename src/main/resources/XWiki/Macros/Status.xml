@@ -59,9 +59,9 @@ Check the parameters.{{status title="Task"/}}
 
 Add a new status macro.{{status title="Improvement" colour="Green"/}}
 
-{{code}}{{status title="Bug" colour="Red" subtle="true"/}}{{/code}}
+{{code}}{{status title="Improvement" colour="Green" subtle="true"/}}{{/code}}
 
-{{status title="Bug" colour="Red" subtle="true"/}}
+Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"/}}
 {{/velocity}}
 </content>
   <object>
