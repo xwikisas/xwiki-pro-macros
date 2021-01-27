@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="XWiki.Macros.Panel" locale="">
+  <web>XWiki.Macros</web>
+  <name>Panel</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1611595713000</creationDate>
+  <parent>xwiki:XWiki.Macros.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1611748068000</date>
+  <contentUpdateDate>1611748068000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Panel</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+$services.localization.render('rendering.macro.panel.description')
+#set ($colorThemeDoc = $xwiki.getDocument($xwiki.getXWikiPreference('colorTheme')))
+
+{{warning}}(!) If there are multiple panels in a wiki page, only one style will be applied on all of them, the style of the last defined panel.{{/warning}}
+
+== Parameters ==
+The default color values are the values set in the enabled color theme -&gt; [[$colorThemeDoc]]
+
+|=Name|=Description|=Default
+|title|$services.localization.render('rendering.macro.panel.parameter.title.description')|none
+|titleColor|$services.localization.render('rendering.macro.panel.parameter.titleColor.description')|@panel-default-text: $colorThemeDoc.getValue('panel-default-text')
+|titleBGColor|$services.localization.render('rendering.macro.panel.parameter.titleBGColor.description')|@panel-bg: $colorThemeDoc.getValue('panel-bg')
+|bgColor|$services.localization.render('rendering.macro.panel.parameter.bgColor.description')|@panel-bg: $colorThemeDoc.getValue('panel-bg')
+|borderStyle|$services.localization.render('rendering.macro.panel.parameter.borderStyle.description')|solid
+|borderColor|$services.localization.render('rendering.macro.panel.parameter.borderColor.description')|@panel-bg: $colorThemeDoc.getValue('panel-bg')
+|borderWidth|$services.localization.render('rendering.macro.panel.parameter.borderWidth.description')|0
+
+== Examples ==
+
+{{code}}
+{{panel title="Need printer help?" borderStyle="dashed" borderColor="blue" titleBGColor="#00a400" titleColor="white" bgColor="#72bc72" borderWidth="1"}}
+Printer setup
+* How to add a printer - 1
+* How to add a printer - 2
+* How to add a printer - 3
+
+Printer troubleshooting
+{{/panel}}
+{{/code}}
+
+{{panel title="Need printer help?" borderStyle="dashed" borderColor="blue" titleBGColor="#00a400" titleColor="white" bgColor="#72bc72" borderWidth="1"}}
+Printer setup
+* How to add a printer - 1
+* How to add a printer - 2
+* How to add a printer - 3
+
+Printer troubleshooting
+{{/panel}}
+
+=== Default style ===
+
+{{code}}
+{{panel title="Need printer help?"}}
+Printer setup
+* How to add a printer - 1
+* How to add a printer - 2
+* How to add a printer - 3
+
+Printer troubleshooting
+{{/panel}}
+{{/code}}
+
+image:defaultStyle.png
+{{/velocity}}
+</content>
+  <attachment>
+    <filename>defaultStyle.png</filename>
+    <mimetype>image/png</mimetype>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1611747645000</date>
+    <version>1.2</version>
+    <comment/>
+    <content>iVBORw0KGgoAAAANSUhEUgAABL8AAADWCAYAAAAwyCAWAAAABHNCSVQICAgIfAhkiAAAABl0RVh0U29mdHdhcmUAZ25vbWUtc2NyZWVuc2hvdO8Dvz4AACAASURBVHic7N0/TNrtHv//531y8jG5gwsdDi644IILLrJoB2UonqR4J8UmRzvYDtpBHdABHdRBHZShMlQGbwePTfrFpDcm52Dy++pwdMEFFlhgkQUWWSD39/AZTn8D2mor1ra2Vvp6JCYFPtd1vS9qh75y/fnl7du3bxEREREREREREWlAfz3/4n//+x/VapX//e9//PLLL7dVk4iIiIiIiIiIyGd7+/Ytf/nLX2hqauIvf/kLAH85/8B///tf3r59q+BLRERERERERETunF9++YW3b9/y3//+991778Kv//f//t+tFCUiIiIiIiIiInLTzrKud+HX//73v1srRkRERERERERE5CadZV3vwi9tdRQRERERERERkUZxlnX95RPPiYiIiIiIiIiI3FkKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGdYPhV4Ho0/vcv3+f+/c9jEaPr9numK2zduNxyjdX0Hf0fg79K8nbLuYSWdaGfuT6vrUy8fHa/D3Te1S/+/gFoqOn488dfLthyln21uaYfDpAf5+H+/c99PUPMTq5QvTg+I7+2xIRERERERH5On/9Nt2aZCIhYl2r+Fq+zQjy4ygXjimZYFhstNxruu1yfkrl9BZTUxEylYvvV0p5Mkd5Mkc7bHWOsbzgp01/RSIiIiIiIvIT+UbhF2CmiITidK54Uf7VyArszjwhnAPLgxf8e7rjtgv6+ZzssTRzGnwZNjof+vF22LFQoZhPchDb5ahoUjoKM7VkZ3POTfNt1ywiIiIiIiLynXy78AuoHIUJxTtZ8d77lsPIJ7Uxuv7/MQzQpGU/jeY4usFhCcDOw+WXTHacj7Z68T3ysTbxnFcZk9J+hJ1hN4Ott1SsiIiIiIiIyHf2bQ68d3TRZQOocBQOsXfyTUaRz9HURFNTE4q+Gk2Bo1QeAMM1yHDHJWu6mtoYHu7BCkCOREanf4mIiIiIiMjP49uEXxY3I4EH1PKvQ8LhA5R/fYbqzRzJXi2Xv/hw9+oN1fAt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ZepJjp6HPno77FgokUvEie4cUTSt2Gzm+9slv4BhQH5niie5B/h93ThsBmYxx0Esym7mdNOm7QGB4fYvHuObOTuHPXNA4tiOwzAwWu7RTDO9Y2PEU0scVXJsTzwh88CPr9uJ3QqlYo6D2Bb7qRImYO0aY+SHTPa+xzwMqKQIPXtG4qGfXrcdKyXyiT2iO4fkzdozzpExvJ9azZWYo29qnwoGPcv/l7m7etiaiIiIiIiIyA24pfALaOpgJPCAo6ldrsq/7nUHeRGEqdA+xUqOw1chDl99+JQV18gsC/7WG27fRNvoMrOVKeZ3cpiVHPuvQuy/+qDt2ALDhXkmtr80/LLSExjB3Aixn9klktn96AnD1kVgOYD7hzu/3IrdZoFMBfI7TD3ZAZyMvV7D3wK0eFl4UWFmKsxRqURmN8LH0zOwdY6xMNt7xYHvt+xbz8M1zKzzgNCrDIfbIQ63P3zAgvMfCyxf8jsuIiIiIiIiIvXdXvgFNLvHCPQcMbV/1XH0TbR659h0+diNRokfZcgXS1QwsFjtOF29+PwP6W6rlwp9bft7dE/+zuveGFvROEeZPMWSCRYrdlcnvsFhfO33SK9+3Xdh2LxMbzrp3tggdpgiVyxhYsFqd9Lp9TP40E3Lj7goiibcYwuMmGFiqTzFChhWK+cvpGxq87PyupODnSjxvSMy+RKlClisNuxOF70+Pw/drT/edscPfNt5WHCNrrHpjrGxFeMok6dUAcNqw+HqwusfxNv+wyWfIiIiIiIiIj+8X96+ffsW4M8//7ztWn4+2TWGnr0ij5WHL/5gsuO2C5Lvq8re9N+ZPzTBFeDNqu/HXfkmIiIiIiIicgf9+uuvt3PgvYiIiIiIiIiIyPeg8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRh3eptjz89SxudXV3YsdBuve1i5DbYOrrowsRot2N8+nERERERERER+Uy67VFERERERERERBqSbnsUEREREREREZGGpvBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYSn8EhERERERERGRhqXwS0REREREREREGpbCLxERERERERERaVgKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGpfBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYSn8EhERERERERGRhqXwS0REREREREREGpbCLxERERERERERaVgKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGpfBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYSn8EhERERERERGRhqXwS0REREREREREGpbCLxERERERERERaVgKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGpfBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYf31ZropEx//O0up8+8ZWGwOugYDBHxtNF3W7CTG+OM9el+v4rt3M5WIiIiIiIiIiIicucGVXwbWnlk2X7/m9evXbK4vE+iCw9AUoUT18iYWJ74RH07Ldfo/Zuuph+mDOn19T4k5+obWyN52HSIiIiIiIiIicqUbWvlVY1httLa0nL5qobUtSPboCbsHGXB3fNygqY1ef9tNllBHFS5feyYiIiIiIiIiIg3sG5/5ZXDPAqYJUCA62s/iQZro9BD9k3HK5TjjnnFiJ0B1j0nPJNG9VUb77nP/vof+0UX2js/aPiOSMzmc/ztDa1mgSja+wvhQP32ePvqfTrOVPHk3cnp1gKHVBIm1cQb6lzj4qLYqx6ftPR4P/UOTrCXet+ckwdb0KAN9Hjx9Q4yv7HFcBRKL9M/sU8m/4nnfNHtlSK70M7CaPtd3kpX+flaSAAdMe0ZZ2ZrjaX8fHk8/Q+OLxLM/wAo2EREREREREZEG9+3Cr+oJ2XiEaMbA2WE/fbPCUSRC1h3gRbCH5o8aHRHZKOF78YZ/vXmB3zhkKbJHmRb8a+uMOAy6Zv/FP0fbONmbZyqcxzmyzPrmS4JeiE1NsXVuL2LpMMxWxcfsizE6Pxwqu8FMKIVteJnNzXWCXRW258PUdmhmWZuYIW54Cb7cZHN5GEcuxMTSAWX3NH8s9GCx/4OX/16k9+NJXCLDzlaRzsAL1tdn8VtShKZCJMpf8sWKiIiIiIiIiMh13eC2R5Pi9nPub59/z4Lz0SxB7z2gUFsC5hwk4OuobUL8KPwx6BwO4G1rBu7x0OdkY6tICT4IygrsR4+wDW8y2l3bZtniDzKS+I1IPM1gWzsAFaOTscleLt1YWSpSMuy4O9toaYaW4VleuCvYgGoiym6lh2DQR0cTQAvjgTRHz2MclrvxfsG34xyefVdr62yA5OMZYkdjuK+XnomIiIiIiIiIyBe4wfDLwNoT5MWIE+P0HYu1heami8/Y2h1XnL5lw25/HwYZhlHnuSLZokkm8oy+jffvmhUTLKX37e3t2C9pDYDTxwPrFPOPh4h1duLu7qanq4N7TXBSzFMq5Zj57fDdXDBNKqadUqleh1ex4XC2vH/Z5MTtgK1skWsuHRMRERERERERkS/wDQ+8v5ylbqAFYNB81cfnnjMMCz2zb5jrrh+lGYalftDW3MH4P9/gSxxyeJAgEZliI9xFcH2OTsPAcAyz/vsgrZe1LX66QhM4P5XLplU7C01ERERERERERL6Vb3zg/bdip91ukkvmzr1XYG9xnJWD6x2kdZKMsRbPY3N7GZycY3XzBQ+NQ+JHZZrtDqzFJJlz599X02tMTkfJ1unPPJ9kneTJV85/WiSTKZzrLEMyB/Z227VqFRERERERERGRL3Pnwq9KqUSVZrr8PVR2lpiLpzkuHJPcWiJ0aNDuvN42QqOSZCcUInKQpXBSIHsUJ1Wy1rZdtvvw21OE59c4yBYoZPcILW2Ttznfb6OsVKicXthobbFSOYqxd1ymfJImtrRB5oNVXZmNJdYSxxSO08SWQuzThb9TWx5FRERERERERL6lG932+G3ZcHXa2Qo95llhnX+OBngRCBPamuF5yMSwdzK8HMB773q9NXePMftoifDSc7YrYLU76QosMNIO0Ip/YRkzFCE8sU0JG86eIMsj7bVtlHY3LiPExN9LzL5ZpPdhgOHkEqFnf6diGtgfDPPAETs3mp2HI93kw895UgSbo4ux5QBuZV8iIiIiIiIiIt/UL2/fvn0L8Oeff952LQ2hWq7SdOGU/wOmPRHs6/9k9NIDxERERERERERE5Fv49ddf7962xx/dxeBLRERERERERERu0x3a9nhXWWl3ObFd6xZLERERERERERG5Sdr2KCIiIiIiIiIiDUnbHkVEREREREREpKEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGpfBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYSn8EhERERERERGRhqXwS0REREREREREGpbCLxERERERERERaVgKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBrWTxJ+ZVkb8jAaLXz8UWKOPs80e9XvX9U3k15hoH+FZJ2Pj7ee4pk+4DamnFzpp3+lXmU/kirlk/JtFyEiIiIiIiIiX+knCb9uWTnOuGec2MltF3L77L3DDHfbrvdwYo6+oTWy37aky2U3mJjYup2xRUREREREROTG/PW2C5CfRxW41+HD970Ga/qCZuVjcpkUscg2OR7deFkiIiIiIiIi8n1p5dcHqoUDVseH6PPcx9M3xOTqAQWA8h6TngFW06cPnsQYvX+fgXdvFIiNehha+2CtUHmP6cchUmaK0ON+FhMAZdLROZ72e/B4+hgYnSOarr/FrpyOMjc6cFrTAKNzUc4//u7zvtO+MpXzM+I4vsj4UD99fQM8nd4idcnuz3dOEmxNP6Xf4+G+p4+B0UXi2TobJJMrDAwtsrUyykCf5+PaEnP0jUZJHqwwOjBEJA3p1YF32x6za0MMrMSJTQ/guX/6fW8lKQMkFumf2aeSf8Xzvmn2yme1nY01xPjKHsdnpZXjTHomiafjzD3tZ3T7+IpJ1pffDROKxMhVjC9qLyIiIiIiIiI/lp8q/DJPihQKhQs/xyUT8+yBaprIxDyHFh8L669Zn/XB/jxTq2mqzU7cjhKpTC05qmaS5IFSJlMLx6o5EnkLLnfbxUGbe1l8HcBluAi8/oNpNxTi80xtFHGNvWR9fZkRR56NqXnil26LTBOZj5B3jPFi8w2bL0aw5yIsbZ2GbCd7zE9FyNmHWX75klm/hXhkn+Jp63IixEQohcU/y8uXCwzbD4js5Op8Q1UOwvNsVToJrm/yZnOZQesRodAu9fIyM7/LRsbByPI668vD2HMRpub3eDeVfJRwzMLg7DLD7R+3L+1GiNsDbL75F+sBJ/mNEFtZwD3NHws9WOz/4OW/F+ltzrI2MUPc8BJ8ucnm8jCOXIiJpQPe54A5NsIHtI8sM/uwtU7FV2vzr/D777/zYsSJ4i8RERERERGRu+/Obnssl8vs7u5is9no7u6+RguT3KsJHr+65COjC4BqKspupZNg0E9HM9DqZ3YsweNwjMz4NC6XjUgiQ9nfQj6Zw9rTg3GUJFP205JPkMPFmPNTdRyzH01hG1xnvLcW0LROBsmmnhPbL+D1t1x8vGqhe3gWX083bU0AvXidYQ5LtdVdhf0oKctDXkx7aa91RiB9xPN9gDJH0X3oWmDW10ET0DoapHj0hEid78jWO8as3Yu7FaCFB71OwhsFKpc+D2DjYWCS3trgTAezDExEOSz01rY3Vqx4A6N0t1ze2rQ9IDDqpgWg109XZIJi6ePnqokou5UegkEfHU212sYDaY6exzgsd+MFoILdH8Tvbq5brYiIiIiIiIj8XO5k+FUul3n8+DGVSi2SefToEePj459oZeAc22Ttw3ApMUffTG3tVymfx7R7cZzLTpodHdgqB+QL4Ot2YdlNkKk6KWYqOId9WDLzJHNVnLkMJacf1yfPmSqSLRo4HOdXJtnpcBjsZIvAB/U1teLuMUgeRllLZynmc6RSJeg57S2bx3AO4zjXxOF2Ytk/Gwscg85zx1+14nTZeLc07IJm2rq7OE7EicbTZPN5MqkUpvUf9adjcdJxcXCcxi7pIrXwy2rHUSf4AjDsbdjPv66z3KpSzFMq5Zj57fD9iizTpGLaKZUAK4ANh13Bl4iIiIiIiIi8dyfDr1Qq9S74Atje3r5G+PWFTtMYE8DhxmVGSGYy5PMOup1OLE6TjUyOVLKIw+3i2tHLhZDnLJoyP37u5IDF5/OkbD309Lrp7fbTbZ0hfEXXTZ/YsGfUS5goEJ98TrjooMfbjdvnxd+9xcTWld19OHjN2VQMy9XVGMa1zqU3DAPDMcz674NcuqGxDGDQXHewLGtDz3iVr71yjL3m9w+DUBERERERERFpOHfyzC+bzXbhtcvlupF+rTY7Rj5N7vxh8pkkRcOO3Qo0uXA7S6Sie+RsHTibm3B2OMgnohzkrLg6rxOm2GizmeQy5w9kz5LMmdjb7B89XU7F2Ochs6vTjPp66e5ow8r7c8ps7XbMTILzp3gd53Kn2xRttNkhl8zw/sj6EzKZS5d9QeGQWMrK8PIKk4M+et3t2A3zskjuvUqOZP78VBLkTDuXTOWrNNsdWItJMufORaum15icjpKt3+ycNkb/+R/+85/aj4IvERERERERkZ/DnQy/2traCAaD/O1vf6Orq4uxsbEb6bep00eP5ZBwKEbyuMBxMspS5AjrA9/pdsZmXG47ucNDTIeTVuCe04kttc8hLrqvPGO9RKFUBVrp8Tkpbi2xepClUMiyt7rETsmFr+fjQMawWLFUcmSyZarlAun4IqH9EmalRBlo6fLhquwQWtkjXSiQPVhlKZo/XW3VTKevB/ZDLMWSHBeOSWzNs5WpU6LFioUSydQx5WqZQjLKfOQIs1KiUufCR8izs7TCXrZAIbvHytIOJZePS6byumjPNAAAHwNJREFUZSqV2tjtPvz2FOH5NQ5OxwotbZO3ObnhnE1EREREREREGsidDL8AvF4v0WiUxcVF2traPt3gOpo6GFsO0lnaYubZY57NxDC7Zlkeb3+3Na/F5cKGgePsoCt7B04LWFzdF87duqDZSbezwvazxywmocW3wMKwlVToOY8fPyecsTO8PIv33iUluUcIPoDoxG/8/ckUkbSbYPAB1qMlpqIFuOdldrl2A+TUkydMREp4g8M4Trf/NbsDLAdclKLzPHvynHCym8CY6/KtiM29jAU7KUWe89tvT5jZOsEbDNLFPjPze+duVTzH2sOIz2Rr6glPJmq3Ti7MerlkKp/P7sZl7DLx92n2yq34F5YZtKQITzzhycQGRVeQ5ZH2a22bFBEREREREZGf0y9v3759C/Dnn3/edi1y1yRX6J+H2T8m6bjtWkREREREREREPvDrr7/e3ZVfIiIiIiIiIiIin3Inb3uUH4S1DZcLLLddh4iIiIiIiIhIHdr2KCIiIiIiIiIiDUnbHkVEREREREREpKEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRh/SThV5a1IQ+j0cLHHyXm6PNMs1f9/lV9M+kVBvpXSNb5+HjrKZ7pA25jysmVfvpX6lUmIiIiIiIiInKzfpLw65aV44x7xomd3HYht8/eO8xwt+16Dyfm6BtaI/ttS7qocMDq5BD9Hg+evgFGF2Oky9+zABERERERERG5SQq/5LupAvc6fPjcLd9nsM+WZW1qnn28BF9usr48giMXYWomxiVrBkVERERERETkDlD49YFq4YDV8SH6PPfx9A0xuXpQCz7Ke0x6BlhNnz54EmP0/n0G3r1RIDbqYWjtg3VK5T2mH4dImSlCj/tZTACUSUfneNrvwePpY2B0jugVy4vK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ERERkeu4s9se5QdgbcPlAstt1yEiIiIiIiIiUoe2PYqIiIiIiIiISEPStkcREREREREREWloCr9ERERERERERKRhKfwSEREREREREZGGpfBLREREREREREQalsIvERERERERERFpWAq/RERERERERESkYSn8EhERERERERGRhqXwS0REREREREREGpbCLxERERERERERaVgKv0REREREREREpGEp/BIRERERERERkYal8EtERERERERERBqWwi8REREREREREWlYCr9ERERERERERKRhKfwSEREREREREZGGdUPhV5n4+H3u3z//46FvYJTFWJZqvWYnMcY948RObqaKH0pyhf6BFdL1Pk/M0TewSvYrh8muDdE3l/jKXq4nudJP/0ryu4wlIiIiIiIiInITbnDll4G1Z5bN1695/fo1m+vLBLrgMDRFKFEn/rI48Y34cFqu0/8xW089TB/UjdI+003314DK8QvhpL13mOFu2+3WJCIiIiIiIiLyGf56k50ZVhutLS2nr1pobQuSPXrC7kEG3B0fN2hqo9ffdpMl1FEFmr5xi8Z3r8OH77aLEBERERERERH5DN/4zC+DexYwTYAC0dF+Fg/SRKeH6J+MUz6/sqi6x6RnkujeKqN9tW2T/aOL7B2ftX1GJGdyOP93htayQJVsfIXxoX76PH30P51mK/l+/2R6dYCh1QSJtXEG+pc4uFDXJf0l5ugbjZI8WGF0YIhIGqhmiS+OMtDnwePp5+n0Fu+HyLI21MeFHYfHawx5ps+NZZLfW2G034Onb4DRC+0vKqejzI0O0e852y6apnz24UmSremn9Ped9rMY5/jCgrVSbZ59Hjx9Q0xuJd+3vXIOUC0csDo+RJ/nfq3t6gEFgPIe049DpMwUocf9LCZq3+m7bY+JRfpH19jbGqf//n3ue/p5Oh0j+66uKtnYHE8H+vD0DTEdjbEyNMBK3X2gIiIiIiIiIiI379uFX9UTsvEI0YyBs8N++maFo0iErDvAi2APzR81OiKyUcL34g3/evMCv3HIUmSPMi3419YZcRh0zf6Lf462cbL3/7d3/zBtZWkYxh+U0UWKTOM0pjGNaUwDjWlgC2jCrBTvSmOlQClQCkjhpPBQkBQMxYwLxwWhyLhgXbAuskTKONIqaUiDG9JAAw00uLGbuMEaCUsjtiCZmIQEkiWTHe/zq9D9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</content>
+    <filesize>16253</filesize>
+  </attachment>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>e173e4c6-92fb-4c81-8a58-28b5142200b0</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>@panelTitleColor: $request.panelTitleColor;
+@panelTitleBgColor: $request.panelTitleBgColor;
+@panelBgColor: $request.panelBgColor;
+@panelBorderStyle: $request.panelBorderStyle;
+@panelBorderColor: $request.panelBorderColor;
+@panelBorderWidth: $request.panelBorderWidth;
+.panelMacro {
+  border-radius: 4px;
+  background-color: @panelBgColor;
+  border: @panelBorderStyle @panelBorderColor @panelBorderWidth;
+}
+.panelMacroTitle h1 {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: 1px solid @panelTitleBgColor;
+  color: @panelTitleColor;
+  background-color: @panelTitleBgColor;
+}
+.panelMacroTitle h1,
+.panelMacroContent {
+  margin: 0;
+  padding: 10px 15px 5px;
+}</code>
+    </property>
+    <property>
+      <contentType>LESS</contentType>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>43749273-194f-407c-b82e-efeda01cd739</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>9</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>8</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategory>
+        <disabled>0</disabled>
+        <name>defaultCategory</name>
+        <number>4</number>
+        <prettyName>Default category</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultCategory>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <code>{{velocity}}
+#set ($colorThemeDoc = $xwiki.getDocument($xwiki.getXWikiPreference('colorTheme')))
+#set ($title = $xcontext.macro.params.title)
+#set ($titleColor = $xcontext.macro.params.titleColor)
+#if (!$titleColor)
+  #set ($titleColor = $colorThemeDoc.getValue('panel-default-text'))
+#end
+#set ($titleBgColor = $xcontext.macro.params.titleBGColor)
+#if (!$titleBgColor)
+  #set ($titleBgColor = $colorThemeDoc.getValue('panel-bg'))
+#end
+#set ($bgColor = $xcontext.macro.params.bgColor)
+#if (!$bgColor)
+  #set ($bgColor = $colorThemeDoc.getValue('panel-bg'))
+#end
+#set ($borderStyle = $xcontext.macro.params.borderStyle)
+#if (!$borderStyle)
+  #set ($borderStyle = 'solid')
+#end
+#set ($borderColor = $xcontext.macro.params.borderColor)
+#if (!$borderColor)
+  #set ($borderColor = $colorThemeDoc.getValue('panel-bg'))
+#end
+#set ($borderWidth = "$!{xcontext.macro.params.borderWidth}px")
+#if (!$borderWidth)
+  #set ($borderWidth = 0)
+#end
+#set ($content = $xcontext.macro.content)
+#set ($cssParams = {
+  'panelTitleColor': $titleColor,
+  'panelTitleBgColor': $titleBgColor,
+  'panelBgColor': $bgColor,
+  'panelBorderStyle': $borderStyle,
+  'panelBorderColor': $borderColor,
+  'panelBorderWidth': $borderWidth
+})
+## Make sure to clear the cache before loading a new css file so the new css values are computed everytime. The reason is that
+## the SSX object uses velocity variables to generate the LESS code and those variables are cached.
+#set ($discard = $services.lesscss.clearCache())
+#set ($discard = $xwiki.ssx.use('XWiki.Macros.Panel', $cssParams))
+{{html clean="false"}}
+  &lt;div class="panelMacro"&gt;
+    &lt;div class="panelMacroTitle"&gt;
+      &lt;h1&gt;$title&lt;/h1&gt;
+    &lt;/div&gt;
+    &lt;div class="panelMacroContent"&gt;
+{{/html}}
+    $xcontext.macro.content
+{{html clean="false"}}
+    &lt;/div&gt;
+  &lt;/div&gt;
+{{/html}}
+{{/velocity}}</code>
+    </property>
+    <property>
+      <contentDescription>haha</contentDescription>
+    </property>
+    <property>
+      <contentType>Optional</contentType>
+    </property>
+    <property>
+      <defaultCategory/>
+    </property>
+    <property>
+      <description>Add the Panel macro to a page to format your text in a customizable coloured panel.</description>
+    </property>
+    <property>
+      <id>panel</id>
+    </property>
+    <property>
+      <name>Panel</name>
+    </property>
+    <property>
+      <supportsInlineMode>0</supportsInlineMode>
+    </property>
+    <property>
+      <visibility>Current Wiki</visibility>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>34219090-9b25-4a24-bc97-3322a37698d3</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The title of the panel. If specified, this title will be displayed in its own title row.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>title</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>f0b20ce0-00c0-474f-8996-c7ce57d59c9e</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The color of the text in the title row of the panel. Colors can be specified as HTML color names or hexadecimal codes.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>titleColor</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>2</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>1862f3a5-37f3-4f62-8e54-f727c5911923</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The background color of the title row of the panel. Colors can be specified as HTML color names or hexadecimal codes.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>titleBGColor</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>77ed0f68-2d1f-451e-ab92-7e72da11abdc</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The background color of the panel. Colors can be specified as HTML color names or hexadecimal codes.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>bgColor</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>4</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>f0ae3427-5375-46c8-941e-2d04bdb45050</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The style of the panel's border. Accepted values are solid, dashed and other valid CSS border styles.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>borderStyle</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>5</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>76118ec3-ca8b-4b47-b3df-c1b2a39763b9</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The color of the panel's border. Colors can be specified as HTML color names or hexadecimal codes.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>borderColor</name>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>6</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>1cd6706e-3168-45eb-b332-fcbbf0a24f18</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The width of the panel's border (in pixels).</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>borderWidth</name>
+    </property>
+  </object>
+</xwikidoc>
