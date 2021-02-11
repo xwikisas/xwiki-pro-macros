@@ -1,0 +1,81 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<xwikidoc version="1.4" reference="Confluence.Macros.GliffyService" locale="">
+  <web>Confluence.Macros</web>
+  <name>GliffyService</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1613012229000</creationDate>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1613025921000</date>
+  <contentUpdateDate>1613025921000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity output="false"}}
+#macro(getUniquePageReference $space $return)
+  #set($id = $mathtool.random(1, 1000000000))
+  #set($uniquePageName = 'Diagram' + $id)
+  #if($xwiki.getDocument($services.model.resolveDocument("${space}.${uniquePageName}")).isNew())
+    #set($return = $NULL)
+    #setVariable("$return" "${space}.${uniquePageName}")
+  #else
+    #getUniquePageReference($space $return)
+  #end
+#end
+{{/velocity}}
+
+{{velocity}}
+#set($createDiagram = "$!request.action" == 'create')
+#set($deleteDiagram = "$!request.action" == 'delete')
+#set($page = $request.page)
+#set($diagramName = $request.diagramName)
+#if($createDiagram &amp;&amp; "$!page" != '' &amp;&amp; "$!diagramName" != '')
+  #set($pageReference = $services.model.resolveDocument($page))
+  #if($services.security.authorization.hasAccess('edit', $pageReference))
+    #set($pageDoc = $xwiki.getDocument($page))
+    #set($diagramAttach = $pageDoc.getAttachment($diagramName))
+    #set($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
+    #if($diagramAttach)
+      #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
+      #set($gliffyContent = $diagramAttach.getContentAsString())
+      #set($gliffyPNGContent = $diagramPreviewAttach.getContentAsString())
+      #set($xml = $services.diagram.importDiagram($gliffyContent, $diagramName))
+      #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
+      #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
+      #set($discard = $diagramDoc.setContent($xml))
+      #set($discard = $diagramDoc.setTitle('Diagram'))
+      #set($gliffyObj = $diagramDoc.newObject('Confluence.Macros.GliffyClass'))
+      #set($discard = $gliffyObj.set('page', $page))
+      #set($discard = $gliffyObj.set('diagramName', $diagramName))
+      #set($discard = $diagramDoc.addObject($gliffyObj))
+      #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
+      #set($discard = $diagramDoc.save($services.localization.render('gliffy.diagram.create.message')))
+    #else
+      ## Bad Request
+      $response.setStatus(400)
+    #end
+  #else
+    ## Unauthorized
+    $response.setStatus(401)
+  #end
+#elseif($deleteDiagram &amp;&amp; "$!page" != '')
+  #set($pageReference = $services.model.resolveDocument($page))
+  #if($services.security.authorization.hasAccess('delete', $pageReference))
+    ## Delete
+    $xwiki.getDocument($pageReference).delete()
+  #else
+    ## Unauthorized
+    $response.setStatus(401)
+  #end
+#else
+  ## Bad Request
+  $response.setStatus(400)
+#end
+{{/velocity}}</content>
+</xwikidoc>

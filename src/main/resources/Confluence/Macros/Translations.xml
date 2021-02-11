@@ -1,0 +1,70 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<xwikidoc version="1.4" reference="Confluence.Macros.Translations" locale="">
+  <web>Confluence.Macros</web>
+  <name>Translations</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1612948455000</creationDate>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1613027384000</date>
+  <contentUpdateDate>1613026524000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>gliffy.diagram.create=The above image is a preview of a Gliffy diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram>>https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
+gliffy.diagram.create.confirm=Convert
+gliffy.diagram.create.success=The diagram has been converted.
+gliffy.diagram.create.error=Could not convert the diagram.
+gliffy.diagram.create.message=Converted diagram.
+gliffy.diagram.delete=The above diagram was converted from Gliffy. If you are not satisfied with the result, you can click on the button below to go back to the preview of the original diagram.
+gliffy.diagram.delete.link=Revert diagram conversion
+gliffy.diagram.modal.title=Back to Gliffy diagram preview
+gliffy.diagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the Gliffy diagram will be displayed. This action is irreversible.
+gliffy.diagram.modal.btn.confirm=Confirm
+gliffy.diagram.delete.success=The editable diagram was successfully deleted.
+gliffy.diagram.delete.error=The diagram could not be deleted.</content>
+  <object>
+    <name>Confluence.Macros.Translations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>9fa6e657-325d-49aa-96a1-70d1a418117d</guid>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <property>
+      <scope>WIKI</scope>
+    </property>
+  </object>
+</xwikidoc>
