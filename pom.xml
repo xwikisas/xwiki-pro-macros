@@ -45,6 +45,7 @@
   </scm>
   <properties>
     <licensing.version>1.16.1</licensing.version>
+    <diagram.version>1.15.4</diagram.version>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
     <xwiki.extension.licensing.publicDocuments>
@@ -60,6 +61,12 @@
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-licensor-api</artifactId>
       <version>${licensing.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.diagram</groupId>
+      <artifactId>application-diagram</artifactId>
+      <version>${diagram.version}</version>
+      <type>xar</type>
     </dependency>
   </dependencies>
   <!-- Even though this repository is already declared in the parent POM, we still explicitly redeclare it for
