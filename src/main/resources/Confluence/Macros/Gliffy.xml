@@ -165,7 +165,6 @@
       e.preventDefault();
 
       var pageReferenceSerialized = $(this).prevAll('.delete-diagram-page:first').val();
-      console.debug(pageReferenceSerialized);
       $.ajax({
         url: serviceURL,
         data: {
