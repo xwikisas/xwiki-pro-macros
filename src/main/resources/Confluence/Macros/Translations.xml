@@ -39,7 +39,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>gliffy.diagram.create=The above image is a preview of a Gliffy diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram>>https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
+  <content>gliffy.diagram.create=The above image is a preview of a Gliffy diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
 gliffy.diagram.create.confirm=Convert
 gliffy.diagram.create.success=The diagram has been converted.
 gliffy.diagram.create.error=Could not convert the diagram.

@@ -128,10 +128,16 @@
     </property>
     <property>
       <code>require(['jquery', 'xwiki-events-bridge'], function($) {
-  var serviceURL = new XWiki.Document(XWiki.Model.resolve('Confluence.Macros.GliffyService', XWiki.EntityType.DOCUMENT)).getURL('get', 'outputSyntax=plain');
+  var serviceURL = new XWiki.Document(
+                       XWiki.Model.resolve('Confluence.Macros.GliffyService', XWiki.EntityType.DOCUMENT))
+                       .getURL('get', 'outputSyntax=plain'),
+      createSuccessMessage = "$escapetool.javascript($services.localization.render('gliffy.diagram.create.success'))",
+      createFailureMessage = "$escapetool.javascript($services.localization.render('gliffy.diagram.create.error'))",
+      deleteSuccessMessage = "$escapetool.javascript($services.localization.render('gliffy.diagram.delete.success'))",
+      deleteFailureMessage = "$escapetool.javascript($services.localization.render('gliffy.diagram.delete.error'))";
 
   var handleCreateDiagram = function () {
-    $(".create-diagram-btn").on('click', function(e){
+    $('.create-diagram-btn').on('click', function(e){
       e.preventDefault();
 
       var pageReferenceSerialized = $(this).prevAll('.create-diagram-page:first').val(),
@@ -144,18 +150,18 @@
           'diagramName' : diagramName
         },
         success: function(data, status) {
-          new XWiki.widgets.Notification("$escapetool.javascript($services.localization.render('gliffy.diagram.create.success'))", 'done');
+          new XWiki.widgets.Notification(createSuccessMessage, 'done');
           location.reload();
         },
         error: function() {
-          new XWiki.widgets.Notification("$escapetool.javascript($services.localization.render('gliffy.diagram.create.error'))", 'error');
+          new XWiki.widgets.Notification(createFailureMessage, 'error');
         }
       });
     });
   }
 
   var handleDeleteDiagram = function() {
-    $(".delete-diagram-btn").on('click', function(e){
+    $('.delete-diagram-btn').on('click', function(e){
       e.preventDefault();
 
       var pageReferenceSerialized = $(this).prevAll('.delete-diagram-page:first').val();
@@ -167,11 +173,11 @@
           'page' : pageReferenceSerialized
         },
         success: function(data, status) {
-          new XWiki.widgets.Notification("$escapetool.javascript($services.localization.render('gliffy.diagram.delete.success'))", 'done');
+          new XWiki.widgets.Notification(deleteSuccessMessage, 'done');
           location.reload();
         },
         error: function() {
-          new XWiki.widgets.Notification("$escapetool.javascript($services.localization.render('gliffy.diagram.delete.error'))", 'error');
+          new XWiki.widgets.Notification(deleteFailureMessage, 'error');
         }
       });
     });
@@ -523,31 +529,31 @@
       <code>{{velocity output="false"}}
 #macro(displayModal $id $diagram)
 
-  {{html}}
-    &lt;!-- Modal -->
-    &lt;div class="modal fade" id="gliffy-${id}-modal" tabindex="-1" role="dialog" aria-labelledby="gliffy-${id}-title" aria-hidden="true">
-      &lt;div class="modal-dialog modal-dialog-centered" role="document">
-        &lt;div class="modal-content">
-          &lt;div class="modal-header">
-            &lt;div class="modal-title" id="gliffy-${id}-title">$services.localization.render('gliffy.diagram.modal.title')&lt;/div>
-            &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              &lt;span aria-hidden="true">&amp;times;&lt;/span>
-            &lt;/button>
-          &lt;/div>
-          &lt;div class="modal-body">
+  {{html clean="false"}}
+    &lt;!-- Modal --&gt;
+    &lt;div class="modal fade" id="gliffy-${id}-modal" tabindex="-1" role="dialog" aria-labelledby="gliffy-${id}-title" aria-hidden="true"&gt;
+      &lt;div class="modal-dialog modal-dialog-centered" role="document"&gt;
+        &lt;div class="modal-content"&gt;
+          &lt;div class="modal-header"&gt;
+            &lt;div class="modal-title" id="gliffy-${id}-title"&gt;$services.localization.render('gliffy.diagram.modal.title')&lt;/div&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
+              &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
+            &lt;/button&gt;
+          &lt;/div&gt;
+          &lt;div class="modal-body"&gt;
             $services.localization.render('gliffy.diagram.modal.text')
-          &lt;/div>
-          &lt;div class="modal-footer">
-            &lt;button type="button" class="btn btn-secondary" data-dismiss="modal">Close&lt;/button>
-            &lt;form action="" method="post">
-              &lt;input name="action" value="createDiagram" type="hidden" />
-              &lt;input name="diagram" class="delete-diagram-page" type="hidden" value="$escapetool.xml($diagram)"/>
-              &lt;button type="submit" class="btn btn-primary delete-diagram-btn">$services.localization.render("gliffy.diagram.modal.btn.confirm")&lt;/button>
-            &lt;/form>
-          &lt;/div>
-        &lt;/div>
-      &lt;/div>
-    &lt;/div>
+          &lt;/div&gt;
+          &lt;div class="modal-footer"&gt;
+            &lt;button type="button" class="btn btn-secondary" data-dismiss="modal"&gt;Close&lt;/button&gt;
+            &lt;form action="" method="post"&gt;
+              &lt;input name="action" value="createDiagram" type="hidden" /&gt;
+              &lt;input name="diagram" class="delete-diagram-page" type="hidden" value="$escapetool.xml($diagram)"/&gt;
+              &lt;button type="submit" class="btn btn-primary delete-diagram-btn"&gt;$services.localization.render("gliffy.diagram.modal.btn.confirm")&lt;/button&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
   {{/html}}
 #end
 {{/velocity}}
@@ -567,12 +573,12 @@
   ## Check if the diagram page exists
   #set($docReferenceSerialized = $services.model.serialize($doc.documentReference, 'local'))
   #set($diagrams = $services.query.xwql('from doc.object(Confluence.Macros.GliffyClass) as gliffyObj where gliffyObj.page = :page and gliffyObj.diagramName = :diagramName').bindValue('page', $docReferenceSerialized).bindValue('diagramName', $diagramName).setLimit(1).execute())
-  #if($diagrams.size() > 0)
+  #if($diagrams.size() &gt; 0)
     #set($diagram = $diagrams.get(0))
   #end
   ##
   (% class="gliffy-diagram-contaier" %)(((
-    ## The diagram exists -> display it
+    ## The diagram exists -&gt; display it
     #if($displayDiagram &amp;&amp; $diagram)
       {{diagram reference="$diagram" cached="false" /}}
 
@@ -583,8 +589,8 @@
           #set($id = $mathtool.random(1, 100000))
           $services.localization.render('gliffy.diagram.delete')
 
-          {{html}}
-            &lt;a class="btn btn-primary" data-toggle="modal" data-target="#gliffy-${id}-modal">$services.localization.render('gliffy.diagram.delete.link')&lt;/a>
+          {{html clean="false"}}
+            &lt;a class="btn btn-primary" data-toggle="modal" data-target="#gliffy-${id}-modal"&gt;$services.localization.render('gliffy.diagram.delete.link')&lt;/a&gt;
           {{/html}}
 
           #displayModal($id $diagram)
@@ -605,12 +611,12 @@
             $services.localization.render('gliffy.diagram.create')
 
             {{html clean=false}}
-              &lt;form action="" method="post">
-                &lt;input name="action" value="createDiagram" type="hidden" />
-                &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($docReferenceSerialized)" type="hidden" />
-                &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" />
-                &lt;button type="submit" class="btn btn-primary create-diagram-btn">$services.localization.render('gliffy.diagram.create.confirm')&lt;/button>
-              &lt;/form>
+              &lt;form action="" method="post"&gt;
+                &lt;input name="action" value="createDiagram" type="hidden" /&gt;
+                &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($docReferenceSerialized)" type="hidden" /&gt;
+                &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" /&gt;
+                &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$services.localization.render('gliffy.diagram.create.confirm')&lt;/button&gt;
+              &lt;/form&gt;
             {{/html}}
           )))
         )))
