@@ -241,21 +241,21 @@
   #set($initialBranchID = $xcontext.macro.params.get('initialBranchID'))
   #set($alignment = $xcontext.macro.params.get('Alignment'))
   ## PNG attachment details
-  #set($attchmentNamePrefix = 'balsamiq')
-  #set($attchmentNameSuffix = 'Master')
+  #set($attachmentNamePrefix = 'balsamiq')
+  #set($attachmentNameSuffix = 'Master')
   #if("$!initialBranchID" != '')
-    #set($attchmentNameSuffix = $initialBranchID)
+    #set($attachmentNameSuffix = $initialBranchID)
   #end
   #set($imageAlignment = 'center')
   #if("$!alignment" != '')
     #set($imageAlignment = $alignment.toLowerCase())
   #end
-  #set($resourceAttchmentName = "${attchmentNamePrefix}_${resourceID}_${attchmentNameSuffix}.png")
-  #set($resourceAttachment = $doc.getAttachment($resourceAttchmentName))
+  #set($attchmentName = "${attachmentNamePrefix}_${resourceID}_${attachmentNameSuffix}.png")
+  #set($attachment = $doc.getAttachment($attchmentName))
   ## Display
-  #if($resourceAttachment)
+  #if($attachment)
     (% style="text-align: ${imageAlignment}"%)(((
-      image:${resourceAttchmentName}
+      image:${attchmentName}
     )))
   #end
 {{/velocity}}</code>
