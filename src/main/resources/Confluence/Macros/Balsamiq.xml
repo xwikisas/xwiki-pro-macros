@@ -273,7 +273,7 @@
       <defaultCategory></defaultCategory>
     </property>
     <property>
-      <description>Bridge between for the Confluence Balsamiq macro. It only displays the image preview of the wireframe. </description>
+      <description>Bridge between the Confluence Balsamiq macro. It only displays the image preview of the wireframe. </description>
     </property>
     <property>
       <id>wireframe</id>
