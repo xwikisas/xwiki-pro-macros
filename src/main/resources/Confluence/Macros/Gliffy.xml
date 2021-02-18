@@ -601,7 +601,7 @@
     ## Display the preview image if it exists
     #if($previewImage &amp;&amp; !$displayDiagram)
       (% class="thumbnail" %)(((
-        image:${previewImageName}
+        [[image:${previewImageName}]]
 
         ##
         ## If Display a button allowing the user to create an XWiki diagram
