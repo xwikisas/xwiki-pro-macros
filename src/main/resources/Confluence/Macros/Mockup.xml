@@ -242,7 +242,7 @@
   #set($attachmentName = "${attachmentNamePrefix}_${attachmentNameSuffix}.png")
   #set($attachment = $doc.getAttachment($attachmentName))
   #if($attachment)
-    image:${attachmentName}
+    [[image:${attachmentName}]]
   #end
 {{/velocity}}</code>
     </property>

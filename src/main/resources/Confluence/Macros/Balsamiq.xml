@@ -255,7 +255,7 @@
   ## Display
   #if($attachment)
     (% style="text-align: ${imageAlignment}"%)(((
-      image:${attchmentName}
+      [[image:${attchmentName}]]
     )))
   #end
 {{/velocity}}</code>
