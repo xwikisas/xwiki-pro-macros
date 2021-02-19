@@ -50,9 +50,9 @@ The mockup preview is an attachment added to the parent page. For example, for a
 = Parameters =
 
 |=Parameter|=Description
-|Name|The ressource ID that is part of the mockup filename attached to the current page (in the example above, it would be //MyMockupID//).
-|initialResourceID|In case the Name parameter is not set, this is parameter will be taken into account for identifying the attachment representing the mockup preview.
-|initialBranchID|The prefix of the preview filename. If it exists, by default, Confluence sets it as being //Master//.
+|**Name**|The ressource ID that is part of the mockup filename attached to the current page (in the example above, it would be //MyMockupID//).
+|**initialResourceID**|In case the Name parameter is not set, this is parameter will be taken into account for identifying the attachment representing the mockup preview.
+|**initialBranchID**|The prefix of the preview filename. If it exists, by default, Confluence sets it as being //Master//.
 
 = Example of usage =
 
