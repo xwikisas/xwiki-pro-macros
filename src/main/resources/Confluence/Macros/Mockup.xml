@@ -395,7 +395,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
       <description></description>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory/>
     </property>
     <property>
       <name>Name</name>
