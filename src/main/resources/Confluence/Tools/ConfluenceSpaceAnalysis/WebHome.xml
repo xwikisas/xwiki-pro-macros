@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Confluence.Tools.ConfluenceSpaceAnalysis.WebHome" locale="">
+  <web>Confluence.Tools.ConfluenceSpaceAnalysis</web>
+  <name>WebHome</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1613743971000</creationDate>
+  <parent>Confluence.Tools.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1613743999000</date>
+  <contentUpdateDate>1613743999000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Confluence Space Analysis</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>
+This script has the objective of analysis a remote Confluence space and detect pages that would cause importing problems because of the page length.
+
+{{info}}
+To use this script a username and token needs to be provided by using "edit object" on this page.
+{{/info}}
+
+{{job id="confluence/confluencespaceanalysis" start="{{velocity~}~}$!{request.confirm}{{/velocity~}~}"}}
+{{groovy}}
+  import groovy.json.*;
+  import java.util.*;
+  import org.xwiki.logging.LogLevel;
+
+  def log = services.logging.getLogger(doc.fullName)
+  services.logging.setLevel(doc.fullName, LogLevel.INFO);
+
+  def baseUrl = request.url
+  def space = request.space
+  def max = 240;
+  def limit = 100;
+  def maxNewNameLength = 40
+  def nb = 1;
+  def docsTooLong = ""
+  def docsHierarchyTooLong = ""
+
+  def resultDocName = "Confluence.Tools.ConfluenceSpaceAnalysis.${space}"
+  def resultDoc = xwiki.getDocument(resultDocName)
+
+  if (request.nb) {
+     nb = Integer.parseInt(request.nb)
+  }
+  if (request.nbdocs) {
+     limit = Integer.parseInt(request.nbdocs)
+  }
+
+  def searchUrl = "${baseUrl}/rest/api/content?type=page&amp;spaceKey=${space}&amp;limit=${limit}&amp;expand=ancestors&amp;start="
+
+
+  def jsonSlurper = new JsonSlurper()
+  def key = doc.getObject(doc.fullName).getProperty("key").getBaseProperty().getValue()
+  def username = doc.getValue("username")
+
+  def getContent(url, username, password) {
+    def authString = "${username}:${password}".getBytes().encodeBase64().toString()
+    def conn = url.toURL().openConnection()
+    conn.setRequestProperty( "Authorization", "Basic ${authString}" )
+    if( conn.responseCode == 200 ) {
+      return conn.content.text
+    } else {
+      return "${conn.responseCode}: ${conn.responseMessage}"
+    }
+  }
+
+  def getNameProposalSize(name, log, newNameList, maxLength) {
+    def splitname = name.replaceAll("/","_").replaceAll("[.]","_").replaceAll(" _ ", "_").replaceAll("[^\\dA-Za-z_ ]"," ").replaceAll('_', " ")replaceAll("\\s+"," ").split(' ')
+    def newname = splitname[0]
+    def scounter = 1
+    while (newname.replaceAll("[0-9_]","")=="" || newname.size()&lt;20) {
+      if (scounter&gt;5)
+        break;
+      if (scounter&gt;=splitname.size())
+        break;
+      if ((newname.size() + splitname[scounter].size()) &gt; maxLength)
+        break;
+      newname += " " + splitname[scounter]
+      scounter++;
+    }
+
+    if (newname.endsWith("_")||newname.endsWith("_"))
+     newname = newname.substring(0, newname.length()-1)
+
+    def count = 1
+    def newname2 = newname;
+    if (newNameList.contains(newname2)) {
+      newname2 = newname + "_1";
+    }
+    newNameList.add(newname2)
+    if (newname2.size() &gt; name.size())
+     return name.size();
+    else
+     return newname2.size();
+  }
+
+  def saveStatus(space, resultDoc, docsTooLong, docsHierarchyTooLong, countAll, countLong, countLongHierarchy, maxDeepLevel, partial) {
+    def spartial = (partial) ? "(partial report)" : "";
+    def content = """= Confluence space analysis report for space ${space} ${spartial} =
+
+* documents analyzed: ${countAll}
+* long docs found: ${countLong}
+* long hierarchy found: ${countLongHierarchy}
+* max level found: ${maxDeepLevel}
+
+== Long documents found ==
+
+${docsTooLong}
+
+== Long hierarchies found ==
+
+${docsHierarchyTooLong}
+
+"""
+   resultDoc.setContent(content)
+   resultDoc.save("Saving confluence space report ${spartial}")
+  }
+
+def countAll = 0
+def countLong = 0
+def countLongHierarchy = 0
+def maxDeepLevel = 0;
+def start = 0
+def loop = 0
+def newNameList = [];
+
+if ((username=="" || username==null || key=="" || key==null)) {
+  log.error("The username and confluence token are not available. Add them using 'edit object'")
+} else {
+log.info("Starting")
+log.info("""Reports are saved as ${resultDoc.getExternalURL()}""")
+services.progress.startStep();
+services.progress.pushLevel(nb);
+log.info("Launching ${nb} loops")
+for (i in 1..nb) {
+ log.info("Loop ${i}")
+ services.progress.startStep();
+ def result = getContent(searchUrl + start, username, key)
+ def pages = jsonSlurper.parseText(result)
+
+ log.info("Analyzing ${pages.results.size()} pages")
+ for (page in pages.results) {
+  countAll++;
+  try {
+   if (page.title.size()&gt;max) {
+    countLong++;
+    def docUrl = baseUrl + page._links.webui
+    docsTooLong += "* ${page.title} (${page.title.size()}) ${docUrl}\n"
+    log.warn("Found long page (${page.title.size()}): ${page.title} ${docUrl}")
+   }
+
+    def fullSize = space.size() + 8 + getNameProposalSize(page.title, log, newNameList, maxNewNameLength)
+    def deepLevel = 1;
+    for (parent in page.ancestors) {
+      deepLevel++;
+      fullSize += 1 + getNameProposalSize(parent.title, log, newNameList, maxNewNameLength)
+    }
+    if (fullSize &gt; max) {
+      countLongHierarchy++;
+      def docUrl = baseUrl + page._links.webui
+      docsHierarchyTooLong += "* ${page.title} (${fullSize}) ${docUrl}\n"
+      log.warn("Found long full hierarchy (${fullSize}): " + page.title + "  ${docUrl}");
+    }
+    if (deepLevel &gt; maxDeepLevel)
+     maxDeepLevel = deepLevel;
+     log.debug("Full name size for page ${page.title}: " + fullSize + " deeplevel: " + deepLevel);
+   } catch (e) {
+    log.error("Error processing page " + page.title + ": " + e.getMessage());
+  }
+ }
+ start += limit;
+ try {
+  log.info("Nb pages: ${countAll}")
+  log.info("Nb long pages: ${countLong}")
+  log.info("Nb long hierarchy: ${countLongHierarchy}")
+  log.info("Max deep level: ${maxDeepLevel}")
+  saveStatus(space, resultDoc, docsTooLong, docsHierarchyTooLong, countAll, countLong, countLongHierarchy, maxDeepLevel, true)
+ } catch (e) {
+    log.error("Error saving status " + e.getMessage());
+ }
+ services.progress.endStep();
+}
+try {
+    log.info("Final Nb pages: ${countAll}")
+    log.info("Final Nb long pages: ${countLong}")
+    log.info("Nb long hierarchy: ${countLongHierarchy}")
+    log.info("Max deep level: ${maxDeepLevel}")
+    saveStatus(space, resultDoc, docsTooLong, docsHierarchyTooLong, countAll, countLong, countLongHierarchy, maxDeepLevel, false)
+} catch (e) {
+    log.error("Error saving status " + e.getMessage());
+}
+log.info("""Report is available ${resultDoc.getExternalURL()}""")
+services.progress.popLevel();
+services.progress.endStep();
+}
+{{/groovy}}
+{{/job}}
+
+{{velocity}}
+ #set($space = "")
+ #if($request.space)
+  #set($space = $request.space)
+ #end
+ #set($url = "")
+ #if($request.url)
+  #set($url = $request.url)
+ #end
+ #set($nbdocs = "100")
+ #if($request.nbdocs)
+  #set($nbdocs = $request.nbdocs)
+ #end
+ #set($nb = "1")
+ #if($request.nb)
+  #set($nb = $request.nb)
+ #end
+ #if ("$request.confirm" != 'true')
+{{html clean=false}}
+&lt;form action=""&gt;
+Confluence URL: &lt;input type="text" name="url" value="${escapetool.xml($url)}" size="60" /&gt;&lt;br /&gt;
+Space name: &lt;input type="text" name="space" value="${escapetool.xml($space)}" size="60" /&gt;&lt;br /&gt;
+Docs per runs: &lt;input type="text" name="nbdocs" value="${escapetool.xml($nbdocs)}" size="5" value="${nbdocs}" /&gt;&lt;br /&gt;
+Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" size="5" value="${nb}" /&gt;&lt;br /&gt;
+&lt;input name="confirm" type="hidden" value="true" /&gt;
+&lt;br /&gt;
+&lt;input name="submit" type="submit" value="Go" class="button" /&gt;
+&lt;/form&gt;
+{{/html}}
+#else
+#set($qs = "url=$!{escapetool.url($!url)}&amp;space=$!{escapetool.url($!space)}&amp;nb=$!{nb}&amp;nbdocs=$!{nbdocs}")
+ $response.sendRedirect($doc.getURL("view", $qs))
+#end
+{{/velocity}}</content>
+  <class>
+    <name>Confluence.Tools.ConfluenceSpaceAnalysis.WebHome</name>
+    <customClass/>
+    <customMapping/>
+    <defaultViewSheet/>
+    <defaultEditSheet/>
+    <defaultWeb/>
+    <nameField/>
+    <validationScript/>
+    <key>
+      <algorithm/>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <hint/>
+      <name>key</name>
+      <number>1</number>
+      <picker>1</picker>
+      <prettyName>key</prettyName>
+      <size>30</size>
+      <storageType>Clear</storageType>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.PasswordClass</classType>
+    </key>
+    <username>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <hint/>
+      <name>username</name>
+      <number>2</number>
+      <picker>1</picker>
+      <prettyName>username</prettyName>
+      <size>30</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+    </username>
+  </class>
+  <object>
+    <name>Confluence.Tools.ConfluenceSpaceAnalysis.WebHome</name>
+    <number>0</number>
+    <className>Confluence.Tools.ListConfluencePages.WebHome</className>
+    <guid>f9e2d6c7-f6d2-4ee0-9d66-f42d6251df3a</guid>
+    <class>
+      <name>Confluence.Tools.ListConfluencePages.WebHome</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <key>
+        <algorithm/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint/>
+        <name>key</name>
+        <number>1</number>
+        <picker>1</picker>
+        <prettyName>key</prettyName>
+        <size>30</size>
+        <storageType>Clear</storageType>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.PasswordClass</classType>
+      </key>
+      <username>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint/>
+        <name>username</name>
+        <number>2</number>
+        <picker>1</picker>
+        <prettyName>username</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </username>
+    </class>
+    <property>
+      <key/>
+    </property>
+    <property>
+      <username/>
+    </property>
+  </object>
+</xwikidoc>
