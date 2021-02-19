@@ -42,7 +42,7 @@
   <content>= Description =
 
 This macro id a bridge for the Confluence Balsamiq Mockup macro. It displays the image preview of the mockup, as it was migrated from Confluence.
-The mockup preview is an attachment added to the parent page. For example, for a mockup identified with //MyMockupID//, there will be an attachment on the parent page of this form: //&lt;balsamiq/mockup&gt;_MyMockupID[_branchID].png//. This means that there should be a prefix called either **mockup** or **balsamiq**, followed by a dash (**_**), then the resource identifier (**MyMockupID** in this case), then an arbitrary suffix (if it is set, by default it will be called **Master**). So, here are some filenames matching our example :
+The mockup preview is an attachment added to the parent page. For example, for a mockup identified with //MyMockupID//, there will be an attachment on the parent page of this form: //&lt;balsamiq/mockup&gt;_MyMockupID[_branchID].png//. This means that there should be a prefix called either **mockup** or **balsamiq**, followed by an underscore (**_**), then the resource identifier (**MyMockupID** in this case), then an arbitrary suffix (if it is set, by default it will be called **Master**). So, here are some filenames matching our example :
 * //balsamiq_MyMockupID_Master.png//
 * //balsamiq_MyMockupID.png//
 * //mockup_MyMockupID.png//
@@ -52,7 +52,7 @@ The mockup preview is an attachment added to the parent page. For example, for a
 |=Parameter|=Description
 |**Name**|The ressource ID that is part of the mockup filename attached to the current page (in the example above, it would be //MyMockupID//).
 |**initialResourceID**|In case the Name parameter is not set, this is parameter will be taken into account for identifying the attachment representing the mockup preview.
-|**initialBranchID**|The prefix of the preview filename. If it exists, by default, Confluence sets it as being //Master//.
+|**initialBranchID**|The branch on which the file was stored. If it exists, by default, Confluence sets it to //Master//.
 
 = Example of usage =
 
