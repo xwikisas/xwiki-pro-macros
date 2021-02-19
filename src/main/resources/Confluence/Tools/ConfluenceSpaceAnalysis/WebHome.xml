@@ -31,8 +31,8 @@
   <parent>Confluence.Tools.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1613743999000</date>
-  <contentUpdateDate>1613743999000</contentUpdateDate>
+  <date>1613746614000</date>
+  <contentUpdateDate>1613746614000</contentUpdateDate>
   <version>1.1</version>
   <title>Confluence Space Analysis</title>
   <comment/>
@@ -43,10 +43,10 @@
 This script has the objective of analysis a remote Confluence space and detect pages that would cause importing problems because of the page length.
 
 {{info}}
-To use this script a username and token needs to be provided by using "edit object" on this page.
+To use this script a username and [[token&gt;&gt;url:https://id.atlassian.com/manage-profile/security/api-tokens]] needs to be provided by using "edit object" on this page.
 {{/info}}
 
-{{job id="confluence/confluencespaceanalysis" start="{{velocity~}~}$!{request.confirm}{{/velocity~}~}"}}
+{{job id="confluence/spaceanalysis" start="{{velocity~}~}$!{request.confirm}{{/velocity~}~}"}}
 {{groovy}}
   import groovy.json.*;
   import java.util.*;
@@ -78,7 +78,10 @@ To use this script a username and token needs to be provided by using "edit obje
 
 
   def jsonSlurper = new JsonSlurper()
-  def key = doc.getObject(doc.fullName).getProperty("key").getBaseProperty().getValue()
+  def key = "";
+  try {
+    key = doc.getObject(doc.fullName).getProperty("key").getBaseProperty().getValue()
+  } catch (e) {}
   def username = doc.getValue("username")
 
   def getContent(url, username, password) {
@@ -163,8 +166,9 @@ log.info("Launching ${nb} loops")
 for (i in 1..nb) {
  log.info("Loop ${i}")
  services.progress.startStep();
- def result = getContent(searchUrl + start, username, key)
- def pages = jsonSlurper.parseText(result)
+ try {
+  def result = getContent(searchUrl + start, username, key)
+  def pages = jsonSlurper.parseText(result)
 
  log.info("Analyzing ${pages.results.size()} pages")
  for (page in pages.results) {
@@ -205,6 +209,9 @@ for (i in 1..nb) {
   saveStatus(space, resultDoc, docsTooLong, docsHierarchyTooLong, countAll, countLong, countLongHierarchy, maxDeepLevel, true)
  } catch (e) {
     log.error("Error saving status " + e.getMessage());
+ }
+ } catch (e2) {
+    log.error("Error retrieving data " + e2.getMessage());
  }
  services.progress.endStep();
 }
@@ -301,10 +308,10 @@ Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" s
   <object>
     <name>Confluence.Tools.ConfluenceSpaceAnalysis.WebHome</name>
     <number>0</number>
-    <className>Confluence.Tools.ListConfluencePages.WebHome</className>
-    <guid>f9e2d6c7-f6d2-4ee0-9d66-f42d6251df3a</guid>
+    <className>Confluence.Tools.ConfluenceSpaceAnalysis.WebHome</className>
+    <guid>9c949238-c44d-4fe1-98fe-ea052bc5edb0</guid>
     <class>
-      <name>Confluence.Tools.ListConfluencePages.WebHome</name>
+      <name>Confluence.Tools.ConfluenceSpaceAnalysis.WebHome</name>
       <customClass/>
       <customMapping/>
       <defaultViewSheet/>
@@ -344,10 +351,10 @@ Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" s
       </username>
     </class>
     <property>
-      <key/>
+      <key></key>
     </property>
     <property>
-      <username/>
+      <username></username>
     </property>
   </object>
 </xwikidoc>
