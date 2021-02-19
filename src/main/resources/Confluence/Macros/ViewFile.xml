@@ -1,6 +1,6 @@
 <?xml version='1.1' encoding='UTF-8'?>
 
-!--
+<!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -258,7 +258,6 @@
 #set($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
 #set($filename = $xcontext.macro.params.get('att--filename'))
 #set($extension = $filename.substring($mathtool.add($filename.lastIndexOf('.'), 1)).toLowerCase())
-#set($extensionIsSupported = $extensions.contains($extension))
 #if($extension == 'pdf' &amp;&amp; $hasPDFViewer)
 
   {{pdfviewer file="${filename}" /}}
