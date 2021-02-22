@@ -31,8 +31,8 @@
   <parent>Confluence.Tools.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1613746614000</date>
-  <contentUpdateDate>1613746614000</contentUpdateDate>
+  <date>1614013238000</date>
+  <contentUpdateDate>1614013238000</contentUpdateDate>
   <version>1.1</version>
   <title>Confluence Space Analysis</title>
   <comment/>
@@ -46,7 +46,7 @@ This script has the objective of analysis a remote Confluence space and detect p
 To use this script a username and [[token&gt;&gt;url:https://id.atlassian.com/manage-profile/security/api-tokens]] needs to be provided by using "edit object" on this page.
 {{/info}}
 
-{{job id="confluence/spaceanalysis" start="{{velocity~}~}$!{request.confirm}{{/velocity~}~}"}}
+{{job id="confluence/spaceanalysis2" start="{{velocity~}~}$!{request.confirm}{{/velocity~}~}"}}
 {{groovy}}
   import groovy.json.*;
   import java.util.*;
@@ -60,6 +60,7 @@ To use this script a username and [[token&gt;&gt;url:https://id.atlassian.com/ma
   def max = 240;
   def limit = 100;
   def maxNewNameLength = 40
+  def start = 0
   def nb = 1;
   def docsTooLong = ""
   def docsHierarchyTooLong = ""
@@ -67,6 +68,9 @@ To use this script a username and [[token&gt;&gt;url:https://id.atlassian.com/ma
   def resultDocName = "Confluence.Tools.ConfluenceSpaceAnalysis.${space}"
   def resultDoc = xwiki.getDocument(resultDocName)
 
+  if (request.start) {
+     start = Integer.parseInt(request.start)
+  }
   if (request.nb) {
      nb = Integer.parseInt(request.nb)
   }
@@ -74,8 +78,11 @@ To use this script a username and [[token&gt;&gt;url:https://id.atlassian.com/ma
      limit = Integer.parseInt(request.nbdocs)
   }
 
-  def searchUrl = "${baseUrl}/rest/api/content?type=page&amp;spaceKey=${space}&amp;limit=${limit}&amp;expand=ancestors&amp;start="
-
+  def searchUrl = "${baseUrl}/rest/api/content?type=page&amp;spaceKey=${space}&amp;limit=${limit}"
+  if (request.ancestor)
+   searchUrl += "&amp;expand=ancestors&amp;start="
+  else 
+   searchUrl += "&amp;start="
 
   def jsonSlurper = new JsonSlurper()
   def key = "";
@@ -151,7 +158,6 @@ def countAll = 0
 def countLong = 0
 def countLongHierarchy = 0
 def maxDeepLevel = 0;
-def start = 0
 def loop = 0
 def newNameList = [];
 
@@ -166,8 +172,11 @@ log.info("Launching ${nb} loops")
 for (i in 1..nb) {
  log.info("Loop ${i}")
  services.progress.startStep();
+ def result = ""
  try {
-  def result = getContent(searchUrl + start, username, key)
+  def url = searchUrl + start
+  log.info("Getting page info from ${url}")
+  result = getContent(url, username, key)
   def pages = jsonSlurper.parseText(result)
 
  log.info("Analyzing ${pages.results.size()} pages")
@@ -181,6 +190,7 @@ for (i in 1..nb) {
     log.warn("Found long page (${page.title.size()}): ${page.title} ${docUrl}")
    }
 
+   if (request.ancestor) {
     def fullSize = space.size() + 8 + getNameProposalSize(page.title, log, newNameList, maxNewNameLength)
     def deepLevel = 1;
     for (parent in page.ancestors) {
@@ -195,7 +205,8 @@ for (i in 1..nb) {
     }
     if (deepLevel &gt; maxDeepLevel)
      maxDeepLevel = deepLevel;
-     log.debug("Full name size for page ${page.title}: " + fullSize + " deeplevel: " + deepLevel);
+    log.debug("Full name size for page ${page.title}: " + fullSize + " deeplevel: " + deepLevel);
+   }
    } catch (e) {
     log.error("Error processing page " + page.title + ": " + e.getMessage());
   }
@@ -212,6 +223,7 @@ for (i in 1..nb) {
  }
  } catch (e2) {
     log.error("Error retrieving data " + e2.getMessage());
+    log.error(result);
  }
  services.progress.endStep();
 }
@@ -253,8 +265,10 @@ services.progress.endStep();
 &lt;form action=""&gt;
 Confluence URL: &lt;input type="text" name="url" value="${escapetool.xml($url)}" size="60" /&gt;&lt;br /&gt;
 Space name: &lt;input type="text" name="space" value="${escapetool.xml($space)}" size="60" /&gt;&lt;br /&gt;
-Docs per runs: &lt;input type="text" name="nbdocs" value="${escapetool.xml($nbdocs)}" size="5" value="${nbdocs}" /&gt;&lt;br /&gt;
-Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" size="5" value="${nb}" /&gt;&lt;br /&gt;
+Docs per runs: &lt;input type="text" name="nbdocs" value="${escapetool.xml($nbdocs)}" size="5" /&gt;&lt;br /&gt;
+Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" size="5" /&gt;&lt;br /&gt;
+Start: &lt;input type="text" name="start" value="0" size="5"  /&gt;&lt;br /&gt;
+&lt;input name="ancestor" type="checkbox" value="1"  /&gt; with hierarchy analysis
 &lt;input name="confirm" type="hidden" value="true" /&gt;
 &lt;br /&gt;
 &lt;input name="submit" type="submit" value="Go" class="button" /&gt;
@@ -351,10 +365,10 @@ Number of runs: &lt;input type="text" name="nb" value="${escapetool.xml($nb)}" s
       </username>
     </class>
     <property>
-      <key></key>
+      <key/>
     </property>
     <property>
-      <username></username>
+      <username/>
     </property>
   </object>
 </xwikidoc>

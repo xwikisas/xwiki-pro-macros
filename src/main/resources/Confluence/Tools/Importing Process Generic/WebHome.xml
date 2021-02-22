@@ -31,8 +31,8 @@
   <parent>Confluence.Tools.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1613646951000</date>
-  <contentUpdateDate>1613646951000</contentUpdateDate>
+  <date>1614012653000</date>
+  <contentUpdateDate>1614012653000</contentUpdateDate>
   <version>1.1</version>
   <title>Importing Process Generic</title>
   <comment/>
@@ -51,15 +51,7 @@ It might be needed to do some precleaning of the Confluence space, truncating pa
 
 The following processes with cut page name to less than 30 characters. This allows 8 level of hierarchies if all pages are 30 characters, and slightly more if some are shorter. Ideally the page titles (which will become the page names in XWiki) at the top of the hierarchy should be as short as possible if the hierarchy is deep.
 
-In order to assess which hierarchies are too long for XWiki, a first import would be needed and the remaining too long hierarchies detected in the "Compute Plan" part.
-
-* Large attachments
-* Page Names with more than 240 characters: we would need a confluence API to find them. Alternate method:
-** Get thee list of page names from Confluence export when asking for a "custom export"
-** Clean up list by removing spaces at the beginning of lines
-** "grep -a -e '.\{245,\}' &lt;filename&gt;"
-
-The pages listed should be modified in Confluence.
+The [[ConfluenceSpaceAnalysis&gt;&gt;Confluence.Tools.ConfluenceSpaceAnalysis.WebHome]] allows to detect pages that are too long and will not import. It also allows to count the number of pages that should be imported. This tool will require a "Confluence API token" to connect to the live Confluence instance.
 
 === Confluence Export ===
 
@@ -73,7 +65,7 @@ XWiki should be set with very large memory settings, high cache:
 
 * Set -Xmx and -Xms to half the memory of the machine (16g for 32g RAM)
 * Set cache to 5000 in xwiki.cfg (instead of 500)
-* deactivate notifications in xwiki.properties
+* deactivate notifications in xwiki.properties (optional)
 
 === Extension Installation ===
 
@@ -91,13 +83,16 @@ Create a subwiki to receive the imported data.
 
 === Deactivate heavy processes ===
 
-* Deactivate notifications in xwiki.properties
-* Clean Notifications: run [[Confluence.Tools.CleanNotificationsPrefs]]
-* Deactivate SOLR and Notiications listeners: XWiki.ListenerAdmin page on main wiki:
-** [[SolrIndexEventListener&gt;&gt;path:/xwiki/bin/view/XWiki/ListenerAdmin?language=#|t=listeners&amp;p=1&amp;l=8&amp;s=listenerName&amp;d=asc&amp;listenerClass=solr]]
-** [[DocumentMovedListener, AutomaticWatchModeListener, LiveNotificationEmailListener&gt;&gt;path:/xwiki/bin/view/XWiki/ListenerAdmin?language=#|t=listeners&amp;p=1&amp;l=8&amp;s=listenerName&amp;d=asc&amp;listenerClass=notifications]]
+* Deactivate notifications in xwiki.properties (optional)
+* Deactivate notifications on your own profile ("never" for automatic page watching, disable page notifications)
+* Clean Notifications: run [[Confluence.Tools.CleanNotificationsPrefs]] (optional)
+* Deactivate SOLR and Notifications listeners: XWiki.ListenerAdmin page on main wiki:
+** (optional, as this would disable SOLR indexing for the whole farm) [[SolrIndexEventListener&gt;&gt;path:/xwiki/bin/view/XWiki/ListenerAdmin?language=#|t=listeners&amp;p=1&amp;l=8&amp;s=listenerName&amp;d=asc&amp;listenerClass=solr]]
+** [[DocumentMovedListener, AutomaticWatchModeListener, LiveNotificationEmailListener&gt;&gt;path:/xwiki/bin/view/XWiki/ListenerAdmin?language=#|t=listeners&amp;p=1&amp;l=8&amp;s=listenerName&amp;d=asc&amp;listenerClass=notifications]] (important for large spaces)
 
 === Modify Nested Spaces Migrator ===
+
+This change is important to avoid failure of the Nested Page Migrator on the DocumentMovedListener.
 
 {{velocity}}
 * Edit object on [[NestedPagesMigration&gt;&gt;path:/xwiki/wiki/${xcontext.database}/edit/NestedPagesMigration/WebHome?editor=object]]
@@ -118,19 +113,16 @@ Go to the [[Filter streams application&gt;&gt;Filter.WebHome]]
 
 Run the Confluence import. Make sure the following settings are used:
 
-* events -&gt; false 
 * verbose -&gt; false
+* import users -&gt; false
 * versions -&gt; true
+* stop after failure -&gt; false
 
 This process can take a few hours depending of the size of the import.
 
-=== Manual changes ===
-
-This step would only be needed if specific pages are creating problems.
-
 === Check Parents ===
 
-Use the CheckParents script to verify if we have many pages without parents.
+Use the [[CheckParents&gt;&gt;Confluence.Tools.CheckParents]] script to verify if we have many pages without parents.
 
 Pages without parents will probably not be places in the final hierarchy.
 
@@ -138,9 +130,9 @@ It is acceptable if there is a limited version of pages without parents.
 
 === Fix Parents ===
 
-This process will modify the parent value of document having a parent containing a dot, to avoid further problems in the importing process.
+The [[FixParents&gt;&gt;Confluence.Tools.FixParents]] will modify the parent value of document having a parent containing a dot, to avoid further problems in the importing process.
 
-This is very important ! Without it the hierarchy might be lost.
+This is **very important** ! Without it the hierarchy might be lost.
 
 This process can be run in batches of 3000 or less until there are none left to convert
 
@@ -152,7 +144,7 @@ This process might not be needed in future versions of XWiki as it is needed to 
 
 Go to [[Long Page Names migration&gt;&gt;Confluence.Tools.LongPageNames]]
 
-This process will reduce the page name length for page names of more than 30 characters. This is needed as the combination of page names in a single hierarchy cannot exceed 255 characters in XWiki.
+This process will reduce the page name length for page names of more than 30 characters. This is needed as the combination of page names in a single hierarchy cannot exceed 255 characters in XWiki. This is the main script avoiding Nested Pages Migrator reporting errors at the "compute plan" step.
 
 The title of the page will not change, only the page name.
 
@@ -168,15 +160,11 @@ would become:
 
 This process is very long and runs in a job.
 
-=== Manual Fixes ===
-
-Go to the [[Manual Fixes page&gt;&gt;Confluence.Tools.ManualFixes]]
-
-This step will fix some know pages that need their parent changed.
-
 === Handle documents having lost their parents ===
 
 Go to [[Check Invalid Parents&gt;&gt;Confluence.Tools.CheckInvalidParents]]
+
+Normally there should not be any remaining pages reported by this tool.
 
 === Nested Pages Migration "Compute Plan" ===
 
