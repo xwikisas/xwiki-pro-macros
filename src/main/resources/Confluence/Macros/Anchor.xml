@@ -279,7 +279,7 @@ Link to the anchor: [[link&gt;&gt;||anchor="test"]]</content>
     </property>
     <property>
       <code>{{velocity}}
-{{id name="$xcontext.macro.params.name" /}}
+{{id name="$wikimacro.parameters.name" /}}
 {{/velocity}}</code>
     </property>
     <property>

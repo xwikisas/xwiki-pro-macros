@@ -275,8 +275,8 @@ My hidden content.
     <property>
       <code>{{velocity}}
 ## BLOCK / INLINE
-#set($outputType = $xcontext.macro.params.get('atlassian-macro-output-type'))
-#set($hidden = $xcontext.macro.params.get('hidden'))
+#set($outputType = $wikimacro.parameters.get('atlassian-macro-output-type'))
+#set($hidden = $wikimacro.parameters.get('hidden'))
 #set($displayAsBlock = "$!outoutType" == '' &amp;&amp; $outputType.toLowerCase() == 'block')
 #if("$!hidden" == 'true')
   (% class="hidden" %)

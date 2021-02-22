@@ -270,9 +270,9 @@ The wireframe preview is an attachment added to the parent page. For example, fo
     <property>
       <code>{{velocity}}
   ## Macro parameters
-  #set($resourceID = $xcontext.macro.params.get('initialResourceID'))
-  #set($initialBranchID = $xcontext.macro.params.get('initialBranchID'))
-  #set($alignment = $xcontext.macro.params.get('Alignment'))
+  #set($resourceID = $wikimacro.parameters.get('initialResourceID'))
+  #set($initialBranchID = $wikimacro.parameters.get('initialBranchID'))
+  #set($alignment = $wikimacro.parameters.get('Alignment'))
   ## PNG attachment details
   #set($attachmentNamePrefix = 'balsamiq')
   #set($attachmentNameSuffix = 'Master')

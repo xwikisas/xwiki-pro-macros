@@ -279,11 +279,11 @@ Filename number 1. has priority, so in case both files are attached to the curre
   ## Filename format : &lt;balsamiq/mockup&gt;_&lt;$Name/$initialResourceID&gt;[/_$initialBranchID].png
   #set($attachmentNamePrefix = 'balsamiq')
   #set($attachmentNameSuffix = '')
-  #set($attachmentFileName = $xcontext.macro.params.get('Name'))
+  #set($attachmentFileName = $wikimacro.parameters.get('Name'))
   #if("$!attachmentFileName" == '')
-    #set($attachmentFileName= $xcontext.macro.params.get('initialResourceID'))
+    #set($attachmentFileName= $wikimacro.parameters.get('initialResourceID'))
   #end
-  #set($initialBranchID = $xcontext.macro.params.get('initialBranchID'))
+  #set($initialBranchID = $wikimacro.parameters.get('initialBranchID'))
   #if("$!initialBranchID" != '')
     #set($attachmentNameSuffix = '_' + $initialBranchID)
   #end

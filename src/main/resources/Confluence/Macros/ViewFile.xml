@@ -256,7 +256,7 @@
       <code>{{velocity}}
 #set($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
 #set($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
-#set($filename = $xcontext.macro.params.get('att--filename'))
+#set($filename = $wikimacro.parameters.get('att--filename'))
 #set($extension = $filename.substring($mathtool.add($filename.lastIndexOf('.'), 1)).toLowerCase())
 #if($extension == 'pdf' &amp;&amp; $hasPDFViewer)
 
