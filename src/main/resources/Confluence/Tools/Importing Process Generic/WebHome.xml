@@ -118,7 +118,7 @@ Go to the [[Filter streams application&gt;&gt;Filter.WebHome]]
 
 Run the Confluence import. Make sure the following settings are used:
 
-* events -&gt; true
+* events -&gt; false 
 * verbose -&gt; false
 * versions -&gt; true
 
