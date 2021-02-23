@@ -38,7 +38,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>= Description =
 
 The Gliffy macro is a bridge between Gliffy macro used in Confluence and the [[Diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]] macro used in XWiki. The aim of this macro is to allow users to view and also to modify the diagrams migrated from Confluence. By default, the macro displays the preview of the Gliffy diagram. The user can create the editable version of the diagram, by using its representation into an XWiki diagram, having always the option to go back to the preview of the original diagram.

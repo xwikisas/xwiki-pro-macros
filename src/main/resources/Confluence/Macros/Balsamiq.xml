@@ -38,7 +38,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>= Description =
 
 This macro id a bridge for the Confluence Balsamiq Wireframe macro. It displays the image preview of the mockup, as it was migrated from Confluence.
