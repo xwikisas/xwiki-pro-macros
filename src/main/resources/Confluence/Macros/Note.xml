@@ -24,7 +24,7 @@
   <web>Confluence.Macros</web>
   <name>Note</name>
   <language/>
-  <defaultLanguage>en</defaultLanguage>
+  <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
   <creationDate>1613062332000</creationDate>
