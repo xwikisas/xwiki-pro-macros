@@ -39,9 +39,9 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{view-file att--filename="Test.ppt" /}}
+  <content>{{view-file name="Test.ppt" /}}
 
-{{view-file att--filename="TestPDF.pdf" /}}</content>
+{{view-file name="TestPDF.pdf" /}}</content>
   <attachment>
     <filename>Test.ppt</filename>
     <author>xwiki:XWiki.Admin</author>
@@ -256,7 +256,10 @@
       <code>{{velocity}}
 #set($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
 #set($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
-#set($filename = $wikimacro.parameters.get('att--filename'))
+#set($filename = $xcontext.macro.params.get('att--filename'))
+#if(!$filename)
+  #set($filename = $xcontext.macro.params.get('name'))
+#end
 #set($extension = $filename.substring($mathtool.add($filename.lastIndexOf('.'), 1)).toLowerCase())
 #if($extension == 'pdf' &amp;&amp; $hasPDFViewer)
 
