@@ -47,6 +47,7 @@
     <licensing.version>1.16.1</licensing.version>
     <diagram.version>1.15.4</diagram.version>
     <pdfviewer.version>2.2</pdfviewer.version>
+    <jwplayer.version>2.1.4</jwplayer.version>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
     <xwiki.extension.licensing.publicDocuments>
@@ -79,6 +80,12 @@
       <groupId>com.xwiki.pdfviewer</groupId>
       <artifactId>macro-pdfviewer-ui</artifactId>
       <version>${pdfviewer.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>macro-jwplayer</artifactId>
+      <version>${jwplayer.version}</version>
       <type>xar</type>
     </dependency>
   </dependencies>
