@@ -77,7 +77,7 @@ The result is the following :
     <filename>file_example.mp3</filename>
     <mimetype>audio/mpeg</mimetype>
     <charset>UTF-8</charset>
-    <author>XWiki.RalucaStavro</author>
+    <author>xwiki:XWiki.Admin</author>
     <date>1614158963000</date>
     <version>1.1</version>
     <comment/>
@@ -88,7 +88,7 @@ The result is the following :
     <filename>file_example.mp4</filename>
     <mimetype>video/mp4</mimetype>
     <charset>UTF-8</charset>
-    <author>XWiki.RalucaStavro</author>
+    <author>xwiki:XWiki.Admin</author>
     <date>1614159258000</date>
     <version>1.1</version>
     <comment/>
