@@ -50,7 +50,22 @@ gliffy.diagram.modal.title=Back to Gliffy diagram preview
 gliffy.diagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the Gliffy diagram will be displayed. This action is irreversible.
 gliffy.diagram.modal.btn.confirm=Confirm
 gliffy.diagram.delete.success=The editable diagram was successfully deleted.
-gliffy.diagram.delete.error=The diagram could not be deleted.</content>
+gliffy.diagram.delete.error=The diagram could not be deleted.
+
+## Section macro
+rendering.macro.section.name=Section Macro
+rendering.macro.section.description=Add the Section macro to a page to organize your content in sections and columns. This macro is used in conjunction with the Column macro, and provides more flexibility than page layouts.
+rendering.macro.section.content.description=Add the Section content
+rendering.macro.section.parameter.border.name=Show Border
+rendering.macro.section.parameter.border.description=Select this option to draw a border around the section and columns.
+
+## Column macro
+rendering.macro.column.name=Column Macro
+rendering.macro.column.description=Add the column macro to a page to organize your content in columns. This macro is used in conjunction with the Section macro, and provides more flexibility than page layouts.
+rendering.macro.column.content.description=Add the Column content
+rendering.macro.column.parameter.width.name=Width
+rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+</content>
   <object>
     <name>Confluence.Macros.Translations</name>
     <number>0</number>
