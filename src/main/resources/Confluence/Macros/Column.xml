@@ -27,12 +27,12 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1614250237000</creationDate>
+  <creationDate>1614352527000</creationDate>
   <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1614285418000</date>
-  <contentUpdateDate>1614285418000</contentUpdateDate>
+  <date>1614354122000</date>
+  <contentUpdateDate>1614352527000</contentUpdateDate>
   <version>1.1</version>
   <title>Column</title>
   <comment/>
@@ -212,7 +212,7 @@ Content in the column 4
     </property>
     <property>
       <code>.macro-column {
-  display: inline-block;
+  display: table-cell;
   padding: 5px;
 }</code>
     </property>
@@ -432,9 +432,9 @@ Content in the column 4
 (% class="macro-column" $style %)(((
   ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
   #if ("{{wikimacrocontent/}}" == 'wikimacrocontent')
-    {{wikimacrocontent /}}
-  #else
     $!xcontext.macro.content
+  #else
+    {{wikimacrocontent /}}
   #end
 )))
 {{/velocity}}</code>
