@@ -78,7 +78,7 @@ Create a subwiki to receive the imported data.
 {{velocity}}
 * XWiki Extensions installation
 ** Install [[Filter Streams&gt;&gt;path:/xwiki/wiki/${xcontext.database}/admin/XWiki/XWikiPreferences?section=XWiki.Extensions&amp;search=filter+streams&amp;repo=recommended&amp;extensionId=org.xwiki.platform%3Axwiki-platform-filter-ui&amp;extensionVersion=11.10.11&amp;extensionNamespace=wiki%3A${xcontext.database}]]
-** Install [[Confluence XML&gt;&gt;path:/xwiki/wiki/${xcontext.database}/admin/XWiki/XWikiPreferences?section=XWiki.Extensions&amp;search=confluence+xml&amp;repo=&amp;extensionId=org.xwiki.contrib.confluence%3Aconfluence-xml&amp;extensionVersion=9.5.1&amp;extensionNamespace=wiki%3A${xcontext.database}]]
+** Install [[Confluence XML&gt;&gt;path:/xwiki/wiki/${xcontext.database}/admin/XWiki/XWikiPreferences?section=XWiki.Extensions&amp;search=confluence+xml&amp;repo=&amp;extensionId=org.xwiki.contrib.confluence%3Aconfluence-xml&amp;extensionVersion=9.8&amp;extensionNamespace=wiki%3A${xcontext.database}]]
 ** Install [[Job Macro&gt;&gt;path:/xwiki/wiki/${xcontext.database}/admin/XWiki/XWikiPreferences?section=XWiki.Extensions&amp;search=job+macro&amp;repo=&amp;extensionId=org.xwiki.contrib%3Amacro-job&amp;extensionVersion=1.5&amp;extensionNamespace=wiki%3A${xcontext.database}]]
 {{/velocity}}
 
