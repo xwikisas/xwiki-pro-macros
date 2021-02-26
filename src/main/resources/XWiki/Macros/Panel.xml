@@ -417,18 +417,18 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     (% class="macro-panel-title" style="$panelTitleStyle"%)(((
       ## Since 11.5 the content of the macro parameter can be edited in WYSIWYG editor.
       #if ("{{wikimacroparameter/}}" == 'wikimacroparameter')
-        {{wikimacroparameter name="title" /}}
-      #else
         $panelTitle
+      #else
+        {{wikimacroparameter name="title" /}}
       #end
     )))
   #end
   (% class="macro-panel-content" style="$panelContentStyle"%)(((
     ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
     #if ("{{wikimacrocontent/}}" == 'wikimacrocontent')
-      {{wikimacrocontent /}}
-    #else
       $!xcontext.macro.content
+    #else
+      {{wikimacrocontent /}}
     #end
   )))
 )))
