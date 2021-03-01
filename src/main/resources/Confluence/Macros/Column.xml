@@ -431,10 +431,10 @@ Content in the column 4
 #end
 (% class="macro-column" $style %)(((
   ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
-  #if ("{{wikimacrocontent/}}" == 'wikimacrocontent')
-    $!xcontext.macro.content
-  #else
+  #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacrocontent')))
     {{wikimacrocontent /}}
+  #else
+    $!xcontext.macro.content
   #end
 )))
 {{/velocity}}</code>
