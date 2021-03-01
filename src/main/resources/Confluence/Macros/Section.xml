@@ -224,14 +224,12 @@ Content in the column 4
       <cache>long</cache>
     </property>
     <property>
-      <code>.hasBorder {
-  border: 1px solid @link-color;
-  border-radius: 5px 5px 5px 5px;
-  padding: 5px;
+      <code>.hasBorder .macro-column {
+  border: 1px dashed grey;
 }</code>
     </property>
     <property>
-      <contentType>LESS</contentType>
+      <contentType>CSS</contentType>
     </property>
     <property>
       <name/>
