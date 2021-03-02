@@ -226,6 +226,9 @@ Content in the column 4
     <property>
       <code>.hasBorder .macro-column {
   border: 1px dashed grey;
+}
+.auto-cursor-target {
+  display: none;
 }</code>
     </property>
     <property>
