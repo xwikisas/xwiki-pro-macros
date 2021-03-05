@@ -1,0 +1,721 @@
+<?xml version='1.0' encoding='UTF-8'?><!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.ConfluenceGalleryMacro" locale="">
+  <web>Confluence.Macros</web>
+  <name>ConfluenceGalleryMacro</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1614852236000</creationDate>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1614945785000</date>
+  <contentUpdateDate>1614945601000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Confluence Gallery Macro</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>= Description =
+
+The Confluence Gallery macro is a bridge between Confluence and XWiki. This bridge uses the XWiki implementation of the Gallery amcro under the hood and therefore assumes that the Confluence gallery macro is prefixed during import. There are two things to note:
+
+Only a subset of the parameters supported by the Confluence macro are supported by this bridge macro: title, exclude, include and page. The remaining parameters are ignored:
+columns does not make sense for the XWiki macro as the images are displayed differently
+excludeLabel and includeLabel are not supported since XWiki does not support attachment tags
+sort and reverse have just not been implemented in this bridge macro
+
+= Parameters =
+
+|=Parameter|=Description|=Required|=Default
+|**title**|Title of the gallery.|No| 
+|**exclude**|Excluded images (comma separated).|No| 
+|**include**|Included images (comma separated).|No| 
+|**page**|Pages containing the images to display. Current page if empty.|No| 
+
+= Examples of usage =
+
+== All images of current page ==
+
+{{code}}
+{{confluence_gallery/}}
+{{/code}}
+
+The result is the following :
+
+{{confluence_gallery/}}
+
+== Exclude one image ==
+
+{{code}}
+{{confluence_gallery exclude="img1.png"/}}
+{{/code}}
+
+The result is the following :
+
+{{confluence_gallery exclude="img1.png"/}}
+
+== Include two images ==
+
+{{code}}
+{{confluence_gallery include="img1.png,img3.png"/}}
+{{/code}}
+
+The result is the following :
+
+{{confluence_gallery include="img1.png,img3.png"/}}
+
+== All images of the Sandbox page ==
+
+{{code}}
+{{confluence_gallery page="Sandbox"/}}
+{{/code}}
+
+The result is the following :
+
+{{confluence_gallery page="Sandbox"/}}</content>
+  <attachment>
+    <filename>img1.png</filename>
+    <mimetype>image/png</mimetype>
+    <charset>UTF-8</charset>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1614945785000</date>
+    <version>1.1</version>
+    <comment/>
+    <content>iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw1AUhU9TS0UqHewg4pChOlkQFXGUViyChdJWaNXB5KV/0KQhSXFxFFwLDv4sVh1cnHV1cBUEwR8QNzcnRRcp8b6k0CLGC4/3cd49h/fuA4RWjalm3ySgapaRScbFfGFVDL7CjwBC8CEsMVNPZRdz8Kyve+qjuovxLO++P2tQKZoM8InE80w3LOIN4tlNS+e8TxxhFUkhPieeMOiCxI9cl11+41x2WOCZESOXSRBHiMVyD8s9zCqGSjxDHFVUjfKFvMsK5y3Oaq3BOvfkLwwVtZUs12mNIoklpJCGCBkNVFGDhRjtGikmMnQe9/CPOP40uWRyVcHIsYA6VEiOH/wPfs/WLE1PuUmhOBB4se2PMSC4C7Sbtv19bNvtE8D/DFxpXX+9Bcx9kt7satEjILwNXFx3NXkPuNwBhp90yZAcyU9LKJWA9zP6pgIwdAsMrLlz65zj9AHI0ayWb4CDQ2C8TNnrHu/u753bvz2d+f0A5qRyb9OqMRwAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQflAwUMAgdfa6Q2AAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAJ5JREFUeNrt0DEBAAAIAyC1f+dZwc8HItAprkaBLFmyZMmSpUCWLFmyZMlSIEuWLFmyZCmQJUuWLFmyFMiSJUuWLFkKZMmSJUuWLAWyZMmSJUuWAlmyZMmSJUuBLFmyZMmSpUCWLFmyZMlSIEuWLFmyZCmQJUuWLFmyFMiSJUuWLFkKZMmSJUuWLAWyZMmSJUuWAlmyZMmSJUuBLFnfFopeAcdq+re3AAAAAElFTkSuQmCC</content>
+    <filesize>693</filesize>
+  </attachment>
+  <attachment>
+    <filename>img2.png</filename>
+    <mimetype>image/png</mimetype>
+    <charset>UTF-8</charset>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1614945785000</date>
+    <version>1.1</version>
+    <comment/>
+    <content>iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw1AUhU9TS0UqHewg4pChOlkQFXGUViyChdJWaNXB5KV/0KQhSXFxFFwLDv4sVh1cnHV1cBUEwR8QNzcnRRcp8b6k0CLGC4/3cd49h/fuA4RWjalm3ySgapaRScbFfGFVDL7CjwBC8CEsMVNPZRdz8Kyve+qjuovxLO++P2tQKZoM8InE80w3LOIN4tlNS+e8TxxhFUkhPieeMOiCxI9cl11+41x2WOCZESOXSRBHiMVyD8s9zCqGSjxDHFVUjfKFvMsK5y3Oaq3BOvfkLwwVtZUs12mNIoklpJCGCBkNVFGDhRjtGikmMnQe9/CPOP40uWRyVcHIsYA6VEiOH/wPfs/WLE1PuUmhOBB4se2PMSC4C7Sbtv19bNvtE8D/DFxpXX+9Bcx9kt7satEjILwNXFx3NXkPuNwBhp90yZAcyU9LKJWA9zP6pgIwdAsMrLlz65zj9AHI0ayWb4CDQ2C8TNnrHu/u753bvz2d+f0A5qRyb9OqMRwAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQflAwUMAhdC3LRSAAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAKBJREFUeNrt0DEBAAAEADD00T8eFXyeLcIyeoKbUiBLlixZsmQpkCVLlixZshTIkiVLlixZCmTJkiVLliwFsmTJkiVLlgJZsmTJkiVLgSxZsmTJkqVAlixZsmTJUiBLlixZsmQpkCVLlixZshTIkiVLlixZCmTJkiVLliwFsmTJkiVLlgJZsmTJkiVLgSxZsmTJkqVAlixZsmTJUiBL1rcFNEUB9PQn0uQAAAAASUVORK5CYII=</content>
+    <filesize>695</filesize>
+  </attachment>
+  <attachment>
+    <filename>img3.png</filename>
+    <mimetype>image/png</mimetype>
+    <charset>UTF-8</charset>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1614945785000</date>
+    <version>1.1</version>
+    <comment/>
+    <content>iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAABhWlDQ1BJQ0MgcHJvZmlsZQAAKJF9kT1Iw1AUhU9TS0UqHewg4pChOlkQFXGUViyChdJWaNXB5KV/0KQhSXFxFFwLDv4sVh1cnHV1cBUEwR8QNzcnRRcp8b6k0CLGC4/3cd49h/fuA4RWjalm3ySgapaRScbFfGFVDL7CjwBC8CEsMVNPZRdz8Kyve+qjuovxLO++P2tQKZoM8InE80w3LOIN4tlNS+e8TxxhFUkhPieeMOiCxI9cl11+41x2WOCZESOXSRBHiMVyD8s9zCqGSjxDHFVUjfKFvMsK5y3Oaq3BOvfkLwwVtZUs12mNIoklpJCGCBkNVFGDhRjtGikmMnQe9/CPOP40uWRyVcHIsYA6VEiOH/wPfs/WLE1PuUmhOBB4se2PMSC4C7Sbtv19bNvtE8D/DFxpXX+9Bcx9kt7satEjILwNXFx3NXkPuNwBhp90yZAcyU9LKJWA9zP6pgIwdAsMrLlz65zj9AHI0ayWb4CDQ2C8TNnrHu/u753bvz2d+f0A5qRyb9OqMRwAAAAJcEhZcwAALiMAAC4jAXilP3YAAAAHdElNRQflAwUMAxtScck4AAAAGXRFWHRDb21tZW50AENyZWF0ZWQgd2l0aCBHSU1QV4EOFwAAAvJJREFUeNrtm6ua6jAURjuDKS6yjsi65g2I5BHqqONx0Ci+OHAj6xgcMnWtInUdRXB1c0QOl2/uMEB3mX9J1M/qzk4Iuw/er2FH7D+0R3j3wsPZgviOXq/3hayyLM2Otos7WRbnXAgRRZEQwsk6dvQea60zpbXOskxrbYy5f1mccyllv993mr529Jk1rfVyuXx+fm6vsu8XnZRyPB6v1+vXX7Ner8fjsZTyVN2N0/lJQcVxPBqNBoNBEAQXUR+GYRiG3W63qqr72QGEEJcqqM9KTAhxJ6am0+lms3m9GpvNZjqdtt7XDUzdia+bmWqXr86HHX00GsVxfLPdyvd9zrnneUVRUO73nfdbVRzHSZJcZOM7yVcQBNvtNs/zuq7bsQCllIvF4rUhFouFlLIdlcU5Hw6Hg8HA9/2mTr91XRNfjP9JkuRKR6qTDl9JktD083hcVv1+3zXaBiES4xtZQggimzedJB/LYoxFUUTkeXLOoygi+DP78fiWikg+xpi7BaIri1Q4ankg6yxZjDF3j04nFsFIB1kEuynBVJAFWdc+lALIgqwGZdGcSCCYCrIg66qyyrIklYxgpEODd4MudGJRywNZv5CltSZS9tZammNcj/t8WZYRyWeMybKM4J5zOJRqrbXWFDLRSfKpLGPMcrlsvLiIxPiQzptm4SbNmvqT1Vo7m83m83k7Jtzw9/1PK8s92263G4bh7e+SjDFKqTRNyQ6GvJVV13VVVbdfjG4BKqWqqmpNZbncLy8v7rWA2/iy1j49PU0mkzzPW3l3gzFJcr7aZeqrOfiqqsqy9DwvCIJr9HtjzGw2m0wmNI+gp8lyvoqi2G63vu8zxi7Vwqy1q9VKKaWUalGf6vzki+V5XhRFXdcXKbF9QaVpSnnvO0eWO08YY4qi2F/I+b5/apU56WmaKqXm87nWujWDtjvwCt01ZTnwcqZ3trg/8tovAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMA/akkE6ZcBlNMAAAAASUVORK5CYII=</content>
+    <filesize>1289</filesize>
+  </attachment>
+  <object>
+    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>d9819b4c-1d09-40bd-9808-7e705e9c2806</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>12</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>13</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>, </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>action=Aktion|doc.reference=Seite|icon.theme=Icon-Theme|locale=Sprache|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Basis-URL der Anfrage|request.parameters=Parameter in der Anfrage|request.url=URL der Anfrage|request.wiki=Wiki laut Anfrage|user=Benutzer|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>11</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>10</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>9</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content availability</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategory>
+        <disabled>0</disabled>
+        <name>defaultCategory</name>
+        <number>4</number>
+        <prettyName>Default category</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultCategory>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <async_cached>0</async_cached>
+    </property>
+    <property>
+      <async_context/>
+    </property>
+    <property>
+      <async_enabled>0</async_enabled>
+    </property>
+    <property>
+      <code>{{velocity}}
+## Get the parameters and put them in lists if necessary
+#set($title = $wikimacro.parameters.title)
+#set($includeString = $wikimacro.parameters.include)
+#set($excludeString = $wikimacro.parameters.exclude)
+#set($pagesString = $wikimacro.parameters.page)
+#set($include = $stringtool.split($includeString, ","))
+#set($exclude = $stringtool.split($excludeString, ","))
+#set($pages = $stringtool.split($pagesString, ","))
+## Display the gallery title if it is set (newlines are needed for the following macro calls to be standalone)
+#if(!$stringtool.isEmpty($title))
+    ==$title==
+    
+    
+#end
+## add the current page to the page list if no pages were given
+#if($stringtool.isEmpty($pagesString))
+    #set ($pages = [$doc])
+#end
+## Collect the attachments to display
+#set ($attachments = [])
+#foreach($page in $pages)
+    ## Resolve page and put attachments in temporary list
+    #set ($tempAttachments = [])
+    #set($query = $services.query.xwql("where doc.fullName like :name").bindValue('name', '%'+${page}+'%'))
+    #set($pageReference = $query.execute())
+    #set($pageDocument = $xwiki.getDocument($pageReference))
+    #set($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
+    ## iterate over remaining attachments and add full reference to attachment list
+    #foreach($attachment in $tempAttachments)
+        #if($attachment.isImage())
+            ## If includes or excludes are set, remove elements from temporary attachment list
+            #if(!$stringtool.isEmpty($includeString))
+                #if ($include.contains($attachment.filename))
+                    #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                #end
+            #elseif(!$stringtool.isEmpty($excludeString))
+                #if (!$exclude.contains($attachment.filename))
+                    #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                #end
+            #else
+                #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+            #end
+        #end
+    #end
+#end
+## Display the attachments in the gallery
+#if ($attachments.size() &gt; 0)
+    {{gallery}}
+    #foreach($attachment in $attachments)
+        [[image:$attachment]]
+    #end
+    {{/gallery}}
+#end
+{{/velocity}}
+</code>
+    </property>
+    <property>
+      <contentDescription/>
+    </property>
+    <property>
+      <contentJavaType/>
+    </property>
+    <property>
+      <contentType>No content</contentType>
+    </property>
+    <property>
+      <defaultCategory>content</defaultCategory>
+    </property>
+    <property>
+      <description>Bridge for the Confluence gallery macro.</description>
+    </property>
+    <property>
+      <id>confluence_gallery</id>
+    </property>
+    <property>
+      <name>Confluence Gallery </name>
+    </property>
+    <property>
+      <supportsInlineMode>0</supportsInlineMode>
+    </property>
+    <property>
+      <visibility>Current Wiki</visibility>
+    </property>
+  </object>
+  <object>
+    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>ed7ca507-639d-47f1-b68c-5e5fb4bf873e</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Title of the gallery.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>title</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>ea86fd93-88cd-4a08-9af8-7695770ae40d</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Excluded images.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>exclude</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <number>2</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>14c677ca-9d32-4832-a4d8-b8015fecaec1</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Included images.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>include</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>ef32b629-5a94-4b23-8a99-7845372949a9</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Pages containing the images to display.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>page</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+</xwikidoc>
