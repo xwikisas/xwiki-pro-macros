@@ -3,7 +3,7 @@
 Advanced XWiki rendering macros also containing a set of bridge macros useful when migrating content from Confluence.
  
 * Project Lead: [Ludovic Dubost](https://github.com/ldubost)
-* [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/XWikiProMacros)
+* [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/ProMacros)
 * [Issue Tracker](https://github.com/xwikisas/xwiki-pro-macros/issues)
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists>), [IRC]( http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
 * [Development Practices](http://dev.xwiki.org)
