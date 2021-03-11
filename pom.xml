@@ -27,20 +27,20 @@
     <artifactId>xwikisas-parent-platform</artifactId>
     <version>9.11-5</version>
   </parent>
-  <groupId>com.xwiki.confluence</groupId>
-  <artifactId>macros-confluence</artifactId>
+  <groupId>com.xwiki.pro</groupId>
+  <artifactId>xwiki-pro-macros</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>xar</packaging>
-  <name>Confluence Macros</name>
+  <name>XWiki Pro - Macros - Parent POM</name>
   <description>XWiki rendering macros useful when migrating content from Confluence</description>
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/xwikisas/macros-confluence/issues</url>
+    <url>https://github.com/xwikisas/xwiki-pro-macros/issues</url>
   </issueManagement>
   <scm>
-    <connection>scm:git:git://github.com/xwikisas/macros-confluence.git</connection>
-    <developerConnection>scm:git:git@github.com:xwikisas/macros-confluence.git</developerConnection>
-    <url>https://github.com/xwikisas/macros-confluence/tree/master</url>
+    <connection>scm:git:git://github.com/xwikisas/xwiki-pro-macros.git</connection>
+    <developerConnection>scm:git:git@github.com:xwikisas/xwiki-pro-macros.git</developerConnection>
+    <url>https://github.com/xwikisas/xwiki-pro-macros/tree/master</url>
     <tag>HEAD</tag>
   </scm>
   <properties>
