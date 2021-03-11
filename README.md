@@ -1,4 +1,4 @@
-# Confluence Macros
+# Pro Macros
 
 Advanced XWiki rendering macros also containing a set of bridge macros useful when migrating content from Confluence.
  
