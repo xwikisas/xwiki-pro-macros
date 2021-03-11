@@ -41,6 +41,7 @@
     <connection>scm:git:git://github.com/xwikisas/xwiki-pro-macros.git</connection>
     <developerConnection>scm:git:git@github.com:xwikisas/xwiki-pro-macros.git</developerConnection>
     <url>https://github.com/xwikisas/xwiki-pro-macros/tree/master</url>
+    <tag>HEAD</tag>
   </scm>
   <properties>
     <licensing.version>1.16.1</licensing.version>
