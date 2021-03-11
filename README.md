@@ -1,6 +1,6 @@
 # Pro Macros
 
-Advanced XWiki rendering macros also containing a set of bridge macros useful when migrating content from Confluence.
+Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.
  
 * Project Lead: [Ludovic Dubost](https://github.com/ldubost)
 * [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/ProMacros)
