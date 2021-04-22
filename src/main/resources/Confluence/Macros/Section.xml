@@ -48,7 +48,7 @@ Add the Section macro to a page to organise your content in sections and columns
 = Parameters =
 
 |=Parameter|=Name|=Description|=Default value
-|border|Show Border|Select this option to draw a border around the section and columns.|false
+|border|Show Border|Select this option to draw a border around the columns, when they exist.|false
 
 = Examples =
 
@@ -64,7 +64,9 @@ Content of a simple section, without border.
 Content of a simple section, without border.
 {{/section}}
 
-== Simple section with border ==
+== Simple section with border, no column ==
+
+No border is added, because the borders are applied on columns, when they exist.
 
 {{code}}
 {{section border="true"}}
@@ -74,6 +76,22 @@ Content of a simple section, with border.
 
 {{section border="true"}}
 Content of a simple section, with border.
+{{/section}}
+
+== Simple section with border and column ==
+
+{{code}}
+{{section border="true"}}
+{{column}}
+Content of a simple section, with border.
+{{/column}}
+{{/section}}
+{{/code}}
+
+{{section border="true"}}
+{{column}}
+Content of a simple section, with border.
+{{/column}}
 {{/section}}
 
 == Section with 4 columns ==
@@ -548,7 +566,7 @@ Content in the column 4
       </type>
     </class>
     <property>
-      <defaultValue>0</defaultValue>
+      <defaultValue>false</defaultValue>
     </property>
     <property>
       <description/>
