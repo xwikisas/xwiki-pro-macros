@@ -65,7 +65,10 @@ rendering.macro.column.description=Add the column macro to a page to organize yo
 rendering.macro.column.content.description=Add the Column content
 rendering.macro.column.parameter.width.name=Width
 rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
-</content>
+
+## Note macro
+rendering.macro.note.name=Note
+rendering.macro.note.description=Add a Note macro to your page to make important information stand out. The macro is used to format your text in a colored panel.</content>
   <object>
     <name>Confluence.Macros.Translations</name>
     <number>0</number>
