@@ -51,7 +51,6 @@ $services.localization.render('rendering.macro.panel.description')
 | bgColor | $services.localization.render('rendering.macro.panel.parameter.bgColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.bgColor.description')
 | contentTextColor | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.description')
 | width | $services.localization.render('rendering.macro.panel.parameter.width.name') | - | $services.localization.render('rendering.macro.panel.parameter.width.description')
-| height | $services.localization.render('rendering.macro.panel.parameter.height.name') | - | $services.localization.render('rendering.macro.panel.parameter.height.description')
 | classes | $services.localization.render('rendering.macro.panel.parameter.classes.name')  | - | $services.localization.render('rendering.macro.panel.parameter.classes.description')
 | borderColor | $services.localization.render('rendering.macro.panel.parameter.borderColor.name') |white| $services.localization.render('rendering.macro.panel.parameter.borderColor.description')
 | borderStyle | $services.localization.render('rendering.macro.panel.parameter.borderStyle.name') |solid | $services.localization.render('rendering.macro.panel.parameter.borderStyle.description')
@@ -437,15 +436,11 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
 #set ($titleBGColor = "$!xcontext.macro.params.titleBGColor")
 #set ($titleColor = "$!xcontext.macro.params.titleColor")
 #set ($width = "$!xcontext.macro.params.width")
-#set ($height = "$!xcontext.macro.params.height")
 #set ($classes = "$!xcontext.macro.params.classes")
 ## Panel border style
 #set ($panelBorderStyle = '')
 #if ($width != '')
   #set ($panelBorderStyle = "${panelBorderStyle}width: $width; ")
-#end
-#if ($height != '')
-  #set ($panelBorderStyle = "${panelBorderStyle}height: $height; ")
 #end
 #if ($borderStyle != '')
   #set ($panelBorderStyle = "${panelBorderStyle}border: $borderStyle; ")
@@ -935,7 +930,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     <name>XWiki.Macros.Panel</name>
     <number>5</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>aae665df-f10e-4573-ab6d-a132cfd03913</guid>
+    <guid>76118ec3-ca8b-4b47-b3df-c1b2a39763b9</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1013,7 +1008,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     <name>XWiki.Macros.Panel</name>
     <number>6</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>76118ec3-ca8b-4b47-b3df-c1b2a39763b9</guid>
+    <guid>1cd6706e-3168-45eb-b332-fcbbf0a24f18</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1091,7 +1086,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     <name>XWiki.Macros.Panel</name>
     <number>7</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>1cd6706e-3168-45eb-b332-fcbbf0a24f18</guid>
+    <guid>a9f07cdd-ae3e-41e4-8be7-c55bfbe1fa35</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1169,7 +1164,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     <name>XWiki.Macros.Panel</name>
     <number>8</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>a9f07cdd-ae3e-41e4-8be7-c55bfbe1fa35</guid>
+    <guid>ec52b2a7-8a28-4d48-bbd4-37d945fd9de2</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1245,87 +1240,9 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   </object>
   <object>
     <name>XWiki.Macros.Panel</name>
-    <number>9</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>ec52b2a7-8a28-4d48-bbd4-37d945fd9de2</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>Panel height (300px or 50%)</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>height</name>
-    </property>
-    <property>
-      <type/>
-    </property>
-  </object>
-  <object>
-    <name>XWiki.Macros.Panel</name>
     <number>10</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>244f9186-134c-4726-8737-e4bf8689b4f3</guid>
+    <guid>a6c23206-acb9-4674-8029-afa6bf367672</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1403,7 +1320,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     <name>XWiki.Macros.Panel</name>
     <number>11</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>a6c23206-acb9-4674-8029-afa6bf367672</guid>
+    <guid>aae665df-f10e-4573-ab6d-a132cfd03913</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>

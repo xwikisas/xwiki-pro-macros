@@ -63,8 +63,6 @@ rendering.macro.panel.parameter.borderRadius.name=Border radius
 rendering.macro.panel.parameter.borderRadius.description=If specified, replaces the default border radius
 rendering.macro.panel.parameter.width.name=Width
 rendering.macro.panel.parameter.width.description=If specified, sets the width of the panel (300px or 50%).
-rendering.macro.panel.parameter.height.name=Height
-rendering.macro.panel.parameter.height.description=If specified, sets the width of the panel (300px or 50%).
 rendering.macro.panel.parameter.classes.name=CSS classes
 rendering.macro.panel.parameter.classes.description= If specified adds css classes to the panel.
 
