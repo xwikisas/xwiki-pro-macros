@@ -377,7 +377,7 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
 #if ($subtle == 'true')
   #set ($statusCssClass = "$statusCssClass subtle")
 #end
-{{html clean="false"}}
+{{html}}
   &lt;span class="$statusCssClass" title="$title"&gt;$title&lt;/span&gt;
 {{/html}}
 {{/velocity}}</code>
