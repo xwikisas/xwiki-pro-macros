@@ -46,7 +46,7 @@ The Content Report Table macro is a bridge between Confluence and XWiki. It prov
 
 |=Parameter|=Description|=Required|=Default
 |**labels**|The labels (tags) to report on, separated by comma.|Yes|
-|**spaces**|The space keys to report on.|No|
+|**spaces**|The space keys to report on, separated by a comma and a blank space (e.g: "Confluence, XWiki")|No|
 |**maxResults**|Maximum Number of results (pages).|No|20
 
 = Example of usage =
@@ -314,11 +314,11 @@ The result is the following :
 })
 #if("$!spaces" != '')
   #foreach($space in $spaces.split('(?&lt;!\\\\), '))
-    #if($foreach.index &gt; 1)
+    #if($foreach.index &gt; 0)
       #set($statement = $statement + ' or ')
     #end
     #set($statement = $statement + "doc.space like :space$foreach.index")
-    #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('.%')))
+    #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
   #end
   #set($statement = $statement + ')')
 #end
