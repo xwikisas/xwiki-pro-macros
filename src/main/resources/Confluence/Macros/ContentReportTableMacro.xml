@@ -302,7 +302,7 @@ The result is the following :
 ## Searching for the matching pages
 #set($statement = 'select distinct doc.fullName, doc.title, doc.creator, doc.date from XWikiDocument doc, BaseObject as obj, DBStringListProperty as prop
                    join prop.list item where obj.className = :className and obj.name = doc.fullName and obj.id = prop.id.id
-                   and prop.id.name = :propName  and lower(item) in (:labelsList) and (')
+                   and prop.id.name = :propName  and lower(item) in (:labelsList)')
 #set($lowerCaseLabelList = [])
 #foreach($label in $labels.split(','))
   #set($discard = $lowerCaseLabelList.add($label.toLowerCase()))
@@ -313,6 +313,7 @@ The result is the following :
   'labelsList': $lowerCaseLabelList
 })
 #if("$!spaces" != '')
+  #set ($statement = $statement + ' and (')
   #foreach($space in $spaces.split('(?&lt;!\\\\), '))
     #if($foreach.index &gt; 0)
       #set($statement = $statement + ' or ')
@@ -320,8 +321,9 @@ The result is the following :
     #set($statement = $statement + "doc.space like :space$foreach.index")
     #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
   #end
-  #set($statement = $statement + ') order by doc.date desc')
+  #set($statement = $statement + ')')
 #end
+#set ($statement = $statement + ' order by doc.date desc')
 #set($query = $services.query.hql($statement))
 #set($discard = $query.bindValues($params))
 #if("$!maxResults" != '')
