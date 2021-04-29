@@ -342,7 +342,7 @@ The result is the following :
       <contentJavaType></contentJavaType>
     </property>
     <property>
-      <contentType></contentType>
+      <contentType>No content</contentType>
     </property>
     <property>
       <defaultCategory>content</defaultCategory>
