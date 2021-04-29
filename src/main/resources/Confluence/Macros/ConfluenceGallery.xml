@@ -44,7 +44,9 @@ The Confluence Gallery macro is a bridge between Confluence and XWiki. This brid
 Only a subset of the parameters supported by the Confluence macro are supported by this bridge macro: title, exclude, include and page. The remaining parameters are ignored:
 columns does not make sense for the XWiki macro as the images are displayed differently
 excludeLabel and includeLabel are not supported since XWiki does not support attachment tags
-sort and reverse have just not been implemented in this bridge macro
+sort and reverse have not been implemented in this bridge macro
+    
+NOTE: The page parameter currently does not work.
 
 = Parameters =
 
