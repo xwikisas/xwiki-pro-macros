@@ -446,7 +446,7 @@ Content in the column 4
       <contentJavaType>Wiki</contentJavaType>
     </property>
     <property>
-      <contentType/>
+      <contentType>Mandatory</contentType>
     </property>
     <property>
       <defaultCategory/>

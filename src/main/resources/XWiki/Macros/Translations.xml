@@ -42,7 +42,7 @@
   <content>## Panel macro
 rendering.macro.panel.name=Panel Macro
 rendering.macro.panel.description=Panel macro to display XWiki content inside a panel.
-rendering.macro.panel.content.description=Add the Panel content. It XWiki 2.1 syntax.
+rendering.macro.panel.content.description=Add the Panel content. It supports XWiki 2.1 syntax.
 rendering.macro.panel.parameter.title.name=Title
 rendering.macro.panel.parameter.title.description=The title of the panel. If specified, this title will be displayed in its own title row.
 rendering.macro.panel.parameter.titleColor.name=Title Text Color
@@ -50,7 +50,9 @@ rendering.macro.panel.parameter.titleColor.description=The color of the text in 
 rendering.macro.panel.parameter.titleBGColor.name=Title background color
 rendering.macro.panel.parameter.titleBGColor.description=The background color of the title row of the panel. Colors can be specified as HTML color names or hexadecimal codes.
 rendering.macro.panel.parameter.bgColor.name=Background color
-rendering.macro.panel.parameter.bgColor.description=If specified, sets the background color of the content of the panel.
+rendering.macro.panel.parameter.bgColor.description=If specified, sets the background color of the content of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+rendering.macro.panel.parameter.contentTextColor.name=Content text color
+rendering.macro.panel.parameter.contentTextColor.description=If specified, sets the text color of the content of the panel. Colors can be specified as HTML color names or hexadecimal codes.
 rendering.macro.panel.parameter.borderStyle.name=Border style
 rendering.macro.panel.parameter.borderStyle.description=The style of the panel's border. Accepted values are solid, dashed and other valid CSS border styles.
 rendering.macro.panel.parameter.borderColor.name=Border color 
@@ -61,8 +63,6 @@ rendering.macro.panel.parameter.borderRadius.name=Border radius
 rendering.macro.panel.parameter.borderRadius.description=If specified, replaces the default border radius
 rendering.macro.panel.parameter.width.name=Width
 rendering.macro.panel.parameter.width.description=If specified, sets the width of the panel (300px or 50%).
-rendering.macro.panel.parameter.height.name=Height
-rendering.macro.panel.parameter.height.description=If specified, sets the width of the panel (300px or 50%).
 rendering.macro.panel.parameter.classes.name=CSS classes
 rendering.macro.panel.parameter.classes.description= If specified adds css classes to the panel.
 
