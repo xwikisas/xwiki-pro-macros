@@ -310,18 +310,18 @@ Please inspect the page, because the details are hidden, so you don't see them i
 #set($tags = $services.query.xwql('select distinct obj.tags from Document doc, doc.object(XWiki.TagClass) as obj where doc.fullName = :docFullName').bindValue('docFullName', $doc.fullName).execute())
 #if($tags.size() &gt; 0)
   #set($statement = 'select distinct doc.fullName, doc.title from XWikiDocument doc, BaseObject as obj, DBStringListProperty as prop
-                     join prop.list item where obj.className = ? and obj.name = doc.fullName and obj.id = prop.id.id
-                     and prop.id.name = ? and (')
-  #set($params = ['XWiki.TagClass', 'tags'])
+                     join prop.list item where obj.className = :className and obj.name = doc.fullName and obj.id = prop.id.id
+                     and prop.id.name = :propName and lower(item) in (:tagsList)')
+  #set($lowerCaseTagsList = [])
   #foreach($tag in $tags)
-    #if($foreach.index &gt; 0)
-      #set($statement = $statement + ' or ')
-    #end
-    #set($statement = $statement + 'lower(item)=lower(?)')
-    #set($discard = $params.add($tag))
+    #set($discard = $lowerCaseTagsList.add($tag.toLowerCase()))
   #end
-  #set($statement = $statement + ')')
-  #set($results = $services.query.hql($statement).bindValues($params).bindValues($params).execute())
+  #set($params = {
+    'className': 'XWiki.TagClass',
+    'propName': 'tags',
+    'tagsList': $lowerCaseTagsList
+  })
+  #set($results = $services.query.hql($statement).bindValues($params).execute())
   (% class="page-details#if($hidden) hidden#end" #if("$!id" != '')id="${id}"#end %)(((
     #foreach($result in $results)
       [[(% class="fa fa-file" %) (%%)$result.get(1)&gt;&gt;$result.get(0)]]
