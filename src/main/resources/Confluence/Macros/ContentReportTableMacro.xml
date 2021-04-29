@@ -320,7 +320,7 @@ The result is the following :
     #set($statement = $statement + "doc.space like :space$foreach.index")
     #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
   #end
-  #set($statement = $statement + ')')
+  #set($statement = $statement + ') order by doc.date desc')
 #end
 #set($query = $services.query.hql($statement))
 #set($discard = $query.bindValues($params))
