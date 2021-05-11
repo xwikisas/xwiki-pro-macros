@@ -42,11 +42,9 @@
 The Confluence Gallery macro is a bridge between Confluence and XWiki. This bridge uses the XWiki implementation of the Gallery amcro under the hood and therefore assumes that the Confluence gallery macro is prefixed during import. There are two things to note:
 
 Only a subset of the parameters supported by the Confluence macro are supported by this bridge macro: title, exclude, include and page. The remaining parameters are ignored:
-columns does not make sense for the XWiki macro as the images are displayed differently
-excludeLabel and includeLabel are not supported since XWiki does not support attachment tags
-sort and reverse have not been implemented in this bridge macro
-    
-NOTE: The page parameter currently does not work.
+* columns does not make sense for the XWiki macro as the images are displayed differently
+* excludeLabel and includeLabel are not supported since XWiki does not support attachment tags
+* sort and reverse have not been implemented in this bridge macro
 
 = Parameters =
 
@@ -91,12 +89,12 @@ The result is the following :
 == All images of the Sandbox page ==
 
 {{code}}
-{{confluence_gallery page="Sandbox"/}}
+{{confluence_gallery page="Sandbox" title="Sandbox images"/}}
 {{/code}}
 
 The result is the following :
 
-{{confluence_gallery page="Sandbox"/}}</content>
+{{confluence_gallery page="Sandbox" title="Sandbox images"/}}</content>
   <attachment>
     <filename>img1.png</filename>
     <mimetype>image/png</mimetype>
@@ -340,37 +338,39 @@ The result is the following :
 #end
 ## add the current page to the page list if no pages were given
 #if($stringtool.isEmpty($pagesString))
-    #set ($pages = [$doc])
+    #set ($pages = [$doc.getTitle()])
 #end
 ## Collect the attachments to display
 #set ($attachments = [])
 #foreach($page in $pages)
     ## Resolve page and put attachments in temporary list
     #set ($tempAttachments = [])
-    #set($query = $services.query.xwql("where doc.fullName like :name").bindValue('name', '%'+${page}+'%'))
-    #set($pageReference = $query.execute())
-    #set($pageDocument = $xwiki.getDocument($pageReference))
-    #set($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
-    ## iterate over remaining attachments and add full reference to attachment list
-    #foreach($attachment in $tempAttachments)
-        #if($attachment.isImage())
-            ## If includes or excludes are set, remove elements from temporary attachment list
-            #if(!$stringtool.isEmpty($includeString))
-                #if ($include.contains($attachment.filename))
+    #set($query = $services.query.xwql("where doc.title = :name").bindValue('name', ''+${page}))
+    #set($pageStrings = $query.execute())
+    #if ($pageStrings.size() > 0)
+        #set($pageDocument = $xwiki.getDocument($pageStrings[0]))
+        #set($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
+        ## iterate over remaining attachments and add full reference to attachment list
+        #foreach($attachment in $tempAttachments)
+            #if($attachment.isImage())
+                ## If includes or excludes are set, remove elements from temporary attachment list
+                #if(!$stringtool.isEmpty($includeString))
+                    #if ($include.contains($attachment.filename))
+                        #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                    #end
+                #elseif(!$stringtool.isEmpty($excludeString))
+                    #if (!$exclude.contains($attachment.filename))
+                        #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                    #end
+                #else
                     #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
                 #end
-            #elseif(!$stringtool.isEmpty($excludeString))
-                #if (!$exclude.contains($attachment.filename))
-                    #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
-                #end
-            #else
-                #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
             #end
         #end
     #end
 #end
 ## Display the attachments in the gallery
-#if ($attachments.size() &gt; 0)
+#if ($attachments.size() > 0)
     {{gallery}}
     #foreach($attachment in $attachments)
         [[image:$attachment]]
