@@ -600,7 +600,7 @@ The result is the following :
   #set($discard = $xwiki.jsx.use('Confluence.Macros.Gliffy'))
   #set($discard = $xwiki.ssx.use('Confluence.Macros.Gliffy'))
   ## Macro parameters
-  #set($diagramName = $wikimacro.parameters.get('name'))
+  #set($diagramName = $xcontext.macro.params.name)
   ## "Constants"
   #set($previewImageName = "${diagramName}.png")
   #set($previewImage = $doc.getAttachment($previewImageName))
