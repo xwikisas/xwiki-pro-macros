@@ -347,7 +347,7 @@ The result is the following :
     #set ($tempAttachments = [])
     #set($query = $services.query.xwql("where doc.title = :name").bindValue('name', ''+${page}))
     #set($pageStrings = $query.execute())
-    #if ($pageStrings.size() > 0)
+    #if ($pageStrings.size() &gt; 0)
         #set($pageDocument = $xwiki.getDocument($pageStrings[0]))
         #set($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
         ## iterate over remaining attachments and add full reference to attachment list
@@ -370,7 +370,7 @@ The result is the following :
     #end
 #end
 ## Display the attachments in the gallery
-#if ($attachments.size() > 0)
+#if ($attachments.size() &gt; 0)
     {{gallery}}
     #foreach($attachment in $attachments)
         [[image:$attachment]]
