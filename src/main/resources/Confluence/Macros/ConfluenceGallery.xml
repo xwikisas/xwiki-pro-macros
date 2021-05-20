@@ -327,9 +327,9 @@ The result is the following :
 #set ($includeString = $wikimacro.parameters.include)
 #set ($excludeString = $wikimacro.parameters.exclude)
 #set ($pagesString = $wikimacro.parameters.page)
-#set ($include = $stringtool.split($includeString, ","))
-#set ($exclude = $stringtool.split($excludeString, ","))
-#set ($pages = $stringtool.split($pagesString, ","))
+#set ($include = $includeString.split(','))
+#set ($exclude = $excludeString.split(','))
+#set ($pages = $pagesString.split(','))
 ## Display the gallery title if it is set (newlines are needed for the following macro calls to be standalone)
 #if (!$stringtool.isEmpty($title))
     ==$title==
