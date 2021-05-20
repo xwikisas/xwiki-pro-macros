@@ -351,7 +351,7 @@ The result is the following :
     ## iterate over remaining attachments and add full reference to attachment list
     #foreach ($attachment in $tempAttachments)
       #if ($attachment.isImage())
-        ## If includes or excludes are set, remove elements from temporary attachment list
+        ## If includes or excludes are set, only get the desired entries from the temporary attachment list
         #if ("$!includeString" != '')
           #if ($include.contains($attachment.filename))
             #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
