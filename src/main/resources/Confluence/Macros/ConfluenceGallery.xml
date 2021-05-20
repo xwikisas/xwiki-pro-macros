@@ -345,7 +345,7 @@ The result is the following :
 #foreach($page in $pages)
     ## Resolve page and put attachments in temporary list
     #set ($tempAttachments = [])
-    #set($query = $services.query.xwql("where doc.title = :name").bindValue('name', ''+${page}))
+    #set ($query = $services.query.xwql('where doc.title = :name').bindValue('name', $page))
     #set($pageStrings = $query.execute())
     #if ($pageStrings.size() &gt; 0)
         #set($pageDocument = $xwiki.getDocument($pageStrings[0]))
