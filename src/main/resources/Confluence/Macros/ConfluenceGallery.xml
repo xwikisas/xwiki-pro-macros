@@ -331,11 +331,11 @@ The result is the following :
 #set ($exclude = $excludeString.split(','))
 #set ($pages = $pagesString.split(','))
 ## Display the gallery title if it is set (newlines are needed for the following macro calls to be standalone)
-#if (!$stringtool.isEmpty($title))
+#if ("$!title" != '')
   ==$title==
 #end
 ## add the current page to the page list if no pages were given
-#if ($stringtool.isEmpty($pagesString))
+#if ("$!pagesString" == ''))
   #set ($pages = [$doc.getTitle()])
 #end
 ## Collect the attachments to display
@@ -352,11 +352,11 @@ The result is the following :
     #foreach ($attachment in $tempAttachments)
       #if ($attachment.isImage())
         ## If includes or excludes are set, remove elements from temporary attachment list
-        #if (!$stringtool.isEmpty($includeString))
+        #if ("$!includeString" != '')
           #if ($include.contains($attachment.filename))
             #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
           #end
-        #elseif (!$stringtool.isEmpty($excludeString))
+        #elseif ("$!excludeString" != ''))
           #if (!$exclude.contains($attachment.filename))
             #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
           #end
