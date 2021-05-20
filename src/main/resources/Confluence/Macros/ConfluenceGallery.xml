@@ -335,7 +335,7 @@ The result is the following :
   ==$title==
 #end
 ## add the current page to the page list if no pages were given
-#if ("$!pagesString" == ''))
+#if ("$!pagesString" == '')
   #set ($pages = [$doc.getTitle()])
 #end
 ## Collect the attachments to display
@@ -356,7 +356,7 @@ The result is the following :
           #if ($include.contains($attachment.filename))
             #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
           #end
-        #elseif ("$!excludeString" != ''))
+        #elseif ("$!excludeString" != '')
           #if (!$exclude.contains($attachment.filename))
             #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
           #end
