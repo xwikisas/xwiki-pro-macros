@@ -323,47 +323,47 @@ The result is the following :
     <property>
       <code>{{velocity}}
 ## Get the parameters and put them in lists if necessary
-#set($title = $wikimacro.parameters.title)
-#set($includeString = $wikimacro.parameters.include)
-#set($excludeString = $wikimacro.parameters.exclude)
-#set($pagesString = $wikimacro.parameters.page)
-#set($include = $stringtool.split($includeString, ","))
-#set($exclude = $stringtool.split($excludeString, ","))
-#set($pages = $stringtool.split($pagesString, ","))
+#set ($title = $wikimacro.parameters.title)
+#set ($includeString = $wikimacro.parameters.include)
+#set ($excludeString = $wikimacro.parameters.exclude)
+#set ($pagesString = $wikimacro.parameters.page)
+#set ($include = $stringtool.split($includeString, ","))
+#set ($exclude = $stringtool.split($excludeString, ","))
+#set ($pages = $stringtool.split($pagesString, ","))
 ## Display the gallery title if it is set (newlines are needed for the following macro calls to be standalone)
-#if(!$stringtool.isEmpty($title))
+#if (!$stringtool.isEmpty($title))
     ==$title==
     
     
 #end
 ## add the current page to the page list if no pages were given
-#if($stringtool.isEmpty($pagesString))
+#if ($stringtool.isEmpty($pagesString))
     #set ($pages = [$doc.getTitle()])
 #end
 ## Collect the attachments to display
 #set ($attachments = [])
-#foreach($page in $pages)
+#foreach ($page in $pages)
     ## Resolve page and put attachments in temporary list
     #set ($tempAttachments = [])
     #set ($query = $services.query.xwql('where doc.title = :name').bindValue('name', $page))
-    #set($pageStrings = $query.execute())
+    #set ($pageStrings = $query.execute())
     #if ($pageStrings.size() &gt; 0)
-        #set($pageDocument = $xwiki.getDocument($pageStrings[0]))
-        #set($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
+        #set ($pageDocument = $xwiki.getDocument($pageStrings[0]))
+        #set ($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
         ## iterate over remaining attachments and add full reference to attachment list
-        #foreach($attachment in $tempAttachments)
-            #if($attachment.isImage())
+        #foreach ($attachment in $tempAttachments)
+            #if ($attachment.isImage())
                 ## If includes or excludes are set, remove elements from temporary attachment list
-                #if(!$stringtool.isEmpty($includeString))
+                #if (!$stringtool.isEmpty($includeString))
                     #if ($include.contains($attachment.filename))
-                        #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                        #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
                     #end
-                #elseif(!$stringtool.isEmpty($excludeString))
+                #elseif (!$stringtool.isEmpty($excludeString))
                     #if (!$exclude.contains($attachment.filename))
-                        #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                        #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
                     #end
                 #else
-                    #set($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
+                    #set ($discard = $attachments.add($pageDocument+'@'+$attachment.filename))
                 #end
             #end
         #end
@@ -372,7 +372,7 @@ The result is the following :
 ## Display the attachments in the gallery
 #if ($attachments.size() &gt; 0)
     {{gallery}}
-    #foreach($attachment in $attachments)
+    #foreach ($attachment in $attachments)
         [[image:$attachment]]
     #end
     {{/gallery}}
