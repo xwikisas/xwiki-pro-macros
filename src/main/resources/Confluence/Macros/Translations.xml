@@ -68,7 +68,10 @@ rendering.macro.column.parameter.width.description=The width of the column. Can 
 
 ## Note macro
 rendering.macro.note.name=Note
-rendering.macro.note.description=Add a Note macro to your page to make important information stand out. The macro is used to format your text in a colored panel.</content>
+rendering.macro.note.description=Add a Note macro to your page to make important information stand out. The macro is used to format your text in a colored panel.
+
+## Content Report Table Macro
+contentReportTable.header.modified=Modified</content>
   <object>
     <name>Confluence.Macros.Translations</name>
     <number>0</number>

@@ -46,7 +46,7 @@ The Content Report Table macro is a bridge between Confluence and XWiki. It prov
 
 |=Parameter|=Description|=Required|=Default
 |**labels**|The labels (tags) to report on, separated by comma.|Yes|
-|**spaces**|The space keys to report on.|No|
+|**spaces**|The space keys to report on, separated by a comma and a blank space (e.g: "Confluence, XWiki")|No|
 |**maxResults**|Maximum Number of results (pages).|No|20
 
 = Example of usage =
@@ -301,28 +301,29 @@ The result is the following :
 #end
 ## Searching for the matching pages
 #set($statement = 'select distinct doc.fullName, doc.title, doc.creator, doc.date from XWikiDocument doc, BaseObject as obj, DBStringListProperty as prop
-                   join prop.list item where obj.className = ? and obj.name = doc.fullName and obj.id = prop.id.id
-                   and prop.id.name=? and (')
-#set($params = ['XWiki.TagClass', 'tags'])
+                   join prop.list item where obj.className = :className and obj.name = doc.fullName and obj.id = prop.id.id
+                   and prop.id.name = :propName  and lower(item) in (:labelsList)')
+#set($lowerCaseLabelList = [])
 #foreach($label in $labels.split(','))
-  #if($foreach.index &gt; 0)
-    #set($statement = $statement + ' or ')
-  #end
-  #set($statement = $statement + 'lower(item)=lower(?)')
-  #set($discard = $params.add($label))
+  #set($discard = $lowerCaseLabelList.add($label.toLowerCase()))
 #end
-#set($statement = $statement + ')')
+#set($params = {
+  'className': 'XWiki.TagClass',
+  'propName': 'tags',
+  'labelsList': $lowerCaseLabelList
+})
 #if("$!spaces" != '')
-  #set($statement = $statement + ' and (')
+  #set ($statement = $statement + ' and (')
   #foreach($space in $spaces.split('(?&lt;!\\\\), '))
-    #if($foreach.index &gt; 1)
+    #if($foreach.index &gt; 0)
       #set($statement = $statement + ' or ')
     #end
-    #set($statement = $statement + 'doc.space like ?')
-    #set($discard = $params.add($space.replaceAll('([%_!])', '!$1').concat('.%')))
+    #set($statement = $statement + "doc.space like :space$foreach.index")
+    #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
   #end
   #set($statement = $statement + ')')
 #end
+#set ($statement = $statement + ' order by doc.date desc')
 #set($query = $services.query.hql($statement))
 #set($discard = $query.bindValues($params))
 #if("$!maxResults" != '')
@@ -330,7 +331,7 @@ The result is the following :
 #end
 #set($results = $query.execute())
 ## Table display
-|=$services.localization.render('xe.index.doc.name')|=$services.localization.render('xe.index.doc.author')|=$services.localization.render('xe.index.doc.date')
+|=$services.localization.render('titlefield')|=$services.localization.render('creator')|=$services.localization.render('contentReportTable.header.modified')
 #foreach($result in $results)
   |[[$result.get(1)&gt;&gt;$result.get(0)]]|{{html clean="false"}}$xwiki.getUserName($result.get(2), true){{/html}}|$datetool.format('MMM dd, yyyy', $result.get(3))
 #end
@@ -343,7 +344,7 @@ The result is the following :
       <contentJavaType></contentJavaType>
     </property>
     <property>
-      <contentType></contentType>
+      <contentType>No content</contentType>
     </property>
     <property>
       <defaultCategory>content</defaultCategory>
