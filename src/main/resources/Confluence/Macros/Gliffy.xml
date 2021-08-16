@@ -39,7 +39,20 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>= Description =
+  <content>{{velocity}}
+#if (!$services.diagram)
+  {{warning}}
+    #set ($queryString = $escapetool.url({
+      'section': 'XWiki.Extensions',
+      'search': 'Diagram'
+    }))
+    #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
+    $services.localization.render('gliffy.diagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"])
+  {{/warning}}
+#end
+{{/velocity}}
+
+= Description =
 
 The Gliffy macro is a bridge between Gliffy macro used in Confluence and the [[Diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]] macro used in XWiki. The aim of this macro is to allow users to view and also to modify the diagrams migrated from Confluence. By default, the macro displays the preview of the Gliffy diagram. The user can create the editable version of the diagram, by using its representation into an XWiki diagram, having always the option to go back to the preview of the original diagram.
 
@@ -597,6 +610,16 @@ The result is the following :
 {{/velocity}}
 
 {{velocity}}
+#if (!$services.diagram)
+  {{warning}}
+    #set ($queryString = $escapetool.url({
+      'section': 'XWiki.Extensions',
+      'search': 'Diagram'
+    }))
+    #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
+    $services.localization.render('gliffy.diagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"])
+  {{/warning}}
+#else
   #set($discard = $xwiki.jsx.use('Confluence.Macros.Gliffy'))
   #set($discard = $xwiki.ssx.use('Confluence.Macros.Gliffy'))
   ## Macro parameters
@@ -661,6 +684,7 @@ The result is the following :
       #end
     #end
   )))
+#end
 {{/velocity}}</code>
     </property>
     <property>
