@@ -1,0 +1,418 @@
+<?xml version='1.0' encoding='UTF-8'?><!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.DetailsSummaryMacro" locale="">
+  <web>Confluence.Macros</web>
+  <name>DetailsSummaryMacro</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>1622105633000</creationDate>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>1625122856000</date>
+  <contentUpdateDate>1622106679000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Page Properties Report Macro</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>= Description =
+
+Use the Page Properties Report macro (or Details Summary macro) to display a table summarizing the contents of multiple Page Properties macros. This is a simplified macro which summarizes the Page Properties macros of all subpages where used. The original macro uses parameters to select the pages to be summarized.
+
+= Parameters =
+
+None implemented.
+
+= Examples of usage =
+
+== Display a summary of the Page Properties macros of all subpages ==
+
+{{code}}
+{{detailssummary/}}
+{{/code}}
+
+The result is empty since this page has no subpages:
+
+{{detailssummary/}}</content>
+  <object>
+    <name>Confluence.Macros.PagePropertiesReport.WebHome</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>275189b6-a2b7-49b7-9da5-77116dc5cca8</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>12</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>13</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>, </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>11</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>10</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>9</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content availability</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategory>
+        <disabled>0</disabled>
+        <name>defaultCategory</name>
+        <number>4</number>
+        <prettyName>Default category</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultCategory>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <async_cached>0</async_cached>
+    </property>
+    <property>
+      <async_context/>
+    </property>
+    <property>
+      <async_enabled>0</async_enabled>
+    </property>
+    <property>
+      <code>{{groovy}}&#xd;
+// use groovy to create input form and get the list of columns for the livetable&#xd;
+import java.util.regex.Pattern&#xd;
+import org.xwiki.rendering.block.match.*;&#xd;
+import org.xwiki.rendering.block.*;&#xd;
+&#xd;
+// debug handling&#xd;
+debug = ""&#xd;
+&#xd;
+def addDebug(msg) {&#xd;
+  if (request.debug)&#xd;
+    debug += msg + "\n";&#xd;
+}&#xd;
+&#xd;
+// define functions for parsing details macros, based on code by Ludovic Dubost&#xd;
+def findInDropDownAndLinks(xdom, data) {&#xd;
+  data.optionvalue = ""&#xd;
+  data.optionid = ""&#xd;
+  data.links = []&#xd;
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
+  for (def block in blocks) {&#xd;
+    addDebug("Found easy dropdown")&#xd;
+    if (block.getId().startsWith("easy-dropdown")) {&#xd;
+     data.optionvalue = block.getParameter("current-option-value")&#xd;
+     if (data.optionvalue==null)&#xd;
+       data.optionvalue = ""&#xd;
+     data.optionid = block.getParameter("option-id")&#xd;
+     if (data.optionid==null)&#xd;
+       data.optionid = ""&#xd;
+    }&#xd;
+  }&#xd;
+  blocks = xdom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);&#xd;
+  for (def block in blocks) {&#xd;
+    addDebug("Found link")&#xd;
+    data.links.add(block.getReference().getReference().toString())&#xd;
+  }&#xd;
+}&#xd;
+&#xd;
+def findInXDOMDetails(xdom, result) {&#xd;
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(TableRowBlock.class), Block.Axes.DESCENDANT);&#xd;
+  for (def block in blocks) {&#xd;
+    block1 = block.getChildren()[0]&#xd;
+    block2 = block.getChildren()[1]&#xd;
+    def content1 = ""&#xd;
+    def contentWiki = ""&#xd;
+    def contentPlain = ""&#xd;
+    if (block1==null) {&#xd;
+      addDebug("Found empty table block1")&#xd;
+    } else {&#xd;
+      content1 = services.rendering.render(block1.getChildren()[0], 'plain/1.0')&#xd;
+    }&#xd;
+    if (block2==null) {&#xd;
+      addDebug("Found empty table block2")&#xd;
+      // contentWiki = services.rendering.render(block, 'xwiki/2.1')&#xd;
+    } else {&#xd;
+     contentWiki = services.rendering.render(block2.getChildren()[0], 'xwiki/2.1')&#xd;
+     contentPlain = services.rendering.render(block2.getChildren()[0], 'plain/1.0')&#xd;
+    }&#xd;
+    if (content1.trim()!="" &amp;&amp; block2!=null) {&#xd;
+      result[content1.trim()] = [ text : contentPlain, wiki: contentWiki];&#xd;
+      findInDropDownAndLinks(block2, result[content1.trim()])&#xd;
+    }&#xd;
+  }&#xd;
+}&#xd;
+&#xd;
+def findInXDOM(xdom, result) {&#xd;
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
+  for (def block in blocks) {&#xd;
+    def content = block.getContent()&#xd;
+    if (content!=null &amp;&amp; content!="") {&#xd;
+      def newxdom = services.rendering.parse(content, 'xwiki/2.1')&#xd;
+      findInXDOM(newxdom, result);&#xd;
+      if (block.getId()=="details") {&#xd;
+        addDebug("Found details macro block")&#xd;
+        def details_id = block.getParameter("id")&#xd;
+        if (details_id == null || details_id == '') {&#xd;
+          details_id = block.hashCode()&#xd;
+        }&#xd;
+        result[details_id] = [:];&#xd;
+        findInXDOMDetails(newxdom, result[details_id])&#xd;
+      }&#xd;
+    }&#xd;
+  }&#xd;
+}&#xd;
+&#xd;
+def findData(page) {&#xd;
+  def result = [:]&#xd;
+  addDebug("Checking page " + page)&#xd;
+  def pageDoc = xwiki.getDocument(page)&#xd;
+  def xdom = pageDoc.getXDOM()&#xd;
+  findInXDOM(xdom, result)&#xd;
+  return result;&#xd;
+}&#xd;
+&#xd;
+// initialize column set needed for livetable configuration&#xd;
+Set columns = ["Title"]&#xd;
+&#xd;
+// use the full document name without '.WebHome' to find subpages&#xd;
+def fullName = doc.getFullName()&#xd;
+def webHomeIndex = fullName.lastIndexOf(".WebHome")&#xd;
+if (webHomeIndex != -1) {&#xd;
+  fullName = fullName.substring(0, webHomeIndex)&#xd;
+}&#xd;
+subPages = services.query.xwql("where doc.space like :currentDocPre order by trim(trailing '.WebHome' from doc.fullName)").bindValue('currentDocPre', fullName + '.%').execute()&#xd;
+&#xd;
+// add the values from the first column of every details macro to the livetable columns set&#xd;
+for (page in subPages) {&#xd;
+  if (page != null) {&#xd;
+    def detailsData = findData(page)&#xd;
+    for (detailsMacro in detailsData) {&#xd;
+      for (pair in detailsMacro.getValue()) {&#xd;
+        columns += [pair.getKey().trim().replace(':', '')]&#xd;
+      }&#xd;
+    }&#xd;
+  }&#xd;
+}&#xd;
+&#xd;
+// store variable in the xcontext so we can use it in velocity&#xd;
+xcontext.put("columns", columns)&#xd;
+{{/groovy}}&#xd;
+&#xd;
+{{velocity}}&#xd;
+## get the variable back from the context&#xd;
+#set ($columns = $xcontext.get("columns"))&#xd;
+## create the column configuration - currently all columns are considered text columns&#xd;
+#set ($columnsProperties = {})&#xd;
+#foreach ($column in $columns)&#xd;
+  #set ($discard = $columnsProperties.put($column, { "type" : "none", "html" : "true" }))&#xd;
+  ##set ($discard = $columnsProperties.put($column, { "type" : "text" }))&#xd;
+#end&#xd;
+## set the page to query for results and pass the page from which the macro is called as an extra parameter called 'source'&#xd;
+#set ($options = {&#xd;
+  "resultPage":"Confluence.Macros.PagePropertiesReportResult.WebHome",&#xd;
+  "extraParams":"source=$escapetool.url($doc)"&#xd;
+})&#xd;
+#livetable("testtable" $columns $columnsProperties $options)&#xd;
+{{/velocity}}</code>
+    </property>
+    <property>
+      <contentDescription></contentDescription>
+    </property>
+    <property>
+      <contentJavaType></contentJavaType>
+    </property>
+    <property>
+      <contentType>No content</contentType>
+    </property>
+    <property>
+      <defaultCategory>Content</defaultCategory>
+    </property>
+    <property>
+      <description>Confluence Page Properties Report</description>
+    </property>
+    <property>
+      <id>detailssummary</id>
+    </property>
+    <property>
+      <name>Page Properties Report</name>
+    </property>
+    <property>
+      <supportsInlineMode>0</supportsInlineMode>
+    </property>
+    <property>
+      <visibility>Current Wiki</visibility>
+    </property>
+  </object>
+</xwikidoc>
