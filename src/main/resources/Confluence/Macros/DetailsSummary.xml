@@ -39,7 +39,7 @@
   <hidden>true</hidden>
   <content>= Description =
 
-Use the Page Properties Report macro (or Details Summary macro) to display a table summarizing the contents of multiple Page Properties macros. This is a simplified macro which summarizes the Page Properties macros of all subpages where used. The original macro uses parameters to select the pages to be summarized.
+Use the Page Properties Report macro (Details Summary macro) to display a table summarizing the contents of multiple Page Properties macros (Details macros). This is a simplified version of the macro which summarizes the Page Properties macros of all subpages where used. The original macro uses parameters to allow selection of the pages to be summarized.
 
 = Parameters =
 

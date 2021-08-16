@@ -39,12 +39,12 @@
   <hidden>true</hidden>
   <content>= Description =
 
-Use the Page Properties macro (or Details macro) to wrap tables that will be used in Page Properties Report macros (Details Summary macros). The Page Properties macro does not do anything with its content itself.
+Use the Page Properties macro (Details macro) to wrap tables that will be used in Page Properties Report macros (Details Summary macros). The Page Properties macro does not do anything with its content itself.
 
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**hidden**|Whether the property table should be displayed on the current page.|No|false|
+|**hidden**|Whether the property table should be displayed on the current page.|No|false
 |**id**|ID which can be used for filtering in the Page Properties Report macro (currently not implemented)|No| 
 
 = Examples of usage =
