@@ -381,7 +381,7 @@ xcontext.put("columns", columns)&#xd;
 #end&#xd;
 ## set the page to query for results and pass the page from which the macro is called as an extra parameter called 'source'&#xd;
 #set ($options = {&#xd;
-  "resultPage":"Confluence.Macros.PagePropertiesReportResult.WebHome",&#xd;
+  "resultPage":"Confluence.Macros.DetailsSummaryResult",&#xd;
   "extraParams":"source=$escapetool.url($doc)"&#xd;
 })&#xd;
 #livetable("testtable" $columns $columnsProperties $options)&#xd;
