@@ -1,4 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -249,149 +251,149 @@ The result is empty since this page has no subpages:
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{groovy}}&#xd;
-// use groovy to create input form and get the list of columns for the livetable&#xd;
-import java.util.regex.Pattern&#xd;
-import org.xwiki.rendering.block.match.*;&#xd;
-import org.xwiki.rendering.block.*;&#xd;
-&#xd;
-// debug handling&#xd;
-debug = ""&#xd;
-&#xd;
-def addDebug(msg) {&#xd;
-  if (request.debug)&#xd;
-    debug += msg + "\n";&#xd;
-}&#xd;
-&#xd;
-// define functions for parsing details macros, based on code by Ludovic Dubost&#xd;
-def findInDropDownAndLinks(xdom, data) {&#xd;
-  data.optionvalue = ""&#xd;
-  data.optionid = ""&#xd;
-  data.links = []&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    addDebug("Found easy dropdown")&#xd;
-    if (block.getId().startsWith("easy-dropdown")) {&#xd;
-     data.optionvalue = block.getParameter("current-option-value")&#xd;
-     if (data.optionvalue==null)&#xd;
-       data.optionvalue = ""&#xd;
-     data.optionid = block.getParameter("option-id")&#xd;
-     if (data.optionid==null)&#xd;
-       data.optionid = ""&#xd;
-    }&#xd;
-  }&#xd;
-  blocks = xdom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    addDebug("Found link")&#xd;
-    data.links.add(block.getReference().getReference().toString())&#xd;
-  }&#xd;
-}&#xd;
-&#xd;
-def findInXDOMDetails(xdom, result) {&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(TableRowBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    block1 = block.getChildren()[0]&#xd;
-    block2 = block.getChildren()[1]&#xd;
-    def content1 = ""&#xd;
-    def contentWiki = ""&#xd;
-    def contentPlain = ""&#xd;
-    if (block1==null) {&#xd;
-      addDebug("Found empty table block1")&#xd;
-    } else {&#xd;
-      content1 = services.rendering.render(block1.getChildren()[0], 'plain/1.0')&#xd;
-    }&#xd;
-    if (block2==null) {&#xd;
-      addDebug("Found empty table block2")&#xd;
-      // contentWiki = services.rendering.render(block, 'xwiki/2.1')&#xd;
-    } else {&#xd;
-     contentWiki = services.rendering.render(block2.getChildren()[0], 'xwiki/2.1')&#xd;
-     contentPlain = services.rendering.render(block2.getChildren()[0], 'plain/1.0')&#xd;
-    }&#xd;
-    if (content1.trim()!="" &amp;&amp; block2!=null) {&#xd;
-      result[content1.trim()] = [ text : contentPlain, wiki: contentWiki];&#xd;
-      findInDropDownAndLinks(block2, result[content1.trim()])&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-&#xd;
-def findInXDOM(xdom, result) {&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    def content = block.getContent()&#xd;
-    if (content!=null &amp;&amp; content!="") {&#xd;
-      def newxdom = services.rendering.parse(content, 'xwiki/2.1')&#xd;
-      findInXDOM(newxdom, result);&#xd;
-      if (block.getId()=="details") {&#xd;
-        addDebug("Found details macro block")&#xd;
-        def details_id = block.getParameter("id")&#xd;
-        if (details_id == null || details_id == '') {&#xd;
-          details_id = block.hashCode()&#xd;
-        }&#xd;
-        result[details_id] = [:];&#xd;
-        findInXDOMDetails(newxdom, result[details_id])&#xd;
-      }&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-&#xd;
-def findData(page) {&#xd;
-  def result = [:]&#xd;
-  addDebug("Checking page " + page)&#xd;
-  def pageDoc = xwiki.getDocument(page)&#xd;
-  def xdom = pageDoc.getXDOM()&#xd;
-  findInXDOM(xdom, result)&#xd;
-  return result;&#xd;
-}&#xd;
-&#xd;
-// initialize column set needed for livetable configuration&#xd;
-Set columns = ["Title"]&#xd;
-&#xd;
-// use the full document name without '.WebHome' to find subpages&#xd;
-def fullName = doc.getFullName()&#xd;
-def webHomeIndex = fullName.lastIndexOf(".WebHome")&#xd;
-if (webHomeIndex != -1) {&#xd;
-  fullName = fullName.substring(0, webHomeIndex)&#xd;
-}&#xd;
-subPages = services.query.xwql("where doc.space like :currentDocPre order by trim(trailing '.WebHome' from doc.fullName)").bindValue('currentDocPre', fullName + '.%').execute()&#xd;
-&#xd;
-// add the values from the first column of every details macro to the livetable columns set&#xd;
-for (page in subPages) {&#xd;
-  if (page != null) {&#xd;
-    def detailsData = findData(page)&#xd;
-    for (detailsMacro in detailsData) {&#xd;
-      for (pair in detailsMacro.getValue()) {&#xd;
-        columns += [pair.getKey().trim().replace(':', '')]&#xd;
-      }&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-&#xd;
-// store variable in the xcontext so we can use it in velocity&#xd;
-xcontext.put("columns", columns)&#xd;
-{{/groovy}}&#xd;
-&#xd;
-{{velocity}}&#xd;
-## get the variable back from the context&#xd;
-#set ($columns = $xcontext.get("columns"))&#xd;
-## create the column configuration - currently all columns are considered text columns&#xd;
-#set ($columnsProperties = {})&#xd;
-#foreach ($column in $columns)&#xd;
-  #set ($discard = $columnsProperties.put($column, { "type" : "none", "html" : "true" }))&#xd;
-  ##set ($discard = $columnsProperties.put($column, { "type" : "text" }))&#xd;
-#end&#xd;
-## set the page to query for results and pass the page from which the macro is called as an extra parameter called 'source'&#xd;
-#set ($options = {&#xd;
-  "resultPage":"Confluence.Macros.DetailsSummaryResult",&#xd;
-  "extraParams":"source=$escapetool.url($doc)"&#xd;
-})&#xd;
-#livetable("testtable" $columns $columnsProperties $options)&#xd;
+      <code>{{groovy}}
+// use groovy to create input form and get the list of columns for the livetable
+import java.util.regex.Pattern
+import org.xwiki.rendering.block.match.*;
+import org.xwiki.rendering.block.*;
+
+// debug handling
+debug = ""
+
+def addDebug(msg) {
+  if (request.debug)
+    debug += msg + "\n";
+}
+
+// define functions for parsing details macros, based on code by Ludovic Dubost
+def findInDropDownAndLinks(xdom, data) {
+  data.optionvalue = ""
+  data.optionid = ""
+  data.links = []
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    addDebug("Found easy dropdown")
+    if (block.getId().startsWith("easy-dropdown")) {
+     data.optionvalue = block.getParameter("current-option-value")
+     if (data.optionvalue==null)
+       data.optionvalue = ""
+     data.optionid = block.getParameter("option-id")
+     if (data.optionid==null)
+       data.optionid = ""
+    }
+  }
+  blocks = xdom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    addDebug("Found link")
+    data.links.add(block.getReference().getReference().toString())
+  }
+}
+
+def findInXDOMDetails(xdom, result) {
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(TableRowBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    block1 = block.getChildren()[0]
+    block2 = block.getChildren()[1]
+    def content1 = ""
+    def contentWiki = ""
+    def contentPlain = ""
+    if (block1==null) {
+      addDebug("Found empty table block1")
+    } else {
+      content1 = services.rendering.render(block1.getChildren()[0], 'plain/1.0')
+    }
+    if (block2==null) {
+      addDebug("Found empty table block2")
+      // contentWiki = services.rendering.render(block, 'xwiki/2.1')
+    } else {
+     contentWiki = services.rendering.render(block2.getChildren()[0], 'xwiki/2.1')
+     contentPlain = services.rendering.render(block2.getChildren()[0], 'plain/1.0')
+    }
+    if (content1.trim()!="" &amp;&amp; block2!=null) {
+      result[content1.trim()] = [ text : contentPlain, wiki: contentWiki];
+      findInDropDownAndLinks(block2, result[content1.trim()])
+    }
+  }
+}
+
+def findInXDOM(xdom, result) {
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    def content = block.getContent()
+    if (content!=null &amp;&amp; content!="") {
+      def newxdom = services.rendering.parse(content, 'xwiki/2.1')
+      findInXDOM(newxdom, result);
+      if (block.getId()=="details") {
+        addDebug("Found details macro block")
+        def details_id = block.getParameter("id")
+        if (details_id == null || details_id == '') {
+          details_id = block.hashCode()
+        }
+        result[details_id] = [:];
+        findInXDOMDetails(newxdom, result[details_id])
+      }
+    }
+  }
+}
+
+def findData(page) {
+  def result = [:]
+  addDebug("Checking page " + page)
+  def pageDoc = xwiki.getDocument(page)
+  def xdom = pageDoc.getXDOM()
+  findInXDOM(xdom, result)
+  return result;
+}
+
+// initialize column set needed for livetable configuration
+Set columns = ["Title"]
+
+// use the full document name without '.WebHome' to find subpages
+def fullName = doc.getFullName()
+def webHomeIndex = fullName.lastIndexOf(".WebHome")
+if (webHomeIndex != -1) {
+  fullName = fullName.substring(0, webHomeIndex)
+}
+subPages = services.query.xwql("where doc.space like :currentDocPre order by trim(trailing '.WebHome' from doc.fullName)").bindValue('currentDocPre', fullName + '.%').execute()
+
+// add the values from the first column of every details macro to the livetable columns set
+for (page in subPages) {
+  if (page != null) {
+    def detailsData = findData(page)
+    for (detailsMacro in detailsData) {
+      for (pair in detailsMacro.getValue()) {
+        columns += [pair.getKey().trim().replace(':', '')]
+      }
+    }
+  }
+}
+
+// store variable in the xcontext so we can use it in velocity
+xcontext.put("columns", columns)
+{{/groovy}}
+
+{{velocity}}
+## get the variable back from the context
+#set ($columns = $xcontext.get("columns"))
+## create the column configuration - currently all columns are considered text columns
+#set ($columnsProperties = {})
+#foreach ($column in $columns)
+  #set ($discard = $columnsProperties.put($column, { "type" : "none", "html" : "true" }))
+  ##set ($discard = $columnsProperties.put($column, { "type" : "text" }))
+#end
+## set the page to query for results and pass the page from which the macro is called as an extra parameter called 'source'
+#set ($options = {
+  "resultPage":"Confluence.Macros.DetailsSummaryResult",
+  "extraParams":"source=$escapetool.url($doc)"
+})
+#livetable("testtable" $columns $columnsProperties $options)
 {{/velocity}}</code>
     </property>
     <property>
-      <contentDescription></contentDescription>
+      <contentDescription/>
     </property>
     <property>
-      <contentJavaType></contentJavaType>
+      <contentJavaType/>
     </property>
     <property>
       <contentType>No content</contentType>

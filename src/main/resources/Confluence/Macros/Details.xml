@@ -1,4 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -52,113 +54,113 @@ Use the Page Properties macro (Details macro) to wrap tables that will be used i
 == A simple wrapped table ==
 
 {{code}}
-{{details id="Testing" hidden=false}}&#xd;
-(% class="auto-cursor-target" %)&#xd;
-\\&#xd;
-&#xd;
-(% class="wrapped" %)&#xd;
-|=(((&#xd;
-Project:&#xd;
-)))|(((&#xd;
-Testproject&#xd;
-)))&#xd;
-|=(((&#xd;
-Status:&#xd;
-)))|(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-Planning&#xd;
-)))&#xd;
-)))&#xd;
-|=(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-Date:&#xd;
-)))&#xd;
-)))|(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-2021-05-27&#xd;
-)))&#xd;
-)))&#xd;
-|=(((&#xd;
-Location:&#xd;
-)))|(((&#xd;
-None&#xd;
-)))&#xd;
-|=(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-ID:&#xd;
-)))|(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-1.2.3AB&#xd;
-)))&#xd;
-|=(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-Notes:&#xd;
-)))|(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-This is a test.&#xd;
-)))&#xd;
-&#xd;
-(% class="auto-cursor-target" %)&#xd;
-\\&#xd;
+{{details id="Testing" hidden=false}}
+(% class="auto-cursor-target" %)
+\\
+
+(% class="wrapped" %)
+|=(((
+Project:
+)))|(((
+Testproject
+)))
+|=(((
+Status:
+)))|(((
+(% class="content-wrapper" %)
+(((
+Planning
+)))
+)))
+|=(((
+(% class="content-wrapper" %)
+(((
+Date:
+)))
+)))|(((
+(% class="content-wrapper" %)
+(((
+2021-05-27
+)))
+)))
+|=(((
+Location:
+)))|(((
+None
+)))
+|=(% colspan="1" %)(% colspan="1" %)
+(((
+ID:
+)))|(% colspan="1" %)(% colspan="1" %)
+(((
+1.2.3AB
+)))
+|=(% colspan="1" %)(% colspan="1" %)
+(((
+Notes:
+)))|(% colspan="1" %)(% colspan="1" %)
+(((
+This is a test.
+)))
+
+(% class="auto-cursor-target" %)
+\\
 {{/details}}
 {{/code}}
 
 The result is the following :
 
-{{details id="Testing" hidden=false}}&#xd;
-(% class="auto-cursor-target" %)&#xd;
-\\&#xd;
-&#xd;
-(% class="wrapped" %)&#xd;
-|=(((&#xd;
-Project:&#xd;
-)))|(((&#xd;
-Testproject&#xd;
-)))&#xd;
-|=(((&#xd;
-Status:&#xd;
-)))|(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-Planning&#xd;
-)))&#xd;
-)))&#xd;
-|=(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-Date:&#xd;
-)))&#xd;
-)))|(((&#xd;
-(% class="content-wrapper" %)&#xd;
-(((&#xd;
-2021-05-27&#xd;
-)))&#xd;
-)))&#xd;
-|=(((&#xd;
-Location:&#xd;
-)))|(((&#xd;
-None&#xd;
-)))&#xd;
-|=(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-ID:&#xd;
-)))|(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-1.2.3AB&#xd;
-)))&#xd;
-|=(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-Notes:&#xd;
-)))|(% colspan="1" %)(% colspan="1" %)&#xd;
-(((&#xd;
-This is a test.&#xd;
-)))&#xd;
-&#xd;
-(% class="auto-cursor-target" %)&#xd;
-\\&#xd;
+{{details id="Testing" hidden=false}}
+(% class="auto-cursor-target" %)
+\\
+
+(% class="wrapped" %)
+|=(((
+Project:
+)))|(((
+Testproject
+)))
+|=(((
+Status:
+)))|(((
+(% class="content-wrapper" %)
+(((
+Planning
+)))
+)))
+|=(((
+(% class="content-wrapper" %)
+(((
+Date:
+)))
+)))|(((
+(% class="content-wrapper" %)
+(((
+2021-05-27
+)))
+)))
+|=(((
+Location:
+)))|(((
+None
+)))
+|=(% colspan="1" %)(% colspan="1" %)
+(((
+ID:
+)))|(% colspan="1" %)(% colspan="1" %)
+(((
+1.2.3AB
+)))
+|=(% colspan="1" %)(% colspan="1" %)
+(((
+Notes:
+)))|(% colspan="1" %)(% colspan="1" %)
+(((
+This is a test.
+)))
+
+(% class="auto-cursor-target" %)
+\\
 {{/details}}</content>
   <object>
     <name>Confluence.Macros.PageProperties.WebHome</name>
@@ -353,19 +355,19 @@ This is a test.&#xd;
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}&#xd;
-#if (!$wikimacro.parameters.hidden)&#xd;
-  ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.&#xd;
-  #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacrocontent')))&#xd;
-    {{wikimacrocontent /}}&#xd;
-  #else&#xd;
-    $!xcontext.macro.content&#xd;
-  #end&#xd;
-#end&#xd;
+      <code>{{velocity}}
+#if (!$wikimacro.parameters.hidden)
+  ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
+  #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacrocontent')))
+    {{wikimacrocontent /}}
+  #else
+    $!xcontext.macro.content
+  #end
+#end
 {{/velocity}}</code>
     </property>
     <property>
-      <contentDescription></contentDescription>
+      <contentDescription/>
     </property>
     <property>
       <contentJavaType>Wiki</contentJavaType>
@@ -533,7 +535,7 @@ This is a test.&#xd;
       </type>
     </class>
     <property>
-      <defaultValue></defaultValue>
+      <defaultValue/>
     </property>
     <property>
       <description>ID which can be used for filtering in the Page Properties Report (detailssummary) macro</description>
@@ -545,7 +547,7 @@ This is a test.&#xd;
       <name>id </name>
     </property>
     <property>
-      <type></type>
+      <type/>
     </property>
   </object>
 </xwikidoc>

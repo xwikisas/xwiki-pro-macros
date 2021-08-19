@@ -1,4 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -37,219 +39,219 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{groovy}}&#xd;
-// use groovy to create input form and get the list of columns for the livetable&#xd;
-import java.util.regex.Pattern&#xd;
-import org.xwiki.rendering.block.match.*;&#xd;
-import org.xwiki.rendering.block.*;&#xd;
-// debug handling&#xd;
-debug = ""&#xd;
-def addDebug(msg) {&#xd;
-  if (request.debug)&#xd;
-    debug += msg + "\n";&#xd;
-}&#xd;
-// define functions for parsing details macros, based on code by Ludovic Dubost&#xd;
-def findInDropDownAndLinks(xdom, data) {&#xd;
-  data.optionvalue = ""&#xd;
-  data.optionid = ""&#xd;
-  data.links = []&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    addDebug("Found easy dropdown")&#xd;
-    if (block.getId().startsWith("easy-dropdown")) {&#xd;
-     data.optionvalue = block.getParameter("current-option-value")&#xd;
-     if (data.optionvalue==null)&#xd;
-       data.optionvalue = ""&#xd;
-     data.optionid = block.getParameter("option-id")&#xd;
-     if (data.optionid==null)&#xd;
-       data.optionid = ""&#xd;
-    }&#xd;
-  }&#xd;
-  blocks = xdom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    addDebug("Found link")&#xd;
-    data.links.add(block.getReference().getReference().toString())&#xd;
-  }&#xd;
-}&#xd;
-def findInXDOMDetails(xdom, result, docName) {&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(TableRowBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    block1 = block.getChildren()[0]&#xd;
-    block2 = block.getChildren()[1]&#xd;
-    def content1 = ""&#xd;
-    def contentWiki = ""&#xd;
-    def contentPlain = ""&#xd;
-    if (block1==null) {&#xd;
-      addDebug("Found empty table block1")&#xd;
-    } else {&#xd;
-      content1 = services.rendering.render(block1.getChildren()[0], 'plain/1.0')&#xd;
-    }&#xd;
-    if (block2==null) {&#xd;
-      addDebug("Found empty table block2")&#xd;
-      // contentWiki = services.rendering.render(block, 'xwiki/2.1')&#xd;
-    } else {&#xd;
-     contentWiki = services.rendering.render(block2.getChildren()[0], 'xwiki/2.1')&#xd;
-     contentPlain = services.rendering.render(block2.getChildren()[0], 'plain/1.0')&#xd;
-    }&#xd;
-    if (content1.trim()!="" &amp;&amp; block2!=null) {&#xd;
-      result[content1.trim()] = [ text : contentPlain, wiki: contentWiki, doc: docName];&#xd;
-      findInDropDownAndLinks(block2, result[content1.trim()])&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-def findInXDOM(xdom, result, docName) {&#xd;
-  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);&#xd;
-  for (def block in blocks) {&#xd;
-    def content = block.getContent()&#xd;
-    if (content!=null &amp;&amp; content!="") {&#xd;
-      def newxdom = services.rendering.parse(content, 'xwiki/2.1')&#xd;
-      findInXDOM(newxdom, result, docName);&#xd;
-      if (block.getId()=="details") {&#xd;
-        addDebug("Found details macro block")&#xd;
-        def details_id = block.getParameter("id")&#xd;
-        if (details_id == null || details_id == '') {&#xd;
-          details_id = block.hashCode()&#xd;
-        }&#xd;
-        result[details_id] = [:];&#xd;
-        findInXDOMDetails(newxdom, result[details_id], docName)&#xd;
-      }&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-def findData(page) {&#xd;
-  def result = [:]&#xd;
-  addDebug("Checking page " + page)&#xd;
-  def pageDoc = xwiki.getDocument(page)&#xd;
-  def xdom = pageDoc.getXDOM()&#xd;
-  findInXDOM(xdom, result, page)&#xd;
-  return result;&#xd;
-}&#xd;
-// get parameters&#xd;
-def escapetool = new org.xwiki.velocity.tools.EscapeTool()&#xd;
-def source = "";&#xd;
-if (request.source)&#xd;
-   source= request.source&#xd;
-// this list will be used to store the data of all found details macros&#xd;
-def allDetails = []&#xd;
-// the source page needs to be passed as a parameter&#xd;
-if (request.source) {&#xd;
-  // get all subpages of the source page&#xd;
-  def sourceDocument = xwiki.getDocument(source)&#xd;
-  def fullName = sourceDocument.getFullName()&#xd;
-  def webHomeIndex = fullName.lastIndexOf(".WebHome")&#xd;
-  if (webHomeIndex != -1) {&#xd;
-    fullName = fullName.substring(0, webHomeIndex)&#xd;
-  }&#xd;
-  subPages = services.query.xwql("where doc.space like :currentDocPre order by doc.fullName").bindValue('currentDocPre', fullName + '.%').execute()&#xd;
-  // extract details macro data from all subpages&#xd;
-  for (page in subPages) {&#xd;
-    def document = xwiki.getDocument(page)&#xd;
-    def detailsData = findData(page)&#xd;
-    for (detailsMacro in detailsData) {&#xd;
-      // add the page title (or alternatively the page name) to the details data&#xd;
-      def title = document.getTitle()&#xd;
-      if (title == '') {&#xd;
-        def nameParts = document.getFullName().split('\\.')&#xd;
-        if (nameParts.size() > 1) {&#xd;
-          title = nameParts[nameParts.size() - 2]&#xd;
-        }&#xd;
-      }&#xd;
-      def linkedTitle = "[[" + title + ">>" + document.getFullName() + "]]"&#xd;
-      detailsMacro.getValue()["Title"] = [ text : title, wiki: linkedTitle, doc: document.getFullName()];&#xd;
-      allDetails.add(detailsMacro.getValue())&#xd;
-    }&#xd;
-  }&#xd;
-}&#xd;
-// add the debug param to a request to get additional debug output&#xd;
-if (request.debug) {&#xd;
-  println "== Debug START =="&#xd;
-  println "{{{ ${debug} }}}"&#xd;
-  println "== Debug  END  =="&#xd;
-}&#xd;
-// store the details macro data in the xcontext so we can use it in velocity&#xd;
-xcontext.put("details", allDetails)&#xd;
-{{/groovy}}&#xd;
-{{velocity wiki="false"}}&#xd;
-#if ("$!{request.xpage}" == 'plain')&#xd;
-  $response.setContentType('application/json')&#xd;
-#end&#xd;
-## get the details macro data from the context&#xd;
-#set ($details = $xcontext.get("details"))&#xd;
-##==============================&#xd;
-## Offset = item # at which to start displaying data&#xd;
-##==============================&#xd;
-#set ($offset = $numbertool.toNumber($request.get('offset')))&#xd;
-## offset starts from 0 in velocity and 1 in javascript&#xd;
-#set ($offset = $offset - 1)&#xd;
-#if ($offset &lt; 0)&#xd;
-  #set ($offset = 0)&#xd;
-#end&#xd;
-##==================&#xd;
-## Limit = # of items to display&#xd;
-##==================&#xd;
-#set ($limit = $numbertool.toNumber($request.get('limit')))&#xd;
-##==================&#xd;
-## Tag = one parameter per tag&#xd;
-##==================&#xd;
-#if ($request.tag)&#xd;
-  #foreach ($tag in $request.getParameterValues('tag'))&#xd;
-    ## TODO: Add code to filter items based on the selected tags&#xd;
-  #end&#xd;
-#end&#xd;
-##==========&#xd;
-## Sort direction&#xd;
-##==========&#xd;
-#set ($order = "$!request.sort")&#xd;
-#if ($order != '')&#xd;
-  #set ($orderDirection = "$!{request.get('dir').toLowerCase()}")&#xd;
-  #if ("$!orderDirection" != '' &amp;&amp; "$!orderDirection" != 'asc')&#xd;
-    #set ($orderDirection = 'desc')&#xd;
-  #end&#xd;
-#end&#xd;
-## ===========&#xd;
-## Filter Data here...&#xd;
-## ===========&#xd;
-## TODO: Add code to filter data &#xd;
-## Each column can be filtered and the filter for a column can be retrieved with:&#xd;
-## #set($filterValue = "$!{request.get(&lt;columnname>)}")&#xd;
-## ===&#xd;
-## JSON&#xd;
-## ===&#xd;
-{&#xd;
-"totalrows": $details.size(),&#xd;
-"matchingtags": {},&#xd;
-"tags" : [],&#xd;
-"returnedrows":  $details.size(),&#xd;
-"offset": 1,&#xd;
-"reqNo": $numbertool.toNumber($request.reqNo),&#xd;
-"rows": [&#xd;
-  ## every row consists of multiple column entries&#xd;
-  #set ($rowPrefix = '')&#xd;
-  #foreach ($detailsMacro in $details)&#xd;
-    $rowPrefix {&#xd;
-    #set ($rowPrefix = ',')&#xd;
-    ## every column entry is a key-value pair of header and value&#xd;
-    #foreach ($entry in $detailsMacro.entrySet())&#xd;
-      ## remove colons from the key (targetted at trailing colons) - maybe use a if and substring instead?&#xd;
-      #set ($cleanedKey = $entry.key.trim().replace(":",""))&#xd;
-      ## currently the plain text content of the details macro values is used - the wiki content could be used if the livetable supports it (I could not get it to work)&#xd;
-      ## replace any sequence of whitespace characters in the key by a single space (since apparently the livetable cannot handle multiline strings)&#xd;
-      ## escape backslashes (before ny other escaping!) and double quotation marks with a backslash&#xd;
-      #set($wiki = $entry.value.get('wiki'))&#xd;
-      #set($pageDocName = $entry.value.get('doc'))&#xd;
-      #set($pageDoc = $xwiki.getDocument($pageDocName))&#xd;
-      #set($html = $pageDoc.getRenderedContent($wiki, "xwiki/2.1"))&#xd;
-      #if(!$html)&#xd;
-       #set($html = $entry.value.get('wiki'))&#xd;
-      #end&#xd;
-      #set ($cleanedValue = $html.replaceAll("\s+", " ").replaceAll('\\', '\\\\').replaceAll('"', '\\"'))&#xd;
-      "$cleanedKey" : "$cleanedValue",&#xd;
-      ##"$cleanedKey" : "$entry.value.get('wiki').trim().replaceAll("\s+", " ").replaceAll('\\', '\\\\').replaceAll('"', '\\"')",&#xd;
-    #end&#xd;
-    "doc_viewable" : true&#xd;
-    }&#xd;
-  #end&#xd;
-]&#xd;
-}&#xd;
+  <content>{{groovy}}
+// use groovy to create input form and get the list of columns for the livetable
+import java.util.regex.Pattern
+import org.xwiki.rendering.block.match.*;
+import org.xwiki.rendering.block.*;
+// debug handling
+debug = ""
+def addDebug(msg) {
+  if (request.debug)
+    debug += msg + "\n";
+}
+// define functions for parsing details macros, based on code by Ludovic Dubost
+def findInDropDownAndLinks(xdom, data) {
+  data.optionvalue = ""
+  data.optionid = ""
+  data.links = []
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    addDebug("Found easy dropdown")
+    if (block.getId().startsWith("easy-dropdown")) {
+     data.optionvalue = block.getParameter("current-option-value")
+     if (data.optionvalue==null)
+       data.optionvalue = ""
+     data.optionid = block.getParameter("option-id")
+     if (data.optionid==null)
+       data.optionid = ""
+    }
+  }
+  blocks = xdom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    addDebug("Found link")
+    data.links.add(block.getReference().getReference().toString())
+  }
+}
+def findInXDOMDetails(xdom, result, docName) {
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(TableRowBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    block1 = block.getChildren()[0]
+    block2 = block.getChildren()[1]
+    def content1 = ""
+    def contentWiki = ""
+    def contentPlain = ""
+    if (block1==null) {
+      addDebug("Found empty table block1")
+    } else {
+      content1 = services.rendering.render(block1.getChildren()[0], 'plain/1.0')
+    }
+    if (block2==null) {
+      addDebug("Found empty table block2")
+      // contentWiki = services.rendering.render(block, 'xwiki/2.1')
+    } else {
+     contentWiki = services.rendering.render(block2.getChildren()[0], 'xwiki/2.1')
+     contentPlain = services.rendering.render(block2.getChildren()[0], 'plain/1.0')
+    }
+    if (content1.trim()!="" &amp;&amp; block2!=null) {
+      result[content1.trim()] = [ text : contentPlain, wiki: contentWiki, doc: docName];
+      findInDropDownAndLinks(block2, result[content1.trim()])
+    }
+  }
+}
+def findInXDOM(xdom, result, docName) {
+  def blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
+  for (def block in blocks) {
+    def content = block.getContent()
+    if (content!=null &amp;&amp; content!="") {
+      def newxdom = services.rendering.parse(content, 'xwiki/2.1')
+      findInXDOM(newxdom, result, docName);
+      if (block.getId()=="details") {
+        addDebug("Found details macro block")
+        def details_id = block.getParameter("id")
+        if (details_id == null || details_id == '') {
+          details_id = block.hashCode()
+        }
+        result[details_id] = [:];
+        findInXDOMDetails(newxdom, result[details_id], docName)
+      }
+    }
+  }
+}
+def findData(page) {
+  def result = [:]
+  addDebug("Checking page " + page)
+  def pageDoc = xwiki.getDocument(page)
+  def xdom = pageDoc.getXDOM()
+  findInXDOM(xdom, result, page)
+  return result;
+}
+// get parameters
+def escapetool = new org.xwiki.velocity.tools.EscapeTool()
+def source = "";
+if (request.source)
+   source= request.source
+// this list will be used to store the data of all found details macros
+def allDetails = []
+// the source page needs to be passed as a parameter
+if (request.source) {
+  // get all subpages of the source page
+  def sourceDocument = xwiki.getDocument(source)
+  def fullName = sourceDocument.getFullName()
+  def webHomeIndex = fullName.lastIndexOf(".WebHome")
+  if (webHomeIndex != -1) {
+    fullName = fullName.substring(0, webHomeIndex)
+  }
+  subPages = services.query.xwql("where doc.space like :currentDocPre order by doc.fullName").bindValue('currentDocPre', fullName + '.%').execute()
+  // extract details macro data from all subpages
+  for (page in subPages) {
+    def document = xwiki.getDocument(page)
+    def detailsData = findData(page)
+    for (detailsMacro in detailsData) {
+      // add the page title (or alternatively the page name) to the details data
+      def title = document.getTitle()
+      if (title == '') {
+        def nameParts = document.getFullName().split('\\.')
+        if (nameParts.size() &gt; 1) {
+          title = nameParts[nameParts.size() - 2]
+        }
+      }
+      def linkedTitle = "[[" + title + "&gt;&gt;" + document.getFullName() + "]]"
+      detailsMacro.getValue()["Title"] = [ text : title, wiki: linkedTitle, doc: document.getFullName()];
+      allDetails.add(detailsMacro.getValue())
+    }
+  }
+}
+// add the debug param to a request to get additional debug output
+if (request.debug) {
+  println "== Debug START =="
+  println "{{{ ${debug} }}}"
+  println "== Debug  END  =="
+}
+// store the details macro data in the xcontext so we can use it in velocity
+xcontext.put("details", allDetails)
+{{/groovy}}
+{{velocity wiki="false"}}
+#if ("$!{request.xpage}" == 'plain')
+  $response.setContentType('application/json')
+#end
+## get the details macro data from the context
+#set ($details = $xcontext.get("details"))
+##==============================
+## Offset = item # at which to start displaying data
+##==============================
+#set ($offset = $numbertool.toNumber($request.get('offset')))
+## offset starts from 0 in velocity and 1 in javascript
+#set ($offset = $offset - 1)
+#if ($offset &lt; 0)
+  #set ($offset = 0)
+#end
+##==================
+## Limit = # of items to display
+##==================
+#set ($limit = $numbertool.toNumber($request.get('limit')))
+##==================
+## Tag = one parameter per tag
+##==================
+#if ($request.tag)
+  #foreach ($tag in $request.getParameterValues('tag'))
+    ## TODO: Add code to filter items based on the selected tags
+  #end
+#end
+##==========
+## Sort direction
+##==========
+#set ($order = "$!request.sort")
+#if ($order != '')
+  #set ($orderDirection = "$!{request.get('dir').toLowerCase()}")
+  #if ("$!orderDirection" != '' &amp;&amp; "$!orderDirection" != 'asc')
+    #set ($orderDirection = 'desc')
+  #end
+#end
+## ===========
+## Filter Data here...
+## ===========
+## TODO: Add code to filter data 
+## Each column can be filtered and the filter for a column can be retrieved with:
+## #set($filterValue = "$!{request.get(&lt;columnname&gt;)}")
+## ===
+## JSON
+## ===
+{
+"totalrows": $details.size(),
+"matchingtags": {},
+"tags" : [],
+"returnedrows":  $details.size(),
+"offset": 1,
+"reqNo": $numbertool.toNumber($request.reqNo),
+"rows": [
+  ## every row consists of multiple column entries
+  #set ($rowPrefix = '')
+  #foreach ($detailsMacro in $details)
+    $rowPrefix {
+    #set ($rowPrefix = ',')
+    ## every column entry is a key-value pair of header and value
+    #foreach ($entry in $detailsMacro.entrySet())
+      ## remove colons from the key (targetted at trailing colons) - maybe use a if and substring instead?
+      #set ($cleanedKey = $entry.key.trim().replace(":",""))
+      ## currently the plain text content of the details macro values is used - the wiki content could be used if the livetable supports it (I could not get it to work)
+      ## replace any sequence of whitespace characters in the key by a single space (since apparently the livetable cannot handle multiline strings)
+      ## escape backslashes (before ny other escaping!) and double quotation marks with a backslash
+      #set($wiki = $entry.value.get('wiki'))
+      #set($pageDocName = $entry.value.get('doc'))
+      #set($pageDoc = $xwiki.getDocument($pageDocName))
+      #set($html = $pageDoc.getRenderedContent($wiki, "xwiki/2.1"))
+      #if(!$html)
+       #set($html = $entry.value.get('wiki'))
+      #end
+      #set ($cleanedValue = $html.replaceAll("\s+", " ").replaceAll('\\', '\\\\').replaceAll('"', '\\"'))
+      "$cleanedKey" : "$cleanedValue",
+      ##"$cleanedKey" : "$entry.value.get('wiki').trim().replaceAll("\s+", " ").replaceAll('\\', '\\\\').replaceAll('"', '\\"')",
+    #end
+    "doc_viewable" : true
+    }
+  #end
+]
+}
 {{/velocity}}</content>
 </xwikidoc>
