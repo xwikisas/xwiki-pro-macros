@@ -1,4 +1,4 @@
-<?xml version='1.1' encoding='UTF-8'?>
+<?xml version="1.1" encoding="UTF-8"?>
 
 <!--
  * See the NOTICE file distributed with this work for additional
@@ -27,12 +27,9 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1613977175000</creationDate>
   <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1614003401000</date>
-  <contentUpdateDate>1614003401000</contentUpdateDate>
   <version>1.1</version>
   <title>Excerpt Macro</title>
   <comment/>
@@ -294,7 +291,7 @@ My hidden content.
       <contentDescription>The content to be marked for use by other macros.</contentDescription>
     </property>
     <property>
-      <contentJavaType></contentJavaType>
+      <contentJavaType/>
     </property>
     <property>
       <contentType>Optional</contentType>
@@ -381,10 +378,10 @@ My hidden content.
       </type>
     </class>
     <property>
-      <defaultValue></defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description></description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -393,7 +390,7 @@ My hidden content.
       <name>atlassian-macro-output-type</name>
     </property>
     <property>
-      <type></type>
+      <type/>
     </property>
   </object>
   <object>
@@ -462,7 +459,7 @@ My hidden content.
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description></description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -471,7 +468,7 @@ My hidden content.
       <name>hidden</name>
     </property>
     <property>
-      <type></type>
+      <type/>
     </property>
   </object>
 </xwikidoc>

@@ -25,11 +25,11 @@
   <parent>
     <groupId>com.xwiki.parent</groupId>
     <artifactId>xwikisas-parent-platform</artifactId>
-    <version>9.11-5</version>
+    <version>11.10</version>
   </parent>
   <groupId>com.xwiki.pro</groupId>
   <artifactId>xwiki-pro-macros</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>xar</packaging>
   <name>XWiki Pro - Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
@@ -44,7 +44,7 @@
     <tag>HEAD</tag>
   </scm>
   <properties>
-    <licensing.version>1.17.1</licensing.version>
+    <licensing.version>1.19</licensing.version>
     <pdfviewer.version>2.2.1</pdfviewer.version>
     <jwplayer.version>2.1.6</jwplayer.version>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
