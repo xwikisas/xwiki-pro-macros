@@ -44,8 +44,8 @@
     <tag>HEAD</tag>
   </scm>
   <properties>
-    <licensing.version>1.19</licensing.version>
-    <pdfviewer.version>2.2.1</pdfviewer.version>
+    <licensing.version>1.20</licensing.version>
+    <pdfviewer.version>2.3</pdfviewer.version>
     <jwplayer.version>2.1.6</jwplayer.version>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
