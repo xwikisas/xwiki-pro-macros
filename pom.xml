@@ -45,7 +45,7 @@
   </scm>
   <properties>
     <licensing.version>1.22</licensing.version>
-    <pdfviewer.version>2.3</pdfviewer.version>
+    <pdfviewer.version>2.3.3</pdfviewer.version>
     <jwplayer.version>2.1.6</jwplayer.version>
     <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
       buying a license or getting a trial license, but they cannot edit or delete them. -->
