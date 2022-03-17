@@ -1,0 +1,25 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<xwikidoc version="1.4" reference="XWiki.Macros.Translations" locale="ro">
+  <web>XWiki.Macros</web>
+  <name>Translations</name>
+  <language>ro</language>
+  <defaultLanguage>en</defaultLanguage>
+  <translation>1</translation>
+  <creator>XWiki.RaphaelJakse</creator>
+  <creationDate>1647533204000</creationDate>
+  <author>XWiki.RaphaelJakse</author>
+  <contentAuthor>XWiki.RaphaelJakse</contentAuthor>
+  <date>1647533239000</date>
+  <contentUpdateDate>1647533239000</contentUpdateDate>
+  <version>1.2</version>
+  <title>Translations</title>
+  <comment/>
+  <minorEdit>true</minorEdit>
+  <syntaxId>plain/1.0</syntaxId>
+  <hidden>false</hidden>
+  <content>## Team macro&#xd;
+rendering.macro.team.content.options=Opțiune&#xd;
+rendering.macro.team.content.filter=A filtra…&#xd;
+rendering.macro.team.content.showUsernames=A arăta nume&#xd;
+rendering.macro.team.content.noUsers=Nu este pe nimeni să arate.</content>
+</xwikidoc>

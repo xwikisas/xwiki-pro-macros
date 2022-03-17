@@ -1,0 +1,1407 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="XWiki.Macros.Team" locale="">
+  <web>XWiki.Macros</web>
+  <name>Team</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>XWiki.RaphaelJakse</creator>
+  <creationDate>1647248274000</creationDate>
+  <parent>WebHome</parent>
+  <author>XWiki.RaphaelJakse</author>
+  <contentAuthor>XWiki.RaphaelJakse</contentAuthor>
+  <date>1647533963000</date>
+  <contentUpdateDate>1647531431000</contentUpdateDate>
+  <version>3.64</version>
+  <title/>
+  <comment/>
+  <minorEdit>true</minorEdit>
+  <syntaxId>xwiki/2.0</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+$services.localization.render('rendering.macro.team.description')
+
+== Parameters ==
+
+|=Name|=Description|=Default
+|tag|$services.localization.render('rendering.macro.team.parameter.tag.description')|projectteam
+|size|$services.localization.render('rendering.macro.team.parameter.size.description')|60
+|showUsernames|$services.localization.render('rendering.macro.team.parameter.showUsernames.description')|false
+|letterAvatarBgColor|$services.localization.render('rendering.macro.team.parameter.letterAvatarBgColor.description')|#0A6
+|letterAvatarFontColor|$services.localization.render('rendering.macro.team.parameter.letterAvatarFontColor.description')|white
+|disableLetterAvatars|$services.localization.render('rendering.macro.team.parameter.disableLetterAvatars.description')|false
+|requireExternalAuth|$services.localization.render('rendering.macro.team.parameter.requireExternalAuth.description')|false
+
+== Examples ==
+
+=== All users ===
+
+{{code}}{{team/}}{{/code}}
+
+{{team/}}
+
+=== All users, no LDAP or OpenIDC requirements, bigger ===
+
+{{code}}{{team requireExternalAuth=false size=100 /}}{{/code}}
+
+{{team requireExternalAuth=false size=100 /}}
+
+=== All users, no LDAP or OpenIDC requirements, some colors ===
+
+{{code}}{{team requireExternalAuth=false letterAvatarBgColor="#05C" letterAvatarFontColor="#FFA"/}}{{/code}}
+
+{{team requireExternalAuth=false letterAvatarBgColor="#05C" letterAvatarFontColor="#FFA"/}}
+
+=== All users, with LDAP or OpenIDC requirements ===
+
+{{code}}{{team requireExternalAuth=true /}}{{/code}}
+
+{{team requireExternalAuth=true /}}
+
+=== All users with names, disable tools ===
+
+{{code}}{{team showUsernames=true disableTools=true/}}{{/code}}
+
+{{team showUsernames=true disableTools=true/}}
+
+=== All users with names, disable letter avatars ===
+
+{{code}}{{team showUsernames=true disableLetterAvatars=true/}}{{/code}}
+
+{{team showUsernames=true disableLetterAvatars=true/}}
+{{/velocity}}</content>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>6b37dc4a-d8d6-473b-a0c3-2546d862493f</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>(function () {
+  function filter (teamDiv, e) {
+    const l = this.value.toLowerCase()
+    for (const user of teamDiv.getElementsByClassName('xwikiteam-user')) {
+      user.style.display = (
+        user.textContent.toLowerCase().includes(l) ||
+        user.dataset.username.toLowerCase().includes(l) ||
+        user.dataset.nameWithoutAccents.includes(l)
+      ) ? "" : "none";
+    }
+  }
+
+  function applyCheckbox(teamDiv, checkbox) {
+    if (checkbox.checked) {
+      teamDiv.classList.add('xwikiteam-usernames-displayed');
+      teamDiv.classList.remove('xwikiteam-usernames-hidden');
+    } else {
+      teamDiv.classList.remove('xwikiteam-usernames-displayed');
+      teamDiv.classList.add('xwikiteam-usernames-hidden');
+    }
+  }
+
+  function bindShowUsernameCheckbox(teamDiv, checkbox) {
+    applyCheckbox(teamDiv, checkbox);
+    checkbox.onclick = applyCheckbox.bind(null, teamDiv, checkbox);
+  }
+
+  function toggleTools(teamDiv, e) {
+    const tools = teamDiv.querySelector('.xwikiteam-tools');
+    if (tools) {
+      tools.hidden = !tools.hidden;
+      if (!tools.hidden) {
+        const filterInput = tools.querySelector('.xwikiteam-filter');
+        if (filterInput) {
+          filterInput.focus();
+        }
+      }
+    }
+    if (e) {
+      e.preventDefault();
+    }
+  }
+
+  for (const teamDiv of document.getElementsByClassName('xwikiteam')) {
+    const a = teamDiv.querySelector('.xwikiteam-tools-link a');
+    if (a) {
+      a.onclick = toggleTools.bind(null, teamDiv);
+      a.parentNode.hidden = false;
+    }
+    const ul = teamDiv.querySelector('.xwikiteam-ul');
+    const tools = teamDiv.querySelector('.xwikiteam-tools');
+    if (!tools) continue;
+    const filterInput = tools.querySelector('.xwikiteam-filter');
+    if (filterInput) {
+      filterInput.addEventListener('keyup', filter.bind(filterInput, teamDiv));
+      if (filterInput.value) {
+        filter.call(filterInput, teamDiv);
+        toggleTools(teamDiv)
+      }
+    }
+
+    bindShowUsernameCheckbox(teamDiv, teamDiv.querySelector(".xwikiteam-show-username-checkbox"));
+  }
+})();</code>
+    </property>
+    <property>
+      <name></name>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>98ffed68-bc9a-4760-a88c-602aa1a3d1aa</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.xwikiteam .xwikiteam-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.xwikiteam .xwikiteam-user, .xwikiteam-tools-link {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.xwikiteam .xwikiteam-user a {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.4ex;
+}
+
+.xwikiteam .xwikiteam-avatar {
+  border: 4px solid white;
+  border-radius: 10em;
+  box-shadow: 0 0 4px #ccc;
+  object-fit: cover;
+  margin: 0.1ex;
+  box-sizing: content-box;
+}
+
+.xwikiteam a:hover .xwikiteam-avatar {
+  border-color: #4791bc;
+}
+
+.xwikiteam .xwikiteam-avatar-initials {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+.xwikiteam .xwikiteam-avatar-initials-letters {
+  display: inline-block; /* blocks underline in the avatar */
+}
+
+.xwikiteam a:focus .xwikiteam-avatar {
+  border-color: currentcolor;
+}
+
+.xwikiteam-username {
+  font-size: small;
+  max-width: 12rem;
+  hyphens: auto;
+}
+
+.xwikiteam-usernames-hidden .xwikiteam-username {
+  display: none;
+}
+
+.xwikiteam + .xwikiteam-tools {
+  display: block;
+  visibility: hidden;
+}
+
+.xwikiteam-tools-link {
+  visibility: hidden;
+  align-self: center;
+  padding: 1em;
+}
+
+.xwikiteam:is(:focus-within, :hover) .xwikiteam-tools-link {
+  visibility: visible;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
+    </property>
+    <property>
+      <name></name>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>ea541189-d4d1-4542-a5fa-c162f608e268</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>13</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>14</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>, </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>action=Action|doc.reference=Document|icon.theme=Thème des icônes|locale=Langue|rendering.defaultsyntax=Syntaxe par défaut|rendering.restricted=Restreint|rendering.targetsyntax=Syntaxe cible|request.base=URL de base pour la requête|request.parameters=Paramètres de la requête|request.url=URL de la requête|request.wiki=Wiki de la requête|user=Utilisateur|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>12</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>10</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>9</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content availability</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategory>
+        <disabled>0</disabled>
+        <name>defaultCategory</name>
+        <number>4</number>
+        <prettyName>Default category</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultCategory>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <priority>
+        <disabled>0</disabled>
+        <name>priority</name>
+        <number>11</number>
+        <numberType>integer</numberType>
+        <prettyName>Priority</prettyName>
+        <size>10</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </priority>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <async_cached>0</async_cached>
+    </property>
+    <property>
+      <async_context/>
+    </property>
+    <property>
+      <async_enabled>0</async_enabled>
+    </property>
+    <property>
+      <code>{{velocity}}
+#set($discard = $xwiki.ssx.use('xwiki:XWiki.Macros.Team'))
+#set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
+#set($pictureList = {})
+#macro(avatarInitials $name $size $letterAvatarBgColor $letterAvatarFontColor)
+  &lt;span class="xwikiteam-avatar xwikiteam-avatar-initials" style="height:${size}px; width:${size}px; border-radius: ${size}px; background-color: $letterAvatarBgColor"&gt;
+    &lt;span class="xwikiteam-avatar-initials-inner"&gt;
+      &lt;span class="xwikiteam-avatar-initials-letters" style="color: $letterAvatarFontColor"&gt;
+        #foreach($firstLetter in $name.toUpperCase().split("[\s-]"))$firstLetter.charAt(0)#end
+      &lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+#end
+#macro(avatar $username $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
+  #set($displayUser = $xwiki.getUserName($username, false))
+  #set($fontSize = $size / 2.5)
+  &lt;li class="xwikiteam-user" data-name-without-accents="${util.clearAccents($displayUser.toLowerCase())}" title="$displayUser" data-username="$username" style="font-size: ${fontSize}px"&gt;
+    #set($url = $xwiki.getURL($username))
+    #set($pictureListKey = "${size}-${username}")
+    #if(!$pictureList.containsKey($pictureListKey))
+      #set($pictureURL = '')
+      #set($profileDoc = $xwiki.getDocument($username))
+      #if(!$profileDoc.isNew())
+        #if($profileDoc.attachmentList.size() != 0)
+          #set($profileobj = $profileDoc.getObject('XWiki.XWikiUsers', 0))
+          #set($profileObjAvatar = $profileDoc.getValue('avatar'))
+          #if($profileObjAvatar &amp;&amp; $profileObjAvatar != '')
+            #foreach($attach in $profileDoc.attachmentList)
+              #if($attach.filename == $profileDoc.getValue('avatar'))
+                #set($pictureURL = $profileDoc.getAttachmentURL($profileObjAvatar, 'download', "height=$size"))
+                #break
+              #end
+            #end
+          #end
+        #end
+      #end
+      #if($pictureURL == "" &amp;&amp; !$disableLetterAvatars)
+        #set($picture = "#avatarInitials($displayUser $size $letterAvatarBgColor $letterAvatarFontColor)")
+      #else
+        #if($pictureURL == "")
+          #set($pictureURL = $xwiki.getAttachmentURL('XWiki.XWikiUserSheet', 'noavatar.png'))
+        #end
+        #set($picture = "&lt;img class='xwikiteam-avatar' src='$pictureURL' alt='$displayUser' title='$displayUser' width='$size' height='$size' /&gt;")
+      #end
+      #set($spanName = "&lt;span class='xwikiteam-username'&gt;$displayUser&lt;/span&gt;")
+      $!pictureList.put($pictureListKey, "$picture $spanName")
+    #end
+    &lt;a href="$url"&gt;
+      $pictureList[$pictureListKey]
+    &lt;/a&gt;
+  &lt;/li&gt;
+#end
+#set($tag = $wikimacro.parameters.tag)
+#set($size = $wikimacro.parameters.size)
+#set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
+#set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
+#set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
+#set($showUsernames = $wikimacro.parameters.showUsernames)
+#set($disableTools = $wikimacro.parameters.disableTools)
+#set($disableLetterAvatars = $wikimacro.parameters.disableLetterAvatars)
+#set($configObject = $xwiki.getDocument("XWiki.Macros.TeamConfiguration").getObject("XWiki.Macros.TeamConfigurationClass"))
+#if("$!{size}" == "")
+  #set($size = $configObject.getValue("size"))
+#end
+#if("$!{size}" == "")
+  #set($size = 60)
+#end
+#if("$!{letterAvatarBgColor}" == "")
+  #set($letterAvatarBgColor = $configObject.getValue("letterAvatarBgColor"))
+#end
+#if("$!{letterAvatarBgColor}" == "")
+  #set($letterAvatarBgColor = "#0A6")
+#end
+#if("$!{letterAvatarFontColor}" == "")
+  #set($letterAvatarFontColor = $configObject.getValue("letterAvatarFontColor"))
+#end
+#if("$!{letterAvatarFontColor}" == "")
+  #set($letterAvatarFontColor = "white")
+#end
+#if("$!{requireExternalAuth}" == "")
+  #set($requireExternalAuth = $configObject.getValue("requireExternalAuth"))
+#end
+#if("$!{requireExternalAuth}" == "false" || "$!{requireExternalAuth}" == "0")
+  #set($requireExternalAuth = false)
+#end
+#if("$!{showUsernames}" == "")
+  #set($showUsernames = $configObject.getValue("showUsernames"))
+#end
+#if("$!{showUsernames}" == "false" || "$!{showUsernames}" == "0")
+  #set($showUsernames = false)
+#end
+#if("$!{disableTools}" == "")
+  #set($disableTools = $configObject.getValue("disableTools"))
+#end
+#if("$!{disableTools}" == "false" || "$!{disableTools}" == "0")
+  #set($disableTools = false)
+#end
+#if("$!{disableLetterAvatars}" == "")
+  #set($disableLetterAvatars = $configObject.getValue("disableLetterAvatars"))
+#end
+#if("$!{disableLetterAvatars}" == "false" || "$!{disableLetterAvatars}" == "0")
+  #set($disableLetterAvatars = false)
+#end
+#if(!$tag || $tag == "")
+  #set($tagselect = "")
+  #set($tagwhere = "")
+#else
+  #set($tagselect = ",
+      BaseObject as obj3,
+      DBStringListProperty as tagprop
+    JOIN
+      tagprop.list list
+  ")
+  #set($tagwhere = " and
+    doc.fullName = obj3.name and
+    obj3.className = 'XWiki.TagClass' and
+    obj3.id = tagprop.id.id and
+    tagprop.id.name = 'tags' and
+    list = '${tag}'
+  ")
+#end
+#set($sql = "SELECT doc.fullName FROM XWikiDocument doc,
+    BaseObject as obj
+    #if($requireExternalAuth), BaseObject as obj2 #end,
+    IntegerProperty as prop
+    $tagselect
+  WHERE
+    doc.fullName = obj.name and
+    obj.className = 'XWiki.XWikiUsers'
+    #if($requireExternalAuth) and
+      doc.fullName = obj2.name and (
+        obj2.className = 'XWiki.LDAPProfileClass' or
+        obj2.className = 'XWiki.OIDC.UserClass'
+      )
+    #end and
+    obj.id = prop.id.id and
+    prop.id.name = 'active' and
+    prop.value = 1
+    $tagwhere
+  ORDER BY doc.name
+")
+#set($list = $services.query.hql($sql).execute())
+{{html wiki=false clean=false}}
+&lt;div class="xwikiteam #if($showUsernames)xwikiteam-usernames-displayed #else xwikiteam-usernames-hidden #end"&gt;
+  #if ($list.size() &gt; 0)
+    &lt;ul class="xwikiteam-ul"&gt;
+      #foreach($user in $list)
+        #avatar("xwiki:${user}" $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
+      #end
+      #if(!$disableTools)
+        &lt;li class="xwikiteam-tools-link" hidden="hidden"&gt;
+          &lt;a href="#" role="button" title="${services.localization.render('rendering.macro.team.content.options')}"&gt;
+            &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
+            &lt;span class="sr-only"&gt;${services.localization.render('rendering.macro.team.content.options')}&lt;/span&gt;
+          &lt;/a&gt;
+        &lt;/li&gt;
+      #end
+    &lt;/ul&gt;
+    &lt;div class="xwikiteam-tools" hidden="hidden"&gt;
+      &lt;input class="xwikiteam-filter" type="text" placeholder="${services.localization.render('rendering.macro.team.content.filter')}" /&gt;
+      &lt;label&gt;
+        &lt;input
+          class="xwikiteam-show-username-checkbox"
+          type="checkbox"
+          #if($displayUsernames)checked="checked"#end
+        /&gt;
+        ${services.localization.render('rendering.macro.team.content.showUsernames')}
+      &lt;/label&gt;
+    &lt;/div&gt;
+  #else
+    &lt;p&gt;${services.localization.render('rendering.macro.team.content.noUsers')}&lt;/p&gt;
+  #end
+&lt;/div&gt;
+{{/html}}
+{{/velocity}}</code>
+    </property>
+    <property>
+      <contentDescription></contentDescription>
+    </property>
+    <property>
+      <contentJavaType></contentJavaType>
+    </property>
+    <property>
+      <contentType>No content</contentType>
+    </property>
+    <property>
+      <defaultCategory>content</defaultCategory>
+    </property>
+    <property>
+      <description>This macro displays the team members which have a specific tag</description>
+    </property>
+    <property>
+      <id>team</id>
+    </property>
+    <property>
+      <name>XWiki Team Image Display</name>
+    </property>
+    <property>
+      <priority/>
+    </property>
+    <property>
+      <supportsInlineMode>1</supportsInlineMode>
+    </property>
+    <property>
+      <visibility>Global</visibility>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>954ed43a-9167-47d2-bd94-bbfdd1a0497a</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>Tag that users need to have to be shown</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>tag</name>
+    </property>
+    <property>
+      <type></type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>2</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>8d197e54-1ccf-479f-9bd1-d64fb8d40558</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>The size of a user icon</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>size</name>
+    </property>
+    <property>
+      <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>82462791-02dd-4371-baa1-34fd9e94045a</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>If true, the user should be searched in LDAP or OAuth</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>requireExternalAuth</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>4</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>884fc322-7bde-445e-b6ab-a0ac37dd3635</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>The name of users should be displayed under their avatars</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>showUsernames</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>5</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>a6479ac0-c4fb-4794-8a6e-b5d1530e167f</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>The background color of the letter avatars</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>letterAvatarBgColor</name>
+    </property>
+    <property>
+      <type></type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>6</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>08bd5ce9-abff-4234-85d9-e49e6af834a0</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>The font color of the letter avatars</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>letterAvatarFontColor</name>
+    </property>
+    <property>
+      <type></type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>7</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>991d8300-63d4-49d9-9107-f985b69d9ca6</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue></defaultValue>
+    </property>
+    <property>
+      <description>Don't use letter avatars and display a default avatar instead</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>disableLetterAvatars</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+</xwikidoc>
