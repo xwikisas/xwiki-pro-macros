@@ -38,14 +38,14 @@
   <comment/>
   <minorEdit>true</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{velocity}}
-$services.localization.render('rendering.macro.team.description')
+{{translation key='rendering.macro.team.description' /}}
 
 == Parameters ==
 
 |=Name|=Description|=Default
-|tag|$services.localization.render('rendering.macro.team.parameter.tag.description')|projectteam
+|tag|$services.localization.render('rendering.macro.team.parameter.tag.description')|
 |size|$services.localization.render('rendering.macro.team.parameter.size.description')|60
 |showUsernames|$services.localization.render('rendering.macro.team.parameter.showUsernames.description')|false
 |letterAvatarBgColor|$services.localization.render('rendering.macro.team.parameter.letterAvatarBgColor.description')|#0A6
@@ -179,7 +179,7 @@ $services.localization.render('rendering.macro.team.description')
     </property>
     <property>
       <code>(function () {
-  function filter (teamDiv, e) {
+  function filter (teamDiv) {
     const l = this.value.toLowerCase()
     for (const user of teamDiv.getElementsByClassName('xwikiteam-user')) {
       user.style.display = (
@@ -852,7 +852,7 @@ $services.localization.render('rendering.macro.team.description')
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
       <visibility>Global</visibility>

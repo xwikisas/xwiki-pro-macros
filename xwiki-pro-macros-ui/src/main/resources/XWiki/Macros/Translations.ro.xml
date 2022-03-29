@@ -18,8 +18,8 @@
   <syntaxId>plain/1.0</syntaxId>
   <hidden>false</hidden>
   <content>## Team macro&#xd;
-rendering.macro.team.content.options=Opțiune&#xd;
-rendering.macro.team.content.filter=A filtra…&#xd;
-rendering.macro.team.content.showUsernames=A arăta nume&#xd;
-rendering.macro.team.content.noUsers=Nu este pe nimeni să arate.</content>
+rendering.macro.team.content.options=Opțiuni&#xd;
+rendering.macro.team.content.filter=Filtrează…&#xd;
+rendering.macro.team.content.showUsernames=Arată numele&#xd;
+rendering.macro.team.content.noUsers=N-a fost găsit niciun utilizator.</content>
 </xwikidoc>
