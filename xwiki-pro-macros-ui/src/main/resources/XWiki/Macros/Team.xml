@@ -34,21 +34,22 @@
   <title/>
   <comment/>
   <minorEdit>false</minorEdit>
-  <syntaxId>xwiki/2.0</syntaxId>
+  <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>{{velocity}}
 {{translation key='rendering.macro.team.description' /}}
 
 == Parameters ==
 
-|=Name|=Description|=Default
-|tag|$services.localization.render('rendering.macro.team.parameter.tag.description')|
-|size|$services.localization.render('rendering.macro.team.parameter.size.description')|60
-|showUsernames|$services.localization.render('rendering.macro.team.parameter.showUsernames.description')|false
-|letterAvatarBgColor|$services.localization.render('rendering.macro.team.parameter.letterAvatarBgColor.description')|#0A6
-|letterAvatarFontColor|$services.localization.render('rendering.macro.team.parameter.letterAvatarFontColor.description')|white
-|disableLetterAvatars|$services.localization.render('rendering.macro.team.parameter.disableLetterAvatars.description')|false
-|requireExternalAuth|$services.localization.render('rendering.macro.team.parameter.requireExternalAuth.description')|false
+|= Parameter |= Name |= Description |= Default
+| tag | {{translation key='rendering.macro.team.parameter.tag.name'/}} | {{translation key='rendering.macro.team.parameter.tag.description'/}} |
+| size | {{translation key='rendering.macro.team.parameter.size.name'/}} | {{translation key='rendering.macro.team.parameter.size.description'/}} | 60
+| showUsernames | {{translation key='rendering.macro.team.parameter.showUsernames.name'/}} | {{translation key='rendering.macro.team.parameter.showUsernames.description'/}} | false
+| letterAvatarBgColor | {{translation key='rendering.macro.team.parameter.letterAvatarBgColor.name'/}} | {{translation key='rendering.macro.team.parameter.letterAvatarBgColor.description'/}} | #0A6
+| letterAvatarFontColor | {{translation key='rendering.macro.team.parameter.letterAvatarFontColor.name'/}} | {{translation key='rendering.macro.team.parameter.letterAvatarFontColor.description'/}} | white
+| disableLetterAvatars | {{translation key='rendering.macro.team.parameter.disableLetterAvatars.name'/}} | {{translation key='rendering.macro.team.parameter.disableLetterAvatars.description'/}} | false
+| requireExternalAuth | {{translation key='rendering.macro.team.parameter.requireExternalAuth.name'/}}| {{translation key='rendering.macro.team.parameter.requireExternalAuth.description'/}} | false
+| limit | {{translation key='rendering.macro.team.parameter.limit.name'/}} | {{translation key='rendering.macro.team.parameter.limit.description'/}} | 100
 
 == Examples ==
 
@@ -177,8 +178,10 @@
     <property>
       <code>(function () {
   function filter (teamDiv) {
-    const l = this.value.toLowerCase()
-    for (const user of teamDiv.getElementsByClassName('xwikiteam-user')) {
+    const l = this.value.toLowerCase();
+    const users = teamDiv.getElementsByClassName('xwikiteam-user');
+    for (let i = 0, len = users.length; i &lt; len; i++) {
+      const user = users[i];
       user.style.display = (
         user.textContent.toLowerCase().includes(l) ||
         user.dataset.username.toLowerCase().includes(l) ||
@@ -189,10 +192,8 @@
 
   function applyCheckbox(teamDiv, checkbox) {
     if (checkbox.checked) {
-      teamDiv.classList.add('xwikiteam-usernames-displayed');
       teamDiv.classList.remove('xwikiteam-usernames-hidden');
     } else {
-      teamDiv.classList.remove('xwikiteam-usernames-displayed');
       teamDiv.classList.add('xwikiteam-usernames-hidden');
     }
   }
@@ -244,7 +245,7 @@
       <name/>
     </property>
     <property>
-      <parse/>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>
@@ -380,14 +381,14 @@
 .xwikiteam .xwikiteam-avatar {
   border: 4px solid white;
   border-radius: 10em;
-  box-shadow: 0 0 4px #ccc;
+  box-shadow: 0 0 4px lighten(@gray-base, 70%);
   object-fit: cover;
   margin: 0.1ex;
   box-sizing: content-box;
 }
 
 .xwikiteam a:hover .xwikiteam-avatar {
-  border-color: #4791bc;
+  border-color: @link-hover-color;
 }
 
 .xwikiteam .xwikiteam-avatar-initials {
@@ -395,7 +396,7 @@
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  font-family: sans-serif;
+  font-family: @font-family-base;
   overflow: hidden;
 }
 
@@ -428,18 +429,20 @@
   padding: 1em;
 }
 
-.xwikiteam:is(:focus-within, :hover) .xwikiteam-tools-link {
-  visibility: visible;
+.xwikiteam:focus-within, .xwikiteam:hover {
+  .xwikiteam-tools-link {
+    visibility: visible;
+  }
 }</code>
     </property>
     <property>
-      <contentType>CSS</contentType>
+      <contentType>LESS</contentType>
     </property>
     <property>
       <name/>
     </property>
     <property>
-      <parse/>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>
@@ -653,7 +656,10 @@
 #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
 #set($pictureList = {})
 #macro(avatarInitials $name $size $letterAvatarBgColor $letterAvatarFontColor)
-  &lt;span class="xwikiteam-avatar xwikiteam-avatar-initials" style="height:${size}px; width:${size}px; border-radius: ${size}px; background-color: $letterAvatarBgColor"&gt;
+  &lt;span
+    class="xwikiteam-avatar xwikiteam-avatar-initials"
+    style="height:${size}px; width:${size}px; border-radius: ${size}px; background-color: $letterAvatarBgColor"
+  &gt;
     &lt;span class="xwikiteam-avatar-initials-inner"&gt;
       &lt;span class="xwikiteam-avatar-initials-letters" style="color: $letterAvatarFontColor"&gt;
         #foreach($firstLetter in $name.toUpperCase().split("[\s-]"))$firstLetter.charAt(0)#end
@@ -663,40 +669,30 @@
 #end
 #macro(avatar $username $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
   #set($displayUser = $xwiki.getUserName($username, false))
-  #set($fontSize = $size / 2.5)
-  &lt;li class="xwikiteam-user" data-name-without-accents="${util.clearAccents($displayUser.toLowerCase())}" title="$displayUser" data-username="$username" style="font-size: ${fontSize}px"&gt;
-    #set($url = $xwiki.getURL($username))
-    #set($pictureListKey = "${size}-${username}")
-    #if(!$pictureList.containsKey($pictureListKey))
-      #set($pictureURL = '')
-      #set($profileDoc = $xwiki.getDocument($username))
-      #if(!$profileDoc.isNew())
-        #if($profileDoc.attachmentList.size() != 0)
-          #set($profileobj = $profileDoc.getObject('XWiki.XWikiUsers', 0))
-          #set($profileObjAvatar = $profileDoc.getValue('avatar'))
-          #if($profileObjAvatar &amp;&amp; $profileObjAvatar != '')
-            #foreach($attach in $profileDoc.attachmentList)
-              #if($attach.filename == $profileDoc.getValue('avatar'))
-                #set($pictureURL = $profileDoc.getAttachmentURL($profileObjAvatar, 'download', "height=$size"))
-                #break
-              #end
-            #end
-          #end
-        #end
-      #end
-      #if($pictureURL == "" &amp;&amp; !$disableLetterAvatars)
-        #set($picture = "#avatarInitials($displayUser $size $letterAvatarBgColor $letterAvatarFontColor)")
-      #else
-        #if($pictureURL == "")
-          #set($pictureURL = $xwiki.getAttachmentURL('XWiki.XWikiUserSheet', 'noavatar.png'))
-        #end
-        #set($picture = "&lt;img class='xwikiteam-avatar' src='$pictureURL' alt='$displayUser' title='$displayUser' width='$size' height='$size' /&gt;")
-      #end
-      #set($spanName = "&lt;span class='xwikiteam-username'&gt;$displayUser&lt;/span&gt;")
-      $!pictureList.put($pictureListKey, "$picture $spanName")
-    #end
+  #set($escapedDisplayUser = $escapetool.xml($displayUser))
+  #set($fontSize = $size / 3)
+  &lt;li
+    class="xwikiteam-user"
+    data-name-without-accents="${util.clearAccents($escapedDisplayUser.toLowerCase())}"
+    title="$escapedDisplayUser"
+    data-username="${escapetool.xml($username)}"
+    style="font-size: ${fontSize}px"
+  &gt;
     &lt;a href="$url"&gt;
-      $pictureList[$pictureListKey]
+      #getUserAvatarURL($username $return $size)
+      #if(!$return.specified &amp;&amp; !$disableLetterAvatars)
+        #avatarInitials($displayUser $size $letterAvatarBgColor $letterAvatarFontColor)
+      #else
+        &lt;img
+          class='xwikiteam-avatar'
+          src='$escapetool.xml($return.url)'
+          alt='$escapedDisplayUser'
+          title='$escapedDisplayUser'
+          width='$size'
+          height='$size'
+        /&gt;
+      #end
+      &lt;span class='xwikiteam-username'&gt;$escapedDisplayUser&lt;/span&gt;
     &lt;/a&gt;
   &lt;/li&gt;
 #end
@@ -708,22 +704,26 @@
 #set($showUsernames = $wikimacro.parameters.showUsernames)
 #set($disableTools = $wikimacro.parameters.disableTools)
 #set($disableLetterAvatars = $wikimacro.parameters.disableLetterAvatars)
+#set($limit = $wikimacro.parameters.limit)
 #set($configObject = $xwiki.getDocument("XWiki.Macros.TeamConfiguration").getObject("XWiki.Macros.TeamConfigurationClass"))
 #if("$!{size}" == "")
   #set($size = $configObject.getValue("size"))
 #end
+#set($size = $escapetool.xml($size))
 #if("$!{size}" == "")
   #set($size = 60)
 #end
 #if("$!{letterAvatarBgColor}" == "")
   #set($letterAvatarBgColor = $configObject.getValue("letterAvatarBgColor"))
 #end
+#set($letterAvatarBgColor = $escapetool.xml($letterAvatarBgColor))
 #if("$!{letterAvatarBgColor}" == "")
   #set($letterAvatarBgColor = "#0A6")
 #end
 #if("$!{letterAvatarFontColor}" == "")
   #set($letterAvatarFontColor = $configObject.getValue("letterAvatarFontColor"))
 #end
+#set($letterAvatarFontColor = $escapetool.xml($letterAvatarFontColor))
 #if("$!{letterAvatarFontColor}" == "")
   #set($letterAvatarFontColor = "white")
 #end
@@ -751,6 +751,12 @@
 #if("$!{disableLetterAvatars}" == "false" || "$!{disableLetterAvatars}" == "0")
   #set($disableLetterAvatars = false)
 #end
+#if("$!{limit}" == "")
+  #set($limit = $configObject.getValue("limit"))
+#end
+#if("$!{limit}" == "")
+  #set($limit = 100)
+#end
 #if(!$tag || $tag == "")
   #set($tagselect = "")
   #set($tagwhere = "")
@@ -769,7 +775,7 @@
     list = '${tag}'
   ")
 #end
-#set($sql = "SELECT doc.fullName FROM XWikiDocument doc,
+#set($hql = ",
     BaseObject as obj
     #if($requireExternalAuth), BaseObject as obj2 #end,
     IntegerProperty as prop
@@ -789,36 +795,36 @@
     $tagwhere
   ORDER BY doc.name
 ")
-#set($list = $services.query.hql($sql).execute())
+#set($list = $services.query.hql($hql).setLimit($limit).execute())
 {{html wiki=false clean=false}}
-&lt;div class="xwikiteam #if($showUsernames)xwikiteam-usernames-displayed #else xwikiteam-usernames-hidden #end"&gt;
+&lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
   #if ($list.size() &gt; 0)
     &lt;ul class="xwikiteam-ul"&gt;
       #foreach($user in $list)
-        #avatar("xwiki:${user}" $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
+        #avatar($user $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
       #end
       #if(!$disableTools)
         &lt;li class="xwikiteam-tools-link" hidden="hidden"&gt;
-          &lt;a href="#" role="button" title="${services.localization.render('rendering.macro.team.content.options')}"&gt;
+          &lt;a href="#" role="button" title="$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))"&gt;
             &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
-            &lt;span class="sr-only"&gt;${services.localization.render('rendering.macro.team.content.options')}&lt;/span&gt;
+            &lt;span class="sr-only"&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))&lt;/span&gt;
           &lt;/a&gt;
         &lt;/li&gt;
       #end
     &lt;/ul&gt;
     &lt;div class="xwikiteam-tools" hidden="hidden"&gt;
-      &lt;input class="xwikiteam-filter" type="text" placeholder="${services.localization.render('rendering.macro.team.content.filter')}" /&gt;
+      &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
       &lt;label&gt;
         &lt;input
           class="xwikiteam-show-username-checkbox"
           type="checkbox"
           #if($displayUsernames)checked="checked"#end
         /&gt;
-        ${services.localization.render('rendering.macro.team.content.showUsernames')}
+        $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
       &lt;/label&gt;
     &lt;/div&gt;
   #else
-    &lt;p&gt;${services.localization.render('rendering.macro.team.content.noUsers')}&lt;/p&gt;
+    &lt;p&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.noUsers'))&lt;/p&gt;
   #end
 &lt;/div&gt;
 {{/html}}
@@ -843,7 +849,7 @@
       <id>team</id>
     </property>
     <property>
-      <name>XWiki Team Image Display</name>
+      <name>Team</name>
     </property>
     <property>
       <priority/>
@@ -852,7 +858,7 @@
       <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
-      <visibility>Global</visibility>
+      <visibility>Current Wiki</visibility>
     </property>
   </object>
   <object>
@@ -996,7 +1002,7 @@
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>60</defaultValue>
     </property>
     <property>
       <description>The size of a user icon</description>
@@ -1008,7 +1014,7 @@
       <name>size</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type/>
     </property>
   </object>
   <object>
@@ -1074,7 +1080,7 @@
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>false</defaultValue>
     </property>
     <property>
       <description>If true, the user should be searched in LDAP or OAuth</description>
@@ -1152,7 +1158,7 @@
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>false</defaultValue>
     </property>
     <property>
       <description>The name of users should be displayed under their avatars</description>
@@ -1230,7 +1236,7 @@
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>#0A6</defaultValue>
     </property>
     <property>
       <description>The background color of the letter avatars</description>
@@ -1308,7 +1314,7 @@
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>white</defaultValue>
     </property>
     <property>
       <description>The font color of the letter avatars</description>
@@ -1399,6 +1405,84 @@
     </property>
     <property>
       <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>8</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>faaa9a0c-1bf5-4e07-b60b-3ea37395d9dc</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>100</defaultValue>
+    </property>
+    <property>
+      <description>The maximum number of users to show</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>limit</name>
+    </property>
+    <property>
+      <type/>
     </property>
   </object>
 </xwikidoc>

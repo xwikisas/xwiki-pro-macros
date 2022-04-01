@@ -368,6 +368,20 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </letterAvatarFontColor>
+      <limit>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>100 (0 to disable the limit)</hint>
+        <name>limit</name>
+        <number>8</number>
+        <numberType>long</numberType>
+        <prettyName>Maximum number of users to display</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </limit>
       <requireExternalAuth>
         <customDisplay/>
         <defaultValue>0</defaultValue>
@@ -424,6 +438,9 @@
     </property>
     <property>
       <letterAvatarFontColor>white</letterAvatarFontColor>
+    </property>
+    <property>
+      <limit>100</limit>
     </property>
     <property>
       <requireExternalAuth>0</requireExternalAuth>
