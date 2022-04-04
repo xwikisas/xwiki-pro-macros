@@ -219,26 +219,36 @@
     }
   }
 
-  for (const teamDiv of document.getElementsByClassName('xwikiteam')) {
-    const a = teamDiv.querySelector('.xwikiteam-tools-link a');
-    if (a) {
-      a.onclick = toggleTools.bind(null, teamDiv);
-      a.parentNode.hidden = false;
-    }
-    const ul = teamDiv.querySelector('.xwikiteam-ul');
-    const tools = teamDiv.querySelector('.xwikiteam-tools');
-    if (!tools) continue;
-    const filterInput = tools.querySelector('.xwikiteam-filter');
-    if (filterInput) {
-      filterInput.addEventListener('keyup', filter.bind(filterInput, teamDiv));
-      if (filterInput.value) {
-        filter.call(filterInput, teamDiv);
-        toggleTools(teamDiv)
+  function init() {
+    const teamDivs = document.getElementsByClassName('xwikiteam');
+    for (let i = 0, len = teamDivs.length; i &lt; len; i++) {
+      const teamDiv = teamDivs[i];
+      const a = teamDiv.querySelector('.xwikiteam-tools-link a');
+      if (a) {
+        if (a.onclick) {
+          continue; // don't initialize already initialized team macros
+        }
+        a.onclick = toggleTools.bind(null, teamDiv);
+        a.parentNode.hidden = false;
       }
-    }
+      const ul = teamDiv.querySelector('.xwikiteam-ul');
+      const tools = teamDiv.querySelector('.xwikiteam-tools');
+      if (!tools) continue;
+      const filterInput = tools.querySelector('.xwikiteam-filter');
+      if (filterInput) {
+        filterInput.addEventListener('keyup', filter.bind(filterInput, teamDiv));
+        if (filterInput.value) {
+          filter.call(filterInput, teamDiv);
+          toggleTools(teamDiv)
+        }
+      }
 
-    bindShowUsernameCheckbox(teamDiv, teamDiv.querySelector(".xwikiteam-show-username-checkbox"));
+      bindShowUsernameCheckbox(teamDiv, teamDiv.querySelector(".xwikiteam-show-username-checkbox"));
+    }
   }
+
+  $(document).on('xwiki:dom:updated', init);
+  $(init);
 })();</code>
     </property>
     <property>
