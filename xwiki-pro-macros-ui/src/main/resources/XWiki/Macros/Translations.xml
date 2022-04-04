@@ -130,6 +130,8 @@ rendering.macro.team.content.options=Options
 rendering.macro.team.content.filter=Filter…
 rendering.macro.team.content.showUsernames=Show names
 rendering.macro.team.content.noUsers=There is nobody to show.</content>
+admin.promacros=Pro Macros
+admin.promacros.description=Settings for Pro Macros
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
