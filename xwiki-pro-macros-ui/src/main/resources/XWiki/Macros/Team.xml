@@ -247,8 +247,12 @@
     }
   }
 
-  $(document).on('xwiki:dom:updated', init);
-  $(init);
+  document.addEventListener('xwiki:dom:updated', init);
+  if (document.body) {
+    init();
+  } else {
+    window.addEventListener('DOMContentLoaded', init);
+  }
 })();</code>
     </property>
     <property>
