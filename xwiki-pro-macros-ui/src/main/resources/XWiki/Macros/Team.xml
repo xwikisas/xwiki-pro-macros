@@ -656,13 +656,16 @@
 #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
 #set($pictureList = {})
 #macro(avatarInitials $name $size $letterAvatarBgColor $letterAvatarFontColor)
+  #set($escapedSize = $escapetool.xml($size))
+  #set($escapedLetterAvatarFontColor = $escapetool.xml($letterAvatarFontColor))
+  #set($escapedLetterAvatarBgColor = $escapetool.xml($letterAvatarBgColor))
   &lt;span
     class="xwikiteam-avatar xwikiteam-avatar-initials"
-    style="height:${size}px; width:${size}px; border-radius: ${size}px; background-color: $letterAvatarBgColor"
+    style="height:${escapedSize}px; width:${escapedSize}px; border-radius: ${escapedSize}px; background-color: $escapedLetterAvatarBgColor"
   &gt;
     &lt;span class="xwikiteam-avatar-initials-inner"&gt;
-      &lt;span class="xwikiteam-avatar-initials-letters" style="color: $letterAvatarFontColor"&gt;
-        #foreach($firstLetter in $name.toUpperCase().split("[\s-]"))$firstLetter.charAt(0)#end
+      &lt;span class="xwikiteam-avatar-initials-letters" style="color: $escapedLetterAvatarFontColor"&gt;
+        #foreach($firstLetter in $name.toUpperCase().split("[\s-]"))$escapetool.xml($firstLetter.charAt(0))#end
       &lt;/span&gt;
     &lt;/span&gt;
   &lt;/span&gt;
