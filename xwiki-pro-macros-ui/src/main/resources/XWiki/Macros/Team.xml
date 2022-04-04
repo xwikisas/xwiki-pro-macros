@@ -219,7 +219,7 @@
     }
   }
 
-  function init() {
+  function initTools() {
     const teamDivs = document.getElementsByClassName('xwikiteam');
     for (let i = 0, len = teamDivs.length; i &lt; len; i++) {
       const teamDiv = teamDivs[i];
@@ -247,7 +247,11 @@
     }
   }
 
-  document.addEventListener('xwiki:dom:updated', init);
+  function init() {
+    initTools();
+    document.observe('xwiki:dom:updated', initTools);
+  }
+
   if (document.body) {
     init();
   } else {
