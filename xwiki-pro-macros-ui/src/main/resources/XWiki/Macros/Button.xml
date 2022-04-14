@@ -306,7 +306,7 @@ $services.localization.render('rendering.macro.button.description')
 ## Retrieve macro parameters
 #set ($label = $escapetool.xml($wikimacro.parameters.label))
 #set ($url = $escapetool.xml($wikimacro.parameters.url))
-#set ($color = $escapetool.xml($wikimacro.parameters.color))
+#set ($color = $wikimacro.parameters.color)
 #set ($width = $escapetool.xml($wikimacro.parameters.width))
 #set ($newTab = $escapetool.xml($wikimacro.parameters.newTab))
 #set ($icon = $escapetool.xml($xcontext.macro.params.icon))
@@ -314,14 +314,12 @@ $services.localization.render('rendering.macro.button.description')
 #if ($xwiki.exists($url))
   #set ($url = $xwiki.getDocument($url).getURL())
 #end
-## The color will be a string of form "java.awt.Color[r=x,g=y,b=z]"
+## The color will be a java.awt.Color object
 ## Transform it into an array of Integers for better malleability: [x, y, z]
-#set ($colors = $color.replaceAll("[^\d,]+", "").split(","))
-#if ($colors.size() != 3)
-  #set ($colors = [255, 255, 255])
+#if ($color)
+  #set ($colors = [$color.Red, $color.Green, $color.Blue])
 #else
-  #set($Integer = 0)
-  #set ($colors = [$Integer.parseInt($colors[0]), $Integer.parseInt($colors[1]), $Integer.parseInt($colors[2])])
+  #set ($colors = [255, 255, 255])
 #end
 #set ($darkenedColors = [])
 #darken($colors, $darkenedColors)
