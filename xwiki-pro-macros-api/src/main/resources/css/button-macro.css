@@ -1,0 +1,3 @@
+/* We need to set the z-index of the IconPicker container to be higher than the XWiki modal on top of which it is
+  displayed. */
+.xwikiIconPickerContainer { z-index: 10501 !important;}

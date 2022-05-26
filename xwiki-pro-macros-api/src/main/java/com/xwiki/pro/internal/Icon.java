@@ -23,7 +23,7 @@ package com.xwiki.pro.internal;
  * The object is used to associate a picker to the icon parameter.
  *
  * @version $Id$
- * @since 1.2.3
+ * @since 1.3
  */
 public interface Icon
 {

@@ -32,12 +32,22 @@
   <name>XWiki Pro - Macros API</name>
   <description>The API needed for the XWiki Pro Macros.</description>
   <dependencies>
+    <!-- We need this XAR dependency because it provides the icon picker that we use in the velocity template that we
+    link to one of the Button Macro parameters. -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-icon-ui</artifactId>
       <version>${platform.version}</version>
       <type>xar</type>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>requirejs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
     </dependency>
   </dependencies>
 </project>

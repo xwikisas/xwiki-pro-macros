@@ -18,25 +18,21 @@
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
 
-<input type="text" id="buttonIconPicker" name="icon" />
+#set ($config = {
+    "prefix": "",
+    "icon-picker": "$xwiki.getURL('IconThemesCode.IconPicker', 'jsx', $escapetool.url({
+      'minify': $request.minify
+    }))"
+  }
+)
+
+<input type="text" class="buttonIconPicker"
+  #foreach ($parameter in $displayer.parameters.entrySet())
+    $escapetool.xml($parameter.key)="$!escapetool.xml($parameter.value)"
+  #end
+  data-config='$escapetool.xml($jsontool.serialize($config))'
+/>
 
 #set($discard = $xwiki.ssx.use('IconThemesCode.IconPicker'))
-#foreach($iconSetName in $services.icon.iconSetNames)
-  #set($discard = $services.icon.render('wiki', $iconSetName))
-#end
-
-<script>
-require.config({
-  paths: {
-    'xwiki-icon-picker': '$xwiki.getURL($services.model.createDocumentReference('', 'IconThemesCode', 'IconPicker'), 'jsx', "minify=$!{escapetool.url($request.minify)}")'
-  }
-});
-require(['jquery', 'xwiki-icon-picker'], function($) {
-  var options = {};
-  options['prefix'] = '';
-  $('#buttonIconPicker').xwikiIconPicker(options);
-});
-</script>
-<style>
-.xwikiIconPickerContainer { z-index: 10501;}
-</style>
+#set($discard = $xwiki.ssrx.use('css/button-macro.css'))
+#set($discard = $xwiki.jsrx.use('js/button-macro.js', {'minify' : $request.minify}))

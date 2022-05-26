@@ -78,21 +78,4 @@
       <version>${platform.version}</version>
     </dependency>
   </dependencies>
-  <!-- Even though this repository is already declared in the parent POM, we still explicitly redeclare it for
-       convenience. This makes it simpler to build this project without having to declare this repository in one's own
-       Maven settings.xml file. In the future We may decide to remove this in the future and make it a rule to have the
-       XWiki SAS Nexus repository in one's settings.xml -->
-  <repositories>
-    <repository>
-      <id>public-store-releases</id>
-      <name>XWiki SAS Public Store Repository for Releases</name>
-      <url>https://nexus.xwiki.com/nexus/content/repositories/public-store-releases/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>
