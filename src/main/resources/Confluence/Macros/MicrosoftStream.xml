@@ -46,8 +46,8 @@ This macro is also a bridge between the Confluence macro and XWiki.
 
 |=Parameter|=Name|=Description|=Required|=Default
 |**url**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.url.description'))|Yes|
-|**width**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.description'))|No|500
-|**height**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.description'))|No|300
+|**width**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.description'))|No|500px
+|**height**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.description'))|No|300px
 |**alignment**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'))|No|
 |**start**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.start.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.start.description'))|No|00:00:00
 |**showinfo**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.description'))|No|false
@@ -55,12 +55,10 @@ This macro is also a bridge between the Confluence macro and XWiki.
 
 {{/velocity}}
 
-= Examples of usage =
-
-== Video ==
+= Example of usage =
 
 {{code}}
-{{microsoftStream url="https://web.microsoftstream.com/video/2113?st=5"/}}
+{{microsoftStream url="https://web.microsoftstream.com/video/2113" width="700px" alignment="left" showinfo="true" start="00:05:04"/}}
 {{/code}}</content>
   <object>
     <name>Confluence.Macros.MicrosoftStream</name>
@@ -424,6 +422,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
   #elseif ($datetool.toDate('ss', $start))
     #set ($dateObj = $datetool.toDate('ss', $start))
   #end
+  #set ($startSeconds = 0)
   #if ($!dateObj)
     #set ($startSeconds = 3600 * $dateObj.getHours() + 60 * $dateObj.getMinutes() + $dateObj.getSeconds())
   #end
@@ -434,12 +433,18 @@ This macro is also a bridge between the Confluence macro and XWiki.
 #set ($discard = $xwiki.ssx.use('Confluence.Macros.MicrosoftStream'))
 #getAlignmentClass($stringtool.lowerCase($xcontext.macro.params.alignment) $alignmentClass)
 #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
-## Update the url params, if needed, since macro parameters have priority over the parameters extracted from url.
-#if ($queryParams.autoplay != $xcontext.macro.params.autoplay)
-  #set ($discard = $queryParams.put('autoplay', $xcontext.macro.params.autoplay))
+## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
+#set ($autoplay = $xcontext.macro.params.autoplay)
+#if ($!autoplay)
+  #set ($discard = $queryParams.put('autoplay', $autoplay))
+#elseif (!$!autoplay &amp;&amp; !$queryParams.autoplay)
+  #set ($discard = $queryParams.put('autoplay', false))
 #end
-#if ($queryParams.showinfo != $xcontext.macro.params.showinfo)
-  #set ($discard = $queryParams.put('showinfo', $xcontext.macro.params.showinfo))
+#set ($showinfo = $xcontext.macro.params.showinfo)
+#if ($!showinfo)
+  #set ($discard = $queryParams.put('showinfo', $showinfo))
+#elseif (!$!showinfo &amp;&amp; !$queryParams.showinfo)
+  #set ($discard = $queryParams.put('showinfo', false))
 #end
 #if ($!xcontext.macro.params.start)
   #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
@@ -447,9 +452,9 @@ This macro is also a bridge between the Confluence macro and XWiki.
     #set ($discard = $queryParams.put('st', $startSeconds))
   #end
 #end
-#set ($videoURL = $baseURL + '?' + $escapetool.url($urlParams))
+#set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
 {{html clean=false}}
-  &lt;p class="microsoftStreamMacro $alignmentClass"&gt;
+  &lt;p class="microsoftStreamMacro $!alignmentClass"&gt;
     &lt;iframe width="$xcontext.macro.params.width" height="$xcontext.macro.params.height"
       src="$videoURL" allowfullscreen&gt;
     &lt;/iframe&gt;
@@ -626,7 +631,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
       </type>
     </class>
     <property>
-      <defaultValue>500</defaultValue>
+      <defaultValue>500px</defaultValue>
     </property>
     <property>
       <description>The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).</description>
@@ -704,7 +709,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
       </type>
     </class>
     <property>
-      <defaultValue>300</defaultValue>
+      <defaultValue>300px</defaultValue>
     </property>
     <property>
       <description>The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).</description>
@@ -938,7 +943,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
       </type>
     </class>
     <property>
-      <defaultValue>false</defaultValue>
+      <defaultValue/>
     </property>
     <property>
       <description>Show the video info on thumbnail</description>
@@ -1016,7 +1021,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
       </type>
     </class>
     <property>
-      <defaultValue>false</defaultValue>
+      <defaultValue/>
     </property>
     <property>
       <description>Whether the video should start automatically or if the user must play it.</description>
