@@ -836,7 +836,7 @@ $services.localization.render('rendering.macro.button.description')
       <name>icon</name>
     </property>
     <property>
-      <type>com.xwiki.pro.internal.Icon</type>
+      <type>com.xwiki.macros.internal.Icon</type>
     </property>
   </object>
 </xwikidoc>

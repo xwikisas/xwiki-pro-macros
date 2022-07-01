@@ -17,10 +17,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.internal;
+package com.xwiki.macros.internal;
 
 /**
- * The object is used to associate a picker to the icon parameter.
+ * The object is used to associate a picker to the icon macro parameters.
  *
  * @version $Id$
  * @since 1.3

@@ -30,9 +30,9 @@
   #foreach ($parameter in $displayer.parameters.entrySet())
     $escapetool.xml($parameter.key)="$!escapetool.xml($parameter.value)"
   #end
-  data-config='$escapetool.xml($jsontool.serialize($config))'
+  data-config="$escapetool.xml($jsontool.serialize($config))"
 />
 
 #set($discard = $xwiki.ssx.use('IconThemesCode.IconPicker'))
 #set($discard = $xwiki.ssrx.use('css/button-macro.css'))
-#set($discard = $xwiki.jsrx.use('js/button-macro.js', {'minify' : $request.minify}))
+#set($discard = $xwiki.jsrx.use('js/button-macro.js'))

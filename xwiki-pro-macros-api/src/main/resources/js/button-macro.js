@@ -16,12 +16,10 @@ require(['jquery'], function($) {
     });
   };
 
+  $('.buttonIconPicker').each(function() {
+    requireIconPicker($(this).data('config'));
+  });
 
-
-  let button = $('.buttonIconPicker');
-  if (button.length > 0) {
-    requireIconPicker(button.data('config'));
-  }
   $('.macro-editor-modal').on('focus', '.buttonIconPicker', function() {
     if (pickerRequired) {
       requireIconPicker($('.buttonIconPicker').data('config'));
