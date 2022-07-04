@@ -18,21 +18,12 @@
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
 
-#set ($config = {
-    "prefix": "",
-    "icon-picker": "$xwiki.getURL('IconThemesCode.IconPicker', 'jsx', $escapetool.url({
-      'minify': $request.minify
-    }))"
-  }
-)
-
-<input type="text" class="buttonIconPicker"
+<input type="text" class="xwiki-icon-picker"
   #foreach ($parameter in $displayer.parameters.entrySet())
     $escapetool.xml($parameter.key)="$!escapetool.xml($parameter.value)"
   #end
-  data-config="$escapetool.xml($jsontool.serialize($config))"
 />
 
 #set($discard = $xwiki.ssx.use('IconThemesCode.IconPicker'))
-#set($discard = $xwiki.ssrx.use('css/button-macro.css'))
-#set($discard = $xwiki.jsrx.use('js/button-macro.js'))
+#set($discard = $xwiki.ssrx.use('css/icon-picker.css'))
+#set($discard = $xwiki.jsrx.use('js/icon-picker.js'))
