@@ -36,7 +36,23 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>## Panel macro
+  <content>## Button macro
+rendering.macro.button.name=Button Macro
+rendering.macro.button.description=Insert a noticeable, clickable button on your XWiki page to highlight links and create call to actions!
+rendering.macro.button.parameter.label.name=Label
+rendering.macro.button.parameter.label.description=The label of the button.
+rendering.macro.button.parameter.url.name=URL
+rendering.macro.button.parameter.url.description=A link or a page reference.
+rendering.macro.button.parameter.color.name=Color
+rendering.macro.button.parameter.color.description=The color of the button.
+rendering.macro.button.parameter.width.name=Width
+rendering.macro.button.parameter.width.description=The width of the button specified in pixels, percentage or other valid CSS value (ex. 30px, 30%, 30em). If no value is specified, the width will be determined by the length of the label.
+rendering.macro.button.parameter.newTab.name=Open in new tab
+rendering.macro.button.parameter.newTab.description=Denotes whether the page will be opened in a new page or not.
+rendering.macro.button.parameter.icon.name=Icon
+rendering.macro.button.parameter.icon.description=Icon associated with the button, placed before the label.
+
+## Panel macro
 rendering.macro.panel.name=Panel Macro
 rendering.macro.panel.description=Panel macro to display XWiki content inside a panel.
 rendering.macro.panel.content.description=Add the Panel content. It supports XWiki 2.1 syntax.
