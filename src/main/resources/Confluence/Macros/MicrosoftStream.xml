@@ -45,13 +45,13 @@ This macro is also a bridge between the Confluence macro and XWiki.
 = Parameters =
 
 |=Parameter|=Name|=Description|=Required|=Default
-|**url**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.url.description'))|Yes|
-|**width**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.width.description'))|No|500px
-|**height**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.height.description'))|No|300px
-|**alignment**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'))|No|
-|**start**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.start.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.start.description'))|No|00:00:00
-|**showinfo**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.description'))|No|false
-|**autoplay**|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.name'))|$escapetool.xml($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.description'))|No|false
+|**url**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.description'))|Yes|
+|**width**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.width.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.width.description'))|No|500px
+|**height**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.height.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.height.description'))|No|300px
+|**alignment**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'))|No|
+|**start**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.start.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.start.description'))|No|00:00:00
+|**showinfo**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.description'))|No|true
+|**autoplay**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.description'))|No|false
 
 {{/velocity}}
 
@@ -165,12 +165,12 @@ This macro is also a bridge between the Confluence macro and XWiki.
       <cache>long</cache>
     </property>
     <property>
-      <code>.microsoftStreamMacroCenter {
-  text-align: center;
-}
-
-.microsoftStreamMacro {
+      <code>.msStreamMacro {
   margin: 1%;
+
+  &amp;-center {
+    text-align: center;
+  }
 
   iframe {
     max-width: 100%;
@@ -391,7 +391,7 @@ This macro is also a bridge between the Confluence macro and XWiki.
   #elseif ($alignment == 'right')
     #set ($alignmentClass = 'pull-right')
   #elseif ($alignment == 'center')
-    #set ($alignmentClass = 'microsoftStreamMacroCenter')
+    #set ($alignmentClass = 'msStreamMacro-center')
   #end
 #end
 
@@ -408,23 +408,24 @@ This macro is also a bridge between the Confluence macro and XWiki.
   #if (!$stringtool.contains($baseURL, 'embed/video'))
     #set ($baseURL = $stringtool.replace($baseURL, 'video', 'embed/video'))
   #end
-  #set ($urlParams = {})
-  #if ($!queryString)
+  #set ($queryParams = {})
+  #if ($queryString)
     #set ($queryParams = $urltool.parseQuery($queryString))
   #end
 #end
 
 #macro (getStartAsSeconds $start $startSeconds)
-  #if ($datetool.toDate('HH:mm:ss', $start))
-    #set ($dateObj = $datetool.toDate('HH:mm:ss', $start))
-  #elseif ($datetool.toDate('mm:ss', $start))
+  #set ($dateObj = $datetool.toDate('HH:mm:ss', $start))
+  #if (!$dateObj)
     #set ($dateObj = $datetool.toDate('mm:ss', $start))
-  #elseif ($datetool.toDate('ss', $start))
-    #set ($dateObj = $datetool.toDate('ss', $start))
+    #if (!$dateObj)
+      #set ($dateObj = $datetool.toDate('ss', $start))
+    #end
   #end
   #set ($startSeconds = 0)
-  #if ($!dateObj)
-    #set ($startSeconds = 3600 * $dateObj.getHours() + 60 * $dateObj.getMinutes() + $dateObj.getSeconds())
+  #if ($dateObj)
+    #set ($startSeconds = 3600 * $dateObj.getValue('HOUR', $dateObj) + 60 * $dateObj.getValue('MINUTE', $dateObj)
+      + $dateObj.getValue('SECOND', $dateObj))
   #end
 #end
 {{/velocity}}
@@ -435,18 +436,14 @@ This macro is also a bridge between the Confluence macro and XWiki.
 #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
 ## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
 #set ($autoplay = $xcontext.macro.params.autoplay)
-#if ($!autoplay)
+#if ($autoplay)
   #set ($discard = $queryParams.put('autoplay', $autoplay))
-#elseif (!$!autoplay &amp;&amp; !$queryParams.autoplay)
-  #set ($discard = $queryParams.put('autoplay', false))
 #end
 #set ($showinfo = $xcontext.macro.params.showinfo)
-#if ($!showinfo)
+#if ($showinfo)
   #set ($discard = $queryParams.put('showinfo', $showinfo))
-#elseif (!$!showinfo &amp;&amp; !$queryParams.showinfo)
-  #set ($discard = $queryParams.put('showinfo', false))
 #end
-#if ($!xcontext.macro.params.start)
+#if ($xcontext.macro.params.start)
   #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
   #if ($queryParams.st != $startSeconds)
     #set ($discard = $queryParams.put('st', $startSeconds))
@@ -454,9 +451,9 @@ This macro is also a bridge between the Confluence macro and XWiki.
 #end
 #set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
 {{html clean=false}}
-  &lt;p class="microsoftStreamMacro $!alignmentClass"&gt;
-    &lt;iframe width="$xcontext.macro.params.width" height="$xcontext.macro.params.height"
-      src="$videoURL" allowfullscreen&gt;
+  &lt;p class="msStreamMacro $!escapetool.xml($alignmentClass)"&gt;
+    &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
+      height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
     &lt;/iframe&gt;
   &lt;/p&gt;
 {{/html}}
@@ -478,13 +475,13 @@ This macro is also a bridge between the Confluence macro and XWiki.
       <description>Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.</description>
     </property>
     <property>
-      <id>microsoftStream</id>
+      <id>msStream</id>
     </property>
     <property>
       <name>Microsoft Stream</name>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
