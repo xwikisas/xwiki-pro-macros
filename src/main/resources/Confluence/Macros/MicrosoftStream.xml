@@ -45,13 +45,40 @@ This macro is also a bridge between the Confluence macro and XWiki.
 = Parameters =
 
 |=Parameter|=Name|=Description|=Required|=Default
-|**url**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.description'))|Yes|
-|**width**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.width.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.width.description'))|No|500px
-|**height**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.height.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.height.description'))|No|300px
-|**alignment**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'))|No|
-|**start**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.start.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.start.description'))|No|00:00:00
-|**showinfo**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.description'))|No|true
-|**autoplay**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.name'))|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.description'))|No|false
+|**url**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.url.description'),
+$xwiki.currentContentSyntaxId)|Yes|
+|**width**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.width.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.width.description'),
+$xwiki.currentContentSyntaxId)|No|500px
+|**height**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.height.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.height.description'),
+$xwiki.currentContentSyntaxId)|No|300px
+|**alignment**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'),
+$xwiki.currentContentSyntaxId)|No|
+|**start**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.start.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.start.description'),
+$xwiki.currentContentSyntaxId)|No|00:00:00
+|**showinfo**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.showinfo.description'),
+$xwiki.currentContentSyntaxId)|No|true
+|**autoplay**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.description'),
+$xwiki.currentContentSyntaxId)|No|false
 
 {{/velocity}}
 
@@ -397,21 +424,17 @@ This macro is also a bridge between the Confluence macro and XWiki.
 
 ## Extract the base URL and query string parameters.
 #macro (getBaseURLAndQueryParams $url $baseURL $queryParams)
-  #set ($baseURL = $url)
-  ## Use $urltool.toURL after XWiki parent version is &gt;= 12.9RC1 to include XCOMMONS-2042: Add a method in URLTool
-  ## to convert a string in an URL object.
-  #if ($stringtool.contains($url, '?'))
-    #set ($baseURL = $stringtool.split($url, '?')[0])
-    #set ($queryString = $stringtool.split($url, '?')[1])
+  #set ($urlComponents = $stringtool.split($url, '?', 2))
+  #set ($baseURL = $urlComponents[0])
+  #set ($queryString = '')
+  #if ($urlComponents.size() &gt; 1)
+    #set ($queryString = $urlComponents[1])
   #end
   ## Depending on how the link was shared, it could be missing this part.
   #if (!$stringtool.contains($baseURL, 'embed/video'))
     #set ($baseURL = $stringtool.replace($baseURL, 'video', 'embed/video'))
   #end
-  #set ($queryParams = {})
-  #if ($queryString)
-    #set ($queryParams = $urltool.parseQuery($queryString))
-  #end
+  #set ($queryParams = $urltool.parseQuery($queryString))
 #end
 
 #macro (getStartAsSeconds $start $startSeconds)
