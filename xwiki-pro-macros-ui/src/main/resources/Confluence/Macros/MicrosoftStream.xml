@@ -447,8 +447,8 @@ $xwiki.currentContentSyntaxId)|No|false
   #end
   #set ($startSeconds = 0)
   #if ($dateObj)
-    #set ($startSeconds = 3600 * $dateObj.getValue('HOUR', $dateObj) + 60 * $dateObj.getValue('MINUTE', $dateObj)
-      + $dateObj.getValue('SECOND', $dateObj))
+    #set ($startSeconds = 3600 * $datetool.getValue('HOUR', $dateObj) + 60 * $datetool.getValue('MINUTE', $dateObj)
+      + $datetool.getValue('SECOND', $dateObj))
   #end
 #end
 {{/velocity}}
@@ -819,7 +819,7 @@ $xwiki.currentContentSyntaxId)|No|false
       <name>alignment</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.macros.internal.Alignment</type>
     </property>
   </object>
   <object>
