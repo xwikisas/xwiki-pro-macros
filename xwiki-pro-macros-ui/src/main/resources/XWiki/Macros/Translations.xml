@@ -87,7 +87,25 @@ rendering.macro.status.parameter.colour.description=The color of the status(text
 rendering.macro.status.parameter.title.name=Title
 rendering.macro.status.parameter.title.description=The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").
 rendering.macro.status.parameter.subtle.name=Subtle
-rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).</content>
+rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).
+
+## Microsoft Stream macro
+rendering.macro.microsoftStream.name=Microsoft Stream Macro
+rendering.macro.microsoftStream.description=Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.
+rendering.macro.microsoftStream.parameter.url.name=URL
+rendering.macro.microsoftStream.parameter.url.description=The URL to the Microsoft Stream video.
+rendering.macro.microsoftStream.parameter.width.name=Width
+rendering.macro.microsoftStream.parameter.width.description=The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+rendering.macro.microsoftStream.parameter.height.name=Height
+rendering.macro.microsoftStream.parameter.height.description=The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).
+rendering.macro.microsoftStream.parameter.alignment.name=Alignment
+rendering.macro.microsoftStream.parameter.alignment.description=Position of the video relatively to its container. Accepted values are left, center and right.
+rendering.macro.microsoftStream.parameter.start.name=Start At
+rendering.macro.microsoftStream.parameter.start.description=Start video at a specific time (use HH:MM:SS as time format).
+rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
+rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
+rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
+rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
