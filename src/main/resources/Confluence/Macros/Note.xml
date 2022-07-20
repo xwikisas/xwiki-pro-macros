@@ -254,10 +254,10 @@ This is my note with title.
       <code>{{velocity}}
   {{warning}}
     #if("$!wikimacro.parameters.title" != "")
-    **$!{wikimacro.parameters.title}**
+    **{{wikimacroparameter name="title" /}}**
 
     #end
-    $wikimacro.content
+    {{wikimacrocontent /}}
   {{/warning}}
 {{/velocity}}</code>
     </property>
