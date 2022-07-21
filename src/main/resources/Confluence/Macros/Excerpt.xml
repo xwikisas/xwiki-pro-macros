@@ -274,14 +274,14 @@ My hidden content.
 ## BLOCK / INLINE
 #set($outputType = $wikimacro.parameters.get('atlassian-macro-output-type'))
 #set($hidden = $wikimacro.parameters.get('hidden'))
-#set($displayAsBlock = "$!outoutType" == '' &amp;&amp; $outputType.toLowerCase() == 'block')
+#set($displayAsBlock = "$!outputType" != '' &amp;&amp; $outputType.toLowerCase() == 'block')
 #if("$!hidden" == 'true')
   (% class="hidden" %)
 #end
 #if($displayAsBlock)
   (((
 #end
-  $xcontext.macro.content
+  {{wikimacrocontent /}}
 #if($displayAsBlock)
   )))
 #end
@@ -291,7 +291,7 @@ My hidden content.
       <contentDescription>The content to be marked for use by other macros.</contentDescription>
     </property>
     <property>
-      <contentJavaType/>
+      <contentJavaType>Wiki</contentJavaType>
     </property>
     <property>
       <contentType>Optional</contentType>
