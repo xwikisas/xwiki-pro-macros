@@ -20,7 +20,7 @@
 package com.xwiki.macros.internal;
 
 /**
- * Enumeration of supported container alignment values .
+ * Enumeration of supported container alignment values.
  *
  * @version $Id$
  * @since 1.2.3
