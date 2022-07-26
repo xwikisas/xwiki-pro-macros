@@ -23,7 +23,7 @@ package com.xwiki.macros.internal;
  * Enumeration of supported container alignment values.
  *
  * @version $Id$
- * @since 1.2.3
+ * @since 1.3
  */
 public enum AlignmentType
 {
