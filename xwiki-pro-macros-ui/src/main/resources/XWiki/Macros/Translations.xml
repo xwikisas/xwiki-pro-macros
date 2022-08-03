@@ -105,7 +105,13 @@ rendering.macro.microsoftStream.parameter.start.description=Start video at a spe
 rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
 rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
 rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
-rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.</content>
+rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+
+## User List macro
+rendering.macro.userList.name=User List
+rendering.macro.userList.description=Displays a customizable list of users with their avatar
+rendering.macro.userList.parameter.users.name=Users
+rendering.macro.userList.parameter.users.description=List of users to be displayed</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>

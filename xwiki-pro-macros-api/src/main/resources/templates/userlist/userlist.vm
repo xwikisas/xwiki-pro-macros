@@ -1,0 +1,17 @@
+#set ($users = $params.users)
+#set ($users = $users.split(','))
+#set ($discard = $xwiki.ssx.use('XWiki.Macros.UserListMacroStyleSheet'))
+<ul class="xwiki-userlist">
+#foreach ($user in $users)
+  #if ($services.security.authorization.hasAccess('view', $xcontext.user, $user))
+    <li>
+      <span class="xwiki-userlist-user-avatar">
+        #mediumUserAvatar($user)
+      </span>
+      <span class="xwiki-userlist-user-username">
+        $xwiki.getUserName($user)
+      </span>
+    </li>
+  #end
+#end
+</ul>
