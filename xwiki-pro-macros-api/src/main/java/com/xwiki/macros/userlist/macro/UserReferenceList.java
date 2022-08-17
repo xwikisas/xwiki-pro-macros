@@ -17,27 +17,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.userlist;
+package com.xwiki.macros.userlist.macro;
 
-import org.xwiki.rendering.listener.reference.ResourceReference;
-import org.xwiki.rendering.listener.reference.ResourceType;
+import java.util.ArrayList;
+
+import org.xwiki.model.reference.EntityReference;
 
 /**
- * The object is used to associate a user picker to the reference parameter.
+ * Class representing a list of user references. This class is needed to declare a valid
+ * @{@link org.xwiki.properties.annotation.PropertyDisplayType} in @{@link UserListMacroParameters}.
  *
  * @version $Id$
- * @since 1.0
+ *
  */
-public class UserResourceReference extends ResourceReference
+public class UserReferenceList extends ArrayList<EntityReference>
 {
-    /**
-     * Creates a new UserResourceReference.
-     *
-     * @param reference the resource reference
-     * @param type the resource type
-     */
-    public UserResourceReference(String reference, ResourceType type)
-    {
-        super(reference, type);
-    }
 }

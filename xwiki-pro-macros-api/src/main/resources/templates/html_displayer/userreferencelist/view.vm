@@ -1,0 +1,36 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+#set ($users = $params.users)
+##set ($users = $users.split(','))
+#set($discard = $xwiki.ssrx.use('css/userlist.css'))
+<ul class="xwiki-userlist">
+#foreach ($user in $users)
+  #if ($services.security.authorization.hasAccess('view', $xcontext.user, $user))
+    <li>
+      <span class="xwiki-userlist-user-avatar">
+        #mediumUserAvatar($user)
+      </span>
+      <span class="xwiki-userlist-user-username">
+        $xwiki.getUserName($user)
+      </span>
+    </li>
+  #end
+#end
+</ul>

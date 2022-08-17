@@ -37,6 +37,12 @@ import org.xwiki.template.TemplateManager;
 
 import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 
+/**
+ * This macro displays a list of users with their name and avatar.
+ *
+ * @version $Id$
+ */
+
 @Component
 @Named("userList")
 @Singleton
@@ -61,7 +67,7 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     public List<Block> execute(UserListMacroParameters parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        Template customTemplate = this.templateManager.getTemplate("userlist/userlist.vm");
+        Template customTemplate = this.templateManager.getTemplate("html_displayer/userreferencelist/view.vm");
 
         try {
             this.bindParameters(parameters);
@@ -74,7 +80,6 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     private void bindParameters(UserListMacroParameters parameters)
     {
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
-
         scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
     }
 

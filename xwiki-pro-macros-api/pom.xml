@@ -50,10 +50,9 @@
       <artifactId>jquery</artifactId>
     </dependency>
     <!-- Dependencies needed by the User List macro -->
-    <!-- Needed to use the default TemplateManager -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-oldcore</artifactId>
+      <artifactId>xwiki-platform-template-api</artifactId>
       <version>${platform.version}</version>
     </dependency>
   </dependencies>

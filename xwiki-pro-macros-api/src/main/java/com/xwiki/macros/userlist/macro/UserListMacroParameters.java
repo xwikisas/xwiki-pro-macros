@@ -22,28 +22,26 @@ package com.xwiki.macros.userlist.macro;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 
-import com.xwiki.macros.userlist.UserResourceReference;
-
 public class UserListMacroParameters
 {
-    private String users;
+    private UserReferenceList users;
 
     /**
-     *
      * @return a list of users
      */
-    public String getUsers()
+    public UserReferenceList getUsers()
     {
         return this.users;
     }
 
     /**
-     * Sets a list of users. A user is represented by a using a serialized DocumentReference.
+     * Sets a list of users.
+     *
      * @param users list of user references
      */
-    @PropertyDisplayType(UserResourceReference.class)
+    @PropertyDisplayType(UserReferenceList.class)
     @PropertyDescription("List of users")
-    public void setUsers(String users)
+    public void setUsers(UserReferenceList users)
     {
         this.users = users;
     }
