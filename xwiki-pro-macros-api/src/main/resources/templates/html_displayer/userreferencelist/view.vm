@@ -17,20 +17,34 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-#set ($users = $params.users)
-##set ($users = $users.split(','))
-#set($discard = $xwiki.ssrx.use('css/userlist.css'))
-<ul class="xwiki-userlist">
-#foreach ($user in $users)
-  #if ($services.security.authorization.hasAccess('view', $xcontext.user, $user))
-    <li>
-      <span class="xwiki-userlist-user-avatar">
-        #mediumUserAvatar($user)
-      </span>
-      <span class="xwiki-userlist-user-username">
-        $xwiki.getUserName($user)
-      </span>
-    </li>
-  #end
+## Hack copied from https://github.com/xwiki-contrib/application-changerequest/blob/main/application-changerequest-ui/src/main/resources/ChangeRequest/Code/SaveChangeRequestModal.xml#L42
+#macro (stripHTML $displayOutput)
+  $stringtool.removeEnd($stringtool.removeStart($displayOutput, '{{html clean="false" wiki="false"}}'), '{{/html}}')
 #end
-</ul>
+#set ($users = $params.users)
+#set ($propertyNames = $params.properties)
+#set ($discard = $xwiki.ssrx.use('css/userlist.css'))
+<table class="xwiki-userlist">
+  #foreach ($user in $users)
+    #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $xcontext.user, $user))
+      #set ($userDoc = $xwiki.getDocument($user))
+      #set ($userObj = $userDoc.getObject('XWiki.XWikiUsers'))
+      #if ($userObj != $NULL)
+        <tr>
+          #foreach ($propertyName in $propertyNames)
+            <td class="xwiki-userlist-user-$propertyName">
+              #if ($propertyName == 'avatar')
+                #mediumUserAvatar($user)
+              #elseif ($propertyName == 'username')
+                $xwiki.getUserName($user)
+              #else
+                #set ($displayedProperty = $userObj.display($propertyName, 'view'))
+                #stripHTML($displayedProperty)
+              #end
+            </td>
+          #end
+        </tr>
+      #end
+    #end
+  #end
+</table>
