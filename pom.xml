@@ -48,54 +48,6 @@
     <url>https://github.com/xwikisas/xwiki-pro-macros/tree/master</url>
     <tag>HEAD</tag>
   </scm>
-  <properties>
-    <licensing.version>1.22</licensing.version>
-    <pdfviewer.version>2.3.3</pdfviewer.version>
-    <jwplayer.version>2.1.6</jwplayer.version>
-    <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
-      buying a license or getting a trial license, but they cannot edit or delete them. -->
-    <xwiki.extension.licensing.publicDocuments>
-    </xwiki.extension.licensing.publicDocuments>
-    <!-- The list of documents that are not covered by the extension license. The user who installs the extension has
-      full access to these documents (view, edit, delete) without having a license, so use this property wisely. -->
-    <xwiki.extension.licensing.excludedDocuments>
-    </xwiki.extension.licensing.excludedDocuments>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>Pro Macros</xwiki.extension.name>
-    <xwiki.extension.category>macro</xwiki.extension.category>
-    <!-- Don't run CLIRR here since there's no Java code. -->
-    <xwiki.clirr.skip>true</xwiki.clirr.skip>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>com.xwiki.licensing</groupId>
-      <artifactId>application-licensing-licensor-api</artifactId>
-      <version>${licensing.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-office-ui</artifactId>
-      <version>${platform.version}</version>
-      <type>xar</type>
-    </dependency>
-    <dependency>
-      <groupId>com.xwiki.pdfviewer</groupId>
-      <artifactId>macro-pdfviewer-ui</artifactId>
-      <version>${pdfviewer.version}</version>
-      <type>xar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>macro-jwplayer</artifactId>
-      <version>${jwplayer.version}</version>
-      <type>xar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-  </dependencies>
   <!-- Even though this repository is already declared in the parent POM, we still explicitly redeclare it for
    convenience. This makes it simpler to build this project without having to declare this repository in one's own
    Maven settings.xml file. In the future We may decide to remove this in the future and make it a rule to have the
