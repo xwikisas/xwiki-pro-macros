@@ -694,9 +694,9 @@
   #set($fontSize = $size / 3)
   &lt;li
     class="xwikiteam-user"
-    data-name-without-accents="${util.clearAccents($escapedDisplayUser.toLowerCase())}"
+    data-name-without-accents="$util.clearAccents($escapedDisplayUser.toLowerCase())"
     title="$escapedDisplayUser"
-    data-username="${escapetool.xml($username)}"
+    data-username="$escapetool.xml($username)"
     style="font-size: ${fontSize}px"
   &gt;
     &lt;a href="$url"&gt;
@@ -726,56 +726,28 @@
 #set($disableTools = $wikimacro.parameters.disableTools)
 #set($disableLetterAvatars = $wikimacro.parameters.disableLetterAvatars)
 #set($limit = $wikimacro.parameters.limit)
-#set($configObject = $xwiki.getDocument("XWiki.Macros.TeamConfiguration").getObject("XWiki.Macros.TeamConfigurationClass"))
-#if("$!{size}" == "")
-  #set($size = $configObject.getValue("size"))
-#end
-#set($size = $escapetool.xml($size))
-#if("$!{size}" == "")
+#if("$!size" == "")
   #set($size = 60)
 #end
-#if("$!{letterAvatarBgColor}" == "")
-  #set($letterAvatarBgColor = $configObject.getValue("letterAvatarBgColor"))
-#end
-#set($letterAvatarBgColor = $escapetool.xml($letterAvatarBgColor))
-#if("$!{letterAvatarBgColor}" == "")
+#if("$!letterAvatarBgColor" == "")
   #set($letterAvatarBgColor = "#0A6")
 #end
-#if("$!{letterAvatarFontColor}" == "")
-  #set($letterAvatarFontColor = $configObject.getValue("letterAvatarFontColor"))
-#end
-#set($letterAvatarFontColor = $escapetool.xml($letterAvatarFontColor))
-#if("$!{letterAvatarFontColor}" == "")
+#if("$!letterAvatarFontColor" == "")
   #set($letterAvatarFontColor = "white")
 #end
-#if("$!{requireExternalAuth}" == "")
-  #set($requireExternalAuth = $configObject.getValue("requireExternalAuth"))
-#end
-#if("$!{requireExternalAuth}" == "false" || "$!{requireExternalAuth}" == "0")
+#if("$!requireExternalAuth" == "" || "$!requireExternalAuth" == "false" || "$!requireExternalAuth" == "0")
   #set($requireExternalAuth = false)
 #end
-#if("$!{showUsernames}" == "")
-  #set($showUsernames = $configObject.getValue("showUsernames"))
-#end
-#if("$!{showUsernames}" == "false" || "$!{showUsernames}" == "0")
+#if("$!showUsernames" == "" || "$!showUsernames" == "false" || "$!showUsernames" == "0")
   #set($showUsernames = false)
 #end
-#if("$!{disableTools}" == "")
-  #set($disableTools = $configObject.getValue("disableTools"))
-#end
-#if("$!{disableTools}" == "false" || "$!{disableTools}" == "0")
+#if("$!disableTools" == "" || "$!disableTools" == "false" || "$!disableTools" == "0")
   #set($disableTools = false)
 #end
-#if("$!{disableLetterAvatars}" == "")
-  #set($disableLetterAvatars = $configObject.getValue("disableLetterAvatars"))
-#end
-#if("$!{disableLetterAvatars}" == "false" || "$!{disableLetterAvatars}" == "0")
+#if("$!disableLetterAvatars" == "" || "$!disableLetterAvatars" == "false" || "$!disableLetterAvatars" == "0")
   #set($disableLetterAvatars = false)
 #end
-#if("$!{limit}" == "")
-  #set($limit = $configObject.getValue("limit"))
-#end
-#if("$!{limit}" == "")
+#if("$!limit" == "")
   #set($limit = 100)
 #end
 #if(!$tag || $tag == "")
@@ -793,7 +765,7 @@
     obj3.className = 'XWiki.TagClass' and
     obj3.id = tagprop.id.id and
     tagprop.id.name = 'tags' and
-    list = '${tag}'
+    list = '$tag'
   ")
 #end
 #set($hql = ",

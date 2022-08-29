@@ -59,7 +59,6 @@
     <!-- The list of documents that are not covered by the extension license. The user who installs the extension has
       full access to these documents (view, edit, delete) without having a license, so use this property wisely. -->
     <xwiki.extension.licensing.excludedDocuments>
-      XWiki.Macros.TeamConfiguration
     </xwiki.extension.licensing.excludedDocuments>
     <!-- Name to display by the Extension Manager -->
     <xwiki.extension.name>Pro Macros</xwiki.extension.name>

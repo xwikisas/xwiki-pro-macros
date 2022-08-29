@@ -129,9 +129,9 @@ rendering.macro.team.parameter.limit.description=The maximum number of people to
 rendering.macro.team.content.options=Options
 rendering.macro.team.content.filter=Filter…
 rendering.macro.team.content.showUsernames=Show names
-rendering.macro.team.content.noUsers=There is nobody to show.</content>
+rendering.macro.team.content.noUsers=There is nobody to show.
 admin.promacros=Pro Macros
-admin.promacros.description=Settings for Pro Macros
+admin.promacros.description=Settings for Pro Macros</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
