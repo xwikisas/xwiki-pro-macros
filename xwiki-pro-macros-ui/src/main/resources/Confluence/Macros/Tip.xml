@@ -254,7 +254,7 @@ This is my tip with a title.
       <code>{{velocity}}
   {{success}}
     #if("$!wikimacro.parameters.title" != "")
-      **$wikimacro.parameters.title**
+      **$services.rendering.escape($wikimacro.parameters.title, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))**
 
     #end
     {{wikimacrocontent /}}
