@@ -51,26 +51,26 @@
 
 = Description =
 
-The Gliffy macro is a bridge between Gliffy macro used in Confluence and the [[Diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]] macro used in XWiki. The aim of this macro is to allow users to view and also to modify the diagrams migrated from Confluence. By default, the macro displays the preview of the Gliffy diagram. The user can create the editable version of the diagram, by using its representation into an XWiki diagram, having always the option to go back to the preview of the original diagram.
+The Gliffy macro is a bridge between Gliffy macro used in Confluence and the [[Diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]] macro used in XWiki. The aim of this macro is to allow users to view and also to modify the diagrams migrated from Confluence. By default, the macro displays the preview of the Gliffy diagram. The user can create the editable version of the diagram, by using its representation into an XWiki diagram, always having the option to go back to the preview of the original diagram.
 
 = Parameters =
 
 |=Parameter|=Description
-|**name**|The diagram identifier. It should be the **name of the attachment** storing the Gliffy diagram data. (% style="color: red"%)It should not have a filename extension(%%). The Gliffy diagram exports consist in attachments added to the parent page. For example, for a diagram called //MyGliffyDiagram//, there will be two attachments on the parent page : //MyGliffyDiagram.png// (the filename with a ".png" extension) representing the preview of the diagram and //MyGliffyDiagram// (with **no filename extention**) representing the diagram data.
+|**name**|The diagram identifier. It should be the **name of the attachment** storing the Gliffy diagram data. (% style="color: red"%)It should not have a filename extension(%%). The Gliffy diagram exports consist in attachments added to the parent page. For example, for a diagram called //MyGliffyDiagram//, there will be two attachments on the parent page: //MyGliffyDiagram.png// (the filename with a ".png" extension) representing the preview of the diagram and //MyGliffyDiagram// (with **no filename extention**) representing the diagram data.
 
 {{info}}
-  Besides the **name** parameter, the ~{~{gliffy}} macro used in Confluence has other parameters that don't have to be cleaned, because these parameters are being ignored by this bridge macro.
+Besides the **name** parameter, the ~{~{gliffy}} macro used in Confluence has other parameters that don't have to be cleaned, because these parameters are being ignored by this bridge macro.
 {{/info}}
 
 = Example of usage =
 
-The syntax of the macro using the diagram called "MyGliffyDiagram" is the following :
+The syntax of the macro using the diagram called "MyGliffyDiagram" is the following:
 
 {{code}}
-  {{gliffy name="MyGliffyDiagram" /}}
+{{gliffy name="MyGliffyDiagram" /}}
 {{/code}}
 
-The result is the following :
+The result is the following:
 
 {{gliffy name="MyGliffyDiagram" /}}</content>
   <attachment>
@@ -357,7 +357,7 @@ The result is the following :
       <cache>long</cache>
     </property>
     <property>
-      <code>.gliffy-diagram-contaier {
+      <code>.gliffy-diagram-container {
   .modal-header {
     .close {
       margin-top: -1.2em;
@@ -637,7 +637,7 @@ The result is the following :
     #set($diagram = $diagrams.get(0))
   #end
   ##
-  (% class="gliffy-diagram-contaier" %)(((
+  (% class="gliffy-diagram-container" %)(((
     ## The diagram exists -&gt; display it
     #if($displayDiagram &amp;&amp; $diagram)
       {{diagram reference="$diagram" cached="false" /}}
