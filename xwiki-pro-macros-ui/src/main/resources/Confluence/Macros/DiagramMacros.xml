@@ -423,6 +423,11 @@
       display: inline;
     }
   }
+  .thumbnail {
+    p {
+      text-align: center;
+    }
+  }
 }</code>
     </property>
     <property>
