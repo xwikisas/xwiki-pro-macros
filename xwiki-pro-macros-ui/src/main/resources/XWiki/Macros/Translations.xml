@@ -109,7 +109,7 @@ rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video
 
 ## Team macro
 rendering.macro.team.name=Team
-rendering.macro.team.description=Display avatars of the members of a team
+rendering.macro.team.description=Display avatars of the members of a team.
 rendering.macro.team.parameter.tag.name=Tag
 rendering.macro.team.parameter.tag.description=Tag that users need to have to be shown
 rendering.macro.team.parameter.size.name=Size

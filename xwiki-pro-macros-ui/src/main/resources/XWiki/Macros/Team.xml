@@ -36,8 +36,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
-{{translation key='rendering.macro.team.description' /}}
+  <content>{{translation key='rendering.macro.team.description' /}}
 
 == Parameters ==
 
@@ -87,8 +86,7 @@
 
 {{code}}{{team showUsernames=true disableLetterAvatars=true/}}{{/code}}
 
-{{team showUsernames=true disableLetterAvatars=true/}}
-{{/velocity}}</content>
+{{team showUsernames=true disableLetterAvatars=true/}}</content>
   <object>
     <name>XWiki.Macros.Team</name>
     <number>0</number>
@@ -176,7 +174,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>(function () {
+      <code>require(['jquery', 'xwiki-events-bridge'], function($) {
   function filter (teamDiv) {
     const l = this.value.toLowerCase();
     const users = teamDiv.getElementsByClassName('xwikiteam-user');
@@ -200,7 +198,7 @@
 
   function bindShowUsernameCheckbox(teamDiv, checkbox) {
     applyCheckbox(teamDiv, checkbox);
-    checkbox.onclick = applyCheckbox.bind(null, teamDiv, checkbox);
+    checkbox.addEventListener('click', applyCheckbox.bind(null, teamDiv, checkbox));
   }
 
   function toggleTools(teamDiv, e) {
@@ -225,10 +223,11 @@
       const teamDiv = teamDivs[i];
       const a = teamDiv.querySelector('.xwikiteam-tools-link a');
       if (a) {
-        if (a.onclick) {
+        if (a.classList.has('initialized')) {
           continue; // don't initialize already initialized team macros
         }
-        a.onclick = toggleTools.bind(null, teamDiv);
+        a.addEventListener('click', toggleTools.bind(null, teamDiv));
+        a.classList.add('initialized');
         a.parentNode.hidden = false;
       }
       const ul = teamDiv.querySelector('.xwikiteam-ul');
@@ -247,17 +246,11 @@
     }
   }
 
-  function init() {
+  $(function () {
     initTools();
-    document.observe('xwiki:dom:updated', initTools);
-  }
-
-  if (document.body) {
-    init();
-  } else {
-    window.addEventListener('DOMContentLoaded', init);
-  }
-})();</code>
+    $('xwiki:dom:updated', initTools);
+  });
+});</code>
     </property>
     <property>
       <name/>
@@ -704,13 +697,14 @@
       #if(!$return.specified &amp;&amp; !$disableLetterAvatars)
         #avatarInitials($displayUser $size $letterAvatarBgColor $letterAvatarFontColor)
       #else
+        #set($escapedSize = $escapetool.xml($size))
         &lt;img
           class='xwikiteam-avatar'
           src='$escapetool.xml($return.url)'
           alt='$escapedDisplayUser'
           title='$escapedDisplayUser'
-          width='$size'
-          height='$size'
+          width='$escapedSize'
+          height='$escapedSize'
         /&gt;
       #end
       &lt;span class='xwikiteam-username'&gt;$escapedDisplayUser&lt;/span&gt;
