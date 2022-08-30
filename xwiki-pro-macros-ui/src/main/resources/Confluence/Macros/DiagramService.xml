@@ -64,7 +64,11 @@
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
       #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
-      #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
+      #if($diagramName.endsWith('.drawio') &amp;&amp; $diagramContent.startsWith('&lt;'))
+        #set($xml = $diagramContent)
+      #else
+        #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
+      #end
       #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
       #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
       #set($discard = $diagramDoc.setContent($xml))

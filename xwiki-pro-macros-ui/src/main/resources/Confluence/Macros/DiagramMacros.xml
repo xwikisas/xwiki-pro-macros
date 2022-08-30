@@ -106,7 +106,7 @@
 
         #if($diagram &amp;&amp; $xcontext.action != 'export')
           ##
-          ## If Display a button allowing the user to go back to confluence diagram mode
+          ## Display a button allowing the user to go back to confluence diagram mode
           #if ($services.security.authorization.hasAccess('delete', $diagram))
             #set($id = $mathtool.random(1, 100000))
             $services.localization.render('confluencediagram.delete')
