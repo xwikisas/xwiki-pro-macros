@@ -40,25 +40,24 @@
 #macro(displayConfluenceDiagramModal $id $diagram)
 
   {{html clean="false"}}
-    &lt;!-- Modal --&gt;
     &lt;div class="modal fade" id="confluencediagram-${id}-modal" tabindex="-1" role="dialog" aria-labelledby="confluencediagram-${id}-title" aria-hidden="true"&gt;
       &lt;div class="modal-dialog modal-dialog-centered" role="document"&gt;
         &lt;div class="modal-content"&gt;
           &lt;div class="modal-header"&gt;
-            &lt;div class="modal-title" id="confluencediagram-${id}-title"&gt;$services.localization.render('confluencediagram.modal.title')&lt;/div&gt;
-            &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
+            &lt;div class="modal-title" id="confluencediagram-${id}-title"&gt;$escapetool.xml($services.localization.render('confluencediagram.modal.title'))&lt;/div&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-label="$escapetool.xml($services.localization.render('confluencediagram.modal.btn.close'))"&gt;
               &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;
             &lt;/button&gt;
           &lt;/div&gt;
           &lt;div class="modal-body"&gt;
-            $services.localization.render('confluencediagram.modal.text')
+            $escapetool.xml($services.localization.render('confluencediagram.modal.text'))
           &lt;/div&gt;
           &lt;div class="modal-footer"&gt;
-            &lt;button type="button" class="btn btn-secondary" data-dismiss="modal"&gt;Close&lt;/button&gt;
+            &lt;button type="button" class="btn btn-secondary" data-dismiss="modal"&gt;$escapetool.xml($services.localization.render('confluencediagram.modal.btn.close'))&lt;/button&gt;
             &lt;form action="" method="post"&gt;
               &lt;input name="action" value="createDiagram" type="hidden" /&gt;
               &lt;input name="diagram" class="delete-diagram-page" type="hidden" value="$escapetool.xml($diagram)"/&gt;
-              &lt;button type="submit" class="btn btn-primary delete-diagram-btn"&gt;$services.localization.render("confluencediagram.modal.btn.confirm")&lt;/button&gt;
+              &lt;button type="submit" class="btn btn-primary delete-diagram-btn"&gt;$escapetool.xml($services.localization.render("confluencediagram.modal.btn.confirm"))&lt;/button&gt;
             &lt;/form&gt;
           &lt;/div&gt;
         &lt;/div&gt;
@@ -74,7 +73,7 @@
         'search': 'Diagram'
       }))
       #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
-      $services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"])
+      $escapetool.xml($services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"]))
     {{/warning}}
   #else
     #set($discard = $xwiki.jsx.use('Confluence.Macros.DiagramMacros'))
@@ -109,10 +108,10 @@
           ## Display a button allowing the user to go back to confluence diagram mode
           #if ($services.security.authorization.hasAccess('delete', $diagram))
             #set($id = $mathtool.random(1, 100000))
-            $services.localization.render('confluencediagram.delete')
+            {{translation key='confluencediagram.delete'/}}
 
             {{html clean="false"}}
-              &lt;a class="btn btn-primary" data-toggle="modal" data-target="#confluencediagram-${id}-modal"&gt;$services.localization.render('confluencediagram.delete.link')&lt;/a&gt;
+              &lt;a class="btn btn-primary" data-toggle="modal" data-target="#confluencediagram-${id}-modal"&gt;$escapetool.xml($services.localization.render('confluencediagram.delete.link'))&lt;/a&gt;
             {{/html}}
 
             #displayConfluenceDiagramModal($id $diagram)
@@ -124,20 +123,20 @@
       ## Display the preview image if it exists
       #if($previewImage &amp;&amp; !$displayDiagram)
         (% class="thumbnail" %)(((
-          [[image:${previewImageName}]]
+          [[image:$services.rendering.escape($previewImageName, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))]]
 
           ##
-          ## If Display a button allowing the user to create an XWiki diagram
+          ## Display a button allowing the user to create an XWiki diagram
           #if ($services.security.authorization.hasAccess('edit', $doc.documentReference) &amp;&amp; $xcontext.action != 'export')
             (% class="caption" %)(((
-              $services.localization.render('confluencediagram.create')
+              {{translation key='confluencediagram.create'/}}
 
               {{html clean=false}}
                 &lt;form action="" method="post"&gt;
                   &lt;input name="action" value="createDiagram" type="hidden" /&gt;
                   &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($docReferenceSerialized)" type="hidden" /&gt;
                   &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" /&gt;
-                  &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$services.localization.render('confluencediagram.create.confirm')&lt;/button&gt;
+                  &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$escapetool.xml($services.localization.render('confluencediagram.create.confirm'))&lt;/button&gt;
                 &lt;/form&gt;
               {{/html}}
             )))
@@ -145,6 +144,18 @@
         #end
       #end
     )))
+  #end
+#end
+#macro(checkDiagramAppInstall)
+  #if (!$services.diagram)
+    {{warning}}
+      #set ($queryString = $escapetool.url({
+        'section': 'XWiki.Extensions',
+        'search': 'Diagram'
+      }))
+      #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
+      $services.rendering.escape($services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"]), $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))
+    {{/warning}}
   #end
 #end
 {{/velocity}}</content>
@@ -239,17 +250,17 @@
   var serviceURL = new XWiki.Document(
                        XWiki.Model.resolve('Confluence.Macros.DiagramService', XWiki.EntityType.DOCUMENT))
                        .getURL('get', 'outputSyntax=plain'),
-      createSuccessMessage = "$escapetool.javascript($services.localization.render('confluencediagram.create.success'))",
-      createFailureMessage = "$escapetool.javascript($services.localization.render('confluencediagram.create.error'))",
-      deleteSuccessMessage = "$escapetool.javascript($services.localization.render('confluencediagram.delete.success'))",
-      deleteFailureMessage = "$escapetool.javascript($services.localization.render('confluencediagram.delete.error'))";
+      createSuccessMessage = $jsontool.serialize($services.localization.render('confluencediagram.create.success')),
+      createFailureMessage = $jsontool.serialize($services.localization.render('confluencediagram.create.error')),
+      deleteSuccessMessage = $jsontool.serialize($services.localization.render('confluencediagram.delete.success')),
+      deleteFailureMessage = $jsontool.serialize($services.localization.render('confluencediagram.delete.error'));
 
   var handleCreateDiagram = function () {
     $('.create-diagram-btn').on('click', function(e){
       e.preventDefault();
 
-      var pageReferenceSerialized = $(this).prevAll('.create-diagram-page:first').val(),
-          diagramName = $(this).prevAll('.create-diagram-name:first').val();
+      var pageReferenceSerialized = $(this).prevAll('.create-diagram-page').val(),
+          diagramName = $(this).prevAll('.create-diagram-name').val();
       $.ajax({
         url: serviceURL,
         data: {
@@ -272,7 +283,7 @@
     $('.delete-diagram-btn').on('click', function(e){
       e.preventDefault();
 
-      var pageReferenceSerialized = $(this).prevAll('.delete-diagram-page:first').val();
+      var pageReferenceSerialized = $(this).prevAll('.delete-diagram-page').val();
       $.ajax({
         url: serviceURL,
         data: {
@@ -294,7 +305,7 @@
     handleCreateDiagram();
     handleDeleteDiagram();
   }
-  XWiki.domIsLoaded &amp;&amp; init();
+  $(init);
 });</code>
     </property>
     <property>

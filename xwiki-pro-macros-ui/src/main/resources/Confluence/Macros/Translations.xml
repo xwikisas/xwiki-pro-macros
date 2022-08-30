@@ -37,7 +37,7 @@
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
   <content>confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
-confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
+confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an editable diagram. You can always go back to this preview.
 confluencediagram.create.confirm=Convert
 confluencediagram.create.success=The diagram has been converted.
 confluencediagram.create.error=Could not convert the diagram.
@@ -46,10 +46,10 @@ confluencediagram.delete=The above diagram was converted from a Confluence diagr
 confluencediagram.delete.link=Revert diagram conversion
 confluencediagram.modal.title=Back to Confluence diagram preview
 confluencediagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the diagram will be displayed. This action is irreversible.
+confluencediagram.modal.btn.close=Close
 confluencediagram.modal.btn.confirm=Confirm
 confluencediagram.delete.success=The editable diagram was successfully deleted.
 confluencediagram.delete.error=The diagram could not be deleted.
-
 ## Section macro
 rendering.macro.section.name=Section Macro
 rendering.macro.section.description=Add the Section macro to a page to organize your content in sections and columns. This macro is used in conjunction with the Column macro, and provides more flexibility than page layouts.

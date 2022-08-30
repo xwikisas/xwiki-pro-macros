@@ -36,17 +36,10 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
-#if (!$services.diagram)
-  {{warning}}
-    #set ($queryString = $escapetool.url({
-      'section': 'XWiki.Extensions',
-      'search': 'Diagram'
-    }))
-    #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
-    $services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"])
-  {{/warning}}
-#end
+  <content>{{include reference="Confluence.Macros.DiagramMacros" /}}
+
+{{velocity}}
+#checkDiagramAppInstall()
 {{/velocity}}
 
 = Description =
