@@ -36,19 +36,19 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>gliffy.diagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
-gliffy.diagram.create=The above image is a preview of a Gliffy diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
-gliffy.diagram.create.confirm=Convert
-gliffy.diagram.create.success=The diagram has been converted.
-gliffy.diagram.create.error=Could not convert the diagram.
-gliffy.diagram.create.message=Converted diagram.
-gliffy.diagram.delete=The above diagram was converted from Gliffy. If you are not satisfied with the result, you can click on the button below to go back to the preview of the original diagram.
-gliffy.diagram.delete.link=Revert diagram conversion
-gliffy.diagram.modal.title=Back to Gliffy diagram preview
-gliffy.diagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the Gliffy diagram will be displayed. This action is irreversible.
-gliffy.diagram.modal.btn.confirm=Confirm
-gliffy.diagram.delete.success=The editable diagram was successfully deleted.
-gliffy.diagram.delete.error=The diagram could not be deleted.
+  <content>confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
+confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an [[editable diagram&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/Diagram%20Application]]. You can always go back to this preview.
+confluencediagram.create.confirm=Convert
+confluencediagram.create.success=The diagram has been converted.
+confluencediagram.create.error=Could not convert the diagram.
+confluencediagram.create.message=Converted diagram.
+confluencediagram.delete=The above diagram was converted from a Confluence diagram. If you are not satisfied with the result, you can click on the button below to go back to the preview of the original diagram.
+confluencediagram.delete.link=Revert diagram conversion
+confluencediagram.modal.title=Back to Confluence diagram preview
+confluencediagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the diagram will be displayed. This action is irreversible.
+confluencediagram.modal.btn.confirm=Confirm
+confluencediagram.delete.success=The editable diagram was successfully deleted.
+confluencediagram.delete.error=The diagram could not be deleted.
 
 ## Section macro
 rendering.macro.section.name=Section Macro
