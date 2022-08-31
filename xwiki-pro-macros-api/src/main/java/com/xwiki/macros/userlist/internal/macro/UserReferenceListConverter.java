@@ -28,15 +28,15 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.properties.converter.AbstractConverter;
 import org.xwiki.properties.converter.ConversionException;
+import org.xwiki.text.StringUtils;
 
 import com.xwiki.macros.userlist.macro.UserReferenceList;
 
 /**
  * XWiki Properties Bean Converter to convert Strings into {@link UserReferenceList}.
  *
+ * @version $Id$
  * @see org.xwiki.properties.converter.Converter
- *
- *  @version $Id$
  */
 @Component
 @Singleton
@@ -50,9 +50,12 @@ public class UserReferenceListConverter extends AbstractConverter<UserReferenceL
     {
         G references = (G) new UserReferenceList();
         if (value != null) {
-            String[] val = value.toString().split(",");
-            for (String entry : val) {
-                references.add(referenceResolver.resolve(entry));
+            String valueString =  value.toString().trim();
+            if (!StringUtils.isEmpty(valueString)) {
+                String[] val = valueString.split(",");
+                for (String entry : val) {
+                    references.add(referenceResolver.resolve(entry));
+                }
             }
         }
 

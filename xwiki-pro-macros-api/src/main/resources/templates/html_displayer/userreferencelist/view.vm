@@ -17,34 +17,51 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-## Hack copied from https://github.com/xwiki-contrib/application-changerequest/blob/main/application-changerequest-ui/src/main/resources/ChangeRequest/Code/SaveChangeRequestModal.xml#L42
+## Hack copied from https://github.com/xwiki-contrib/application-changerequest/blob/application-changerequest-1.0.1/application-changerequest-ui/src/main/resources/ChangeRequest/Code/SaveChangeRequestModal.xml#L42
 #macro (stripHTML $displayOutput)
   $stringtool.removeEnd($stringtool.removeStart($displayOutput, '{{html clean="false" wiki="false"}}'), '{{/html}}')
 #end
-#set ($users = $params.users)
-#set ($propertyNames = $params.properties)
-#set ($discard = $xwiki.ssrx.use('css/userlist.css'))
-<table class="xwiki-userlist">
-  #foreach ($user in $users)
-    #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $xcontext.user, $user))
-      #set ($userDoc = $xwiki.getDocument($user))
-      #set ($userObj = $userDoc.getObject('XWiki.XWikiUsers'))
-      #if ($userObj != $NULL)
-        <tr>
-          #foreach ($propertyName in $propertyNames)
-            <td class="xwiki-userlist-user-$propertyName">
-              #if ($propertyName == 'avatar')
-                #mediumUserAvatar($user)
-              #elseif ($propertyName == 'username')
-                $xwiki.getUserName($user)
-              #else
-                #set ($displayedProperty = $userObj.display($propertyName, 'view'))
-                #stripHTML($displayedProperty)
-              #end
-            </td>
-          #end
-        </tr>
+#macro (displayInvalidUserMessageRow $user $colspan)
+  <tr>
+    <td colspan="$colspan">
+      <div class="box warningmessage">
+        $services.localization.render('rendering.macro.userList.invalidUser', [$user])
+      </div>
+    </td>
+  </tr>
+#end
+#if ("$!displayer.parameters.users" != '')
+  #set ($users = $displayer.parameters.users.split(','))
+  #set ($propertyNames = $displayer.parameters.properties.split(','))
+  #set ($discard = $xwiki.ssrx.use('css/userlist.css'))
+  <table class="xwiki-userlist">
+    #foreach ($user in $users)
+      #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $xcontext.user, $user))
+        #set ($userDoc = $xwiki.getDocument($user))
+        #set ($userObj = $userDoc.getObject('XWiki.XWikiUsers'))
+        #if ($userObj != $NULL)
+          <tr>
+            #foreach ($propertyName in $propertyNames)
+              <td class="xwiki-userlist-user-$propertyName">
+                #if ($propertyName == 'avatar')
+                  #mediumUserAvatar($user)
+                #elseif ($propertyName == 'username')
+                  $xwiki.getUserName($user)
+                #else
+                  #set ($displayedProperty = $userObj.display($propertyName, 'view'))
+                  #stripHTML($displayedProperty)
+                #end
+              </td>
+            #end
+          </tr>
+        #else
+          #displayInvalidUserMessageRow($user, $propertyNames.size())
+        #end
+      #else
+        #displayInvalidUserMessageRow($user, $propertyNames.size())
       #end
     #end
-  #end
-</table>
+  </table>
+#else
+  <div class="box warningmessage">$services.localization.render('rendering.macro.userList.isEmpty')</div>
+#end

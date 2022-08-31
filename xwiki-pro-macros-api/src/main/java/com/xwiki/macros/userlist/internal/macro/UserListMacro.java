@@ -19,40 +19,51 @@
  */
 package com.xwiki.macros.userlist.internal.macro;
 
+import java.io.StringReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.script.ScriptContext;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.displayer.HTMLDisplayerException;
+import org.xwiki.displayer.HTMLDisplayerManager;
+import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.script.ScriptContextManager;
-import org.xwiki.template.Template;
-import org.xwiki.template.TemplateManager;
+import org.xwiki.text.StringUtils;
 
 import com.xwiki.macros.userlist.macro.UserListMacroParameters;
+import com.xwiki.macros.userlist.macro.UserReferenceList;
 
 /**
  * This macro displays a list of users with their name and avatar.
  *
  * @version $Id$
  */
-
 @Component
 @Named("userList")
 @Singleton
 public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 {
     @Inject
-    private TemplateManager templateManager;
+    @Named("xhtml/5")
+    private Parser xhtmlParser;
 
     @Inject
-    private ScriptContextManager scriptContextManager;
+    private HTMLDisplayerManager htmlDisplayerManager;
+
+    @Inject
+    @Named("default")
+    private EntityReferenceSerializer<String> referenceSerializer;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -67,20 +78,19 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     public List<Block> execute(UserListMacroParameters parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        Template customTemplate = this.templateManager.getTemplate("html_displayer/userreferencelist/view.vm");
 
+        Map<String, String> params = new HashMap<>();
         try {
-            this.bindParameters(parameters);
-            return this.templateManager.execute(customTemplate).getChildren();
-        } catch (Exception e) {
-            throw new MacroExecutionException("Failed to render the userList viewer template.", e);
+            List<String> userReferences =
+                parameters.getUsers().stream().map(reference -> referenceSerializer.serialize(reference)).collect(
+                    Collectors.toList());
+            params.put("users", StringUtils.join(userReferences, ','));
+            params.put("properties", StringUtils.join(parameters.getProperties(), ','));
+            String html = htmlDisplayerManager.display(UserReferenceList.class, content, params, "view");
+            return this.xhtmlParser.parse(new StringReader(html)).getChildren();
+        } catch (HTMLDisplayerException | ParseException e) {
+            throw new MacroExecutionException("Failed to render the userProfile viewer template.", e);
         }
-    }
-
-    private void bindParameters(UserListMacroParameters parameters)
-    {
-        ScriptContext scriptContext = scriptContextManager.getScriptContext();
-        scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
     }
 
     @Override

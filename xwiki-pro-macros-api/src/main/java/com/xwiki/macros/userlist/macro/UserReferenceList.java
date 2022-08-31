@@ -28,7 +28,6 @@ import org.xwiki.model.reference.EntityReference;
  * @{@link org.xwiki.properties.annotation.PropertyDisplayType} in @{@link UserListMacroParameters}.
  *
  * @version $Id$
- *
  */
 public class UserReferenceList extends ArrayList<EntityReference>
 {

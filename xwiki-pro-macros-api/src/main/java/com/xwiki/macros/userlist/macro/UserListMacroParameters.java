@@ -23,9 +23,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.xwiki.properties.annotation.PropertyDescription;
-import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyName;
 
+/**
+ * Parameters for the {@link com.xwiki.macros.userlist.internal.macro.UserListMacro}.
+ *
+ * @version $Id$
+ */
 public class UserListMacroParameters
 {
     private UserReferenceList users;
@@ -45,7 +49,6 @@ public class UserListMacroParameters
      *
      * @param users list of user references
      */
-    @PropertyDisplayType(UserReferenceList.class)
     @PropertyDescription("List of users")
     public void setUsers(UserReferenceList users)
     {
