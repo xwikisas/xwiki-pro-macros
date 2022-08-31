@@ -65,16 +65,25 @@
     &lt;/div&gt;
   {{/html}}
 #end
+#macro(warnAboutDiagramAppInstall)
+  {{warning}}
+    #set ($queryString = $escapetool.url({
+      'section': 'XWiki.Extensions',
+      'search': 'Diagram'
+    }))
+    #set ($syntax = $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))
+    #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
+    #set ($message = $services.localization.render('confluencediagram.installRequired', ['linkPrefix', 'linkSuffix']))
+    #set ($escapedMessage = $services.rendering.escape($message, $syntax))
+    #set ($escapedLinkPrefix = $services.rendering.escape('linkPrefix', $syntax))
+    #set ($escapedLinkSuffix = $services.rendering.escape('linkSuffix', $syntax))
+    #set ($escapedMessage = $escapedMessage.replace($escapedLinkPrefix, '[[').replace($escapedLinkSuffix, "&gt;&gt;path:$installURL||target='_blank']]"))
+    $escapedMessage
+  {{/warning}}
+#end
 #macro(displayConfluenceDiagram)
   #if (!$services.diagram)
-    {{warning}}
-      #set ($queryString = $escapetool.url({
-        'section': 'XWiki.Extensions',
-        'search': 'Diagram'
-      }))
-      #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
-      $escapetool.xml($services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"]))
-    {{/warning}}
+    #warnAboutDiagramAppInstall()
   #else
     #set($discard = $xwiki.jsx.use('Confluence.Macros.DiagramMacros'))
     #set($discard = $xwiki.ssx.use('Confluence.Macros.DiagramMacros'))
@@ -148,14 +157,7 @@
 #end
 #macro(checkDiagramAppInstall)
   #if (!$services.diagram)
-    {{warning}}
-      #set ($queryString = $escapetool.url({
-        'section': 'XWiki.Extensions',
-        'search': 'Diagram'
-      }))
-      #set ($installURL = $xwiki.getURL('XWiki.XWikiPreferences', 'admin', $queryString))
-      $services.rendering.escape($services.localization.render('confluencediagram.installRequired', ['[[', "&gt;&gt;path:$installURL||target='_blank']]"]), $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))
-    {{/warning}}
+    #warnAboutDiagramAppInstall()
   #end
 #end
 {{/velocity}}</content>
