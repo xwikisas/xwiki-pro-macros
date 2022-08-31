@@ -175,8 +175,8 @@
     </property>
     <property>
       <code>require(['jquery', 'xwiki-events-bridge'], function($) {
-  function filter (teamDiv) {
-    const l = this.value.toLowerCase();
+  function filter (input, teamDiv) {
+    const l = input.value.toLowerCase();
     const users = teamDiv.getElementsByClassName('xwikiteam-user');
     for (let i = 0, len = users.length; i &lt; len; i++) {
       const user = users[i];
@@ -201,7 +201,7 @@
     checkbox.addEventListener('click', applyCheckbox.bind(null, teamDiv, checkbox));
   }
 
-  function toggleTools(teamDiv, e) {
+  function toggleTools(teamDiv) {
     const tools = teamDiv.querySelector('.xwikiteam-tools');
     if (tools) {
       tools.hidden = !tools.hidden;
@@ -212,33 +212,54 @@
         }
       }
     }
-    if (e) {
-      e.preventDefault();
-    }
   }
 
-  function initTools() {
-    const teamDivs = document.getElementsByClassName('xwikiteam');
+  function getTeamDivFromEvent(e) {
+    return $(e.target).parents('.xwikiteam')[0];
+  }
+
+  function handleToolLinkClick(e) {
+    toggleTools(getTeamDivFromEvent(e));
+    e.preventDefault();
+  }
+
+  function handleFilterInputKeyUp(e) {
+    filter(e.target, getTeamDivFromEvent(e));
+  }
+
+  function bindEvents(parent) {
+    const teamDivs = (
+      parent.classList.contains("xwikiteam")
+        ? [parent]
+        : parent.getElementsByClassName('xwikiteam')
+    );
+
     for (let i = 0, len = teamDivs.length; i &lt; len; i++) {
       const teamDiv = teamDivs[i];
+
       const a = teamDiv.querySelector('.xwikiteam-tools-link a');
       if (a) {
-        if (a.classList.has('initialized')) {
-          continue; // don't initialize already initialized team macros
-        }
-        a.addEventListener('click', toggleTools.bind(null, teamDiv));
-        a.classList.add('initialized');
+        // Make sure the event is not bound twice when the dom is updated
+        a.removeEventListener('click', handleToolLinkClick);
+
+        a.addEventListener('click', handleToolLinkClick);
         a.parentNode.hidden = false;
       }
-      const ul = teamDiv.querySelector('.xwikiteam-ul');
+
       const tools = teamDiv.querySelector('.xwikiteam-tools');
-      if (!tools) continue;
+      if (!tools) {
+        continue;
+      }
+
       const filterInput = tools.querySelector('.xwikiteam-filter');
       if (filterInput) {
-        filterInput.addEventListener('keyup', filter.bind(filterInput, teamDiv));
+        // Make sure the event is not bound twice when the dom is updated
+        filterInput.removeEventListener('keyup', handleFilterInputKeyUp);
+
+        filterInput.addEventListener('keyup', handleFilterInputKeyUp);
         if (filterInput.value) {
-          filter.call(filterInput, teamDiv);
-          toggleTools(teamDiv)
+          filter(filterInput, teamDiv);
+          toggleTools(teamDiv);
         }
       }
 
@@ -247,8 +268,13 @@
   }
 
   $(function () {
-    initTools();
-    $('xwiki:dom:updated', initTools);
+    bindEvents(document.body);
+    $(document).on('xwiki:dom:updated', function (e, data) {
+      const elements = (data &amp;&amp; data.elements) || [document.body];
+      for (let i = 0, len = elements.length; i &lt; len; i++) {
+        bindEvents(elements[i]);
+      }
+    });
   });
 });</code>
     </property>
