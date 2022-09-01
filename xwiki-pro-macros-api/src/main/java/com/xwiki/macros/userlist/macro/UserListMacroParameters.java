@@ -49,6 +49,7 @@ public class UserListMacroParameters
      *
      * @param users list of user references
      */
+    @PropertyName("UserList")
     @PropertyDescription("List of users")
     public void setUsers(UserReferenceList users)
     {
