@@ -19,7 +19,7 @@
  */
 package com.xwiki.macros.userlist.internal.macro;
 
-import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +34,10 @@ import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
-import org.xwiki.rendering.parser.ParseException;
-import org.xwiki.rendering.parser.Parser;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
 
@@ -54,10 +54,6 @@ import com.xwiki.macros.userlist.macro.UserReferenceList;
 @Singleton
 public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 {
-    @Inject
-    @Named("xhtml/5")
-    private Parser xhtmlParser;
-
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
 
@@ -87,8 +83,8 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
             params.put("users", StringUtils.join(userReferences, ','));
             params.put("properties", StringUtils.join(parameters.getProperties(), ','));
             String html = htmlDisplayerManager.display(UserReferenceList.class, content, params, "view");
-            return this.xhtmlParser.parse(new StringReader(html)).getChildren();
-        } catch (HTMLDisplayerException | ParseException e) {
+            return Arrays.asList(new RawBlock(html, Syntax.HTML_5_0));
+        } catch (HTMLDisplayerException e) {
             throw new MacroExecutionException("Failed to render the userProfile viewer template.", e);
         }
     }
