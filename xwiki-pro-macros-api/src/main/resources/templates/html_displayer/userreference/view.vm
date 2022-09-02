@@ -1,0 +1,74 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+## Hack copied from https://github.com/xwiki-contrib/application-changerequest/blob/application-changerequest-1.0.1/application-changerequest-ui/src/main/resources/ChangeRequest/Code/SaveChangeRequestModal.xml#L42
+#macro (stripHTML $displayOutput)
+  $stringtool.removeEnd($stringtool.removeStart($displayOutput, '{{html clean="false" wiki="false"}}'), '{{/html}}')
+#end
+#set ($ref = $displayer.parameters.user)
+#if ("$!ref" != '')
+  #set ($discard = $xwiki.ssrx.use('css/userprofile.css'))
+  #set ($reference = $services.model.resolveDocument($ref))
+  #if ($xwiki.exists($reference) && $services.security.authorization.hasAccess('view', $reference))
+    #set ($properties = $displayer.parameters.properties.split(','))
+    #set ($userPage = $xwiki.getDocument($reference))
+    #set ($userObj = $userPage.getObject('XWiki.XWikiUsers'))
+    <div class="xwiki-user-profile-box">
+      <div class="xwiki-user-profile-header">
+        <div class="media">
+          <div class="media-left">
+            <a href="$xwiki.getURL($reference)" title="$xwiki.getUserName($reference, false)">
+              #mediumUserAvatar($ref)
+            </a>
+          </div>
+          <div class="media-body">
+            <h2 class="media-heading">$xwiki.getUserName($reference)</h2>
+            <div class="xwiki-user-profile-comment">
+              #stripHTML($userPage.display('comment', 'view'))
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="xwiki-user-profile-body">
+        <ul>
+          #foreach ($property in $properties)
+            #if ($property == 'email')
+              #set ($icon = 'envelope')
+            #elseif ($property == 'phone')
+              #set ($icon = 'phone')
+            #elseif ($property == 'company')
+              #set ($icon = 'building')
+            #else
+              #set ($icon = $NULL)
+            #end
+            #set ($propertyValue = $userObj.getValue($property))
+            #if ("$!propertyValue" != '')
+              <li>
+                #if ($icon != $NULL)
+                  <span class="xwiki-user-profile-attribute-icon">$services.icon.renderHTML($icon)</span>
+                #end
+                #stripHTML($userPage.display($property, 'view'))
+              </li>
+            #end
+          #end
+        </ul>
+      </div>
+    </div>
+  #end
+#end
