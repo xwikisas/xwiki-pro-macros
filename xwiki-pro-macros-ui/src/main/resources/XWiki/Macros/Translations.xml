@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="XWiki.Macros.Translations" locale="">
+<xwikidoc version="1.5" reference="XWiki.Macros.Translations" locale="">
   <web>XWiki.Macros</web>
   <name>Translations</name>
   <language/>
@@ -29,6 +29,7 @@
   <creator>xwiki:XWiki.Admin</creator>
   <parent>xwiki:XWiki.Macros.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
+  <originalMetadataAuthor>XWiki.superadmin</originalMetadataAuthor>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
   <title>Translations</title>
@@ -105,7 +106,17 @@ rendering.macro.microsoftStream.parameter.start.description=Start video at a spe
 rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
 rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
 rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
-rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.</content>
+rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+
+## User Profile macro
+rendering.macro.userProfile.name=User Profile
+rendering.macro.userProfile.description=Displays a user profile with custom properties
+rendering.macro.userProfile.parameter.reference.name=User
+rendering.macro.userProfile.parameter.reference.description=Reference to a user page
+rendering.macro.userProfile.parameter.properties.name=User properties
+rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
+rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro &lt;em&gt;reference&lt;/em&gt; parameter is either missing or invalid.
+</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
@@ -124,6 +135,8 @@ rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>scope</name>
         <number>1</number>

@@ -76,8 +76,8 @@ public class UserProfileMacro extends AbstractMacro<UserProfileMacroParameters>
 
         Map<String, String> params = new HashMap<>();
         try {
-            String userReference = referenceSerializer.serialize(parameters.getUser());
-            params.put("user", userReference);
+            String userReference = referenceSerializer.serialize(parameters.getReference());
+            params.put("reference", userReference);
             params.put("properties", StringUtils.join(parameters.getProperties(), ','));
             String html = htmlDisplayerManager.display(UserReference.class, content, params, "view");
             return Arrays.asList(new RawBlock(html, Syntax.HTML_5_0));
