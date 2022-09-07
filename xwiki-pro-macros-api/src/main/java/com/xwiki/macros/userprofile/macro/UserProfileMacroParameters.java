@@ -19,6 +19,7 @@
  */
 package com.xwiki.macros.userprofile.macro;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.xwiki.properties.annotation.PropertyDescription;
@@ -26,7 +27,7 @@ import org.xwiki.properties.annotation.PropertyName;
 
 public class UserProfileMacroParameters
 {
-    private List<String> properties;
+    private List<String> properties = Arrays.asList("company", "email", "phone", "address");
 
     private UserReference user;
 

@@ -44,30 +44,32 @@
         </div>
       </div>
     </div>
-    <div class="xwiki-user-profile-body">
-      <ul>
-        #foreach ($property in $properties)
-          #if ($property == 'email')
-            #set ($icon = 'envelope')
-          #elseif ($property == 'phone')
-            #set ($icon = 'phone')
-          #elseif ($property == 'company')
-            #set ($icon = 'building')
-          #else
-            #set ($icon = $NULL)
+    #if ($!displayer.parameters.properties != '')
+      <div class="xwiki-user-profile-body">
+        <ul>
+          #foreach ($property in $properties)
+            #if ($property == 'email')
+              #set ($icon = 'envelope')
+            #elseif ($property == 'phone')
+              #set ($icon = 'phone')
+            #elseif ($property == 'company')
+              #set ($icon = 'building')
+            #else
+              #set ($icon = $NULL)
+            #end
+            #set ($propertyValue = $userObj.getValue($property))
+            #if ("$!propertyValue" != '')
+              <li>
+                #if ($icon != $NULL)
+                  <span class="xwiki-user-profile-attribute-icon">$services.icon.renderHTML($icon)</span>
+                #end
+                #stripHTML($userPage.display($property, 'view'))
+              </li>
+            #end
           #end
-          #set ($propertyValue = $userObj.getValue($property))
-          #if ("$!propertyValue" != '')
-            <li>
-              #if ($icon != $NULL)
-                <span class="xwiki-user-profile-attribute-icon">$services.icon.renderHTML($icon)</span>
-              #end
-              #stripHTML($userPage.display($property, 'view'))
-            </li>
-          #end
-        #end
-      </ul>
-    </div>
+        </ul>
+      </div>
+    #end
   </div>
 #else
   <div class="box warningmessage">
