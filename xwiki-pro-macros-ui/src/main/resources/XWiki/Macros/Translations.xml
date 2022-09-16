@@ -105,7 +105,33 @@ rendering.macro.microsoftStream.parameter.start.description=Start video at a spe
 rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
 rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
 rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
-rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.</content>
+rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+
+## Team macro
+rendering.macro.team.name=Team
+rendering.macro.team.description=Display avatars of the members of a team.
+rendering.macro.team.parameter.tag.name=Tag
+rendering.macro.team.parameter.tag.description=Tag that users need to have to be shown
+rendering.macro.team.parameter.size.name=Size
+rendering.macro.team.parameter.size.description=The size (height and width) of an avatar
+rendering.macro.team.parameter.showUsernames.name=Show usernames
+rendering.macro.team.parameter.showUsernames.description=The name of users should be displayed under their avatars
+rendering.macro.team.parameter.letterAvatarBgColor.name=Letter Avatars Background Color
+rendering.macro.team.parameter.letterAvatarBgColor.description=The background color of the letter avatars
+rendering.macro.team.parameter.letterAvatarFontColor.name=Letter Avatars Font Color
+rendering.macro.team.parameter.letterAvatarFontColor.description=The font color of the letter avatars
+rendering.macro.team.parameter.disableLetterAvatars.name=Disable Letter Avatars
+rendering.macro.team.parameter.disableLetterAvatars.description=Don't use letter avatars and display a default avatar instead
+rendering.macro.team.parameter.requireExternalAuth.name=Require External Auth
+rendering.macro.team.parameter.requireExternalAuth.description=The user should be searched in LDAP or OAuth
+rendering.macro.team.parameter.limit.name=Limit
+rendering.macro.team.parameter.limit.description=The maximum number of people to show (0 turns off the limit)
+rendering.macro.team.content.options=Options
+rendering.macro.team.content.filter=Filter…
+rendering.macro.team.content.showUsernames=Show names
+rendering.macro.team.content.noUsers=There is nobody to show.
+admin.promacros=Pro Macros
+admin.promacros.description=Settings for Pro Macros</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
