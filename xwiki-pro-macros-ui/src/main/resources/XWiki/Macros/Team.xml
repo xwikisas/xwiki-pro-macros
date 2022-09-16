@@ -215,7 +215,7 @@
   }
 
   function getTeamDivFromEvent(e) {
-    return $(e.target).parents('.xwikiteam')[0];
+    return $(e.target).closest('.xwikiteam')[0];
   }
 
   function handleToolLinkClick(e) {
