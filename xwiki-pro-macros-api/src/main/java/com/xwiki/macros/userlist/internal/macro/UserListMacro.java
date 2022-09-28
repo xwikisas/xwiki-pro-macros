@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
-import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
@@ -55,9 +54,6 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 {
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
-
-    @Inject
-    private EntityReferenceSerializer<String> referenceSerializer;
 
     /**
      * Create and initialize the descriptor of the macro.
