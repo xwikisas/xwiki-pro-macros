@@ -21,30 +21,30 @@
 #macro (stripHTML $displayOutput)
   $stringtool.removeEnd($stringtool.removeStart($displayOutput, '{{html clean="false" wiki="false"}}'), '{{/html}}')
 #end
-#set ($ref = $displayer.parameters.reference)
-#set ($reference = $services.model.resolveDocument($ref))
-#if ("$!ref" != '' && $xwiki.exists($reference) && $services.security.authorization.hasAccess('view', $reference))
+#set ($userReference = $displayer.value)
+#if ("$!userReference" != '' && $xwiki.exists($userReference) && $services.security.authorization.hasAccess('view', $userReference))
+  #set ($userId = $services.model.serialize($userReference))
   #set ($discard = $xwiki.ssrx.use('css/userprofile.css'))
   #set ($properties = $displayer.parameters.properties.split(','))
-  #set ($userPage = $xwiki.getDocument($reference))
+  #set ($userPage = $xwiki.getDocument($userReference))
   #set ($userObj = $userPage.getObject('XWiki.XWikiUsers'))
   <div class="xwiki-user-profile-box">
     <div class="xwiki-user-profile-header">
       <div class="media">
         <div class="media-left">
-          <a href="$xwiki.getURL($reference)" title="$xwiki.getUserName($reference, false)">
-            #mediumUserAvatar($ref)
+          <a href="$xwiki.getURL($userReference)" title="$escapetool.xml($xwiki.getUserName($userId, false))">
+            #mediumUserAvatar($userId)
           </a>
         </div>
         <div class="media-body">
-          <h2 class="media-heading">$xwiki.getUserName($reference)</h2>
+          <h2 class="media-heading">$xwiki.getUserName($userId)</h2>
           <div class="xwiki-user-profile-comment">
             #stripHTML($userPage.display('comment', 'view'))
           </div>
         </div>
       </div>
     </div>
-    #if ($!displayer.parameters.properties != '')
+    #if ("$!displayer.parameters.properties" != '')
       <div class="xwiki-user-profile-body">
         <ul>
           #foreach ($property in $properties)
@@ -73,6 +73,6 @@
   </div>
 #else
   <div class="box warningmessage">
-    $services.localization.render('rendering.macro.userProfile.parameter.reference.isInvalid')
+    $escapetool.xml($services.localization.render('rendering.macro.userProfile.parameter.reference.isInvalid'))
   </div>
 #end

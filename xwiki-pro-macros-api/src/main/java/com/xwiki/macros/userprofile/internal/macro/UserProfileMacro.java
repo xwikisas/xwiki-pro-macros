@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
-import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
@@ -56,10 +55,6 @@ public class UserProfileMacro extends AbstractMacro<UserProfileMacroParameters>
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
 
-    @Inject
-    @Named("default")
-    private EntityReferenceSerializer<String> referenceSerializer;
-
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -73,13 +68,10 @@ public class UserProfileMacro extends AbstractMacro<UserProfileMacroParameters>
     public List<Block> execute(UserProfileMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-
         Map<String, String> params = new HashMap<>();
         try {
-            String userReference = referenceSerializer.serialize(parameters.getReference());
-            params.put("reference", userReference);
             params.put("properties", StringUtils.join(parameters.getProperties(), ','));
-            String html = htmlDisplayerManager.display(UserReference.class, content, params, "view");
+            String html = htmlDisplayerManager.display(UserReference.class, parameters.getReference(), params, "view");
             return Arrays.asList(new RawBlock(html, Syntax.HTML_5_0));
         } catch (HTMLDisplayerException e) {
             throw new MacroExecutionException("Failed to render the userProfile viewer template.", e);

@@ -29,7 +29,6 @@
   <creator>xwiki:XWiki.Admin</creator>
   <parent>xwiki:XWiki.Macros.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
-  <originalMetadataAuthor>XWiki.superadmin</originalMetadataAuthor>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
   <title>Translations</title>
@@ -141,7 +140,7 @@ rendering.macro.userProfile.parameter.reference.name=User
 rendering.macro.userProfile.parameter.reference.description=Reference to a user page
 rendering.macro.userProfile.parameter.properties.name=User properties
 rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
-rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro &lt;em&gt;reference&lt;/em&gt; parameter is either missing or invalid.</content>
+rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
