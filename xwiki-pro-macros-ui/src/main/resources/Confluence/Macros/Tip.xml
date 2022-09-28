@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.Excerpt" locale="">
+<xwikidoc version="1.4" reference="Confluence.Macros.Tip" locale="">
   <web>Confluence.Macros</web>
-  <name>Excerpt</name>
+  <name>Tip</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,57 +31,38 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Excerpt Macro</title>
+  <title>Tip</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>= Description =
 
-The Excerpt macro is a bridge between Confluence and XWiki. It allows the user to mark part of the page's content for use by other macros.
+This is a bridge macro between Confluence Tip macro and XWikis Success macro.
 
 = Parameters =
 
-|=Parameter|=Description|=Default
-|**atlassian-macro-output-type**|The ouput type. It can be either BLOCK or INLINE.|INLINE
-|**hidden**|If true, the content of the macro will be hidden.|false
+|=Parameter|=Description
+|**title**|The title of the tip.
 
 = Example of usage =
 
-Example of excerpt with HTML :
-
 {{code}}
-{{excerpt}}
-|=Title1|=Title2|=Title3
-|Text1|Text2|Text3
-{{/excerpt}}
+{{tip title="Tip: "}}
+This is my tip with a title.
+{{/tip}}
 {{/code}}
 
-The result is the following :
+Result :
 
-{{excerpt}}
-|=Title1|=Title2|=Title3
-|Text1|Text2|Text3
-{{/excerpt}}
-
-Example of hidden excerpt :
-
-{{code}}
-{{excerpt hidden="true"}}
-My hidden content.
-{{/excerpt}}
-{{/code}}
-
-The result is the following :
-
-{{excerpt hidden="true"}}
-My hidden content.
-{{/excerpt}}</content>
+{{tip title="Tip: "}}
+This is my tip with a title.
+{{/tip}}</content>
   <object>
-    <name>Confluence.Macros.Excerpt</name>
+    <name>Confluence.Macros.Tip</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
-    <guid>7bcea831-db66-4881-b9dd-42d858b7cd12</guid>
+    <guid>d13d74ba-c4cd-47fb-8dd2-d887b3f59ec1</guid>
     <class>
       <name>XWiki.WikiMacroClass</name>
       <customClass/>
@@ -271,55 +252,48 @@ My hidden content.
     </property>
     <property>
       <code>{{velocity}}
-## BLOCK / INLINE
-#set($outputType = $wikimacro.parameters.get('atlassian-macro-output-type'))
-#set($hidden = $wikimacro.parameters.get('hidden'))
-#set($displayAsBlock = "$!outputType" != '' &amp;&amp; $outputType.toLowerCase() == 'block')
-#if("$!hidden" == 'true')
-  (% class="hidden" %)
-#end
-#if($displayAsBlock)
-  (((
-#end
-  {{wikimacrocontent /}}
-#if($displayAsBlock)
-  )))
-#end
+  {{success}}
+    #if("$!wikimacro.parameters.title" != "")
+      **$services.rendering.escape($wikimacro.parameters.title, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))**
+
+    #end
+    $!wikimacro.content
+  {{/success}}
 {{/velocity}}</code>
     </property>
     <property>
-      <contentDescription>The content to be marked for use by other macros.</contentDescription>
+      <contentDescription/>
     </property>
     <property>
-      <contentJavaType>Wiki</contentJavaType>
+      <contentJavaType/>
     </property>
     <property>
-      <contentType>Optional</contentType>
+      <contentType>Mandatory</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategory/>
     </property>
     <property>
-      <description>Bridge for the Confluence Excerpt macro. It marks part of the page's content for use by other macros.</description>
+      <description/>
     </property>
     <property>
-      <id>excerpt</id>
+      <id>tip</id>
     </property>
     <property>
-      <name>Excerpt</name>
+      <name>Tip</name>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode/>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Excerpt</name>
+    <name>Confluence.Macros.Tip</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>5c9fec91-2360-43f9-ad16-c081aa7684d5</guid>
+    <guid>51ccee36-7ed1-4be6-b396-a289ab732eeb</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -381,91 +355,13 @@ My hidden content.
       <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>Title to show</description>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>0</mandatory>
     </property>
     <property>
-      <name>atlassian-macro-output-type</name>
-    </property>
-    <property>
-      <type/>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.Excerpt</name>
-    <number>1</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>9450c5fd-9a66-4c07-904f-2426c161a118</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue>false</defaultValue>
-    </property>
-    <property>
-      <description/>
-    </property>
-    <property>
-      <mandatory/>
-    </property>
-    <property>
-      <name>hidden</name>
+      <name>title</name>
     </property>
     <property>
       <type/>

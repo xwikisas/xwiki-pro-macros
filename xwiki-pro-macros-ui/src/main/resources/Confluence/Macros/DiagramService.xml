@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.GliffyService" locale="">
+<xwikidoc version="1.4" reference="Confluence.Macros.DiagramService" locale="">
   <web>Confluence.Macros</web>
-  <name>GliffyService</name>
+  <name>DiagramService</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Confluence.Macros.Gliffy</parent>
+  <parent>Confluence.Macros</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -62,19 +62,23 @@
     #set($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
     #if($diagramAttach)
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
-      #set($gliffyContent = $diagramAttach.getContentAsString())
-      #set($gliffyPNGContent = $diagramPreviewAttach.getContentAsString())
-      #set($xml = $services.diagram.importDiagram($gliffyContent, $diagramName))
+      #set($diagramContent = $diagramAttach.getContentAsString())
+      #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
+      #if($diagramName.endsWith('.drawio') &amp;&amp; $diagramContent.startsWith('&lt;'))
+        #set($xml = $diagramContent)
+      #else
+        #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
+      #end
       #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
       #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
       #set($discard = $diagramDoc.setContent($xml))
       #set($discard = $diagramDoc.setTitle('Diagram'))
-      #set($gliffyObj = $diagramDoc.newObject('Confluence.Macros.GliffyClass'))
-      #set($discard = $gliffyObj.set('page', $page))
-      #set($discard = $gliffyObj.set('diagramName', $diagramName))
-      #set($discard = $diagramDoc.addObject($gliffyObj))
+      #set($diagramObj = $diagramDoc.newObject('Confluence.Macros.DiagramClass'))
+      #set($discard = $diagramObj.set('page', $page))
+      #set($discard = $diagramObj.set('diagramName', $diagramName))
+      #set($discard = $diagramDoc.addObject($diagramObj))
       #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
-      #set($discard = $diagramDoc.save($services.localization.render('gliffy.diagram.create.message')))
+      #set($discard = $diagramDoc.save($services.localization.render('confluencediagram.create.message')))
     #else
       ## Bad Request
       $response.setStatus(400)
