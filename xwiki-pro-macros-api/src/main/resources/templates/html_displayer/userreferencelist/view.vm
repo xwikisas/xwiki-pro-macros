@@ -30,12 +30,11 @@
     </td>
   </tr>
 #end
-#if ("$!displayer.value" != '')
-  #set ($users = $displayer.value.split(','))
+#if ($displayer.value != $NULL && $displayer.value.size() > 0)
   #set ($propertyNames = $displayer.parameters.properties.split(','))
   #set ($discard = $xwiki.ssrx.use('css/userlist.css'))
   <table class="xwiki-userlist">
-    #foreach ($user in $users)
+    #foreach ($user in $displayer.value)
       #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $user))
         #set ($userDoc = $xwiki.getDocument($user))
         #set ($userObj = $userDoc.getObject('XWiki.XWikiUsers'))

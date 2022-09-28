@@ -19,12 +19,10 @@
  */
 package com.xwiki.macros.userlist.internal.macro;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -77,16 +75,8 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 
         Map<String, String> params = new HashMap<>();
         try {
-            List<String> userReferences = new ArrayList<>();
-            if (parameters.getUsers() != null) {
-                userReferences =
-                    parameters.getUsers().stream().map(reference -> referenceSerializer.serialize(reference)).collect(
-                        Collectors.toList());
-            }
             params.put("properties", StringUtils.join(parameters.getProperties(), ','));
-            String html =
-                htmlDisplayerManager.display(UserReferenceList.class, StringUtils.join(userReferences, ','), params,
-                    "view");
+            String html = htmlDisplayerManager.display(UserReferenceList.class, parameters.getUsers(), params, "view");
             return Arrays.asList(new RawBlock(html, Syntax.HTML_5_0));
         } catch (HTMLDisplayerException e) {
             throw new MacroExecutionException("Failed to render the userProfile viewer template.", e);
