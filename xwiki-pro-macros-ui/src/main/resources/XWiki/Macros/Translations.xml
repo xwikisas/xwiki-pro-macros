@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="XWiki.Macros.Translations" locale="">
+<xwikidoc version="1.3" reference="XWiki.Macros.Translations" locale="">
   <web>XWiki.Macros</web>
   <name>Translations</name>
   <language/>
@@ -159,8 +159,6 @@ rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro
         <cache>0</cache>
         <disabled>0</disabled>
         <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
         <multiSelect>0</multiSelect>
         <name>scope</name>
         <number>1</number>
