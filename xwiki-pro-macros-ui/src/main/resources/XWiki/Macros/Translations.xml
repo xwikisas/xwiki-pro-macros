@@ -140,7 +140,18 @@ rendering.macro.userProfile.parameter.reference.name=User
 rendering.macro.userProfile.parameter.reference.description=Reference to a user page
 rendering.macro.userProfile.parameter.properties.name=User properties
 rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
-rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.</content>
+rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.
+
+## User List macro
+rendering.macro.userList.name=User List
+rendering.macro.userList.description=Displays a list of users with a customizable set of their properties
+rendering.macro.userList.parameter.users.name=Users
+rendering.macro.userList.parameter.users.description=List of users to be displayed
+rendering.macro.userList.parameter.properties.name=Properties
+rendering.macro.userList.parameter.properties.description=List of user properties to be displayed
+rendering.macro.userList.isEmpty=The User List macro has an empty user list.
+rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.
+</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>

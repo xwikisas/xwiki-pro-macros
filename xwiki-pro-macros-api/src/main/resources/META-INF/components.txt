@@ -1,2 +1,4 @@
 com.xwiki.macros.userprofile.internal.macro.UserProfileMacro
 com.xwiki.macros.userprofile.internal.macro.UserReferenceConverter
+com.xwiki.macros.userlist.internal.macro.UserListMacro
+com.xwiki.macros.userlist.internal.macro.UserReferenceListConverter

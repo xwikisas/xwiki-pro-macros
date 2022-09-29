@@ -1,0 +1,66 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+## Hack copied from https://github.com/xwiki-contrib/application-changerequest/blob/application-changerequest-1.0.1/application-changerequest-ui/src/main/resources/ChangeRequest/Code/SaveChangeRequestModal.xml#L42
+#macro (stripHTML $displayOutput)
+  $stringtool.removeEnd($stringtool.removeStart($displayOutput, '{{html clean="false" wiki="false"}}'), '{{/html}}')
+#end
+#macro (displayInvalidUserMessageRow $user $colspan)
+  <tr>
+    <td colspan="$colspan">
+      <div class="box warningmessage">
+        $escapetool.xml($services.localization.render('rendering.macro.userList.invalidUser', [$user]))
+      </div>
+    </td>
+  </tr>
+#end
+#if ($displayer.value != $NULL && $displayer.value.size() > 0)
+  #set ($propertyNames = $displayer.parameters.properties.split(','))
+  #set ($discard = $xwiki.ssrx.use('css/userlist.css'))
+  <table class="xwiki-userlist">
+    #foreach ($user in $displayer.value)
+      #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $user))
+        #set ($userDoc = $xwiki.getDocument($user))
+        #set ($userObj = $userDoc.getObject('XWiki.XWikiUsers'))
+        #if ($userObj != $NULL)
+          <tr>
+            #foreach ($propertyName in $propertyNames)
+              <td class="xwiki-userlist-user-$escapetool.xml($propertyName)">
+                #if ($propertyName == 'avatar')
+                  #mediumUserAvatar($user)
+                #elseif ($propertyName == 'username')
+                  $xwiki.getUserName($user)
+                #else
+                  #set ($displayedProperty = $userObj.display($propertyName, 'view'))
+                  #stripHTML($displayedProperty)
+                #end
+              </td>
+            #end
+          </tr>
+        #else
+          #displayInvalidUserMessageRow($user, $propertyNames.size())
+        #end
+      #else
+        #displayInvalidUserMessageRow($user, $propertyNames.size())
+      #end
+    #end
+  </table>
+#else
+  <div class="box warningmessage">$escapetool.xml($services.localization.render('rendering.macro.userList.isEmpty'))</div>
+#end

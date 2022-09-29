@@ -49,7 +49,7 @@
       <groupId>org.webjars</groupId>
       <artifactId>jquery</artifactId>
     </dependency>
-    <!-- Dependencies needed by the User Profile macro -->
+    <!-- Dependencies needed by the User List and User Profile macros -->
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-displayer</artifactId>
