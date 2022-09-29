@@ -133,6 +133,15 @@ rendering.macro.team.content.noUsers=There is nobody to show.
 admin.promacros=Pro Macros
 admin.promacros.description=Settings for Pro Macros
 
+## User Profile macro
+rendering.macro.userProfile.name=User Profile
+rendering.macro.userProfile.description=Displays a user profile with custom properties
+rendering.macro.userProfile.parameter.reference.name=User
+rendering.macro.userProfile.parameter.reference.description=Reference to a user page
+rendering.macro.userProfile.parameter.properties.name=User properties
+rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
+rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.
+
 ## User List macro
 rendering.macro.userList.name=User List
 rendering.macro.userList.description=Displays a list of users with a customizable set of their properties

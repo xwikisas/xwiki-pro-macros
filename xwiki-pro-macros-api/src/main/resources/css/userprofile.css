@@ -1,0 +1,37 @@
+.xwiki-user-profile-box {
+  margin-bottom: 1em;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
+
+.xwiki-user-profile-box .xwiki-user-profile-header {
+  padding: 1em;
+  background: #eaeaea;
+}
+
+.xwiki-user-profile-box .xwiki-user-profile-header h2 {
+  font-size: 16px;
+}
+
+.xwiki-user-profile-box .xwiki-user-profile-header .media-left img {
+  max-width: 50px;
+  max-height: 50px;
+}
+
+.xwiki-user-profile-box .xwiki-user-profile-header .xwiki-user-profile-comment {
+  font-style: italic;
+  color: #4d5860;
+}
+
+.xwiki-user-profile-body {
+  padding: 1em;
+}
+
+.xwiki-user-profile-body ul {
+  padding: 0;
+  list-style: none;
+}
+
+.xwiki-user-profile-body li .xwiki-user-profile-attribute-icon {
+  padding-right: 0.2em;
+}
