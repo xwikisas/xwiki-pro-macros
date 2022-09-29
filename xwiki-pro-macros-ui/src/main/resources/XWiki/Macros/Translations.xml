@@ -131,7 +131,18 @@ rendering.macro.team.content.filter=Filter…
 rendering.macro.team.content.showUsernames=Show names
 rendering.macro.team.content.noUsers=There is nobody to show.
 admin.promacros=Pro Macros
-admin.promacros.description=Settings for Pro Macros</content>
+admin.promacros.description=Settings for Pro Macros
+
+## User List macro
+rendering.macro.userList.name=User List
+rendering.macro.userList.description=Displays a list of users with a customizable set of their properties
+rendering.macro.userList.parameter.users.name=Users
+rendering.macro.userList.parameter.users.description=List of users to be displayed
+rendering.macro.userList.parameter.properties.name=Properties
+rendering.macro.userList.parameter.properties.description=List of user properties to be displayed
+rendering.macro.userList.isEmpty=The User List macro has an empty user list.
+rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.
+</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
