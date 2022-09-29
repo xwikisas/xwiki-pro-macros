@@ -25,7 +25,7 @@ import org.xwiki.model.reference.EntityReference;
 
 /**
  * Class representing a list of user references. This class is needed to declare a valid
- * @{@link org.xwiki.properties.annotation.PropertyDisplayType} in @{@link UserListMacroParameters}.
+ * {@link org.xwiki.properties.annotation.PropertyDisplayType} in {@link UserListMacroParameters}.
  *
  * @version $Id$
  */
