@@ -507,11 +507,28 @@ $xwiki.ssx.use('Confluence.Macros.Attachments')
 $xwiki.jsx.use('Confluence.Macros.Attachments')
 #if ("$!{request.forceTestRights}" == "1")#template("xwikivars.vm")#end
 #template('attachment_macros.vm')
-#set ($attachments = $doc.attachmentList)
-#if ("$!wikimacro.parameters.page" != '')
-  #set ($document = $xwiki.getDocument("$!wikimacro.parameters.page"))
-  #set ($attachments = $document.attachmentList)
+## Get attachments
+#if ("$!wikimacro.parameters.tags" != '')
+  #set ($tags = $!wikimacro.parameters.tags.split(','))
+  #set ($pageReferenceSet = $collectiontool.getSet())
+  #foreach ($tag in $tags)
+    #set ($references = $xwiki.tag.getDocumentsWithTag("$tag"))
+    #set ($discard = $pageReferenceSet.addAll($references))
+  #end
+  #set ($attachments = [])
+  #foreach ($pageReference in $pageReferenceSet)
+    #set ($document = $xwiki.getDocument("$pageReference"))
+    #set ($documentAttachments = $document.attachmentList)
+    #set ($discard = $attachments.addAll($documentAttachments))
+  #end
+#else
+  #set ($attachments = $doc.attachmentList)
+  #if ("$!wikimacro.parameters.page" != '')
+    #set ($document = $xwiki.getDocument("$!wikimacro.parameters.page"))
+    #set ($attachments = $document.attachmentList)
+  #end
 #end
+## Filter attachments
 #set ($confluencePatterns = "$!wikimacro.parameters.patterns")
 #if ($confluencePatterns == '')
   #set($attachmentsFiltered = $attachments)
@@ -565,6 +582,7 @@ Warning: sortOrder parameter must be one of 'ascending' or 'descending'
 {{/warning}}
 #end
 #set ($attachmentsFiltered = $collectiontool.sort($attachmentsFiltered, "$sortBy:$sortOrder"))
+## Display attchments
 {{html clean="false"}}
 #if ($attachmentsFiltered.size() &gt; 0)
   #displayAttachments($attachmentsFiltered)
@@ -1040,6 +1058,84 @@ Warning: sortOrder parameter must be one of 'ascending' or 'descending'
     </property>
     <property>
       <name>sortOrder</name>
+    </property>
+    <property>
+      <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>8</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>e1ae4f9d-5f3c-4059-b14b-573e4069241a</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>A list of comma-separated wiki tags, used to display attachments from pages matching all given tags. If you do not enter tags, the macro will display the files attached to the current page. When used, ~{~{~{ page }}} property is ignored.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>tags</name>
     </property>
     <property>
       <type>java.lang.String</type>
