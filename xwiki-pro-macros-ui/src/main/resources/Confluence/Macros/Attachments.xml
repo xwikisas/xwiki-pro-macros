@@ -685,13 +685,13 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
       <defaultCategory>confluence</defaultCategory>
     </property>
     <property>
-      <description/>
+      <description>Confluence attachment macro support for XWiki</description>
     </property>
     <property>
-      <id>attachments</id>
+      <id>confluence_attachments</id>
     </property>
     <property>
-      <name>attachments</name>
+      <name>Attachments</name>
     </property>
     <property>
       <priority/>
