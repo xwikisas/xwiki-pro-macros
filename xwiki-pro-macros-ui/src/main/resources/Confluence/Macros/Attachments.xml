@@ -501,10 +501,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{html clean="false"}}
-  &lt;div class="confluence-attachment-macro"&gt;
-{{/html}}
-{{velocity output="false"}}
+      <code>{{velocity output="false"}}
 $xwiki.ssx.use('Confluence.Macros.Attachments')
 $xwiki.jsx.use('Confluence.Macros.Attachments')
 #if ("$!{request.forceTestRights}" == "1")#template("xwikivars.vm")#end
@@ -547,10 +544,9 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
     #end
   #end
 #end
-{{/velocity}}
-{{velocity}}
 ## Sort attachments
 #set ($confluenceSortBy = "$!wikimacro.parameters.sortBy")
+#set ($invalidSortBy = false)
 #if ($confluenceSortBy == 'date')
   #set ($sortBy = 'date')
 #elseif ($confluenceSortBy == 'size')
@@ -560,86 +556,127 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
 #elseif ($confluenceSortBy == 'creation date')
   #set ($sortBy = 'date')
 #else
-{{warning}}
-Warning: sortBy parameter must be one of 'date', 'size', or 'name'
-{{/warning}}
+  #set ($invalidSortBy = true)
 #end
 #set ($confluenceSortOrder = "$!wikimacro.parameters.sortOrder")
-#set ($reverseOrderProperties = ['filesize', 'date'])
+#set ($invalidSortOrder = false)
+#set ($reverseSortOrderProperties = ['filesize', 'date'])
 #if ($confluenceSortOrder == 'ascending')
-  #if ($reverseOrderProperties.contains($sortBy))
+  #if ($reverseSortOrderProperties.contains($sortBy))
     #set ($sortOrder = 'desc')
   #else
     #set ($sortOrder = 'asc')
   #end
 #elseif ($confluenceSortOrder == 'descending')
-  #if ($reverseOrderProperties.contains($sortBy))
+  #if ($reverseSortOrderProperties.contains($sortBy))
     #set ($sortOrder = 'asc')
   #else
     #set ($sortOrder = 'desc')
   #end
 #else
-{{warning}}
-Warning: sortOrder parameter must be one of 'ascending' or 'descending'
-{{/warning}}
+  #set ($invalidSortOrder = false)
 #end
 #set ($attachmentsFiltered = $collectiontool.sort($attachmentsFiltered, "$sortBy:$sortOrder"))
-## Display attchments
-{{html clean="false"}}
-#if ($attachmentsFiltered.size() &gt; 0)
-  #displayAttachments($attachmentsFiltered)
-  #deleteAttachmentModal()
-#else
-  &lt;p class="noitems"&gt;
-    $!escapetool.xml($services.localization.render('core.viewers.attachments.noAttachments'))
-  &lt;/p&gt;
-#end
-{{/html}}
-## Allow upload
-#set ($upload = "$!wikimacro.parameters.upload")
-#if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
-
-
-  {{html}}
-    &lt;form action="$doc.getURL("upload")" enctype="multipart/form-data" method="post" id="AddAttachment"&gt;
-    &lt;div&gt;
-    ## CSRF prevention
-    &lt;input type="hidden" name="form_token" value="$!{services.csrf.getToken()}" /&gt;
-    ## $redirect is defined in attachmentslist.vm
-    &lt;input type="hidden" name="xredirect" value="$escapetool.xml($redirect)" /&gt;
-    &lt;fieldset id="attachform"&gt;
-      &lt;legend&gt;
-        $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.title'))
-      &lt;/legend&gt;
-      ## Temporarily disabled, until we fix attachment name handling
-      ## &lt;div&gt;&lt;label id="xwikiuploadnamelabel" for="xwikiuploadname"&gt;$services.localization.render('core.viewers.attachments.upload.filename')&lt;/label&gt;&lt;/div&gt;
-      ## &lt;div&gt;&lt;input id="xwikiuploadname" type="hidden" name="filename" value="" size="40"/&gt;&lt;/div&gt;
-      &lt;div class="fileupload-field"&gt;
-        &lt;label class="hidden" for="xwikiuploadfile"&gt;
-          $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.file'))
-        &lt;/label&gt;
-        &lt;input id="xwikiuploadfile" type="file" name="filepath" size="40" class="uploadFileInput noitems" data-max-file-size="$!escapetool.xml($xwiki.getSpacePreference('upload_maxsize'))" /&gt;
-      &lt;/div&gt;
-      &lt;div&gt;
-        &lt;span class="buttonwrapper"&gt;
-          &lt;input type="submit" value="$!escapetool.xml($services.localization.render('core.viewers.attachments.upload.submit'))" class="button btn btn-primary"/&gt;
-        &lt;/span&gt;
-        &lt;span class="buttonwrapper"&gt;
-          &lt;a class="cancel secondary button btn btn-primary" href="$doc.getURL()"&gt;
-            $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.cancel'))
-          &lt;/a&gt;
-        &lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/fieldset&gt;
-    &lt;/div&gt;
-    &lt;/form&gt;
-  {{/html}}
-#end
 {{/velocity}}
-
+{{velocity}}
+#if ($invalidSortBy)
+  {{error}}
+    Attachment macro error: sortBy parameter must be one of 'date', 'size', or 'name'
+  {{/error}}
+  #break
+#end
+#if ($invalidSortOrder)
+  {{error}}
+    Attachment macro error: sortOrder parameter must be one of 'ascending' or 'descending'
+  {{/error}}
+  #break
+#end
+## Display attachments
 {{html clean="false"}}
-  &lt;/div&gt; &lt;!-- .confluence-attachment-macro --&gt;
+  &lt;div class="confluence-attachment-macro"&gt;
+    #if ($attachmentsFiltered.size() &gt; 0)
+      #displayAttachments($attachmentsFiltered)
+      #deleteAttachmentModal()
+    #else
+      &lt;p class="noitems"&gt;
+        $!escapetool.xml($services.localization.render('core.viewers.attachments.noAttachments'))
+      &lt;/p&gt;
+    #end
+
+    ## Allow upload
+    #set ($upload = "$!wikimacro.parameters.upload")
+    #if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
+      &lt;br /&gt;
+
+      &lt;form
+        id="AddAttachment"
+        action="$doc.getURL("upload")"
+        method="post"
+        enctype="multipart/form-data"
+      &gt;
+        &lt;div&gt;
+          ## CSRF prevention
+          &lt;input
+            type="hidden"
+            name="form_token"
+            value="$!{services.csrf.getToken()}"
+          /&gt;
+
+          ## $redirect is defined in attachmentslist.vm
+          &lt;input
+            type="hidden"
+            name="xredirect"
+            value="$escapetool.xml($redirect)"
+          /&gt;
+
+          &lt;fieldset id="attachform"&gt;
+            &lt;legend&gt;
+              $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.title'))
+            &lt;/legend&gt;
+
+            &lt;div class="fileupload-field"&gt;
+              &lt;label
+                class="hidden"
+                for="xwikiuploadfile"
+              &gt;
+                $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.file'))
+              &lt;/label&gt;
+
+              &lt;input
+                id="xwikiuploadfile"
+                class="uploadFileInput noitems"
+                type="file"
+                name="filepath"
+                size="40"
+                data-max-file-size="$!escapetool.xml($xwiki.getSpacePreference('upload_maxsize'))"
+              /&gt;
+            &lt;/div&gt;
+
+            &lt;div&gt;
+              &lt;span class="buttonwrapper"&gt;
+                &lt;input
+                  class="button btn btn-primary"
+                  type="submit"
+                  value="$!escapetool.xml($services.localization.render('core.viewers.attachments.upload.submit'))"
+                /&gt;
+              &lt;/span&gt;
+
+              &lt;span class="buttonwrapper"&gt;
+                &lt;a
+                  class="cancel secondary button btn btn-primary"
+                  href="$doc.getURL()"
+                &gt;
+                  $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.cancel'))
+                &lt;/a&gt;
+              &lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/fieldset&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    #end
+  &lt;/div&gt; ## .confluence-attachment-macro
 {{/html}}
+{{/velocity}}
 </code>
     </property>
     <property>
