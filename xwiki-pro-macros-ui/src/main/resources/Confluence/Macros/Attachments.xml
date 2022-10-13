@@ -622,13 +622,6 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
             value="$!{services.csrf.getToken()}"
           /&gt;
 
-          ## $redirect is defined in attachmentslist.vm
-          &lt;input
-            type="hidden"
-            name="xredirect"
-            value="$escapetool.xml($redirect)"
-          /&gt;
-
           &lt;fieldset id="attachform"&gt;
             &lt;legend&gt;
               $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.title'))
