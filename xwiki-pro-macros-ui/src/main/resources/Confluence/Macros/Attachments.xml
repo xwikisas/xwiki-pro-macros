@@ -519,7 +519,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
   #end
   #set ($attachments = [])
   #foreach ($pageReference in $pageReferenceSet)
-    #set ($document = $xwiki.getDocument("$pageReference"))
+    #set ($document = $xwiki.getDocument($pageReference))
     #set ($documentAttachments = $document.attachmentList)
     #set ($discard = $attachments.addAll($documentAttachments))
   #end
