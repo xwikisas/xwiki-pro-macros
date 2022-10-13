@@ -590,7 +590,9 @@ Warning: sortOrder parameter must be one of 'ascending' or 'descending'
   #displayAttachments($attachmentsFiltered)
   #deleteAttachmentModal()
 #else
-  &lt;p class="noitems"&gt;$services.localization.render('core.viewers.attachments.noAttachments')&lt;/p&gt;
+  &lt;p class="noitems"&gt;
+    $!escapetool.xml($services.localization.render('core.viewers.attachments.noAttachments'))
+  &lt;/p&gt;
 #end
 {{/html}}
 ## Allow upload
@@ -606,20 +608,26 @@ Warning: sortOrder parameter must be one of 'ascending' or 'descending'
     ## $redirect is defined in attachmentslist.vm
     &lt;input type="hidden" name="xredirect" value="$escapetool.xml($redirect)" /&gt;
     &lt;fieldset id="attachform"&gt;
-      &lt;legend&gt;$services.localization.render('core.viewers.attachments.upload.title')&lt;/legend&gt;
+      &lt;legend&gt;
+        $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.title'))
+      &lt;/legend&gt;
       ## Temporarily disabled, until we fix attachment name handling
       ## &lt;div&gt;&lt;label id="xwikiuploadnamelabel" for="xwikiuploadname"&gt;$services.localization.render('core.viewers.attachments.upload.filename')&lt;/label&gt;&lt;/div&gt;
       ## &lt;div&gt;&lt;input id="xwikiuploadname" type="hidden" name="filename" value="" size="40"/&gt;&lt;/div&gt;
       &lt;div class="fileupload-field"&gt;
-        &lt;label class="hidden" for="xwikiuploadfile"&gt;$services.localization.render('core.viewers.attachments.upload.file')&lt;/label&gt;
+        &lt;label class="hidden" for="xwikiuploadfile"&gt;
+          $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.file'))
+        &lt;/label&gt;
         &lt;input id="xwikiuploadfile" type="file" name="filepath" size="40" class="uploadFileInput noitems" data-max-file-size="$!escapetool.xml($xwiki.getSpacePreference('upload_maxsize'))" /&gt;
       &lt;/div&gt;
       &lt;div&gt;
         &lt;span class="buttonwrapper"&gt;
-          &lt;input type="submit" value="$services.localization.render('core.viewers.attachments.upload.submit')" class="button btn btn-primary"/&gt;
+          &lt;input type="submit" value="$!escapetool.xml($services.localization.render('core.viewers.attachments.upload.submit'))" class="button btn btn-primary"/&gt;
         &lt;/span&gt;
         &lt;span class="buttonwrapper"&gt;
-          &lt;a class="cancel secondary button btn btn-primary" href="$doc.getURL()"&gt;$services.localization.render('core.viewers.attachments.upload.cancel')&lt;/a&gt;
+          &lt;a class="cancel secondary button btn btn-primary" href="$doc.getURL()"&gt;
+            $!escapetool.xml($services.localization.render('core.viewers.attachments.upload.cancel'))
+          &lt;/a&gt;
         &lt;/span&gt;
       &lt;/div&gt;
     &lt;/fieldset&gt;
