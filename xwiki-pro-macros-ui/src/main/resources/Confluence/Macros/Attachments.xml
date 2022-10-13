@@ -776,10 +776,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
       <defaultValue/>
     </property>
     <property>
-      <description>A comma-separated list of regular expressions, used to filter the attachments by file name. Note that the parameter values must be regular expressions. For example:
-
-* To match a file suffix of 'jpg', use .*jpg (not *.jpg).
-* To match file names ending in 'jpg' or 'png', use .*jpg,.*png
+      <description>A comma-separated list of regular expressions, used to filter the attachments by file name. Note that the parameter values must be regular expressions. For example: to match a file suffix of 'jpg', use '.*jpg' (not '*.jpg'); to match file names ending in 'jpg' or 'png', use '.*jpg,.*png'
 
  </description>
     </property>
@@ -1015,12 +1012,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
       <defaultValue>date</defaultValue>
     </property>
     <property>
-      <description>The sort order for attachments. Note that people viewing the page can change the sort order by clicking the column headings. Valid values are:
-
-* **date** – sorts by updated date in reverse chronological order (newest first)
-* **size** – sorts largest to smallest
-* **name** – sorts alphabetically
-* **created date** - sorts by creation date in reverse chronological order (newest first)</description>
+      <description>The sort order for attachments. Note that people viewing the page can change the sort order by clicking the column headings. Valid values are: 'date' - sorts by updated date in reverse chronological order (newest first); 'size' - sorts largest to smallest; 'name' - sorts alphabetically</description>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1098,7 +1090,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
       <defaultValue>ascending</defaultValue>
     </property>
     <property>
-      <description>Used in combination with the **Sort By** parameter, to sort the attachments in ascending or descending order.</description>
+      <description>Used in combination with the Sort By parameter, to sort the attachments in ascending or descending order.</description>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1176,7 +1168,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
       <defaultValue/>
     </property>
     <property>
-      <description>A list of comma-separated wiki tags, used to display attachments from pages matching all given tags. If you do not enter tags, the macro will display the files attached to the current page. When used, ~{~{~{ page }}} property is ignored.</description>
+      <description>A list of comma-separated wiki tags, used to display attachments from pages matching all given tags. If you do not enter tags, the macro will display the files attached to the current page. When used, 'page' property is ignored.</description>
     </property>
     <property>
       <mandatory>0</mandatory>
