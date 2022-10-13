@@ -150,11 +150,14 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <cache>long</cache>
     </property>
     <property>
-      <code>document.observe('xwiki:html5upload:message', function (event) {
-  if (event.memo.content === 'UPLOAD_FINISHED' &amp;&amp; event.memo.type === 'done') {
-    location.reload();
-  }
-});</code>
+      <code>require(['jquery', 'xwiki-events-bridge'], function ($) {
+  $('#xwikiuploadfile').on('xwiki:html5upload:message', function (event, data) {
+    if (data.content === 'UPLOAD_FINISHED' &amp;&amp; data.type === 'done') {
+      location.reload();
+    }
+  });
+});
+</code>
     </property>
     <property>
       <name/>
