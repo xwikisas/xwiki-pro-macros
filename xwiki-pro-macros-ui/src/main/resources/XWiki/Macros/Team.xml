@@ -708,7 +708,8 @@
   &lt;/span&gt;
 #end
 #macro(avatar $username $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
-  #set($displayUser = $xwiki.getUserName($username, false))
+  #set($displayUser = $xwiki.getPlainUserName($username))
+  #set($url = $xwiki.getURL($username))
   #set($escapedDisplayUser = $escapetool.xml($displayUser))
   #set($fontSize = $size / 3)
   &lt;li
