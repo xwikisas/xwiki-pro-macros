@@ -49,6 +49,7 @@
 | disableLetterAvatars | {{translation key='rendering.macro.team.parameter.disableLetterAvatars.name'/}} | {{translation key='rendering.macro.team.parameter.disableLetterAvatars.description'/}} | false
 | requireExternalAuth | {{translation key='rendering.macro.team.parameter.requireExternalAuth.name'/}}| {{translation key='rendering.macro.team.parameter.requireExternalAuth.description'/}} | false
 | limit | {{translation key='rendering.macro.team.parameter.limit.name'/}} | {{translation key='rendering.macro.team.parameter.limit.description'/}} | 100
+| scope | {{translation key='rendering.macro.team.parameter.scope.name'/}} | {{translation key='rendering.macro.team.parameter.scope.description'/}} | auto
 
 == Examples ==
 
@@ -82,11 +83,11 @@
 
 {{team showUsernames=true disableTools=true/}}
 
-=== All users with names, disable letter avatars ===
+=== All users with names, disable letter avatars, only in the main wiki ===
 
-{{code}}{{team showUsernames=true disableLetterAvatars=true/}}{{/code}}
+{{code}}{{team showUsernames=true disableLetterAvatars=true scope=global/}}{{/code}}
 
-{{team showUsernames=true disableLetterAvatars=true/}}</content>
+{{team showUsernames=true disableLetterAvatars=true scope=global/}}</content>
   <object>
     <name>XWiki.Macros.Team</name>
     <number>0</number>
@@ -740,6 +741,7 @@
 #end
 #set($tag = $wikimacro.parameters.tag)
 #set($size = $wikimacro.parameters.size)
+#set($scope = $wikimacro.parameters.scope)
 #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
 #set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
 #set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
@@ -749,6 +751,26 @@
 #set($limit = $wikimacro.parameters.limit)
 #if("$!size" == "")
   #set($size = 60)
+#end
+#if("$!scope" == "")
+  #set($scope = "auto")
+#end
+#if($scope == "auto")
+  #if($xcontext.database != $xcontext.mainWikiName &amp;&amp; "$!services.wiki" != '')
+    #set ($wikiUserScope = $services.wiki.user.getUserScope($services.wiki.currentWikiId))
+    #if($wikiUserScope == 'GLOBAL_ONLY')
+      #set($scope = 'global')
+    #elseif($wikiUserScope == 'LOCAL_AND_GLOBAL')
+      #set($scope = 'both')
+    #else
+      #set($scope = 'local')
+    #end
+  #else
+    #set($scope = 'global')
+  #end
+#end
+#if($scope == "both" &amp;&amp; $xcontext.database == $xcontext.mainWikiName)
+  #set($scope = "global")
 #end
 #if("$!letterAvatarBgColor" == "")
   #set($letterAvatarBgColor = "#0A6")
@@ -809,7 +831,24 @@
     $tagwhere
   ORDER BY doc.name
 ")
-#set($list = $services.query.hql($hql).setLimit($limit).execute())
+#macro(addUsersFromWiki $list $wiki $limit)
+  #set($l = $services.query.hql($hql).setLimit($limit).setWiki($wiki).execute())
+  #foreach($username in $l)
+    #set($discard = $list.add("$wiki:$username"))
+  #end
+#end
+#set($list = [])
+#if ($scope == "global")
+  #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+#elseif ($scope == "local")
+  #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+#elseif ($scope == "both")
+  #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+  #if($list.size() &lt; $limit)
+    #set($limit = $limit - $list.size())
+    #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+  #end
+#end
 {{html wiki=false clean=false}}
 &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
   #if ($list.size() &gt; 0)
@@ -1494,6 +1533,84 @@
     </property>
     <property>
       <name>limit</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>9</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>63718f32-d8ac-40b0-bcf3-cb91650b740b</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>auto</defaultValue>
+    </property>
+    <property>
+      <description>In which wiki to find users (global: in the main wiki. local: in the current wiki. both: in both the main wiki and the local wiki. auto: find out from the wiki settings). Has no effect in the main wiki.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>scope</name>
     </property>
     <property>
       <type/>
