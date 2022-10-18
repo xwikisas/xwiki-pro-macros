@@ -29,7 +29,7 @@
   </parent>
   <groupId>com.xwiki.pro</groupId>
   <artifactId>xwiki-pro-macros-parent</artifactId>
-  <version>1.5</version>
+  <version>1.6-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>XWiki Pro - Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
@@ -46,7 +46,7 @@
     <connection>scm:git:git://github.com/xwikisas/xwiki-pro-macros.git</connection>
     <developerConnection>scm:git:git@github.com:xwikisas/xwiki-pro-macros.git</developerConnection>
     <url>https://github.com/xwikisas/xwiki-pro-macros/tree/master</url>
-    <tag>xwiki-pro-macros-parent-1.5</tag>
+    <tag>HEAD</tag>
   </scm>
   <!-- Even though this repository is already declared in the parent POM, we still explicitly redeclare it for
    convenience. This makes it simpler to build this project without having to declare this repository in one's own
