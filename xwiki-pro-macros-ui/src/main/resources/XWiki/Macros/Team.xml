@@ -871,7 +871,7 @@
         &lt;input
           class="xwikiteam-show-username-checkbox"
           type="checkbox"
-          #if($displayUsernames)checked="checked"#end
+          #if($showUsernames)checked="checked"#end
         /&gt;
         $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
       &lt;/label&gt;
