@@ -578,6 +578,7 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
 #end
 #set ($attachmentsFiltered = $collectiontool.sort($attachmentsFiltered, "$sortBy:$sortOrder"))
 {{/velocity}}
+
 {{velocity}}
 #if ($invalidSortBy)
   {{error}}
