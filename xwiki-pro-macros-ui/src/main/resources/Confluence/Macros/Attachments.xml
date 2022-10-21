@@ -278,9 +278,14 @@ Not every parameters supported by the Confluence macro are supported by this bri
   .upload-response {
     display: none;
   }
-  #attachform {
-    .buttonwrapper {
-      display: none;
+
+  #AddAttachment {
+    margin-top: 15px;
+
+    #attachform {
+      .buttonwrapper {
+        display: none;
+      }
     }
   }
 }</code>
@@ -607,8 +612,6 @@ $xwiki.jsx.use('Confluence.Macros.Attachments')
     ## Allow upload
     #set ($upload = "$!wikimacro.parameters.upload")
     #if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
-      &lt;br /&gt;
-
       &lt;form
         id="AddAttachment"
         action="$doc.getURL("upload")"
