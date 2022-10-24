@@ -274,12 +274,12 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
     <property>
       <code>{{velocity}}
-#set ($uri = $escapetool.xml($wikimacro.parameters.get('uri')))
-#set ($width = $escapetool.xml($wikimacro.parameters.get('width')))
-#set ($height = $escapetool.xml($wikimacro.parameters.get('height')))
-#set ($showinfo = $escapetool.xml($wikimacro.parameters.get('showinfo')))
-#set ($start = $escapetool.xml($wikimacro.parameters.get('start')))
-#set ($autoplay = $escapetool.xml($wikimacro.parameters.get('autoplay')))
+#set ($uri = $services.rendering.escape($wikimacro.parameters.get('uri'), $xwiki.currentContentSyntaxId))
+#set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
+#set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+#set ($showinfo = $services.rendering.escape($wikimacro.parameters.get('showinfo'), $xwiki.currentContentSyntaxId))
+#set ($start = $services.rendering.escape($wikimacro.parameters.get('start'), $xwiki.currentContentSyntaxId))
+#set ($autoplay = $services.rendering.escape($wikimacro.parameters.get('autoplay'), $xwiki.currentContentSyntaxId))
 {{msStream url="$uri" width="$!width" height="$!height" showinfo="$!showinfo" start="$!start" autoplay="$!autoplay"/}}
 {{/velocity}}</code>
     </property>
