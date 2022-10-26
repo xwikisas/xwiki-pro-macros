@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="XWiki.Macros.MicrosoftStream" locale="">
-  <web>XWiki.Macros</web>
+<xwikidoc version="1.4" reference="Confluence.Macros.MicrosoftStream" locale="">
+  <web>Confluence.Macros</web>
   <name>MicrosoftStream</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>xwiki:XWiki.Macros.WebHome</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -38,13 +38,12 @@
   <hidden>true</hidden>
   <content>{{velocity}}
 = Description =
-
-The Microsoft Stream Macro provides a way for embeding a Microsoft Stream video in a page.
+This macro is a bridge between the Confluence macro and XWiki for embeding Microsoft Stream videos in a page.
 
 = Parameters =
 
 |=Parameter|=Name|=Description|=Required|=Default
-|**url**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'),
+|**uri**|$services.rendering.escape($services.localization.render('rendering.macro.microsoftStream.parameter.url.name'),
 $xwiki.currentContentSyntaxId)|$services.rendering.escape(
 $services.localization.render('rendering.macro.microsoftStream.parameter.url.description'),
 $xwiki.currentContentSyntaxId)|Yes|
@@ -58,11 +57,6 @@ $services.localization.render('rendering.macro.microsoftStream.parameter.height.
 $xwiki.currentContentSyntaxId)|$services.rendering.escape(
 $services.localization.render('rendering.macro.microsoftStream.parameter.height.description'),
 $xwiki.currentContentSyntaxId)|No|300px
-|**alignment**|$services.rendering.escape(
-$services.localization.render('rendering.macro.microsoftStream.parameter.alignment.name'),
-$xwiki.currentContentSyntaxId)|$services.rendering.escape(
-$services.localization.render('rendering.macro.microsoftStream.parameter.alignment.description'),
-$xwiki.currentContentSyntaxId)|No|
 |**start**|$services.rendering.escape(
 $services.localization.render('rendering.macro.microsoftStream.parameter.start.name'),
 $xwiki.currentContentSyntaxId)|$services.rendering.escape(
@@ -84,144 +78,13 @@ $xwiki.currentContentSyntaxId)|No|false
 = Example of usage =
 
 {{code}}
-{{msStream url="https://web.microsoftstream.com/video/2113" width="700px" alignment="left" showinfo="true" start="00:05:04"/}}
+{{net-presago-stream-macro uri="https://web.microsoftstream.com/video/2113" width="700px" showinfo="true" start="00:05:04"/}}
 {{/code}}</content>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
-    <number>0</number>
-    <className>XWiki.StyleSheetExtension</className>
-    <guid>19916262-e6d1-4231-a538-ad14c222b3c3</guid>
-    <class>
-      <name>XWiki.StyleSheetExtension</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <cache>
-        <cache>0</cache>
-        <defaultValue>long</defaultValue>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>cache</name>
-        <number>5</number>
-        <prettyName>Caching policy</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>long|short|default|forbid</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </cache>
-      <code>
-        <contenttype>PureText</contenttype>
-        <disabled>0</disabled>
-        <editor>PureText</editor>
-        <name>code</name>
-        <number>2</number>
-        <prettyName>Code</prettyName>
-        <rows>20</rows>
-        <size>50</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
-      <contentType>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>contentType</name>
-        <number>6</number>
-        <prettyName>Content Type</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>CSS|LESS</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </contentType>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <parse>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>parse</name>
-        <number>4</number>
-        <prettyName>Parse content</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </parse>
-      <use>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>use</name>
-        <number>3</number>
-        <prettyName>Use this extension</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>currentPage|onDemand|always</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </use>
-    </class>
-    <property>
-      <cache>long</cache>
-    </property>
-    <property>
-      <code>.msStreamMacro {
-  margin: 1%;
-
-  &amp;-center {
-    text-align: center;
-  }
-
-  iframe {
-    max-width: 100%;
-    border: none;
-  }
-}</code>
-    </property>
-    <property>
-      <contentType>LESS</contentType>
-    </property>
-    <property>
-      <name>Microsoft Stream Stylesheet</name>
-    </property>
-    <property>
-      <parse/>
-    </property>
-    <property>
-      <use>onDemand</use>
-    </property>
-  </object>
-  <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
-    <guid>b4bbe2a5-a648-43e0-a587-fda417d5874c</guid>
+    <guid>5ba52982-61a4-46b3-b788-cc568a3d4f2d</guid>
     <class>
       <name>XWiki.WikiMacroClass</name>
       <customClass/>
@@ -253,11 +116,11 @@ $xwiki.currentContentSyntaxId)|No|false
         <number>13</number>
         <prettyName>Context elements</prettyName>
         <relationalStorage>0</relationalStorage>
-        <separator> </separator>
+        <separator>, </separator>
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -410,75 +273,14 @@ $xwiki.currentContentSyntaxId)|No|false
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity output="false"}}
-#macro (getAlignmentClass $alignment $alignmentClass)
-  #if ($alignment == 'left')
-    #set ($alignmentClass = 'pull-left')
-  #elseif ($alignment == 'right')
-    #set ($alignmentClass = 'pull-right')
-  #elseif ($alignment == 'center')
-    #set ($alignmentClass = 'msStreamMacro-center')
-  #end
-#end
-
-## Extract the base URL and query string parameters.
-#macro (getBaseURLAndQueryParams $url $baseURL $queryParams)
-  #set ($urlComponents = $stringtool.split($url, '?', 2))
-  #set ($baseURL = $urlComponents[0])
-  #set ($queryString = '')
-  #if ($urlComponents.size() &gt; 1)
-    #set ($queryString = $urlComponents[1])
-  #end
-  ## Depending on how the link was shared, it could be missing this part.
-  #if (!$stringtool.contains($baseURL, 'embed/video'))
-    #set ($baseURL = $stringtool.replace($baseURL, 'video', 'embed/video'))
-  #end
-  #set ($queryParams = $urltool.parseQuery($queryString))
-#end
-
-#macro (getStartAsSeconds $start $startSeconds)
-  #set ($dateObj = $datetool.toDate('HH:mm:ss', $start))
-  #if (!$dateObj)
-    #set ($dateObj = $datetool.toDate('mm:ss', $start))
-    #if (!$dateObj)
-      #set ($dateObj = $datetool.toDate('ss', $start))
-    #end
-  #end
-  #set ($startSeconds = 0)
-  #if ($dateObj)
-    #set ($startSeconds = 3600 * $datetool.getValue('HOUR', $dateObj) + 60 * $datetool.getValue('MINUTE', $dateObj)
-      + $datetool.getValue('SECOND', $dateObj))
-  #end
-#end
-{{/velocity}}
-
-{{velocity}}
-#set ($discard = $xwiki.ssx.use('XWiki.Macros.MicrosoftStream'))
-#getAlignmentClass($stringtool.lowerCase($xcontext.macro.params.alignment) $alignmentClass)
-#getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
-## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
-#set ($autoplay = $xcontext.macro.params.autoplay)
-#if ($autoplay)
-  #set ($discard = $queryParams.put('autoplay', $autoplay))
-#end
-#set ($showinfo = $xcontext.macro.params.showinfo)
-#if ($showinfo)
-  #set ($discard = $queryParams.put('showinfo', $showinfo))
-#end
-#if ($xcontext.macro.params.start)
-  #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
-  #if ($queryParams.st != $startSeconds)
-    #set ($discard = $queryParams.put('st', $startSeconds))
-  #end
-#end
-#set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
-{{html clean=false}}
-  &lt;p class="msStreamMacro $!escapetool.xml($alignmentClass)"&gt;
-    &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
-      height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
-    &lt;/iframe&gt;
-  &lt;/p&gt;
-{{/html}}
+      <code>{{velocity}}
+#set ($uri = $services.rendering.escape($wikimacro.parameters.get('uri'), $xwiki.currentContentSyntaxId))
+#set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
+#set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+#set ($showinfo = $services.rendering.escape($wikimacro.parameters.get('showinfo'), $xwiki.currentContentSyntaxId))
+#set ($start = $services.rendering.escape($wikimacro.parameters.get('start'), $xwiki.currentContentSyntaxId))
+#set ($autoplay = $services.rendering.escape($wikimacro.parameters.get('autoplay'), $xwiki.currentContentSyntaxId))
+{{msStream url="$uri" width="$!width" height="$!height" showinfo="$!showinfo" start="$!start" autoplay="$!autoplay"/}}
 {{/velocity}}</code>
     </property>
     <property>
@@ -494,26 +296,26 @@ $xwiki.currentContentSyntaxId)|No|false
       <defaultCategory>Content</defaultCategory>
     </property>
     <property>
-      <description>Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.</description>
+      <description>Bridge for the Confluence Microsoft Stream Macro.</description>
     </property>
     <property>
-      <id>msStream</id>
+      <id>net-presago-stream-macro</id>
     </property>
     <property>
-      <name>Microsoft Stream</name>
+      <name>Microsoft Stream Confluence Bridge</name>
     </property>
     <property>
-      <supportsInlineMode>0</supportsInlineMode>
+      <supportsInlineMode/>
     </property>
     <property>
-      <visibility>Current Wiki</visibility>
+      <visibility/>
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>b0f7355f-69af-4aff-b439-dbc297036b57</guid>
+    <guid>8c39f61e-e593-4b0b-a77f-e590f8ddf92d</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -578,20 +380,20 @@ $xwiki.currentContentSyntaxId)|No|false
       <description>The URL to the Microsoft Stream video.</description>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory>0</mandatory>
     </property>
     <property>
-      <name>url</name>
+      <name>uri</name>
     </property>
     <property>
       <type/>
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>3dda4775-5706-48c0-98dc-ff204c118ea7</guid>
+    <guid>23afc2fb-80db-4237-8793-5c9a99114df6</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -666,10 +468,10 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>2</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>90c3b0c3-1420-4e38-ae6a-d47ebb83190d</guid>
+    <guid>be30d248-b149-49f1-9025-12a5e2421ca6</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -744,88 +546,10 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
-    <number>3</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>6b69fdec-ac17-4bb6-ad5d-9212ec66bb9b</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>Position of the video relatively to its container. Accepted values are left, center and right.</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>alignment</name>
-    </property>
-    <property>
-      <type>com.xwiki.macros.internal.AlignmentType</type>
-    </property>
-  </object>
-  <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>4</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>75a6fac7-6e15-4e7c-8f60-23b659f60825</guid>
+    <guid>930b08d1-451a-4378-99bb-aeac7bdd83cf</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -900,10 +624,10 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>5</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>49ccc8b6-7f3e-4d05-ba5a-546b5d61f06a</guid>
+    <guid>e7f094c7-9fe4-47db-9af5-6e25525b248b</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -962,7 +686,7 @@ $xwiki.currentContentSyntaxId)|No|false
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>true</defaultValue>
     </property>
     <property>
       <description>Show the video info on thumbnail</description>
@@ -978,10 +702,10 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
   </object>
   <object>
-    <name>XWiki.Macros.MicrosoftStream</name>
+    <name>Confluence.Macros.MicrosoftStream</name>
     <number>6</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>579aaff0-815e-4604-b927-d20178abcee5</guid>
+    <guid>4e4ad7b4-5009-4a93-b3ab-418bab0aae00</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1040,7 +764,7 @@ $xwiki.currentContentSyntaxId)|No|false
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>false</defaultValue>
     </property>
     <property>
       <description>Whether the video should start automatically or if the user must play it.</description>
