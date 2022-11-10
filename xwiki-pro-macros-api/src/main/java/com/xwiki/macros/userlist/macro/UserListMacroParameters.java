@@ -33,6 +33,7 @@ import org.xwiki.properties.annotation.PropertyName;
 public class UserListMacroParameters
 {
     private UserReferenceList users;
+    private GroupReferenceList groups;
 
     private List<String> properties = Arrays.asList("avatar", "username");
 
@@ -49,11 +50,31 @@ public class UserListMacroParameters
      *
      * @param users list of user references
      */
-    @PropertyName("UserList")
+    @PropertyName("users")
     @PropertyDescription("List of users")
     public void setUsers(UserReferenceList users)
     {
         this.users = users;
+    }
+
+    /**
+     * @return a list of groups
+     */
+    public GroupReferenceList getGroups()
+    {
+        return this.groups;
+    }
+
+    /**
+     * Sets a list of users.
+     *
+     * @param groups list of user references
+     */
+    @PropertyName("groups")
+    @PropertyDescription("List of groups")
+    public void setGroups(GroupReferenceList groups)
+    {
+        this.groups = groups;
     }
 
     /**
