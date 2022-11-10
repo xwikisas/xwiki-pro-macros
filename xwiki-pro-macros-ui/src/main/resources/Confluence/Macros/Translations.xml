@@ -68,6 +68,14 @@ rendering.macro.column.parameter.width.description=The width of the column. Can 
 rendering.macro.note.name=Note
 rendering.macro.note.description=Add a Note macro to your page to make important information stand out. The macro is used to format your text in a colored panel.
 
+## Userlister macro
+rendering.macro.userlister.name=User Lister
+rendering.macro.userlister.description=Confluence bridge macro to list users of groups
+rendering.macro.userlister.parameter.groups.name=Groups
+rendering.macro.userlister.parameter.groups.description=Groups of users to display, separated by commas. '*' can be used to display all the users
+rendering.macro.userlister.parameter.online.name=Online
+rendering.macro.userlister.parameter.online.description=Ignored. Here for compatibility reasons
+
 ## Content Report Table Macro
 contentReportTable.header.modified=Modified</content>
   <object>
