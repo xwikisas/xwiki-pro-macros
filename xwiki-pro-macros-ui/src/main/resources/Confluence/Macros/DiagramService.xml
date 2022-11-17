@@ -64,7 +64,8 @@
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
       #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
-      #if($diagramName.endsWith('.drawio') &amp;&amp; $diagramContent.startsWith('&lt;'))
+      #if($diagramContent.contains('&lt;mxfile ') &amp;&amp; $diagramContent.contains('&lt;diagram '))
+        ## Drawio
         #set($xml = $diagramContent)
       #else
         #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))

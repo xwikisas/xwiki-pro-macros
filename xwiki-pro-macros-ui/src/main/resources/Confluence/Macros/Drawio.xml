@@ -49,7 +49,7 @@ The Drawio macro is a bridge between Drawio macro used in Confluence and the [[D
 = Parameters =
 
 |=Parameter|=Description
-|**diagramName**|The diagram identifier. It should be the **name of the attachment** storing the Drawio diagram data. (% style="color: red"%)It should have a `.drawio` filename extension(%%). The Drawio diagram exports consist in attachments added to the parent page. For example, for a diagram called //MyDrawioDiagram.drawio//, there will be two attachments on the parent page: //MyDrawioDiagram.drawio.png// (the filename with a ".png" extension) representing the preview of the diagram and //MyDrawioDiagram.drawio// representing the diagram data in Diagrams.net's native format.
+|**diagramName**|The diagram identifier. It should be the **name of the attachment** storing the Drawio diagram data. The Drawio diagram exports consist in attachments added to the parent page. For example, for a diagram called //MyDrawioDiagram.drawio//, there will be two attachments on the parent page: //MyDrawioDiagram.drawio.png// (the filename with a ".png" extension) representing the preview of the diagram and //MyDrawioDiagram.drawio// representing the diagram data in Diagrams.net's native format.
 
 {{info}}
 Besides the **diagramName** parameter, the ~{~{drawio}} macro used in Confluence has other parameters that don't have to be cleaned, because these parameters are being ignored by this bridge macro.
