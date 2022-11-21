@@ -639,6 +639,12 @@ There are only a few things that are not supported compared to the confluence ma
     <property>
       <code>{{velocity output="false"}}
 
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Parameter formatting macros
+## -----------------------------------------------------------------
+
 ## Format serialized comma-separated list coming from macro parameters
 ## so that it can be used inside a solr filter query parameter
 ## * Escape spaces inside values by wrapping them inside quotes,
@@ -713,9 +719,20 @@ There are only a few things that are not supported compared to the confluence ma
   #setVariable("$return" $types)
 #end
 
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Parameters
+## -----------------------------------------------------------------
+
+## Gather every parameter in an option object
+#set ($options = {})
+
 ## Authors
 #set ($confluenceAuthorsString = "$!wikimacro.parameters.author.strip()")
 #formatSerializedAuthorList($confluenceAuthorsString, $authors)
+#set ($discard = $options.put('authors', $authors))
 
 ## Wiki &amp; Spaces
 #set ($confluenceSpacesString = "$!wikimacro.parameters.spaces.strip()")
@@ -728,8 +745,8 @@ There are only a few things that are not supported compared to the confluence ma
   ## Search in current space
   #set ($spaces = $doc.space)
 #elseif (
-  $confluenceSpacesString.equals('@personal')
-  || $confluenceSpacesString.equals('@global')
+  $confluenceSpacesString.equals('@global')
+  || $confluenceSpacesString.equals('@personal')
   || $confluenceSpacesString.equals('@favorite')
   || $confluenceSpacesString.equals('@favourite')
 )
@@ -747,17 +764,22 @@ There are only a few things that are not supported compared to the confluence ma
   ## Search in specified spaces
   #formatSerializedList($confluenceSpacesString, $spaces)
 #end
+#set ($discard = $options.put('wiki', $wiki))
+#set ($discard = $options.put('spaces', $spaces))
 
 ## Tags
 #set ($confluenceLabelString = "$!wikimacro.parameters.labels.strip()")
 #formatSerializedList($confluenceLabelString, $tags)
+#set ($discard = $options.put('tags', $tags))
 
 ## Types
 #set ($confluenceTypesString = "$!wikimacro.parameters.types.strip()")
 #parseTypes($confluenceTypesString, $types)
+#set ($discard = $options.put('types', $types))
 
 ## Limit
 #set ($limit = $!wikimacro.parameters.max)
+#set ($discard = $options.put('limit', $limit))
 
 ## Theme
 #set ($availableTheme = ['concise', 'social', 'sidebar'])
@@ -765,6 +787,8 @@ There are only a few things that are not supported compared to the confluence ma
 #if (!$availableTheme.contains($theme))
  #set ($theme = 'concise')
 #end
+#set ($discard = $options.put('theme', $theme))
+
 #set ($ICON_BY_TYPE = {
   "DOCUMENT": 'page',
   "ATTACHMENT": 'attach',
@@ -785,6 +809,14 @@ There are only a few things that are not supported compared to the confluence ma
 #else
   #set ($showProfilePic = false)
 #end
+#set ($discard = $options.put('showProfilePic', $showProfilePic))
+
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Display results macros
+## -----------------------------------------------------------------
 
 #set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
 
@@ -826,90 +858,94 @@ There are only a few things that are not supported compared to the confluence ma
     #end
   &lt;/span&gt;
 #end
-{{/velocity}}
 
-{{velocity output="false"}}
-#macro (queryDocuments $return)
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Query macros
+## -----------------------------------------------------------------
+
+#macro (queryDocuments $options $return)
   #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   ## Document filters
   #set ($discard = $fq.add('type:DOCUMENT'))
-  #if ("$!wiki" != '')
-    #set ($discard = $fq.add("wiki:($wiki)"))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
-  #if ("$!spaces" != '')
-    #set ($discard = $fq.add("space:($spaces)"))
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
   #end
-  #if ("$!authors" != '')
-    #set ($discard = $fq.add("author:($authors)"))
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("author:($options.authors)"))
   #end
-  #if ("$!tags" == '')
+  #if ("$!options.tags" == '')
     #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
   #else
     #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($tags)"))
+    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
   #end
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.bindValue('sort', "date desc"))
   #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($limit))
+  #set ($discard = $query.setLimit($options.limit))
   #set ($response = $query.execute()[0])
   ## Return
   #set ($return = $NULL)
   #setVariable("$return" $response)
 #end
 
-#macro (queryBlogposts $return)
+#macro (queryBlogposts $options $return)
   #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   ## Document filters
   #set ($discard = $fq.add('type:DOCUMENT'))
-  #if ("$!wiki" != '')
-    #set ($discard = $fq.add("wiki:($wiki)"))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
-  #if ("$!spaces" != '')
-    #set ($discard = $fq.add("space:($spaces)"))
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
   #end
-  #if ("$!authors" != '')
-    #set ($discard = $fq.add("author:($authors)"))
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("author:($options.authors)"))
   #end
-  #if ("$!tags" == '')
+  #if ("$!options.tags" == '')
     #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
   #else
     #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($tags)"))
+    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
   #end
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.bindValue('sort', "date desc"))
   #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($limit))
+  #set ($discard = $query.setLimit($options.limit))
   #set ($response = $query.execute()[0])
   ## Return
   #set ($return = $NULL)
   #setVariable("$return" $response)
 #end
 
-#macro (queryAttachments $return)
+#macro (queryAttachments $options $return)
   #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   ## Attachment filters
   #set ($discard = $fq.add('type:ATTACHMENT'))
-  #if ("$!wiki" != '')
-    #set ($discard = $fq.add("wiki:($wiki)"))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
-  #if ("$!spaces" != '')
-    #set ($discard = $fq.add("space:($spaces)"))
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
   #end
-  #if ("$!authors" != '')
-    #set ($discard = $fq.add("attauthor:($authors)"))
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("attauthor:($options.authors)"))
   #end
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.bindValue('sort', "attdate desc"))
   #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($limit))
+  #set ($discard = $query.setLimit($options.limit))
   #set ($response = $query.execute()[0])
   ## Create a clean `date` property to attachments
   #foreach ($attachment in $response.results)
@@ -922,27 +958,27 @@ There are only a few things that are not supported compared to the confluence ma
   #setVariable("$return" $response)
 #end
 
-#macro (queryComments $return)
+#macro (queryComments $options $return)
   #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   ## Comment filters
   #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
   #set ($discard = $fq.add('class:XWiki.XWikiComments'))
-  #if ("$!wiki" != '')
-    #set ($discard = $fq.add("wiki:($wiki)"))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
-  #if ("$!spaces" != '')
-    #set ($discard = $fq.add("space:($spaces)"))
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
   #end
   #set ($discard = $fq.add('propertyname:(author)'))
-  #if ("$!authors" != '')
-    #set ($discard = $fq.add("propertyvalue_:($authors)"))
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("propertyvalue_:($options.authors)"))
   #end
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.bindValue('sort', "_version_ desc"))
   #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($limit))
+  #set ($discard = $query.setLimit($options.limit))
   #set ($response = $query.execute()[0])
   ## Add missing comment data
   #foreach ($comment in $response.results)
@@ -987,9 +1023,9 @@ There are only a few things that are not supported compared to the confluence ma
 ## During the merge, we have to make sure we respects two things:
 ## - results are still sorted by most recent ones first
 ## - the number of results is no more than the limit defined in the macro parameter
-#macro (mergeSortLimitResults $resultLists $return)
+#macro (mergeSortLimitResults $resultLists $options $return)
   #set ($results = [])
-  #foreach ($discard in [1..$limit])
+  #foreach ($discard in [1..$options.limit])
     #set ($mostRecentDate = $NULL)
     #set ($listIndex = $NULL)
     ## Search throught the lists of results the most recent result
@@ -1038,41 +1074,46 @@ There are only a few things that are not supported compared to the confluence ma
   #end
 #end
 
-#macro (fetchResults $return)
+#macro (fetchResults $options $return)
   ## Fetch data
   #set ($queryResponses = [])
-  #if ($types.contains('page'))
-    #queryDocuments($documentsResponse)
+  #if ($options.types.contains('page'))
+    #queryDocuments($options $documentsResponse)
     #set ($discard = $queryResponses.add($documentsResponse.results))
   #end
-  #if ($types.contains('blogpost'))
-    #queryBlogposts($blogpostResponse)
+  #if ($options.types.contains('blogpost'))
+    #queryBlogposts($options $blogpostResponse)
     #set ($discard = $queryResponses.add($blogpostResponse.results))
   #end
-  #if ($types.contains('attachment'))
-    #queryAttachments($attachmentsResponse)
+  #if ($options.types.contains('attachment'))
+    #queryAttachments($options $attachmentsResponse)
     #set ($discard = $queryResponses.add($attachmentsResponse.results))
   #end
-  #if ($types.contains('comment'))
-    #queryComments($commentsResponse)
+  #if ($options.types.contains('comment'))
+    #queryComments($options $commentsResponse)
     #set ($discard = $queryResponses.add($commentsResponse.results))
   #end
   ## Resolve used data
-  #mergeSortLimitResults($queryResponses $results)
+  #mergeSortLimitResults($queryResponses $options $results)
   #resolveResultsMetadata($results)
   ## Return
   #set ($return = $NULL)
   #setVariable("$return" $results)
 #end
 
-#fetchResults($results)
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Fetch results
+## -----------------------------------------------------------------
+
+#fetchResults($options, $results)
 
 {{/velocity}}
 
 {{velocity}}
 $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
-##
-#set ($socialThemePreviousAuthor = $NULL)
 ##
 {{html clean="false"}}
   &lt;section class="recently-updated-macro" $widthStyle&gt;
@@ -1101,8 +1142,8 @@ $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
           ## Theme sidebar - end
         #elseif ($theme == 'social')
           ## Theme social - start
-          #set ($socialThemeIsSameAuthor = $result.author.equals($socialThemePreviousAuthor))
-          #set ($socialThemePreviousAuthor = $result.author)
+          #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
+          #set ($options.socialThemePreviousAuthor = $result.author)
           #set ($socialThemeCollapseClass = '')
           #if ($socialThemeIsSameAuthor)
             #set ($socialThemeCollapseClass = 'collapsed')
