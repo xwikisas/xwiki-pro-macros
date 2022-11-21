@@ -1103,19 +1103,17 @@ There are only a few things that are not supported compared to the confluence ma
 #end
 
 #macro (displayResult_concise $result $options)
-  &lt;li&gt;
-    &lt;div class="result-item"&gt;
-      [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-      #displayResultTitle($result)
-      &lt;span class="result-metadata"&gt;
-        #displayResultDate($result)
-        &lt;span class="separator"&gt;⋅&lt;/span&gt;
-        &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
-        #displayResultAuthorAvatarURL($result)
-        #displayResultAuthorName($result)
-      &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
+  &lt;div class="result-item"&gt;
+    [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+    #displayResultTitle($result)
+    &lt;span class="result-metadata"&gt;
+      #displayResultDate($result)
+      &lt;span class="separator"&gt;⋅&lt;/span&gt;
+      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
+      #displayResultAuthorAvatarURL($result)
+      #displayResultAuthorName($result)
+    &lt;/span&gt;
+  &lt;/div&gt;
 #end
 
 #macro (displayResult_social $result $options)
@@ -1125,47 +1123,45 @@ There are only a few things that are not supported compared to the confluence ma
   #if ($socialThemeIsSameAuthor)
     #set ($socialThemeCollapseClass = 'collapsed')
   #end
-  &lt;li&gt;
-    &lt;div class="result-container $socialThemeCollapseClass"&gt;
-      #displayResultAuthorAvatarURL($result)
-      &lt;div class="result-items"&gt;
-        #displayResultAuthorName($result)
-        &lt;div class="result-item"&gt;
-          [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-          #displayResultTitle($result)
-          &lt;span class="result-metadata"&gt;
-            &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-            #displayResultDate($result)
-          &lt;/span&gt;
-        &lt;/div&gt;
+  &lt;div class="result-container $socialThemeCollapseClass"&gt;
+    #displayResultAuthorAvatarURL($result)
+    &lt;div class="result-items"&gt;
+      #displayResultAuthorName($result)
+      &lt;div class="result-item"&gt;
+        [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+        #displayResultTitle($result)
+        &lt;span class="result-metadata"&gt;
+          &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+          #displayResultDate($result)
+        &lt;/span&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-  &lt;/li&gt;
+  &lt;/div&gt;
 #end
 
 #macro (displayResult_sidebar $result $options)
-  &lt;li&gt;
-    &lt;div class="result-item"&gt;
-      [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
-      #displayResultTitle($result)
-      &lt;span class="result-metadata"&gt;
-        &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-        #displayResultAuthorAvatarURL($result)
-        #displayResultDate($result)
-      &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/li&gt;
+  &lt;div class="result-item"&gt;
+    [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
+    #displayResultTitle($result)
+    &lt;span class="result-metadata"&gt;
+      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+      #displayResultAuthorAvatarURL($result)
+      #displayResultDate($result)
+    &lt;/span&gt;
+  &lt;/div&gt;
 #end
 
 #macro (displayResults $results $options)
   #foreach ($result in $results)
-    #if ($theme == 'sidebar')
-      #displayResult_sidebar($result $options)
-    #elseif ($theme == 'social')
-      #displayResult_social($result $options)
-    #else
-      #displayResult_concise($result $options)
-    #end
+    &lt;li&gt;
+      #if ($theme == 'sidebar')
+        #displayResult_sidebar($result $options)
+      #elseif ($theme == 'social')
+        #displayResult_social($result $options)
+      #else
+        #displayResult_concise($result $options)
+      #end
+    &lt;/li&gt;
   #end
 #end
 
