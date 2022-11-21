@@ -815,53 +815,6 @@ There are only a few things that are not supported compared to the confluence ma
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
-## Display results macros
-## -----------------------------------------------------------------
-
-#set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
-
-#macro (displayResultAuthorName $result)
-  &lt;span class="result-last-author-name"&gt;
-    #if ($authorExceptions.contains($result.author))
-      $escapetool.xml($stringtool.substringAfter("$result.author", '.'))
-    #else
-      [[$result.author]]
-    #end
-  &lt;/span&gt;
-#end
-
-#macro (displayResultAuthorAvatarURL $result)
-  #set ($noavatarURL = $xwiki.getSkinFile('icons/xwiki/noavatar.png', true))
-  #if ("$showProfilePic" == "true")
-    &lt;span class="result-last-author-avatar"&gt;
-      #if ($authorExceptions.contains($result.author))
-        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$escapetool.xml($result.author)" /&gt;
-      #else
-        #resizedUserAvatar("$result.author", 48)
-      #end
-    &lt;/span&gt;
-  #end
-#end
-
-#macro (displayResultTitle $result)
-  &lt;span class="result-title"&gt;
-    &lt;a href="$result.href"&gt;$escapetool.xml($result.title_)&lt;/a&gt;
-  &lt;/span&gt;
-#end
-
-#macro (displayResultDate $result)
-  &lt;span class="result-date"&gt;
-    #if ($datetool.difference($datetool.getDate(), $result.date).getDays() == 0)
-      $services.date.displayTimeAgo($result.date)
-    #else
-      $xwiki.formatDate($result.date)
-    #end
-  &lt;/span&gt;
-#end
-
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
 ## Query macros
 ## -----------------------------------------------------------------
 
@@ -1105,6 +1058,121 @@ There are only a few things that are not supported compared to the confluence ma
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
+## Display results macros
+## -----------------------------------------------------------------
+
+#set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
+
+#macro (displayResultAuthorName $result)
+  &lt;span class="result-last-author-name"&gt;
+    #if ($authorExceptions.contains($result.author))
+      $escapetool.xml($stringtool.substringAfter("$result.author", '.'))
+    #else
+      [[$result.author]]
+    #end
+  &lt;/span&gt;
+#end
+
+#macro (displayResultAuthorAvatarURL $result)
+  #set ($noavatarURL = $xwiki.getSkinFile('icons/xwiki/noavatar.png', true))
+  #if ("$showProfilePic" == "true")
+    &lt;span class="result-last-author-avatar"&gt;
+      #if ($authorExceptions.contains($result.author))
+        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$escapetool.xml($result.author)" /&gt;
+      #else
+        #resizedUserAvatar("$result.author", 48)
+      #end
+    &lt;/span&gt;
+  #end
+#end
+
+#macro (displayResultTitle $result)
+  &lt;span class="result-title"&gt;
+    &lt;a href="$result.href"&gt;$escapetool.xml($result.title_)&lt;/a&gt;
+  &lt;/span&gt;
+#end
+
+#macro (displayResultDate $result)
+  &lt;span class="result-date"&gt;
+    #if ($datetool.difference($datetool.getDate(), $result.date).getDays() == 0)
+      $services.date.displayTimeAgo($result.date)
+    #else
+      $xwiki.formatDate($result.date)
+    #end
+  &lt;/span&gt;
+#end
+
+#macro (displayResult_concise $result $options)
+  &lt;li&gt;
+    &lt;div class="result-item"&gt;
+      [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+      #displayResultTitle($result)
+      &lt;span class="result-metadata"&gt;
+        #displayResultDate($result)
+        &lt;span class="separator"&gt;⋅&lt;/span&gt;
+        &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
+        #displayResultAuthorAvatarURL($result)
+        #displayResultAuthorName($result)
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+#end
+
+#macro (displayResult_social $result $options)
+  #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
+  #set ($options.socialThemePreviousAuthor = $result.author)
+  #set ($socialThemeCollapseClass = '')
+  #if ($socialThemeIsSameAuthor)
+    #set ($socialThemeCollapseClass = 'collapsed')
+  #end
+  &lt;li&gt;
+    &lt;div class="result-container $socialThemeCollapseClass"&gt;
+      #displayResultAuthorAvatarURL($result)
+      &lt;div class="result-items"&gt;
+        #displayResultAuthorName($result)
+        &lt;div class="result-item"&gt;
+          [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+          #displayResultTitle($result)
+          &lt;span class="result-metadata"&gt;
+            &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+            #displayResultDate($result)
+          &lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+#end
+
+#macro (displayResult_sidebar $result $options)
+  &lt;li&gt;
+    &lt;div class="result-item"&gt;
+      [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
+      #displayResultTitle($result)
+      &lt;span class="result-metadata"&gt;
+        &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+        #displayResultAuthorAvatarURL($result)
+        #displayResultDate($result)
+      &lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+#end
+
+#macro (displayResults $results $options)
+  #foreach ($result in $results)
+    #if ($theme == 'sidebar')
+      #displayResult_sidebar($result $options)
+    #elseif ($theme == 'social')
+      #displayResult_social($result $options)
+    #else
+      #displayResult_concise($result $options)
+    #end
+  #end
+#end
+
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
 ## Fetch results
 ## -----------------------------------------------------------------
 
@@ -1115,74 +1183,14 @@ There are only a few things that are not supported compared to the confluence ma
 {{velocity}}
 $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
 ##
-{{html clean="false"}}
+{{html clean="false" wiki="true"}}
   &lt;section class="recently-updated-macro" $widthStyle&gt;
     #if ("$wikimacro.parameters.hideHeading" != "true")
       &lt;h2&gt;Recently Updated&lt;/h2&gt;
     #end
 
     &lt;ul class="items theme-${theme}"&gt;
-{{/html}}
-
-{{html clean="false" wiki="true"}}
-      #foreach ($result in $results)
-        #if ($theme == 'sidebar')
-          ## Theme sidebar - start
-          &lt;li&gt;
-            &lt;div class="result-item"&gt;
-              [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
-              #displayResultTitle($result)
-              &lt;span class="result-metadata"&gt;
-                &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-                #displayResultAuthorAvatarURL($result)
-                #displayResultDate($result)
-              &lt;/span&gt;
-            &lt;/div&gt;
-          &lt;/li&gt;
-          ## Theme sidebar - end
-        #elseif ($theme == 'social')
-          ## Theme social - start
-          #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
-          #set ($options.socialThemePreviousAuthor = $result.author)
-          #set ($socialThemeCollapseClass = '')
-          #if ($socialThemeIsSameAuthor)
-            #set ($socialThemeCollapseClass = 'collapsed')
-          #end
-          &lt;li&gt;
-            &lt;div class="result-container $socialThemeCollapseClass"&gt;
-              #displayResultAuthorAvatarURL($result)
-              &lt;div class="result-items"&gt;
-                #displayResultAuthorName($result)
-                &lt;div class="result-item"&gt;
-                  [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-                  #displayResultTitle($result)
-                  &lt;span class="result-metadata"&gt;
-                    &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-                    #displayResultDate($result)
-                  &lt;/span&gt;
-                &lt;/div&gt;
-              &lt;/div&gt;
-            &lt;/div&gt;
-          &lt;/li&gt;
-          ## Theme social - end
-        #else
-          ## Theme concise - start
-          &lt;li&gt;
-            &lt;div class="result-item"&gt;
-              [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-              #displayResultTitle($result)
-              &lt;span class="result-metadata"&gt;
-                #displayResultDate($result)
-                &lt;span class="separator"&gt;⋅&lt;/span&gt;
-                &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
-                #displayResultAuthorAvatarURL($result)
-                #displayResultAuthorName($result)
-              &lt;/span&gt;
-            &lt;/div&gt;
-          &lt;/li&gt;
-          ## Theme concise - end
-        #end
-      #end
+      #displayResults($results $options)
     &lt;/ul&gt;
 
   &lt;/section&gt; ## .recently-updated-macro
