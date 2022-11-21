@@ -776,7 +776,7 @@ There are only a few things that are not supported compared to the confluence ma
   "OBJECT_PROPERTY": 'commented'
 })
 
-#set ($widthStyle = "style='--width: $wikimacro.parameters.width'")
+#set ($widthStyle = "style='--width: $escapetool.xml($wikimacro.parameters.width)'")
 #set ($confluenceShowProfilePic = "$!wikimacro.parameters.showProfilePic")
 #if ("$confluenceShowProfilePic" == "false" &amp;&amp; $theme == 'social')
   #set ($showProfilePic = false)
