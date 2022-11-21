@@ -788,27 +788,43 @@ There are only a few things that are not supported compared to the confluence ma
 
 #set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
 
-#macro (displayAuthorName $author)
+#macro (displayResultAuthorName $result)
   &lt;span class="result-last-author-name"&gt;
-    #if ($authorExceptions.contains($author))
-      ${stringtool.substringAfter("$author", '.')}
+    #if ($authorExceptions.contains($result.author))
+      $escapetool.xml($stringtool.substringAfter("$result.author", '.'))
     #else
-      [[${author}]]
+      [[$result.author]]
     #end
   &lt;/span&gt;
 #end
 
-#macro (displayAuthorAvatarURL $author)
+#macro (displayResultAuthorAvatarURL $result)
   #set ($noavatarURL = $xwiki.getSkinFile('icons/xwiki/noavatar.png', true))
   #if ("$showProfilePic" == "true")
     &lt;span class="result-last-author-avatar"&gt;
-      #if ($authorExceptions.contains($author))
-        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$author" /&gt;
+      #if ($authorExceptions.contains($result.author))
+        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$escapetool.xml($result.author)" /&gt;
       #else
         #resizedUserAvatar("$result.author", 48)
       #end
     &lt;/span&gt;
   #end
+#end
+
+#macro (displayResultTitle $result)
+  &lt;span class="result-title"&gt;
+    &lt;a href="$result.href"&gt;$escapetool.xml($result.title_)&lt;/a&gt;
+  &lt;/span&gt;
+#end
+
+#macro (displayResultDate $result)
+  &lt;span class="result-date"&gt;
+    #if ($datetool.difference($datetool.getDate(), $result.date).getDays() == 0)
+      $services.date.displayTimeAgo($result.date)
+    #else
+      $xwiki.formatDate($result.date)
+    #end
+  &lt;/span&gt;
 #end
 {{/velocity}}
 
@@ -1073,14 +1089,12 @@ $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
           ## Theme sidebar - start
           &lt;li&gt;
             &lt;div class="result-item"&gt;
-              [[image:icon:${ICON_BY_TYPE[$result.type]}||class="document-icon"]]
-              &lt;span class="result-title"&gt;
-                &lt;a href="${result.href}"&gt;${result.title_}&lt;/a&gt;
-              &lt;/span&gt;
+              [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
+              #displayResultTitle($result)
               &lt;span class="result-metadata"&gt;
-                &lt;span class="result-last-author-text"&gt;${AUTHORING_TEXT_BY_TYPE[$result.type]}&lt;/span&gt;
-                #displayAuthorAvatarURL(${result.author})
-                $services.date.displayTimeAgo(${result.date})
+                &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+                #displayResultAuthorAvatarURL($result)
+                #displayResultDate($result)
               &lt;/span&gt;
             &lt;/div&gt;
           &lt;/li&gt;
@@ -1095,17 +1109,15 @@ $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
           #end
           &lt;li&gt;
             &lt;div class="result-container $socialThemeCollapseClass"&gt;
-              #displayAuthorAvatarURL(${result.author})
+              #displayResultAuthorAvatarURL($result)
               &lt;div class="result-items"&gt;
-                #displayAuthorName(${result.author})
+                #displayResultAuthorName($result)
                 &lt;div class="result-item"&gt;
-                  [[image:icon:${ICON_BY_TYPE[$result.type]}||class="result-icon"]]
-                  &lt;span class="result-title"&gt;
-                    &lt;a href="${result.href}"&gt;${result.title_}&lt;/a&gt;
-                  &lt;/span&gt;
+                  [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+                  #displayResultTitle($result)
                   &lt;span class="result-metadata"&gt;
-                    &lt;span class="result-last-author-text"&gt;${AUTHORING_TEXT_BY_TYPE[$result.type]}&lt;/span&gt;
-                    $services.date.displayTimeAgo(${result.date})
+                    &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+                    #displayResultDate($result)
                   &lt;/span&gt;
                 &lt;/div&gt;
               &lt;/div&gt;
@@ -1116,16 +1128,14 @@ $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
           ## Theme concise - start
           &lt;li&gt;
             &lt;div class="result-item"&gt;
-              [[image:icon:${ICON_BY_TYPE[$result.type]}||class="result-icon"]]
-              &lt;span class="result-title"&gt;
-                &lt;a href="${result.href}"&gt;${result.title_}&lt;/a&gt;
-              &lt;/span&gt;
+              [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
+              #displayResultTitle($result)
               &lt;span class="result-metadata"&gt;
-                $services.date.displayTimeAgo(${result.date})
+                #displayResultDate($result)
                 &lt;span class="separator"&gt;⋅&lt;/span&gt;
-                &lt;span class="result-last-author-text"&gt;${AUTHORING_TEXT_BY_TYPE[$result.type]} by&lt;/span&gt;
-                #displayAuthorAvatarURL(${result.author})
-                #displayAuthorName(${result.author})
+                &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
+                #displayResultAuthorAvatarURL($result)
+                #displayResultAuthorName($result)
               &lt;/span&gt;
             &lt;/div&gt;
           &lt;/li&gt;
