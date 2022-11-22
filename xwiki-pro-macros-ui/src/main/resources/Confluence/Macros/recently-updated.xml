@@ -77,6 +77,154 @@ There are only a few things that are not supported compared to the confluence ma
   <object>
     <name>Confluence.Macros.recently-updated</name>
     <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>6c59bc44-fe22-452e-a603-601550d23493</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>const MACRO_URL = "$xwiki.getURL('Confluence.Macros.RecentlyUpdatedService', 'get')";
+#[[
+
+require(['jquery'], $ =&gt; {
+  $(() =&gt; {
+    const $macros = $('.recently-updated-macro');
+    const $showMoreButton = $macros.find('button.show-more');
+
+    const fetchMoreResultsHTML = async ($macro) =&gt; {
+      const urlParams = new URLSearchParams({
+        'xpage': 'plain',
+        'outputSyntax': 'plain',
+        'macroOptions': $macro.data('options')
+      });
+      const url = `${MACRO_URL}?${urlParams.toString()}`;
+      console.log('url', url);
+      // Fetch new results
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Response is not ok.')
+      const html = await response.text();
+      console.log('html', html);
+      // Append new results to HTML
+      const $results = $macro.find('ul.results');
+      $results[0].innerHTML += html;
+    }
+
+    const handleMetadata = ($macro) =&gt; {
+      const $dataElement = $macro.find('.recently-updated-options');
+      console.log('$dataElement', $dataElement)
+      console.log("$dataElement.attr('data-options')", $dataElement.attr('data-options'))
+      $macro.data('options', $dataElement.attr('data-options'))
+      $dataElement.remove();
+    };
+
+    // Init
+    $macros.each((i, macro) =&gt; {
+      handleMetadata($(macro));
+    });
+
+    $showMoreButton.click(event =&gt; {
+      console.log('clicked!');
+      const $macro = $(event.target).closest('.recently-updated-macro');
+      console.log('$macro', $macro);
+      fetchMoreResultsHTML($macro);
+      handleMetadata($macro);
+    })
+  })
+});
+
+]]#</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.recently-updated</name>
+    <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
     <guid>3b3cfea7-37ba-41a1-af19-203cd936d122</guid>
     <class>
@@ -181,7 +329,7 @@ There are only a few things that are not supported compared to the confluence ma
     <property>
       <code>
 .recently-updated-macro {
-  ul.items {
+  ul.results {
     padding: 0rem;
 
     &amp;.theme-concise,
@@ -637,8 +785,10 @@ There are only a few things that are not supported compared to the confluence ma
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity output="false"}}
+      <code>
+{{include reference="Confluence.Macros.RecentlyUpdatedService" /}}
 
+{{velocity output="false"}}
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
@@ -665,7 +815,7 @@ There are only a few things that are not supported compared to the confluence ma
 
 ## Format serialized comma-separated author list coming from macro parameters
 ## Author format is different between comments and document metadata
-## ("xwiki:" wiki prefix is missing from comments author metadata)
+## ("xwiki:" wiki prefix is missing from comments author metadata),
 ## so add both versions in the formatted serialized list
 #macro (formatSerializedAuthorList $serializedAuthorList $return)
   #set ($authorsList = [])
@@ -685,8 +835,9 @@ There are only a few things that are not supported compared to the confluence ma
   #setVariable("$return" $authors)
 #end
 
+## Format serialized comma-separated types list coming from macro parameters
+## Return a list containing all the types of results that need to be displayed
 #macro (parseTypes $serializedTypeList $return)
-  #set ($allTypes = ['page', 'blogpost', 'attachment', 'comment'])
   #set ($types = [])
   #set ($typesDiscarded = [])
   #set ($splittedTypeList = $!stringtool.split($serializedTypeList, ','))
@@ -711,7 +862,7 @@ There are only a few things that are not supported compared to the confluence ma
   #end
   ## Compute types to return
   #if ($types.size() == 0)
-    #set ($types = $allTypes)
+    #set ($types = $TYPES.clone())
   #end
   #set ($discard = $types.removeAll($typesDiscarded))
   ## Return
@@ -719,477 +870,116 @@ There are only a few things that are not supported compared to the confluence ma
   #setVariable("$return" $types)
 #end
 
-
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Parameters
-## -----------------------------------------------------------------
-
-## Gather every parameter in an option object
-#set ($options = {})
-
-## Authors
-#set ($confluenceAuthorsString = "$!wikimacro.parameters.author.strip()")
-#formatSerializedAuthorList($confluenceAuthorsString, $authors)
-#set ($discard = $options.put('authors', $authors))
-
-## Wiki &amp; Spaces
-#set ($confluenceSpacesString = "$!wikimacro.parameters.spaces.strip()")
-#set ($spaces = $NULL)
-#set ($wiki = $doc.wiki)
-#if (
-  $confluenceSpacesString.equals('')
-  || $confluenceSpacesString.equals('@self')
-)
-  ## Search in current space
-  #set ($spaces = $doc.space)
-#elseif (
-  $confluenceSpacesString.equals('@global')
-  || $confluenceSpacesString.equals('@personal')
-  || $confluenceSpacesString.equals('@favorite')
-  || $confluenceSpacesString.equals('@favourite')
-)
-  ## Search everywhere in current wiki
-  ## `@personal`, `@favorite` and `@favourite` do not have an equivalent in XWiki,
-  ## so make them fallback as `@global`
-  #set ($wiki = $doc.wiki)
-#elseif (
-  $confluenceSpacesString.equals('@all')
-  || $confluenceSpacesString.equals('*')
-)
-  ## Search everywhere in every wikis
-  #set ($wiki = $NULL)
-#else
-  ## Search in specified spaces
-  #formatSerializedList($confluenceSpacesString, $spaces)
-#end
-#set ($discard = $options.put('wiki', $wiki))
-#set ($discard = $options.put('spaces', $spaces))
-
-## Tags
-#set ($confluenceLabelString = "$!wikimacro.parameters.labels.strip()")
-#formatSerializedList($confluenceLabelString, $tags)
-#set ($discard = $options.put('tags', $tags))
-
-## Types
-#set ($confluenceTypesString = "$!wikimacro.parameters.types.strip()")
-#parseTypes($confluenceTypesString, $types)
-#set ($discard = $options.put('types', $types))
-
-## Limit
-#set ($limit = $!wikimacro.parameters.max)
-#set ($discard = $options.put('limit', $limit))
-
-## Theme
-#set ($availableTheme = ['concise', 'social', 'sidebar'])
-#set ($theme = "$wikimacro.parameters.theme.strip()")
-#if (!$availableTheme.contains($theme))
- #set ($theme = 'concise')
-#end
-#set ($discard = $options.put('theme', $theme))
-
-#set ($ICON_BY_TYPE = {
-  "DOCUMENT": 'page',
-  "ATTACHMENT": 'attach',
-  "OBJECT_PROPERTY": 'comment'
-})
-#set ($AUTHORING_TEXT_BY_TYPE = {
-  "DOCUMENT": 'contributed',
-  "ATTACHMENT": 'attached',
-  "OBJECT_PROPERTY": 'commented'
-})
-
-#set ($widthStyle = "style='--width: $escapetool.xml($wikimacro.parameters.width)'")
-#set ($confluenceShowProfilePic = "$!wikimacro.parameters.showProfilePic")
-#if ("$confluenceShowProfilePic" == "false" &amp;&amp; $theme == 'social')
-  #set ($showProfilePic = false)
-#elseif ("$confluenceShowProfilePic" == "true" || $theme == 'social')
-  #set ($showProfilePic = true)
-#else
-  #set ($showProfilePic = false)
-#end
-#set ($discard = $options.put('showProfilePic', $showProfilePic))
-
-
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Query macros
-## -----------------------------------------------------------------
-
-#macro (queryDocuments $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Document filters
-  #set ($discard = $fq.add('type:DOCUMENT'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
+## Init options from macro parameters
+#macro (initOptionsFromParameters $return)
+  ## Gather every parameter in an option object that will be returned
+  #set ($options = {})
+  ## Gather some data to be send to the client to be cached
+  #set ($options.typesMetadata = {})
+  #foreach ($type in $TYPES)
+    #set ($discard = $options.typesMetadata.put("$type", {}))
   #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("author:($options.authors)"))
-  #end
-  #if ("$!options.tags" == '')
-    #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
+
+  ## Authors
+  #set ($confluenceAuthorsString = "$!wikimacro.parameters.author.strip()")
+  #formatSerializedAuthorList($confluenceAuthorsString, $authors)
+  #set ($options.authors = $authors)
+
+  ## Wiki &amp; Spaces
+  #set ($confluenceSpacesString = "$!wikimacro.parameters.spaces.strip()")
+  #set ($options.spaces = $NULL)
+  #set ($options.wiki = $doc.wiki)
+  #if (
+    $confluenceSpacesString.equals('')
+    || $confluenceSpacesString.equals('@self')
+  )
+    ## Search in current space
+    #set ($options.spaces = $doc.space)
+  #elseif (
+    $confluenceSpacesString.equals('@global')
+    || $confluenceSpacesString.equals('@personal')
+    || $confluenceSpacesString.equals('@favorite')
+    || $confluenceSpacesString.equals('@favourite')
+  )
+    ## Search everywhere in current wiki
+    ## `@personal`, `@favorite` and `@favourite` do not have an equivalent in XWiki,
+    ## so make them fallback as `@global`
+    #set ($options.wiki = $doc.wiki)
+  #elseif (
+    $confluenceSpacesString.equals('@all')
+    || $confluenceSpacesString.equals('*')
+  )
+    ## Search everywhere in every wikis
+    #set ($options.wiki = $NULL)
   #else
-    #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    ## Search in specified spaces
+    #formatSerializedList($confluenceSpacesString, $spaces)
+    #set ($options.spaces = $spaces)
   #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "date desc"))
-  #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
 
-#macro (queryBlogposts $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Document filters
-  #set ($discard = $fq.add('type:DOCUMENT'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
+  ## Tags
+  #set ($confluenceLabelString = "$!wikimacro.parameters.labels.strip()")
+  #formatSerializedList($confluenceLabelString, $tags)
+  #set ($options.tags = $tags)
+
+  ## Types
+  #set ($confluenceTypesString = "$!wikimacro.parameters.types.strip()")
+  #parseTypes($confluenceTypesString, $types)
+  #set ($options.types = $types)
+
+  ## Offset &amp; Limit
+  #set ($offset = 0)
+  #set ($options.offset = $offset)
+  #set ($limit = $!wikimacro.parameters.max)
+  #set ($options.limit = $limit)
+
+  ## Theme
+  #set ($availableTheme = ['concise', 'social', 'sidebar'])
+  #set ($options.theme = "$wikimacro.parameters.theme.strip()")
+  #if (!$availableTheme.contains($options.theme))
+   #set ($options.theme = 'concise')
   #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("author:($options.authors)"))
-  #end
-  #if ("$!options.tags" == '')
-    #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
+
+  ## showProfilePic
+  #set ($confluenceShowProfilePic = "$!wikimacro.parameters.showProfilePic")
+  #if ("$confluenceShowProfilePic" == "false" &amp;&amp; $options.theme == 'social')
+    #set ($options.showProfilePic = false)
+  #elseif ("$confluenceShowProfilePic" == "true" || $options.theme == 'social')
+    #set ($options.showProfilePic = true)
   #else
-    #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    #set ($options.showProfilePic = false)
   #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "date desc"))
-  #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
+
   ## Return
   #set ($return = $NULL)
-  #setVariable("$return" $response)
+  #setVariable("$return" $options)
 #end
+{{/velocity}}
 
-#macro (queryAttachments $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Attachment filters
-  #set ($discard = $fq.add('type:ATTACHMENT'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
-  #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("attauthor:($options.authors)"))
-  #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "attdate desc"))
-  #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Create a clean `date` property to attachments
-  #foreach ($attachment in $response.results)
-    #set ($discard = $attachment.put('date', $attachment.attdate[0]))
-    #set ($discard = $attachment.put('title_', $attachment.filename[0]))
-    #set ($discard = $attachment.put('author', $attachment.attauthor[0]))
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
-
-#macro (queryComments $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Comment filters
-  #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
-  #set ($discard = $fq.add('class:XWiki.XWikiComments'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
-  #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #set ($discard = $fq.add('propertyname:(author)'))
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("propertyvalue_:($options.authors)"))
-  #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "_version_ desc"))
-  #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Add missing comment data
-  #foreach ($comment in $response.results)
-    #addCommentData($comment)
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
-
-#macro (addCommentData $comment)
-  ## Comment filters
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery("name:$comment.name", 'solr'))
-  #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
-  #set ($discard = $fq.add('class:XWiki.XWikiComments'))
-  #set ($discard = $fq.add("wiki:($comment.wiki)"))
-  #set ($discard = $fq.add("space:($comment.space)"))
-  #set ($discard = $fq.add("number:($comment.number)"))
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.setOffset(0))
-  #set ($discard = $query.setLimit(3))
-  #set ($commentResponse = $query.execute()[0])
-  ## Add data to result
-  #foreach ($property in $commentResponse.results)
-    #if ($property.propertyname == 'date')
-      #set ($dateFormat = $datetool.getDateFormat("EEE MMM dd HH:mm:ss z yyyy", $datetool.getLocale(), $datetool.getTimeZone()))
-      #set ($date = $dateFormat.parse($property.propertyvalue_[0]))
-      #set ($discard = $comment.put('date', $date))
-    #elseif ($property.propertyname == 'author')
-      #set ($discard = $comment.put('author', "$property.propertyvalue_[0]"))
-    #elseif ($property.propertyname == 'comment')
-      #set ($discard = $comment.put('comment', $property.propertyvalue_[0]))
-    #end
-  #end
-#end
-
-## Results can be of type document, attachment, or comment
-## As results are fetched from three different requests (1 for each type)
-## We need to merge those results together into one unique list of results.
-## During the merge, we have to make sure we respects two things:
-## - results are still sorted by most recent ones first
-## - the number of results is no more than the limit defined in the macro parameter
-#macro (mergeSortLimitResults $resultLists $options $return)
-  #set ($results = [])
-  #foreach ($discard in [1..$options.limit])
-    #set ($mostRecentDate = $NULL)
-    #set ($listIndex = $NULL)
-    ## Search throught the lists of results the most recent result
-    ## Lists are already sorted by themselves,
-    ## so we just need to compare the first result of each list
-    #foreach ($resultList in $resultLists)
-      #if ($resultList.size() &gt; 0)
-        ## Flag result if it is the most recent found until now
-        #set ($date = $resultList[0].date)
-        #if ($mostRecentDate == $NULL || $datetool.difference($mostRecentDate, $date).getMilliseconds() &gt; 0)
-          #set ($mostRecentDate = $date)
-          #set ($listIndex = $foreach.index)
-        #end
-      #end
-    #end
-    ## Use the most recent result found
-    #if ($listIndex == $NULL)
-      #break
-    #else
-      #set ($discard = $results.add($resultLists[$listIndex][0]))
-      #set ($discard = $resultLists[$listIndex].remove(0))
-    #end
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $results)
-#end
-
-## Resolve some metadata for results
-## Metadata computed here are the one heavy to compute,
-## because they use the document object associated to the result.
-## So we compute those metadata the latest possible,
-## only for the results we are sure to display
-#macro (resolveResultsMetadata $results)
-  #foreach ($result in $results)
-    #set ($documentFullname = "${result.wiki}:${result.space}.${result.name}")
-    #set ($document = $xwiki.getDocument($documentFullname))
-    #if ($result.type.equals('DOCUMENT'))
-      #set ($discard = $result.put('href', $document.getURL()))
-    #elseif ($result.type.equals('ATTACHMENT'))
-      #set ($discard = $result.put('href', $document.getAttachmentURL($result.filename[0], 'viewattachrev')))
-    #elseif ($result.type.equals('OBJECT_PROPERTY'))
-      #set ($discard = $result.put('href', "$document.getURL('view', 'viewer=comments')#xwikicomment_${result.number}"))
-      #set ($discard = $result.put('title_', $document.title))
-    #end
-  #end
-#end
-
-#macro (fetchResults $options $return)
-  ## Fetch data
-  #set ($queryResponses = [])
-  #if ($options.types.contains('page'))
-    #queryDocuments($options $documentsResponse)
-    #set ($discard = $queryResponses.add($documentsResponse.results))
-  #end
-  #if ($options.types.contains('blogpost'))
-    #queryBlogposts($options $blogpostResponse)
-    #set ($discard = $queryResponses.add($blogpostResponse.results))
-  #end
-  #if ($options.types.contains('attachment'))
-    #queryAttachments($options $attachmentsResponse)
-    #set ($discard = $queryResponses.add($attachmentsResponse.results))
-  #end
-  #if ($options.types.contains('comment'))
-    #queryComments($options $commentsResponse)
-    #set ($discard = $queryResponses.add($commentsResponse.results))
-  #end
-  ## Resolve used data
-  #mergeSortLimitResults($queryResponses $options $results)
-  #resolveResultsMetadata($results)
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $results)
-#end
-
-
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Display results macros
-## -----------------------------------------------------------------
-
-#set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
-
-#macro (displayResultAuthorName $result)
-  &lt;span class="result-last-author-name"&gt;
-    #if ($authorExceptions.contains($result.author))
-      $escapetool.xml($stringtool.substringAfter("$result.author", '.'))
-    #else
-      [[$result.author]]
-    #end
-  &lt;/span&gt;
-#end
-
-#macro (displayResultAuthorAvatarURL $result)
-  #set ($noavatarURL = $xwiki.getSkinFile('icons/xwiki/noavatar.png', true))
-  #if ("$showProfilePic" == "true")
-    &lt;span class="result-last-author-avatar"&gt;
-      #if ($authorExceptions.contains($result.author))
-        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$escapetool.xml($result.author)" /&gt;
-      #else
-        #resizedUserAvatar("$result.author", 48)
-      #end
-    &lt;/span&gt;
-  #end
-#end
-
-#macro (displayResultTitle $result)
-  &lt;span class="result-title"&gt;
-    &lt;a href="$result.href"&gt;$escapetool.xml($result.title_)&lt;/a&gt;
-  &lt;/span&gt;
-#end
-
-#macro (displayResultDate $result)
-  &lt;span class="result-date"&gt;
-    #if ($datetool.difference($datetool.getDate(), $result.date).getDays() == 0)
-      $services.date.displayTimeAgo($result.date)
-    #else
-      $xwiki.formatDate($result.date)
-    #end
-  &lt;/span&gt;
-#end
-
-#macro (displayResult_concise $result $options)
-  &lt;div class="result-item"&gt;
-    [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-    #displayResultTitle($result)
-    &lt;span class="result-metadata"&gt;
-      #displayResultDate($result)
-      &lt;span class="separator"&gt;⋅&lt;/span&gt;
-      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
-      #displayResultAuthorAvatarURL($result)
-      #displayResultAuthorName($result)
-    &lt;/span&gt;
-  &lt;/div&gt;
-#end
-
-#macro (displayResult_social $result $options)
-  #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
-  #set ($options.socialThemePreviousAuthor = $result.author)
-  #set ($socialThemeCollapseClass = '')
-  #if ($socialThemeIsSameAuthor)
-    #set ($socialThemeCollapseClass = 'collapsed')
-  #end
-  &lt;div class="result-container $socialThemeCollapseClass"&gt;
-    #displayResultAuthorAvatarURL($result)
-    &lt;div class="result-items"&gt;
-      #displayResultAuthorName($result)
-      &lt;div class="result-item"&gt;
-        [[image:icon:$ICON_BY_TYPE[$result.type]||class="result-icon"]]
-        #displayResultTitle($result)
-        &lt;span class="result-metadata"&gt;
-          &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-          #displayResultDate($result)
-        &lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-#end
-
-#macro (displayResult_sidebar $result $options)
-  &lt;div class="result-item"&gt;
-    [[image:icon:$ICON_BY_TYPE[$result.type]||class="document-icon"]]
-    #displayResultTitle($result)
-    &lt;span class="result-metadata"&gt;
-      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
-      #displayResultAuthorAvatarURL($result)
-      #displayResultDate($result)
-    &lt;/span&gt;
-  &lt;/div&gt;
-#end
-
-#macro (displayResults $results $options)
-  #foreach ($result in $results)
-    &lt;li&gt;
-      #if ($theme == 'sidebar')
-        #displayResult_sidebar($result $options)
-      #elseif ($theme == 'social')
-        #displayResult_social($result $options)
-      #else
-        #displayResult_concise($result $options)
-      #end
-    &lt;/li&gt;
-  #end
-#end
-
-
+{{velocity}}
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
 ## -----------------------------------------------------------------
 ## Fetch results
 ## -----------------------------------------------------------------
-
-#fetchResults($options, $results)
-
-{{/velocity}}
-
-{{velocity}}
 $xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
-##
-{{html clean="false" wiki="true"}}
+$xwiki.jsx.use('xwiki:Confluence.Macros.recently-updated')
+#initOptionsFromParameters($options)
+#fetchResults($options, $results)
+{{html clean="false"}}
+  #set ($confluenceWidth = $escapetool.xml($wikimacro.parameters.width))
+  #set ($widthStyle = "style='--width: $confluenceWidth'")
   &lt;section class="recently-updated-macro" $widthStyle&gt;
     #if ("$wikimacro.parameters.hideHeading" != "true")
       &lt;h2&gt;Recently Updated&lt;/h2&gt;
     #end
-
-    &lt;ul class="items theme-${theme}"&gt;
+    &lt;ul class="results theme-${options.theme}"&gt;
       #displayResults($results $options)
     &lt;/ul&gt;
-
-  &lt;/section&gt; ## .recently-updated-macro
+    &lt;button class="btn btn-link show-more"&gt;
+      Show more
+    &lt;/button&gt;
+  &lt;/section&gt;
 {{/html}}
 {{/velocity}}
 </code>
