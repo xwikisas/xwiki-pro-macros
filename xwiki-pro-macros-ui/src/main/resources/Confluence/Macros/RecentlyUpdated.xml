@@ -20,18 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="Confluence.Macros.recently-updated" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.RecentlyUpdated" locale="">
   <web>Confluence.Macros</web>
-  <name>recently-updated</name>
+  <name>RecentlyUpdated</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <originalMetadataAuthor>XWiki.Admin</originalMetadataAuthor>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title/>
+  <title>RecentlyUpdated</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -75,7 +76,7 @@ There are only a few things that are not supported compared to the confluence ma
 * add button to fetch more results
 * test more thoroughly on subwikis</content>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
     <guid>6c59bc44-fe22-452e-a603-601550d23493</guid>
@@ -223,7 +224,7 @@ require(['jquery'], $ =&gt; {
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
     <guid>3b3cfea7-37ba-41a1-af19-203cd936d122</guid>
@@ -460,7 +461,7 @@ require(['jquery'], $ =&gt; {
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>1</number>
     <className>XWiki.StyleSheetExtension</className>
     <guid>48479d96-b2e8-4658-936d-0f87dad48af2</guid>
@@ -583,7 +584,7 @@ require(['jquery'], $ =&gt; {
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>788b8823-af80-4f49-bc96-0f8431187c27</guid>
@@ -962,8 +963,8 @@ require(['jquery'], $ =&gt; {
 ## -----------------------------------------------------------------
 ## Fetch results
 ## -----------------------------------------------------------------
-$xwiki.ssx.use('xwiki:Confluence.Macros.recently-updated')
-$xwiki.jsx.use('xwiki:Confluence.Macros.recently-updated')
+$xwiki.ssx.use('xwiki:Confluence.Macros.RecentlyUpdated')
+$xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
 #initOptionsFromParameters($options)
 #fetchResults($options, $results)
 {{html clean="false"}}
@@ -1022,7 +1023,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>e948b899-15a1-4af1-8d3a-3016d74c6f9d</guid>
@@ -1100,7 +1101,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>86b78bac-28e6-48be-8f19-ffdbf9bcbd4a</guid>
@@ -1178,7 +1179,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>2</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>b077519c-dc5e-4c77-b7d5-1f882653aca6</guid>
@@ -1256,7 +1257,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>3</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>199498c6-e761-4540-adb6-2db2c923dfbb</guid>
@@ -1334,7 +1335,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>4</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>fb726f4f-3e4a-4cc8-b608-f0ceeb5b1926</guid>
@@ -1412,7 +1413,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>5</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>149d0152-37f8-43f2-8012-3a520e07cdbe</guid>
@@ -1490,7 +1491,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>6</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>12108df7-3386-4932-91c1-63ce3c7bd6bd</guid>
@@ -1568,7 +1569,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>7</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>5e5b16a3-9463-4f0c-949e-411e9d7e3359</guid>
@@ -1646,7 +1647,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.recently-updated</name>
+    <name>Confluence.Macros.RecentlyUpdated</name>
     <number>8</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>4b67c758-6063-4326-be0a-6a47d2e2ac5f</guid>
