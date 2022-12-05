@@ -68,5 +68,6 @@
   <modules>
     <module>xwiki-pro-macros-api</module>
     <module>xwiki-pro-macros-ui</module>
+    <module>xwiki-pro-macros-xip</module>
   </modules>
 </project>
