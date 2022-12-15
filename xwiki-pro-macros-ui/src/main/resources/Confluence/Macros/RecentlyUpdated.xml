@@ -162,38 +162,52 @@ There are only a few things that are not supported compared to the confluence ma
       <cache>long</cache>
     </property>
     <property>
-      <code>const MACRO_URL = "$xwiki.getURL('Confluence.Macros.RecentlyUpdatedService', 'get')";
+      <code>const MACRO_SERVICE_URL = "$xwiki.getURL('Confluence.Macros.RecentlyUpdatedService', 'get')";
 #[[
 
 require(['jquery'], $ =&gt; {
   $(() =&gt; {
     const $macros = $('.recently-updated-macro');
-    const $showMoreButton = $macros.find('button.show-more');
 
+    /*
+     * Query new results and append them to the page
+     */
     const fetchMoreResultsHTML = async ($macro) =&gt; {
       const urlParams = new URLSearchParams({
         'xpage': 'plain',
         'outputSyntax': 'plain',
         'macroOptions': $macro.data('options')
       });
-      const url = `${MACRO_URL}?${urlParams.toString()}`;
-      console.log('url', url);
-      // Fetch new results
+      const url = `${MACRO_SERVICE_URL}?${urlParams.toString()}`;
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Response is not ok.')
+      if (!response.ok) {
+        throw new Error('An error occured fetching new results.');
+      }
+      // Append html results directly to the page
       const html = await response.text();
-      console.log('html', html);
-      // Append new results to HTML
-      const $results = $macro.find('ul.results');
-      $results[0].innerHTML += html;
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      $macro.find('ul.results')[0].appendChild(template.content);
+      handleMetadata($macro);
     }
 
+    /*
+     * Store fetched metadata for next result fetch
+     * Update fetch button according to whether there are more results to fetch
+     */
     const handleMetadata = ($macro) =&gt; {
       const $dataElement = $macro.find('.recently-updated-options');
-      console.log('$dataElement', $dataElement)
-      console.log("$dataElement.attr('data-options')", $dataElement.attr('data-options'))
-      $macro.data('options', $dataElement.attr('data-options'))
-      $dataElement.remove();
+      if ($dataElement.length === 0) {
+        console.warn('No options were found when fetching new results')
+      } else {
+        $macro.data('options', $dataElement.attr('data-options'))
+        const hasNext = JSON.parse($dataElement.attr('data-has-next'));
+        if (!hasNext) {
+          $macro.find('button.show-more')
+            .replaceWith('&lt;div class="no-more-results"&gt;No more results&lt;/div&gt;')
+        }
+        $dataElement.remove();
+      }
     };
 
     // Init
@@ -201,12 +215,10 @@ require(['jquery'], $ =&gt; {
       handleMetadata($(macro));
     });
 
-    $showMoreButton.click(event =&gt; {
-      console.log('clicked!');
+    // Fetch new results
+    $macros.find('button.show-more').click(async event =&gt; {
       const $macro = $(event.target).closest('.recently-updated-macro');
-      console.log('$macro', $macro);
       fetchMoreResultsHTML($macro);
-      handleMetadata($macro);
     })
   })
 });
@@ -444,6 +456,11 @@ require(['jquery'], $ =&gt; {
         }
       }
     }
+  }
+
+  .no-more-results {
+    .text-muted();
+    font-style: italic;
   }
 }</code>
     </property>
@@ -965,9 +982,9 @@ require(['jquery'], $ =&gt; {
 ## -----------------------------------------------------------------
 $xwiki.ssx.use('xwiki:Confluence.Macros.RecentlyUpdated')
 $xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
-#initOptionsFromParameters($options)
-#fetchResults($options, $results)
 {{html clean="false"}}
+  #initOptionsFromParameters($options)
+  #fetchResults($options, $results)
   #set ($confluenceWidth = $escapetool.xml($wikimacro.parameters.width))
   #set ($widthStyle = "style='--width: $confluenceWidth'")
   &lt;section class="recently-updated-macro" $widthStyle&gt;

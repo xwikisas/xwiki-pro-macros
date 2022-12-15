@@ -232,27 +232,26 @@
 ## fetch new results by executing the associated query
 #macro (fetchResults_queries $queryResponses $options)
   #foreach ($type in $TYPES)
-    #set ($metadata = $options.typesMetadata.get("$type"))
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
     ## Customize options for query
     #set ($typeOptions = $options.clone())
     ## Update offset based on previous used results count
     ## If this is the first time fetching results, init some values
-    #if ("$!metadata.offset" == '')
-      #set ($metadata.offset = 0)
-      #set ($metadata.hasNext = true)
+    #if ("$!typeMetadata.offset" == '')
+      #set ($typeMetadata.offset = 0)
+      #set ($typeMetadata.hasNext = true)
     #end
     ## Set the limit to (limit + 1), so that we are able to tell
     ## whether the query has more results to come after the set limit
-    #set ($limit = $options.limit)
-    #set ($typeOptions.offset = $metadata.offset)
-    #set ($typeOptions.limit = $limit + 1)
+    #set ($typeOptions.offset = $typeMetadata.offset)
+    #set ($typeOptions.limit = $options.limit + 1)
     ## Fetch results if needed
-    #if ($options.types.contains("${type}") &amp;&amp; $metadata.hasNext)
+    #if ($options.types.contains("$type") &amp;&amp; $typeMetadata.hasNext)
       #evaluate ("#query${stringtool.capitalize($type)}s(${escapetool.d}typeOptions ${escapetool.d}response)")
-      #set ($metadata.fetchedCountTotal = $response.results.size())
+      #set ($typeMetadata.fetchedCountTotal = $response.results.size())
       #set ($discard = $queryResponses.add($response.results))
     #else
-      #set ($metadata.fetchedCountTotal = 0)
+      #set ($typeMetadata.fetchedCountTotal = 0)
     #end
   #end
 #end
@@ -317,23 +316,26 @@
 #macro (fetchResults_updateMetadata $results $options)
   ## Init needed metadata
   #foreach ($type in $TYPES)
-    #set ($metadata = $options.typesMetadata.get("$type"))
-    #set ($metadata.fetchedCountUsed = 0)
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
+    #set ($typeMetadata.fetchedCountUsed = 0)
   #end
   ## Find how many results of each type were used in the end
   #foreach ($result in $results)
-    #set ($metadata = $options.typesMetadata.get("$result.type"))
-    #set ($metadata.fetchedCountUsed = $metadata.fetchedCountUsed + 1)
+    #set ($typeMetadata = $options.typesMetadata.get("$result.type"))
+    #set ($typeMetadata.fetchedCountUsed = $typeMetadata.fetchedCountUsed + 1)
   #end
   ## Update type metadata
   #set ($options.typesMetadata.hasNext = false)
   #foreach ($type in $TYPES)
-    #set ($metadata = $options.typesMetadata.get("$type"))
-    #set ($metadata.offset = $metadata.offset + $metadata.fetchedCountUsed)
-    #set ($hasUsedEveryResults = $metadata.fetchedCountTotal &lt;= $options.limit &amp;&amp; $metadata.fetchedCountTotal == $metadata.fetchedCountUsed)
-    #set ($metadata.hasNext = !$hasUsedEveryResults)
-    #if ($metadata.hasNext)
-      #set ($options.typesMetadata.hasNext = false)
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
+    #set ($typeMetadata.offset = $typeMetadata.offset + $typeMetadata.fetchedCountUsed)
+    ## Compute if there are next results
+    #set ($hasReachedLimit = $typeMetadata.fetchedCountTotal &lt;= $options.limit)
+    #set ($hasUsedAllCurrentResults = $typeMetadata.fetchedCountTotal == $typeMetadata.fetchedCountUsed)
+    #set ($hasUsedEveryResults = $hasReachedLimit &amp;&amp; $hasUsedAllCurrentResults)
+    #set ($typeMetadata.hasNext = !$hasUsedEveryResults)
+    #if ($typeMetadata.hasNext)
+      #set ($options.typesMetadata.hasNext = true)
     #end
   #end
 #end
@@ -467,11 +469,10 @@
   ## Add hidden div containing options and metadata from those results,
   ## that will be passed back to the service when clicking the "show more" button
   &lt;div
-    hidden
-    class="recently-updated-options"
+    class="recently-updated-options hidden"
     data-options="$!escapetool.xml($jsontool.serialize($options))"
-    data-has-next="$options.typesMetadata.hasNext"
-  ~&gt;&lt;/div&gt;
+    data-has-next="$!escapetool.xml($options.typesMetadata.hasNext)"&gt;
+  &lt;/div&gt;
 #end
 {{/velocity}}
 
@@ -482,7 +483,7 @@
 ## Fetch results
 ## -----------------------------------------------------------------
 #if ($xcontext.action == 'get')
-  #set ($options = $jsontool.parse($request.macroOptions))
+  #set ($options = $jsontool.fromString($request.macroOptions))
   #fetchResults($options, $results)
   #displayResults($results $options)
 #end
