@@ -384,8 +384,12 @@
 #end
 
 #macro (displayResultTitle $result)
+  #set ($title = $result.title_)
+  #if ("$title" == '')
+    #set ($title = $result.name)
+  #end
   &lt;span class="result-title"&gt;
-    &lt;a href="$result.href"&gt;$escapetool.xml($result.title_)&lt;/a&gt;
+    &lt;a href="$result.href"&gt;$escapetool.xml("$title")&lt;/a&gt;
   &lt;/span&gt;
 #end
 

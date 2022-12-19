@@ -366,15 +366,6 @@ require(['jquery'], $ =&gt; {
 
           .result-title {
             grid-area: title;
-
-            a:empty{
-              .text-muted();
-
-              &amp;::before {
-                content: '(no title)';
-                font-style: italic;
-              }
-            }
           }
 
           .result-metadata {
