@@ -39,7 +39,7 @@
   <hidden>true</hidden>
   <content>The recently-updated macro is a bridge between Confluence and XWiki. It displays the most recent contributions to the wiki, relative to documents, attachments and comments.
 
-There are only a few things that are not supported compared to the confluence macro, due to differences between the two:
+There are only a few things that are not supported compared to the Confluence macro, due to differences between the two:
 * some special values of the {{{ spaces }}} parameters are not supported: {{{ @personal }}}, {{{ @favorite }}} / {{{ @favourite }}}, and personal spaces starting with a "~~"
 
 = Parameters =
