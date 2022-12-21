@@ -162,11 +162,11 @@ There are only a few things that are not supported compared to the confluence ma
       <cache>long</cache>
     </property>
     <property>
-      <code>const MACRO_SERVICE_URL = "$xwiki.getURL('Confluence.Macros.RecentlyUpdatedService', 'get')";
-#[[
-
+      <code>
 require(['jquery'], $ =&gt; {
   $(() =&gt; {
+    const MACRO_SERVICE_URL = new XWiki.Document(XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)).getURL('get');
+
     const $macros = $('.recently-updated-macro');
 
     /*
@@ -222,14 +222,13 @@ require(['jquery'], $ =&gt; {
     })
   })
 });
-
-]]#</code>
+</code>
     </property>
     <property>
       <name/>
     </property>
     <property>
-      <parse>1</parse>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>
