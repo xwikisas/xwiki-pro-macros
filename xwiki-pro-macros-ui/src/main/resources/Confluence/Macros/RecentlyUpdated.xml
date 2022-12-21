@@ -1026,7 +1026,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
       <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
-      <visibility>Global</visibility>
+      <visibility>Current Wiki</visibility>
     </property>
   </object>
   <object>
