@@ -162,8 +162,14 @@ There are only a few things that are not supported compared to the Confluence ma
       <cache>long</cache>
     </property>
     <property>
-      <code>
-require(['jquery'], $ =&gt; {
+      <code>define('recentlyUpdateMacroTranslations', {
+  prefix: 'recentlyUpdatedMacro.',
+  keys: [
+    "noMoreResults",
+  ]
+});
+
+require(['jquery', 'xwiki-l10n!recentlyUpdateMacroTranslations'], ($, l10n) =&gt; {
   $(() =&gt; {
     const MACRO_SERVICE_URL = new XWiki.Document(XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)).getURL('get');
 
@@ -204,7 +210,7 @@ require(['jquery'], $ =&gt; {
         const hasNext = JSON.parse($dataElement.attr('data-has-next'));
         if (!hasNext) {
           $macro.find('button.show-more')
-            .replaceWith('&lt;div class="no-more-results"&gt;No more results&lt;/div&gt;')
+            .replaceWith('&lt;div class="no-more-results"&gt;' + l10n['noMoreResults'] + '&lt;/div&gt;')
         }
         $dataElement.remove();
       }
@@ -979,7 +985,7 @@ $xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
   #set ($widthStyle = "style='--width: $confluenceWidth'")
   &lt;section class="recently-updated-macro" $widthStyle&gt;
     #if ("$wikimacro.parameters.hideHeading" != "true")
-      &lt;h2&gt;Recently Updated&lt;/h2&gt;
+      &lt;h2&gt;$services.localization.render('recentlyUpdatedMacro.title')&lt;/h2&gt;
     #end
     &lt;ul class="results theme-${options.theme}"&gt;
       #displayResults($results $options)
