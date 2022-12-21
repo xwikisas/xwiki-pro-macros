@@ -1404,7 +1404,7 @@ It's very flexible, you can limit the list to specific people, spaces, types of 
       </type>
     </class>
     <property>
-      <defaultValue>page, blogpost, comment, attachment</defaultValue>
+      <defaultValue/>
     </property>
     <property>
       <description>This parameter allows you to filter content by content type. The macro will display only the content of the type you specify here. You can specify one or more types, separated by a comma or a space. To exclude content of a given content type, put a minus sign (-) immediately in front of that content type. For example: If you specify a content type of -blogpost you will get pages and all other content except for blog posts. Available values: "page" - documents, "blogpost" or "news" - blogpost documents, "comment" - comments on documents, "attachment" - attachments</description>
