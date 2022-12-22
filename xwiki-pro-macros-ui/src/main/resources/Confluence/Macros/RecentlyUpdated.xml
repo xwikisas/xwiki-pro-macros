@@ -175,28 +175,32 @@ require(['jquery'], $ =&gt; {
     /*
      * Query new results and append them to the page
      */
-    const fetchMoreResultsHTML = async ($macro) =&gt; {
-      const urlParams = new URLSearchParams({
-        'xpage': 'plain',
-        'outputSyntax': 'plain',
-        'macroOptions': $macro.data('options')
+    const fetchMoreResultsHTML = function ($macro) {
+      const urlParams = [
+        'xpage=plain',
+        'outputSyntax=plain',
+        'macroOptions=' + $macro.data('options'),
+      ].join('&amp;');
+      const url = MACRO_SERVICE_URL + '?' + encodeURI(urlParams);
+      fetch(url)
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('An error occured fetching new results.');
+        }
+        return response.text();
+      })
+      .then(function (html) {
+        // Append html results directly to the page
+        $macro.find('ul.results').append(html);
+        handleMetadata($macro);
       });
-      const url = `${MACRO_SERVICE_URL}?${urlParams.toString()}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('An error occured fetching new results.');
-      }
-      // Append html results directly to the page
-      const html = await response.text();
-      $macro.find('ul.results').append(html);
-      handleMetadata($macro);
     }
 
     /*
      * Store fetched metadata for next result fetch
      * Update fetch button according to whether there are more results to fetch
      */
-    const handleMetadata = ($macro) =&gt; {
+    const handleMetadata = function ($macro) {
       const $dataElement = $macro.find('.recently-updated-options');
       if ($dataElement.length === 0) {
         console.warn('No options were found when fetching new results')
@@ -212,12 +216,12 @@ require(['jquery'], $ =&gt; {
     };
 
     // Init
-    $macros.each((i, macro) =&gt; {
+    $macros.each(function (i, macro) {
       handleMetadata($(macro));
     });
 
     // Fetch new results
-    $macros.find('button.show-more').click(async event =&gt; {
+    $macros.find('button.show-more').click(function (event) {
       const $macro = $(event.target).closest('.recently-updated-macro');
       fetchMoreResultsHTML($macro);
     })
