@@ -188,9 +188,7 @@ require(['jquery'], $ =&gt; {
       }
       // Append html results directly to the page
       const html = await response.text();
-      const template = document.createElement('template');
-      template.innerHTML = html;
-      $macro.find('ul.results')[0].appendChild(template.content);
+      $macro.find('ul.results').append(html);
       handleMetadata($macro);
     }
 
