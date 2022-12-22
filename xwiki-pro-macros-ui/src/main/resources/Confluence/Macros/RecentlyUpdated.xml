@@ -161,14 +161,12 @@ There are only a few things that are not supported compared to the Confluence ma
       <cache>long</cache>
     </property>
     <property>
-      <code>define('recentlyUpdateMacroTranslations', {
-  prefix: 'recentlyUpdatedMacro.',
-  keys: [
-    "noMoreResults",
-  ]
-});
+      <code>const l10n = {
+  noMoreResults: "$services.localization.render('recentlyUpdatedMacro.noMoreResults')",
+};
+#[[
 
-require(['jquery', 'xwiki-l10n!recentlyUpdateMacroTranslations'], ($, l10n) =&gt; {
+require(['jquery'], $ =&gt; {
   $(() =&gt; {
     const MACRO_SERVICE_URL = new XWiki.Document(XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)).getURL('get');
 
@@ -227,13 +225,14 @@ require(['jquery', 'xwiki-l10n!recentlyUpdateMacroTranslations'], ($, l10n) =&gt
     })
   })
 });
-</code>
+
+]]#</code>
     </property>
     <property>
       <name/>
     </property>
     <property>
-      <parse>0</parse>
+      <parse>1</parse>
     </property>
     <property>
       <use>onDemand</use>
