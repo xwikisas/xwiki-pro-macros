@@ -823,7 +823,7 @@ require(['jquery'], $ =&gt; {
   #set ($authorsList = [])
   #set ($splittedAuthorList = $!stringtool.split($serializedAuthorList, ','))
   #foreach ($author in $splittedAuthorList)
-    #set ($author = $author.strip())
+    #set ($author = $!stringtool.strip($author))
     #set ($searchRegex = '^([-+])?')
     #set ($replacement = '$1xwiki:')
     #set ($prefixedAuthor = $!stringtool.replaceAll($author, $searchRegex, $replacement))
@@ -845,7 +845,7 @@ require(['jquery'], $ =&gt; {
   #set ($splittedTypeList = $!stringtool.split($serializedTypeList, ','))
   ## Gather types based on wheter they are kept or discarded
   #foreach ($type in $splittedTypeList)
-    #set ($type = $type.strip())
+    #set ($type = $!stringtool.strip($type))
     #if ($type.startsWith('-'))
       #set ($usedTypeList = $typesDiscarded)
       #set ($type = $!stringtool.substring($type, 1))
@@ -883,12 +883,12 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Authors
-  #set ($confluenceAuthorsString = "$!wikimacro.parameters.author.strip()")
+  #set ($confluenceAuthorsString = "$!stringtool.strip($!wikimacro.parameters.author)")
   #formatSerializedAuthorList($confluenceAuthorsString, $authors)
   #set ($options.authors = $authors)
 
   ## Wiki &amp; Spaces
-  #set ($confluenceSpacesString = "$!wikimacro.parameters.spaces.strip()")
+  #set ($confluenceSpacesString = "$!stringtool.strip($!wikimacro.parameters.spaces)")
   #set ($options.spaces = $NULL)
   #set ($options.wiki = $doc.wiki)
   #if (
@@ -920,12 +920,12 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Tags
-  #set ($confluenceLabelString = "$!wikimacro.parameters.labels.strip()")
+  #set ($confluenceLabelString = "$!stringtool.strip($!wikimacro.parameters.labels)")
   #formatSerializedList($confluenceLabelString, $tags)
   #set ($options.tags = $tags)
 
   ## Types
-  #set ($confluenceTypesString = "$!wikimacro.parameters.types.strip()")
+  #set ($confluenceTypesString = "$!stringtool.strip($!wikimacro.parameters.types)")
   #parseTypes($confluenceTypesString, $types)
   #set ($options.types = $types)
 
@@ -937,7 +937,7 @@ require(['jquery'], $ =&gt; {
 
   ## Theme
   #set ($availableTheme = ['concise', 'social', 'sidebar'])
-  #set ($options.theme = "$wikimacro.parameters.theme.strip()")
+  #set ($options.theme = "$!stringtool.strip($!wikimacro.parameters.theme)")
   #if (!$availableTheme.contains($options.theme))
    #set ($options.theme = 'concise')
   #end
