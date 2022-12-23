@@ -35,7 +35,19 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content/>
+  <content>The expand macro is a bridge between Confluence and XWiki. It provides an expandable / collapsible section for writting content.
+
+= Parameters =
+
+|=Parameter|=Description|=Required|=Default
+|**title**|Text displayed on the collaspse toggle|No|Click here to expand...
+
+
+= Example Usage =
+
+{{expand}}
+Hello 👀
+{{/expand}}</content>
   <object>
     <name>Confluence.Macros.Expand</name>
     <number>0</number>
