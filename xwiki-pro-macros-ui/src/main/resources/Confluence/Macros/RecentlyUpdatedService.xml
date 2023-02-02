@@ -385,7 +385,7 @@
 
 #macro (displayResultTitle $result)
   #set ($title = $result.title_)
-  #if ("$title" == '')
+  #if ("$!title" == '')
     #set ($title = $result.name)
   #end
   &lt;span class="result-title"&gt;
