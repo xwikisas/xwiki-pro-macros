@@ -1006,13 +1006,7 @@ $xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
       <defaultCategory>confluence</defaultCategory>
     </property>
     <property>
-      <description>Add the Recently Updated macro to a page to show a list of pages, blogs, files, and comments that have been created or edited recently. 
-
-This is great for:
-- project landing or information pages
-- team space home pages
-
-It's very flexible, you can limit the list to specific people, spaces, types of content, and more. </description>
+      <description>Add the Recently Updated macro to a page to show a list of pages, blogs, files, and comments that have been created or edited recently. This is great for project landing, information pages, or team space home pages. It's very flexible, you can limit the list to specific people, spaces, types of content, and more.</description>
     </property>
     <property>
       <id>recently-updated</id>
