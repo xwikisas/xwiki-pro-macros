@@ -162,7 +162,7 @@ There are only a few things that are not supported compared to the Confluence ma
     </property>
     <property>
       <code>const l10n = {
-  noMoreResults: "$services.localization.render('recentlyUpdatedMacro.noMoreResults')",
+  noMoreResults: "$escapetool.xml($services.localization.render('recentlyUpdatedMacro.noMoreResults'))",
 };
 #[[
 
@@ -179,9 +179,9 @@ require(['jquery'], $ =&gt; {
       const urlParams = [
         'xpage=plain',
         'outputSyntax=plain',
-        'macroOptions=' + $macro.data('options'),
+        'macroOptions=' + encodeURIComponent($macro.data('options')),
       ].join('&amp;');
-      const url = MACRO_SERVICE_URL + '?' + encodeURI(urlParams);
+      const url = MACRO_SERVICE_URL + '?' + urlParams;
       fetch(url)
       .then(function (response) {
         if (!response.ok) {
@@ -978,7 +978,7 @@ $xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
   #set ($widthStyle = "style='--width: $confluenceWidth'")
   &lt;section class="recently-updated-macro" $widthStyle&gt;
     #if ("$wikimacro.parameters.hideHeading" != "true")
-      &lt;h2&gt;$services.localization.render('recentlyUpdatedMacro.title')&lt;/h2&gt;
+      &lt;h2&gt;$escapetool.xml($services.localization.render('recentlyUpdatedMacro.title'))&lt;/h2&gt;
     #end
     &lt;ul class="results theme-${options.theme}"&gt;
       #displayResults($results $options)
