@@ -168,7 +168,9 @@ There are only a few things that are not supported compared to the Confluence ma
 
 require(['jquery'], $ =&gt; {
   $(() =&gt; {
-    const MACRO_SERVICE_URL = new XWiki.Document(XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)).getURL('get');
+    const MACRO_SERVICE_URL = new XWiki.Document(
+      XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)
+    ).getURL('get');
 
     const $macros = $('.recently-updated-macro');
 
