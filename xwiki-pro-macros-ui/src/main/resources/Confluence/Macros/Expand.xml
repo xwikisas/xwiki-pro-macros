@@ -416,16 +416,16 @@ $xwiki.ssx.use('Confluence.Macros.Expand')
   #set ($expandMacroColllapseId = $expandMacroColllapseId + 1)
 #end
 #set ($opened = $xcontext.action == 'edit')
-#set ($accorionId = "accordion-$expandMacroColllapseId")
+#set ($accordionId = "accordion-$escapetool.xml($expandMacroColllapseId)")
 #set ($toggleId = "toggle-$expandMacroColllapseId")
 #set ($expandId = "collapse-$expandMacroColllapseId")
 
 {{html clean="false"}}
-&lt;div class="panel-group confluence-expand-macro" id="${accorionId}" role="tablist"&gt;
+&lt;div class="panel-group confluence-expand-macro" id="${accordionId}" role="tablist"&gt;
   &lt;div class="panel panel-default"&gt;
     &lt;div class="panel-heading" role="tab" id="${toggleId}"&gt;
       &lt;h4 class="panel-title"&gt;
-        &lt;a role="button" data-toggle="collapse" data-parent="#${accorionId}" href="#${expandId}" #if($opened)aria-expanded="true"#end aria-controls="${expandId}"&gt;#*
+        &lt;a role="button" data-toggle="collapse" data-parent="#${accordionId}" href="#${expandId}" #if($opened)aria-expanded="true"#end aria-controls="${expandId}"&gt;#*
           *#$!wikimacro.parameters.title#*
         *#&lt;/a&gt;
       &lt;/h4&gt;
