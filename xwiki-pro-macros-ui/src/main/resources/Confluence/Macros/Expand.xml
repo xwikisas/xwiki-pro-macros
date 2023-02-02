@@ -460,11 +460,7 @@ $xwiki.ssx.use('Confluence.Macros.Expand')
     <property>
       <description>Add the Expand macro to your page to provide content in an expandable / collapsible section. 
 
-This is one of Confluence's most popular macros. It's great for:
-
-    visually reducing the amount of information on a page
-    breaking process information down into clickable steps
-    hiding background or obsolete information, while still keeping it on the page for future reference.   
+This is one of Confluence's most popular macros. It's great for: visually reducing the amount of information on a page, breaking process information down into clickable steps, hiding background or obsolete information, while still keeping it on the page for future reference.
 
 The macro is collapsed by default, people need to click each one to expand it. There's no way to expand all macros on a page at once, however all Expand macros are automatically expanded when you print or export the page to PDF.</description>
     </property>
