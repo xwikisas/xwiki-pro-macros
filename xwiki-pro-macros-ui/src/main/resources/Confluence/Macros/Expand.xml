@@ -164,17 +164,17 @@ Hello 👀
         display: block;
         padding: @panel-heading-padding;
 
-        &amp;::before {
-          content: "\f054";
-          display: inline-block;
-          width: 0.7em;
-          margin-right: 0.5em;
-          font-family: "FontAwesome";
-          color: #333;
-          text-decoration-color: transparent;
+        p {
+          display: inline;
         }
-        &amp;[aria-expanded="true"]::before {
-          content: "\f078";
+
+        .glyphicon {
+          margin-right: 0.5rem;
+          transform: rotate(0deg);
+          transition: transform 0.1s;
+        }
+        &amp;[aria-expanded="true"] .glyphicon {
+          transform: rotate(90deg);
         }
       }
     }
@@ -420,23 +420,24 @@ $xwiki.ssx.use('Confluence.Macros.Expand')
 #set ($toggleId = "toggle-$expandMacroColllapseId")
 #set ($expandId = "collapse-$expandMacroColllapseId")
 
-{{html clean="false"}}
+{{html clean="false" wiki="true"}}
 &lt;div class="panel-group confluence-expand-macro" id="${accordionId}" role="tablist"&gt;
   &lt;div class="panel panel-default"&gt;
     &lt;div class="panel-heading" role="tab" id="${toggleId}"&gt;
       &lt;h4 class="panel-title"&gt;
-        &lt;a role="button" data-toggle="collapse" data-parent="#${accordionId}" href="#${expandId}" #if($opened)aria-expanded="true"#end aria-controls="${expandId}"&gt;#*
-          *#$!wikimacro.parameters.title#*
-        *#&lt;/a&gt;
+        &lt;a
+          role="button"
+          data-toggle="collapse"
+          data-parent="#${accordionId}"
+          href="#${expandId}"
+          #if($opened)aria-expanded="true"#end
+          aria-controls="${expandId}"
+        &gt;&lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;{{wikimacroparameter name="title" /}}&lt;/a&gt;
       &lt;/h4&gt;
     &lt;/div&gt;
     &lt;div id="${expandId}" class="panel-collapse collapse #if($opened)in#end" role="tabpanel" aria-labelledby="${toggleId}"&gt;
       &lt;div class="panel-body"&gt;
-        {{/html}}
-
-          {{wikimacrocontent /}}
-
-        {{html clean="false"}}
+        {{wikimacrocontent /}}
       &lt;/div&gt;
     &lt;/div&gt;
   &lt;/div&gt;
