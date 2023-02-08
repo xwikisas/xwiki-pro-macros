@@ -1,0 +1,496 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.5" reference="Confluence.Macros.RecentlyUpdatedService" locale="">
+  <web>Confluence.Macros</web>
+  <name>RecentlyUpdatedService</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Main.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <originalMetadataAuthor>XWiki.Admin</originalMetadataAuthor>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>RecentlyUpdatedService</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity output="false"}}
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Constants &amp; Globals
+## -----------------------------------------------------------------
+
+#set ($TYPES = ['page', 'blogpost', 'attachment', 'comment'])
+
+#set ($ICON_BY_TYPE = {
+  "page": 'page',
+  "blogpost": 'page',
+  "attachment": 'attach',
+  "comment": 'comment'
+})
+#set ($AUTHORING_TEXT_BY_TYPE = {
+  "page": 'contributed',
+  "blogpost": 'contributed',
+  "attachment": 'attached',
+  "comment": 'commented'
+})
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Query macros
+## -----------------------------------------------------------------
+
+#macro (queryPages $options $return)
+  #set ($fq = [])
+  #set ($query = $services.query.createQuery('name:*', 'solr'))
+  ## Document filters
+  #set ($discard = $fq.add('type:DOCUMENT'))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
+  #end
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
+  #end
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("author:($options.authors)"))
+  #end
+  #if ("$!options.tags" == '')
+    #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
+  #else
+    #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
+    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+  #end
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.bindValue('sort', "date desc"))
+  #set ($discard = $query.setOffset($options.offset))
+  #set ($discard = $query.setLimit($options.limit))
+  #set ($response = $query.execute()[0])
+  ## Fix some properties
+  #foreach ($page in $response.results)
+    #set ($discard = $page.put('type', 'page'))
+  #end
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $response)
+#end
+
+#macro (queryBlogposts $options $return)
+  #set ($fq = [])
+  #set ($query = $services.query.createQuery('name:*', 'solr'))
+  ## Document filters
+  #set ($discard = $fq.add('type:DOCUMENT'))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
+  #end
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
+  #end
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("author:($options.authors)"))
+  #end
+  #if ("$!options.tags" == '')
+    #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
+  #else
+    #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
+    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+  #end
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.bindValue('sort', "date desc"))
+  #set ($discard = $query.setOffset($options.offset))
+  #set ($discard = $query.setLimit($options.limit))
+  #set ($response = $query.execute()[0])
+  ## Fix some properties
+  #foreach ($blogpost in $response.results)
+    #set ($discard = $blogpost.put('type', 'blogpost'))
+  #end
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $response)
+#end
+
+#macro (queryAttachments $options $return)
+  #set ($fq = [])
+  #set ($query = $services.query.createQuery('name:*', 'solr'))
+  ## Attachment filters
+  #set ($discard = $fq.add('type:ATTACHMENT'))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
+  #end
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
+  #end
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("attauthor:($options.authors)"))
+  #end
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.bindValue('sort', "attdate desc"))
+  #set ($discard = $query.setOffset($options.offset))
+  #set ($discard = $query.setLimit($options.limit))
+  #set ($response = $query.execute()[0])
+  ## Fix some properties
+  #foreach ($attachment in $response.results)
+    #set ($discard = $attachment.put('type', 'attachment'))
+    #set ($discard = $attachment.put('date', $attachment.attdate[0]))
+    #set ($discard = $attachment.put('title_', $attachment.filename[0]))
+    #set ($discard = $attachment.put('author', $attachment.attauthor[0]))
+  #end
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $response)
+#end
+
+#macro (queryComments $options $return)
+  #set ($fq = [])
+  #set ($query = $services.query.createQuery('name:*', 'solr'))
+  ## Comment filters
+  #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
+  #set ($discard = $fq.add('class:XWiki.XWikiComments'))
+  #if ("$!options.wiki" != '')
+    #set ($discard = $fq.add("wiki:($options.wiki)"))
+  #end
+  #if ("$!options.spaces" != '')
+    #set ($discard = $fq.add("space:($options.spaces)"))
+  #end
+  #set ($discard = $fq.add('propertyname:(author)'))
+  #if ("$!options.authors" != '')
+    #set ($discard = $fq.add("propertyvalue_:($options.authors)"))
+  #end
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.bindValue('sort', "_version_ desc"))
+  #set ($discard = $query.setOffset($options.offset))
+  #set ($discard = $query.setLimit($options.limit))
+  #set ($response = $query.execute()[0])
+  ## Add missing comment data &amp; fix some properties
+  #foreach ($comment in $response.results)
+    #set ($discard = $comment.put('type', 'comment'))
+    #addCommentData($comment)
+  #end
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $response)
+#end
+
+#macro (addCommentData $comment)
+  ## Comment filters
+  #set ($fq = [])
+  #set ($query = $services.query.createQuery("name:$comment.name", 'solr'))
+  #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
+  #set ($discard = $fq.add('class:XWiki.XWikiComments'))
+  #set ($discard = $fq.add("wiki:($comment.wiki)"))
+  #set ($discard = $fq.add("space:($comment.space)"))
+  #set ($discard = $fq.add("number:($comment.number)"))
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.setOffset(0))
+  #set ($discard = $query.setLimit(3))
+  #set ($commentResponse = $query.execute()[0])
+  ## Add data to result
+  #foreach ($property in $commentResponse.results)
+    #if ($property.propertyname == 'date')
+      #set ($dateFormat = $datetool.getDateFormat("EEE MMM dd HH:mm:ss z yyyy", $datetool.getLocale(), $datetool.getTimeZone()))
+      #set ($date = $dateFormat.parse($property.propertyvalue_[0]))
+      #set ($discard = $comment.put('date', $date))
+    #elseif ($property.propertyname == 'author')
+      #set ($discard = $comment.put('author', "$property.propertyvalue_[0]"))
+    #elseif ($property.propertyname == 'comment')
+      #set ($discard = $comment.put('comment', $property.propertyvalue_[0]))
+    #end
+  #end
+#end
+
+## For each possible type of result,
+## fetch new results by executing the associated query
+#macro (fetchResults_queries $queryResponses $options)
+  #foreach ($type in $TYPES)
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
+    ## Customize options for query
+    #set ($typeOptions = $options.clone())
+    ## Update offset based on previous used results count
+    ## If this is the first time fetching results, init some values
+    #if ("$!typeMetadata.offset" == '')
+      #set ($typeMetadata.offset = 0)
+      #set ($typeMetadata.hasNext = true)
+    #end
+    ## Set the limit to (limit + 1), so that we are able to tell
+    ## whether the query has more results to come after the set limit
+    #set ($typeOptions.offset = $typeMetadata.offset)
+    #set ($typeOptions.limit = $options.limit + 1)
+    ## Fetch results if needed
+    #if ($options.types.contains("$type") &amp;&amp; $typeMetadata.hasNext)
+      #evaluate ("#query${stringtool.capitalize($type)}s(${escapetool.d}typeOptions ${escapetool.d}response)")
+      #set ($typeMetadata.fetchedCountTotal = $response.results.size())
+      #set ($discard = $queryResponses.add($response.results))
+    #else
+      #set ($typeMetadata.fetchedCountTotal = 0)
+    #end
+  #end
+#end
+
+## Results can be of type document, attachment, or comment
+## As results are fetched from three different requests (1 for each type)
+## We need to merge those results together into one unique list of results.
+## During the merge, we have to make sure we respects two things:
+## - results are still sorted by most recent ones first
+## - the number of results is no more than the limit defined in the macro parameter
+#macro (fetchResults_mergeSortLimit $resultLists $options $return)
+  #set ($results = [])
+  #foreach ($discard in [1..$options.limit])
+    #set ($mostRecentDate = $NULL)
+    #set ($listIndex = $NULL)
+    ## Search throught the lists of results the most recent result
+    ## Lists are already sorted by themselves,
+    ## so we just need to compare the first result of each list
+    #foreach ($resultList in $resultLists)
+      #if ($resultList.size() &gt; 0)
+        ## Flag result if it is the most recent found until now
+        #set ($date = $resultList[0].date)
+        #if ($mostRecentDate == $NULL || $datetool.difference($mostRecentDate, $date).getMilliseconds() &gt; 0)
+          #set ($mostRecentDate = $date)
+          #set ($listIndex = $foreach.index)
+        #end
+      #end
+    #end
+    ## Use the most recent result found
+    #if ($listIndex == $NULL)
+      #break
+    #else
+      #set ($discard = $results.add($resultLists[$listIndex][0]))
+      #set ($discard = $resultLists[$listIndex].remove(0))
+    #end
+  #end
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $results)
+#end
+
+## Resolve some properties for results
+## Properties computed here are the heavy ones to compute,
+## because they need to use the document object associated to the result.
+## So we compute those properties the latest possible,
+## only for the results we are sure to display
+#macro (fetchResults_resolveProperties $results)
+  #foreach ($result in $results)
+    #set ($documentFullname = "${result.wiki}:${result.space}.${result.name}")
+    #set ($document = $xwiki.getDocument($documentFullname))
+    #if ($result.type.equals('page') || $result.type.equals('blogpost'))
+      #set ($discard = $result.put('href', $document.getURL()))
+    #elseif ($result.type.equals('attachment'))
+      #set ($discard = $result.put('href', $document.getAttachmentURL($result.filename[0], 'viewattachrev')))
+    #elseif ($result.type.equals('comment'))
+      #set ($discard = $result.put('href', "$document.getURL('view', 'viewer=comments')#xwikicomment_${result.number}"))
+      #set ($discard = $result.put('title_', $document.title))
+    #end
+  #end
+#end
+
+#macro (fetchResults_updateMetadata $results $options)
+  ## Init needed metadata
+  #foreach ($type in $TYPES)
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
+    #set ($typeMetadata.fetchedCountUsed = 0)
+  #end
+  ## Find how many results of each type were used in the end
+  #foreach ($result in $results)
+    #set ($typeMetadata = $options.typesMetadata.get("$result.type"))
+    #set ($typeMetadata.fetchedCountUsed = $typeMetadata.fetchedCountUsed + 1)
+  #end
+  ## Update type metadata
+  #set ($options.typesMetadata.hasNext = false)
+  #foreach ($type in $TYPES)
+    #set ($typeMetadata = $options.typesMetadata.get("$type"))
+    #set ($typeMetadata.offset = $typeMetadata.offset + $typeMetadata.fetchedCountUsed)
+    ## Compute if there are next results
+    #set ($hasReachedLimit = $typeMetadata.fetchedCountTotal &lt;= $options.limit)
+    #set ($hasUsedAllCurrentResults = $typeMetadata.fetchedCountTotal == $typeMetadata.fetchedCountUsed)
+    #set ($hasUsedEveryResults = $hasReachedLimit &amp;&amp; $hasUsedAllCurrentResults)
+    #set ($typeMetadata.hasNext = !$hasUsedEveryResults)
+    #if ($typeMetadata.hasNext)
+      #set ($options.typesMetadata.hasNext = true)
+    #end
+  #end
+#end
+
+#macro (fetchResults $options $return)
+  #set ($queryResponses = [])
+  #fetchResults_queries($queryResponses, $options)
+  #fetchResults_mergeSortLimit($queryResponses $options $results)
+  #fetchResults_resolveProperties($results)
+  #fetchResults_updateMetadata($results, $options)
+  ## Return
+  #set ($return = $NULL)
+  #setVariable("$return" $results)
+#end
+
+
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Display results macros
+## -----------------------------------------------------------------
+
+#set ($authorExceptions = ['XWiki.superadmin', 'XWiki.XWikiGuest'])
+
+#macro (displayResultAuthorName $result)
+  &lt;span class="result-last-author-name"&gt;
+    #if ($authorExceptions.contains($result.author))
+      $escapetool.xml($stringtool.substringAfter("$result.author", '.'))
+    #else
+      $xwiki.getUserName($result.author)
+    #end
+  &lt;/span&gt;
+#end
+
+#macro (displayResultAuthorAvatarURL $result $options)
+  #set ($noavatarURL = $xwiki.getSkinFile('icons/xwiki/noavatar.png', true))
+  #if ("$options.showProfilePic" == "true")
+    &lt;span class="result-last-author-avatar"&gt;
+      #if ($authorExceptions.contains($result.author))
+        &lt;img class="avatar avatar_48" src="$noavatarURL" alt="$escapetool.xml($result.author)" /&gt;
+      #else
+        #resizedUserAvatar("$result.author", 48)
+      #end
+    &lt;/span&gt;
+  #end
+#end
+
+#macro (displayResultTitle $result)
+  #set ($title = $result.title_)
+  #if ("$!title" == '')
+    #set ($title = $result.name)
+  #end
+  &lt;span class="result-title"&gt;
+    &lt;a href="$result.href"&gt;$escapetool.xml("$title")&lt;/a&gt;
+  &lt;/span&gt;
+#end
+
+#macro (displayResultDate $result)
+  &lt;span class="result-date"&gt;
+    #if ($datetool.difference($datetool.getDate(), $result.date).getDays() == 0)
+      $services.date.displayTimeAgo($result.date)
+    #else
+      $xwiki.formatDate($result.date)
+    #end
+  &lt;/span&gt;
+#end
+
+#macro (displayResultTypeIcon $result)
+    &lt;span class="result-icon"&gt;
+      $services.icon.renderHTML($$ICON_BY_TYPE[$result.type])
+    &lt;/span&gt;
+#end
+
+#macro (displayResult_concise $result $options)
+  &lt;div class="result-item"&gt;
+    #displayResultTypeIcon($result)
+    #displayResultTitle($result)
+    &lt;span class="result-metadata"&gt;
+      #displayResultDate($result)
+      &lt;span class="separator"&gt;⋅&lt;/span&gt;
+      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type] by&lt;/span&gt;
+      #displayResultAuthorAvatarURL($result, $options)
+      #displayResultAuthorName($result)
+    &lt;/span&gt;
+  &lt;/div&gt;
+#end
+
+#macro (displayResult_social $result $options)
+  #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
+  #set ($options.socialThemePreviousAuthor = $result.author)
+  #set ($socialThemeCollapseClass = '')
+  #if ($socialThemeIsSameAuthor)
+    #set ($socialThemeCollapseClass = 'collapsed')
+  #end
+  &lt;div class="result-container $socialThemeCollapseClass"&gt;
+    #displayResultAuthorAvatarURL($result, $options)
+    &lt;div class="result-items"&gt;
+      #displayResultAuthorName($result)
+      &lt;div class="result-item"&gt;
+        #displayResultTypeIcon($result)
+        #displayResultTitle($result)
+        &lt;span class="result-metadata"&gt;
+          &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+          #displayResultDate($result)
+        &lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+#end
+
+#macro (displayResult_sidebar $result $options)
+  &lt;div class="result-item"&gt;
+    #displayResultTypeIcon($result)
+    #displayResultTitle($result)
+    &lt;span class="result-metadata"&gt;
+      &lt;span class="result-last-author-text"&gt;$AUTHORING_TEXT_BY_TYPE[$result.type]&lt;/span&gt;
+      #displayResultAuthorAvatarURL($result, $options)
+      #displayResultDate($result)
+    &lt;/span&gt;
+  &lt;/div&gt;
+#end
+
+#macro (displayResults $results $options)
+  #foreach ($result in $results)
+    &lt;li&gt;
+      #if ($options.theme == 'sidebar')
+        #displayResult_sidebar($result $options)
+      #elseif ($options.theme == 'social')
+        #displayResult_social($result $options)
+      #else
+        #displayResult_concise($result $options)
+      #end
+    &lt;/li&gt;
+  #end
+  ## Add hidden div containing options and metadata from those results,
+  ## that will be passed back to the service when clicking the "show more" button
+  &lt;div
+    class="recently-updated-options hidden"
+    data-options="$!escapetool.xml($jsontool.serialize($options))"
+    data-has-next="$!escapetool.xml($options.typesMetadata.hasNext)"&gt;
+  &lt;/div&gt;
+#end
+{{/velocity}}
+
+{{velocity}}
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## -----------------------------------------------------------------
+## Fetch results
+## -----------------------------------------------------------------
+#if ($xcontext.action == 'get')
+  #set ($options = $jsontool.fromString($request.macroOptions))
+  #fetchResults($options, $results)
+  #displayResults($results $options)
+#end
+{{/velocity}}
+</content>
+</xwikidoc>
