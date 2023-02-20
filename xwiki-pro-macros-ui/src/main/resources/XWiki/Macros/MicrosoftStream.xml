@@ -450,35 +450,50 @@ $xwiki.currentContentSyntaxId)|No|false
       + $datetool.getValue('SECOND', $dateObj))
   #end
 #end
+
+#macro (executeMacro)
+  #set ($discard = $xwiki.ssx.use('XWiki.Macros.MicrosoftStream'))
+  #getAlignmentClass($stringtool.lowerCase($xcontext.macro.params.alignment) $alignmentClass)
+  #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
+  ## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
+  #set ($autoplay = $xcontext.macro.params.autoplay)
+  #if ($autoplay)
+    #set ($discard = $queryParams.put('autoplay', $autoplay))
+  #end
+  #set ($showinfo = $xcontext.macro.params.showinfo)
+  #if ($showinfo)
+    #set ($discard = $queryParams.put('showinfo', $showinfo))
+  #end
+  #if ($xcontext.macro.params.start)
+    #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
+    #if ($queryParams.st != $startSeconds)
+      #set ($discard = $queryParams.put('st', $startSeconds))
+    #end
+  #end
+  #set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
+  {{html clean=false}}
+    &lt;p class="msStreamMacro $!escapetool.xml($alignmentClass)"&gt;
+      &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
+        height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
+      &lt;/iframe&gt;
+    &lt;/p&gt;
+  {{/html}}
+#end
 {{/velocity}}
 
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
 {{velocity}}
-#set ($discard = $xwiki.ssx.use('XWiki.Macros.MicrosoftStream'))
-#getAlignmentClass($stringtool.lowerCase($xcontext.macro.params.alignment) $alignmentClass)
-#getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
-## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
-#set ($autoplay = $xcontext.macro.params.autoplay)
-#if ($autoplay)
-  #set ($discard = $queryParams.put('autoplay', $autoplay))
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
 #end
-#set ($showinfo = $xcontext.macro.params.showinfo)
-#if ($showinfo)
-  #set ($discard = $queryParams.put('showinfo', $showinfo))
-#end
-#if ($xcontext.macro.params.start)
-  #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
-  #if ($queryParams.st != $startSeconds)
-    #set ($discard = $queryParams.put('st', $startSeconds))
-  #end
-#end
-#set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
-{{html clean=false}}
-  &lt;p class="msStreamMacro $!escapetool.xml($alignmentClass)"&gt;
-    &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
-      height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
-    &lt;/iframe&gt;
-  &lt;/p&gt;
-{{/html}}
 {{/velocity}}</code>
     </property>
     <property>

@@ -689,10 +689,7 @@
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}
-#set($discard = $xwiki.ssx.use('xwiki:XWiki.Macros.Team'))
-#set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
-#set($pictureList = {})
+      <code>{{velocity output="false"}}
 #macro(avatarInitials $name $size $letterAvatarBgColor $letterAvatarFontColor)
   #set($escapedSize = $escapetool.xml($size))
   #set($escapedLetterAvatarFontColor = $escapetool.xml($letterAvatarFontColor))
@@ -739,148 +736,168 @@
     &lt;/a&gt;
   &lt;/li&gt;
 #end
-#set($tag = $wikimacro.parameters.tag)
-#set($size = $wikimacro.parameters.size)
-#set($scope = $wikimacro.parameters.scope)
-#set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
-#set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
-#set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
-#set($showUsernames = $wikimacro.parameters.showUsernames)
-#set($disableTools = $wikimacro.parameters.disableTools)
-#set($disableLetterAvatars = $wikimacro.parameters.disableLetterAvatars)
-#set($limit = $wikimacro.parameters.limit)
-#if("$!size" == "")
-  #set($size = 60)
-#end
-#if("$!scope" == "")
-  #set($scope = "auto")
-#end
-#if($scope == "auto")
-  #if($xcontext.database != $xcontext.mainWikiName &amp;&amp; "$!services.wiki" != '')
-    #set ($wikiUserScope = $services.wiki.user.getUserScope($services.wiki.currentWikiId))
-    #if($wikiUserScope == 'GLOBAL_ONLY')
-      #set($scope = 'global')
-    #elseif($wikiUserScope == 'LOCAL_AND_GLOBAL')
-      #set($scope = 'both')
-    #else
-      #set($scope = 'local')
-    #end
-  #else
-    #set($scope = 'global')
-  #end
-#end
-#if($scope == "both" &amp;&amp; $xcontext.database == $xcontext.mainWikiName)
-  #set($scope = "global")
-#end
-#if("$!letterAvatarBgColor" == "")
-  #set($letterAvatarBgColor = "#0A6")
-#end
-#if("$!letterAvatarFontColor" == "")
-  #set($letterAvatarFontColor = "white")
-#end
-#if("$!requireExternalAuth" == "" || "$!requireExternalAuth" == "false" || "$!requireExternalAuth" == "0")
-  #set($requireExternalAuth = false)
-#end
-#if("$!showUsernames" == "" || "$!showUsernames" == "false" || "$!showUsernames" == "0")
-  #set($showUsernames = false)
-#end
-#if("$!disableTools" == "" || "$!disableTools" == "false" || "$!disableTools" == "0")
-  #set($disableTools = false)
-#end
-#if("$!disableLetterAvatars" == "" || "$!disableLetterAvatars" == "false" || "$!disableLetterAvatars" == "0")
-  #set($disableLetterAvatars = false)
-#end
-#if("$!limit" == "")
-  #set($limit = 100)
-#end
-#if(!$tag || $tag == "")
-  #set($tagselect = "")
-  #set($tagwhere = "")
-#else
-  #set($tagselect = ",
-      BaseObject as obj3,
-      DBStringListProperty as tagprop
-    JOIN
-      tagprop.list list
-  ")
-  #set($tagwhere = " and
-    doc.fullName = obj3.name and
-    obj3.className = 'XWiki.TagClass' and
-    obj3.id = tagprop.id.id and
-    tagprop.id.name = 'tags' and
-    list = '$tag'
-  ")
-#end
-#set($hql = ",
-    BaseObject as obj
-    #if($requireExternalAuth), BaseObject as obj2 #end,
-    IntegerProperty as prop
-    $tagselect
-  WHERE
-    doc.fullName = obj.name and
-    obj.className = 'XWiki.XWikiUsers'
-    #if($requireExternalAuth) and
-      doc.fullName = obj2.name and (
-        obj2.className = 'XWiki.LDAPProfileClass' or
-        obj2.className = 'XWiki.OIDC.UserClass'
-      )
-    #end and
-    obj.id = prop.id.id and
-    prop.id.name = 'active' and
-    prop.value = 1
-    $tagwhere
-  ORDER BY doc.name
-")
-#macro(addUsersFromWiki $list $wiki $limit)
+#macro (addUsersFromWiki $list $wiki $limit)
   #set($l = $services.query.hql($hql).setLimit($limit).setWiki($wiki).execute())
   #foreach($username in $l)
     #set($discard = $list.add("$wiki:$username"))
   #end
 #end
-#set($list = [])
-#if ($scope == "global")
-  #addUsersFromWiki($list $xcontext.mainWikiName $limit)
-#elseif ($scope == "local")
-  #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
-#elseif ($scope == "both")
-  #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
-  #if($list.size() &lt; $limit)
-    #set($limit = $limit - $list.size())
-    #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+#macro (executeMacro)
+  #set($discard = $xwiki.ssx.use('xwiki:XWiki.Macros.Team'))
+  #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
+  #set($pictureList = {})
+  #set($tag = $wikimacro.parameters.tag)
+  #set($size = $wikimacro.parameters.size)
+  #set($scope = $wikimacro.parameters.scope)
+  #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
+  #set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
+  #set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
+  #set($showUsernames = $wikimacro.parameters.showUsernames)
+  #set($disableTools = $wikimacro.parameters.disableTools)
+  #set($disableLetterAvatars = $wikimacro.parameters.disableLetterAvatars)
+  #set($limit = $wikimacro.parameters.limit)
+  #if("$!size" == "")
+    #set($size = 60)
   #end
-#end
-{{html wiki=false clean=false}}
-&lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
-  #if ($list.size() &gt; 0)
-    &lt;ul class="xwikiteam-ul"&gt;
-      #foreach($user in $list)
-        #avatar($user $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
+  #if("$!scope" == "")
+    #set($scope = "auto")
+  #end
+  #if($scope == "auto")
+    #if($xcontext.database != $xcontext.mainWikiName &amp;&amp; "$!services.wiki" != '')
+      #set ($wikiUserScope = $services.wiki.user.getUserScope($services.wiki.currentWikiId))
+      #if($wikiUserScope == 'GLOBAL_ONLY')
+        #set($scope = 'global')
+      #elseif($wikiUserScope == 'LOCAL_AND_GLOBAL')
+        #set($scope = 'both')
+      #else
+        #set($scope = 'local')
       #end
-      #if(!$disableTools)
-        &lt;li class="xwikiteam-tools-link" hidden="hidden"&gt;
-          &lt;a href="#" role="button" title="$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))"&gt;
-            &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
-            &lt;span class="sr-only"&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))&lt;/span&gt;
-          &lt;/a&gt;
-        &lt;/li&gt;
-      #end
-    &lt;/ul&gt;
-    &lt;div class="xwikiteam-tools" hidden="hidden"&gt;
-      &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
-      &lt;label&gt;
-        &lt;input
-          class="xwikiteam-show-username-checkbox"
-          type="checkbox"
-          #if($showUsernames)checked="checked"#end
-        /&gt;
-        $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
-      &lt;/label&gt;
-    &lt;/div&gt;
+    #else
+      #set($scope = 'global')
+    #end
+  #end
+  #if($scope == "both" &amp;&amp; $xcontext.database == $xcontext.mainWikiName)
+    #set($scope = "global")
+  #end
+  #if("$!letterAvatarBgColor" == "")
+    #set($letterAvatarBgColor = "#0A6")
+  #end
+  #if("$!letterAvatarFontColor" == "")
+    #set($letterAvatarFontColor = "white")
+  #end
+  #if("$!requireExternalAuth" == "" || "$!requireExternalAuth" == "false" || "$!requireExternalAuth" == "0")
+    #set($requireExternalAuth = false)
+  #end
+  #if("$!showUsernames" == "" || "$!showUsernames" == "false" || "$!showUsernames" == "0")
+    #set($showUsernames = false)
+  #end
+  #if("$!disableTools" == "" || "$!disableTools" == "false" || "$!disableTools" == "0")
+    #set($disableTools = false)
+  #end
+  #if("$!disableLetterAvatars" == "" || "$!disableLetterAvatars" == "false" || "$!disableLetterAvatars" == "0")
+    #set($disableLetterAvatars = false)
+  #end
+  #if("$!limit" == "")
+    #set($limit = 100)
+  #end
+  #if(!$tag || $tag == "")
+    #set($tagselect = "")
+    #set($tagwhere = "")
   #else
-    &lt;p&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.noUsers'))&lt;/p&gt;
+    #set($tagselect = ",
+        BaseObject as obj3,
+        DBStringListProperty as tagprop
+      JOIN
+        tagprop.list list
+    ")
+    #set($tagwhere = " and
+      doc.fullName = obj3.name and
+      obj3.className = 'XWiki.TagClass' and
+      obj3.id = tagprop.id.id and
+      tagprop.id.name = 'tags' and
+      list = '$tag'
+    ")
   #end
-&lt;/div&gt;
-{{/html}}
+  #set($hql = ",
+      BaseObject as obj
+      #if($requireExternalAuth), BaseObject as obj2 #end,
+      IntegerProperty as prop
+      $tagselect
+    WHERE
+      doc.fullName = obj.name and
+      obj.className = 'XWiki.XWikiUsers'
+      #if($requireExternalAuth) and
+        doc.fullName = obj2.name and (
+          obj2.className = 'XWiki.LDAPProfileClass' or
+          obj2.className = 'XWiki.OIDC.UserClass'
+        )
+      #end and
+      obj.id = prop.id.id and
+      prop.id.name = 'active' and
+      prop.value = 1
+      $tagwhere
+    ORDER BY doc.name
+  ")
+  #set($list = [])
+  #if ($scope == "global")
+    #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+  #elseif ($scope == "local")
+    #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+  #elseif ($scope == "both")
+    #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+    #if($list.size() &lt; $limit)
+      #set($limit = $limit - $list.size())
+      #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+    #end
+  #end
+  {{html wiki=false clean=false}}
+  &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
+    #if ($list.size() &gt; 0)
+      &lt;ul class="xwikiteam-ul"&gt;
+        #foreach($user in $list)
+          #avatar($user $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
+        #end
+        #if(!$disableTools)
+          &lt;li class="xwikiteam-tools-link" hidden="hidden"&gt;
+            &lt;a href="#" role="button" title="$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))"&gt;
+              &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
+              &lt;span class="sr-only"&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))&lt;/span&gt;
+            &lt;/a&gt;
+          &lt;/li&gt;
+        #end
+      &lt;/ul&gt;
+      &lt;div class="xwikiteam-tools" hidden="hidden"&gt;
+        &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
+        &lt;label&gt;
+          &lt;input
+            class="xwikiteam-show-username-checkbox"
+            type="checkbox"
+            #if($showUsernames)checked="checked"#end
+          /&gt;
+          $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
+        &lt;/label&gt;
+      &lt;/div&gt;
+    #else
+      &lt;p&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.noUsers'))&lt;/p&gt;
+    #end
+  &lt;/div&gt;
+  {{/html}}
+#end
+{{/velocity}}
+
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
+#end
 {{/velocity}}</code>
     </property>
     <property>

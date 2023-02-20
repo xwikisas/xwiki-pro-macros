@@ -358,25 +358,42 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
       </visibility>
     </class>
     <property>
-      <code>{{velocity}}
-#set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
-#set ($color = $xcontext.macro.params.colour)
-#if (!$color)
-  #set ($color = 'Grey')
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
+  #set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
+  #set ($color = $xcontext.macro.params.colour)
+  #if (!$color)
+    #set ($color = 'Grey')
+  #end
+  #set ($title = $xcontext.macro.params.title)
+  #if (!$title)
+    #set ($title = $color)
+  #end
+  #set ($statusCssClass = "${color.toLowerCase()}Status statusBox")
+  #set ($subtle = $xcontext.macro.params.subtle)
+  #set ($subtleCssClass = 'subtle')
+  #if ($subtle == 'true')
+    #set ($statusCssClass = "$statusCssClass subtle")
+  #end
+  {{html}}
+    &lt;span class="$statusCssClass" title="$title"&gt;$title&lt;/span&gt;
+  {{/html}}
 #end
-#set ($title = $xcontext.macro.params.title)
-#if (!$title)
-  #set ($title = $color)
+{{/velocity}}
+
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
 #end
-#set ($statusCssClass = "${color.toLowerCase()}Status statusBox")
-#set ($subtle = $xcontext.macro.params.subtle)
-#set ($subtleCssClass = 'subtle')
-#if ($subtle == 'true')
-  #set ($statusCssClass = "$statusCssClass subtle")
-#end
-{{html}}
-  &lt;span class="$statusCssClass" title="$title"&gt;$title&lt;/span&gt;
-{{/html}}
 {{/velocity}}</code>
     </property>
     <property>
