@@ -507,7 +507,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
     </property>
     <property>
       <code>{{velocity output="false"}}
-#macro (filterAndSortAttachments)
+#macro (filterAndSortAttachments $attachmentsFiltered $invalidSortBy $invalidSortOrder)
   $xwiki.ssx.use('Confluence.Macros.Attachments')
   $xwiki.jsx.use('Confluence.Macros.Attachments')
   #if ("$!{request.forceTestRights}" == "1")#template("xwikivars.vm")#end
