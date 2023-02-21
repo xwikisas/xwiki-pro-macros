@@ -36,7 +36,9 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>## Button macro
+  <content>proMacros.extension.name=Pro Macros
+
+## Button macro
 rendering.macro.button.name=Button Macro
 rendering.macro.button.description=Insert a noticeable, clickable button on your XWiki page to highlight links and create call to actions!
 rendering.macro.button.parameter.label.name=Label

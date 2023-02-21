@@ -963,33 +963,48 @@ require(['jquery'], $ =&gt; {
   #set ($return = $NULL)
   #setVariable("$return" $options)
 #end
+
+#macro (executeMacro)
+  ## -----------------------------------------------------------------
+  ## -----------------------------------------------------------------
+  ## -----------------------------------------------------------------
+  ## Fetch results
+  ## -----------------------------------------------------------------
+  $xwiki.ssx.use('xwiki:Confluence.Macros.RecentlyUpdated')
+  $xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
+  {{html clean="false"}}
+    #initOptionsFromParameters($options)
+    #fetchResults($options, $results)
+    #set ($confluenceWidth = $escapetool.xml($wikimacro.parameters.width))
+    #set ($widthStyle = "style='--width: $confluenceWidth'")
+    &lt;section class="recently-updated-macro" $widthStyle&gt;
+      #if ("$wikimacro.parameters.hideHeading" != "true")
+        &lt;h2&gt;$escapetool.xml($services.localization.render('recentlyUpdatedMacro.title'))&lt;/h2&gt;
+      #end
+      &lt;ul class="results theme-${options.theme}"&gt;
+        #displayResults($results $options)
+      &lt;/ul&gt;
+      &lt;button class="btn btn-link show-more"&gt;
+        Show more
+      &lt;/button&gt;
+    &lt;/section&gt;
+  {{/html}}
+#end
 {{/velocity}}
 
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
 {{velocity}}
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Fetch results
-## -----------------------------------------------------------------
-$xwiki.ssx.use('xwiki:Confluence.Macros.RecentlyUpdated')
-$xwiki.jsx.use('xwiki:Confluence.Macros.RecentlyUpdated')
-{{html clean="false"}}
-  #initOptionsFromParameters($options)
-  #fetchResults($options, $results)
-  #set ($confluenceWidth = $escapetool.xml($wikimacro.parameters.width))
-  #set ($widthStyle = "style='--width: $confluenceWidth'")
-  &lt;section class="recently-updated-macro" $widthStyle&gt;
-    #if ("$wikimacro.parameters.hideHeading" != "true")
-      &lt;h2&gt;$escapetool.xml($services.localization.render('recentlyUpdatedMacro.title'))&lt;/h2&gt;
-    #end
-    &lt;ul class="results theme-${options.theme}"&gt;
-      #displayResults($results $options)
-    &lt;/ul&gt;
-    &lt;button class="btn btn-link show-more"&gt;
-      Show more
-    &lt;/button&gt;
-  &lt;/section&gt;
-{{/html}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
+#end
 {{/velocity}}
 </code>
     </property>
