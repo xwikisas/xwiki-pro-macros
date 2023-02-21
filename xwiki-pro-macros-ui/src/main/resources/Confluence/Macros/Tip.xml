@@ -251,7 +251,8 @@ This is my tip with a title.
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
   {{success}}
     #if("$!wikimacro.parameters.title" != "")
       **$services.rendering.escape($wikimacro.parameters.title, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))**
@@ -259,6 +260,22 @@ This is my tip with a title.
     #end
     $!wikimacro.content
   {{/success}}
+#end
+{{/velocity}}
+
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
+#end
 {{/velocity}}</code>
     </property>
     <property>

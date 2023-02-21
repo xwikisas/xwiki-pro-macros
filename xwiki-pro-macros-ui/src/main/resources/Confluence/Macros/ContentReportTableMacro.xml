@@ -288,49 +288,66 @@ The result is the following :
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}
-## Used parameters :
-#set($labels = $wikimacro.parameters.get('labels'))
-#set($spaces = $wikimacro.parameters.get('spaces'))
-#set($maxResults = $wikimacro.parameters.get('maxResults'))
-#if("$!maxResults" == '')
-  #set($maxResults = 20)
-#end
-## Searching for the matching pages
-#set($statement = 'select distinct doc.fullName, doc.title, doc.creator, doc.date from XWikiDocument doc, BaseObject as obj, DBStringListProperty as prop
-                   join prop.list item where obj.className = :className and obj.name = doc.fullName and obj.id = prop.id.id
-                   and prop.id.name = :propName  and lower(item) in (:labelsList)')
-#set($lowerCaseLabelList = [])
-#foreach($label in $labels.split(','))
-  #set($discard = $lowerCaseLabelList.add($label.toLowerCase()))
-#end
-#set($params = {
-  'className': 'XWiki.TagClass',
-  'propName': 'tags',
-  'labelsList': $lowerCaseLabelList
-})
-#if("$!spaces" != '')
-  #set ($statement = $statement + ' and (')
-  #foreach($space in $spaces.split('(?&lt;!\\\\), '))
-    #if($foreach.index &gt; 0)
-      #set($statement = $statement + ' or ')
-    #end
-    #set($statement = $statement + "doc.space like :space$foreach.index")
-    #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
+  ## Used parameters :
+  #set($labels = $wikimacro.parameters.get('labels'))
+  #set($spaces = $wikimacro.parameters.get('spaces'))
+  #set($maxResults = $wikimacro.parameters.get('maxResults'))
+  #if("$!maxResults" == '')
+    #set($maxResults = 20)
   #end
-  #set($statement = $statement + ')')
+  ## Searching for the matching pages
+  #set($statement = 'select distinct doc.fullName, doc.title, doc.creator, doc.date from XWikiDocument doc, BaseObject as obj, DBStringListProperty as prop
+                     join prop.list item where obj.className = :className and obj.name = doc.fullName and obj.id = prop.id.id
+                     and prop.id.name = :propName  and lower(item) in (:labelsList)')
+  #set($lowerCaseLabelList = [])
+  #foreach($label in $labels.split(','))
+    #set($discard = $lowerCaseLabelList.add($label.toLowerCase()))
+  #end
+  #set($params = {
+    'className': 'XWiki.TagClass',
+    'propName': 'tags',
+    'labelsList': $lowerCaseLabelList
+  })
+  #if("$!spaces" != '')
+    #set ($statement = $statement + ' and (')
+    #foreach($space in $spaces.split('(?&lt;!\\\\), '))
+      #if($foreach.index &gt; 0)
+        #set($statement = $statement + ' or ')
+      #end
+      #set($statement = $statement + "doc.space like :space$foreach.index")
+      #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
+    #end
+    #set($statement = $statement + ')')
+  #end
+  #set ($statement = $statement + ' order by doc.date desc')
+  #set($query = $services.query.hql($statement))
+  #set($discard = $query.bindValues($params))
+  #if("$!maxResults" != '')
+   #set($discard = $query.setLimit($mathtool.toNumber($maxResults)).addFilter('currentlanguage'))
+  #end
+  #set($results = $query.execute())
+  ## Table display
+  |=$services.localization.render('titlefield')|=$services.localization.render('creator')|=$services.localization.render('contentReportTable.header.modified')
+  #foreach($result in $results)
+    |[[$result.get(1)&gt;&gt;$result.get(0)]]|{{html clean="false"}}$xwiki.getUserName($result.get(2), true){{/html}}|$datetool.format('MMM dd, yyyy', $result.get(3))
+  #end
 #end
-#set ($statement = $statement + ' order by doc.date desc')
-#set($query = $services.query.hql($statement))
-#set($discard = $query.bindValues($params))
-#if("$!maxResults" != '')
- #set($discard = $query.setLimit($mathtool.toNumber($maxResults)).addFilter('currentlanguage'))
-#end
-#set($results = $query.execute())
-## Table display
-|=$services.localization.render('titlefield')|=$services.localization.render('creator')|=$services.localization.render('contentReportTable.header.modified')
-#foreach($result in $results)
-  |[[$result.get(1)&gt;&gt;$result.get(0)]]|{{html clean="false"}}$xwiki.getUserName($result.get(2), true){{/html}}|$datetool.format('MMM dd, yyyy', $result.get(3))
+{{/velocity}}
+
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
 #end
 {{/velocity}}</code>
     </property>

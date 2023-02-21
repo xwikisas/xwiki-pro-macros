@@ -283,19 +283,36 @@ The result is the following :
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}
-#set($attachment = $wikimacro.parameters.get('att--filename'))
-#if(!$attachment)
-  #set($attachment = $wikimacro.parameters.get('name'))
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
+  #set($attachment = $wikimacro.parameters.get('att--filename'))
+  #if(!$attachment)
+    #set($attachment = $wikimacro.parameters.get('name'))
+  #end
+  #set($page = $wikimacro.parameters.get('page'))
+  #set($width = $wikimacro.parameters.get('width'))
+  #set($height = $wikimacro.parameters.get('height'))
+  #set($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
+  #if("$!page" != '')
+    #set($attachment = "${page}@${attachment}")
+  #end
+  {{jwplayer attachment="${attachment}" width="$!{width}" height="$!{height}" autostart="$!{autostart}" /}}
 #end
-#set($page = $wikimacro.parameters.get('page'))
-#set($width = $wikimacro.parameters.get('width'))
-#set($height = $wikimacro.parameters.get('height'))
-#set($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
-#if("$!page" != '')
-  #set($attachment = "${page}@${attachment}")
+{{/velocity}}
+
+{{include reference="Licenses.Code.VelocityMacros"/}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{error}}
+    #getMissingLicenseMessage('proMacros.extension.name')
+  {{/error}}
 #end
-{{jwplayer attachment="${attachment}" width="$!{width}" height="$!{height}" autostart="$!{autostart}" /}}
 {{/velocity}}</code>
     </property>
     <property>
