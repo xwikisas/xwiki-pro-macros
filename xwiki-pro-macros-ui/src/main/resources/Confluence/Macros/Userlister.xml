@@ -278,20 +278,26 @@
 #set ($confluenceGroups = $stringtool.split("$!wikimacro.parameters.groups", ","))
 #set ($xwikiGroups = [])
 #foreach ($untrimmedConfluenceGroup in $confluenceGroups)
-  #set($confluenceGroup = $untrimmedConfluenceGroup.trim())
-  #if ($confluenceGroup == "*")
+  #set ($confluenceGroup = $untrimmedConfluenceGroup.trim())
+  #if ($confluenceGroup == '*')
     #set ($xwikiGroups = [])
     #break
   #end
-  #if ($confluenceGroup.startsWith("site-admins") || $confluenceGroup.startsWith("confluence-admins") || $confluenceGroup == "administrators")
-    #set ($discard = $xwikiGroups.add("XWiki.XWikiAdminGroup"))
-  #elseif ($confluenceGroup.startsWith("site-users") || $confluenceGroup.startsWith("confluence-users") || $confluenceGroup == "users")
-    #set ($discard = $xwikiGroups.add("XWiki.XWikiAllGroup"))
-  #else
-    #set ($discard = $xwikiGroups.add("XWiki.$confluenceGroup"))
+  #if ($confluenceGroup.startsWith('site-admins') || $confluenceGroup.startsWith('confluence-admins') || $confluenceGroup == 'administrators')
+    #set ($groupName = 'XWikiAdminGroup')
+  #elseif ($confluenceGroup.startsWith('site-users') || $confluenceGroup.startsWith('confluence-users') || $confluenceGroup == 'users')
+    #set ($groupName = 'XWikiAllGroup')
+  #elseif ($confluenceGrop != '')
+    #set ($groupName = $confluenceGroup)
+  #end
+  #if ("$!groupName" != '')
+    #set ($xwikiSpace = $services.model.resolveSpace('XWiki'))
+    #set ($groupReference = $services.model.resolveDocument($groupName, $xwikiSpace))
+    #set ($discard = $xwikiGroups.add($services.model.serialize($groupReference)))
   #end
 #end
-#set($groups = $stringtool.join($xwikiGroups, ","))
+#set ($groups = $stringtool.join($xwikiGroups, ','))
+#set ($groups = $services.rendering.escape($groups, 'xwiki/2.1'))
 {{userList groups="$groups"/}}
 {{/velocity}}</code>
     </property>
@@ -311,7 +317,7 @@
       <defaultCategory>content</defaultCategory>
     </property>
     <property>
-      <description>This macro displays the users members of the given group(s).</description>
+      <description>This macro displays the members of the given group(s).</description>
     </property>
     <property>
       <id>userlister</id>
@@ -395,7 +401,7 @@
       <defaultValue/>
     </property>
     <property>
-      <description>Confluence groups  of the users to list, separated by commas. '*' means all users.</description>
+      <description>List of Confluence user groups, separated by a comma. A wildcard means all wiki members.</description>
     </property>
     <property>
       <mandatory>1</mandatory>
