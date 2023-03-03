@@ -50,11 +50,14 @@ public class UserReferenceListConverter extends AbstractConverter<UserReferenceL
     {
         G references = (G) new UserReferenceList();
         if (value != null) {
-            String valueString =  value.toString().trim();
+            String valueString = value.toString().trim();
             if (!StringUtils.isEmpty(valueString)) {
-                String[] val = valueString.split(",");
-                for (String entry : val) {
-                    references.add(referenceResolver.resolve(entry));
+                String[] userNames = valueString.split(",");
+                for (String userName : userNames) {
+                    String trimmedUserName = userName.trim();
+                    if (StringUtils.isNotEmpty(trimmedUserName)) {
+                        references.add(referenceResolver.resolve(trimmedUserName));
+                    }
                 }
             }
         }

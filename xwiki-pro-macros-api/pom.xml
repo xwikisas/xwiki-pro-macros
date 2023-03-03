@@ -72,7 +72,7 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-oldcore</artifactId>
+      <artifactId>xwiki-platform-query-manager</artifactId>
       <version>${platform.version}</version>
     </dependency>
     <dependency>

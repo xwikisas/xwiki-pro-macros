@@ -50,11 +50,14 @@ public class GroupReferenceListConverter extends AbstractConverter<GroupReferenc
     {
         G references = (G) new GroupReferenceList();
         if (value != null) {
-            String valueString =  value.toString().trim();
+            String valueString = value.toString().trim();
             if (!StringUtils.isEmpty(valueString)) {
-                String[] val = valueString.split(",");
-                for (String entry : val) {
-                    references.add(referenceResolver.resolve(entry));
+                String[] groupNames = valueString.split(",");
+                for (String groupName : groupNames) {
+                    String trimmedGroupName = groupName.trim();
+                    if (StringUtils.isNotEmpty(trimmedGroupName)) {
+                        references.add(referenceResolver.resolve(trimmedGroupName));
+                    }
                 }
             }
         }

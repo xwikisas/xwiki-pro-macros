@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
+import org.xwiki.stability.Unstable;
 
 /**
  * Parameters for the {@link com.xwiki.macros.userlist.internal.macro.UserListMacro}.
@@ -59,7 +60,9 @@ public class UserListMacroParameters
 
     /**
      * @return a list of groups
+     * @since 1.6
      */
+    @Unstable
     public GroupReferenceList getGroups()
     {
         return this.groups;
@@ -69,7 +72,9 @@ public class UserListMacroParameters
      * Sets a list of users.
      *
      * @param groups list of user references
+     * @since 1.6
      */
+    @Unstable
     @PropertyName("groups")
     @PropertyDescription("List of groups")
     public void setGroups(GroupReferenceList groups)

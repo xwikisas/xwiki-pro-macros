@@ -22,13 +22,16 @@ package com.xwiki.macros.userlist.macro;
 import java.util.ArrayList;
 
 import org.xwiki.model.reference.EntityReference;
+import org.xwiki.stability.Unstable;
 
 /**
  * Class representing a list of group references. This class is needed to declare a valid
  * {@link org.xwiki.properties.annotation.PropertyDisplayType} in {@link UserListMacroParameters}.
  *
  * @version $Id$
+ * @since 1.6
  */
+@Unstable
 public class GroupReferenceList extends ArrayList<EntityReference>
 {
 }

@@ -19,23 +19,27 @@
  */
 package com.xwiki.macros.userlist.internal.macro;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.model.reference.DocumentReferenceResolver;
-import org.xwiki.model.reference.EntityReferenceSerializer;
-import org.xwiki.model.reference.EntityReference;
 import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
+import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.DocumentReferenceResolver;
+import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.EntityReferenceResolver;
+import org.xwiki.model.reference.EntityReferenceSerializer;
+import org.xwiki.query.Query;
+import org.xwiki.query.QueryException;
+import org.xwiki.query.QueryManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
@@ -43,18 +47,15 @@ import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
-import org.xwiki.query.Query;
-import org.xwiki.query.QueryException;
-import org.xwiki.query.QueryManager;
+import org.xwiki.wiki.descriptor.WikiDescriptorManager;
+import org.xwiki.wiki.user.UserScope;
 import org.xwiki.wiki.user.WikiUserManager;
 import org.xwiki.wiki.user.WikiUserManagerException;
 
-import org.xwiki.wiki.user.UserScope;
-
-import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.userlist.macro.GroupReferenceList;
 import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 import com.xwiki.macros.userlist.macro.UserReferenceList;
+
 /**
  * This macro displays a list of users with their name and avatar.
  *
@@ -69,13 +70,16 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     private HTMLDisplayerManager htmlDisplayerManager;
 
     @Inject
-    private Provider<XWikiContext> contextProvider;
-
-    @Inject
     private QueryManager queryManager;
 
     @Inject
     private DocumentReferenceResolver<String> referenceResolver;
+
+    @Inject
+    private EntityReferenceResolver<String> entityReferenceResolver;
+
+    @Inject
+    private WikiDescriptorManager wikiDescriptorManager;
 
     @Inject
     @Named("local")
@@ -100,24 +104,26 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 
         if (groups.isEmpty()) {
             query = queryManager.createQuery(
-                  "select doc.fullName from Document doc, doc.object(XWiki.XWikiUsers) obj "
-                + "order by doc.fullName",
+                "select doc.fullName from Document doc, doc.object(XWiki.XWikiUsers) obj "
+                    + "order by doc.fullName",
                 Query.XWQL
             );
         } else {
             query = queryManager.createQuery(
-                  "select g.member from "
-                +   "Document doc, "
-                +   "doc.object(XWiki.XWikiGroups) g "
-                + "where doc.fullName in (:groups) and g.member <> ''"
-                + "order by g.member",
+                "select g.member from "
+                    + "Document doc, "
+                    + "doc.object(XWiki.XWikiGroups) g "
+                    + "where doc.fullName in (:groups) and g.member <> ''"
+                    + "order by g.member",
                 Query.XWQL
             );
             query.bindValue("groups", groups);
         }
 
-        for (Object user : query.setWiki(wiki).execute()) {
-            users.add(referenceResolver.resolve(wiki + ":" + (String) user));
+        EntityReference wikiReference = entityReferenceResolver.resolve(wiki, EntityType.WIKI);
+        for (Object userName : query.setWiki(wiki).execute()) {
+            String trimmedUserName = ((String) userName).trim();
+            users.add(referenceResolver.resolve(trimmedUserName, wikiReference));
         }
     }
 
@@ -144,16 +150,17 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
                 groups.add(localSerializer.serialize(group));
             }
 
-            XWikiContext xcontext = contextProvider.get();
-            String mainWiki = xcontext.getMainXWiki();
-            String currentWiki = xcontext.getWikiId();
+            String mainWiki = wikiDescriptorManager.getMainWikiId();
+            String currentWiki = wikiDescriptorManager.getCurrentWikiId();
 
             if (!groups.isEmpty() || users.isEmpty()) {
-                // if no users nor groups are given, let's list all users
-                if (mainWiki.equals(xcontext.getWikiId())) {
+                // If no user is given or if at least one group is given, we add all users
+                // (respectively from the wiki or from the given group(s)).
+                if (mainWiki.equals(currentWiki)) {
+                    // We are in the main wiki.
                     addUsersFromWiki(users, mainWiki, groups);
                 } else {
-                    // we are in a subwiki
+                    // We are in a subwiki.
                     UserScope userScope = wikiUserManager.getUserScope(currentWiki);
                     switch (userScope) {
                         case GLOBAL_ONLY:
