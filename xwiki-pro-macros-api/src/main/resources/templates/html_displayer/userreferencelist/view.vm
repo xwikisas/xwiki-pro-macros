@@ -32,8 +32,13 @@
 #end
 #if ($displayer.value != $NULL && $displayer.value.size() > 0)
   #set ($propertyNames = $displayer.parameters.properties.split(','))
+  #set ($fixedTableLayout = $displayer.parameters.fixedTableLayout)
+  #set ($userTableCssClass = 'xwiki-userlist')
+  #if ("$!fixedTableLayout" == 'true')
+    #set ($userTableCssClass = "$userTableCssClass xwiki-userlist-fixed-layout")
+  #end
   #set ($discard = $xwiki.ssrx.use('css/userlist.css'))
-  <table class="xwiki-userlist">
+  <table class="$userTableCssClass">
     #foreach ($user in $displayer.value)
       #if ($xwiki.exists($user) && $services.security.authorization.hasAccess('view', $user))
         #set ($userDoc = $xwiki.getDocument($user))

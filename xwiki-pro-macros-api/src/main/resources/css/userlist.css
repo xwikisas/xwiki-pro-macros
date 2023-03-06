@@ -1,3 +1,14 @@
-.xwiki-userlist-user-avatar {
-  width: 50px;
+.xwiki-userlist-fixed-layout {
+  table-layout: fixed;
+}
+
+/** Make sure table cells do not overflow when containing for instance long e-mail addresses. */
+.xwiki-userlist tr td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.xwiki-userlist tr td.xwiki-userlist-user-avatar {
+  width: 70px;
+  text-align: center;
 }
