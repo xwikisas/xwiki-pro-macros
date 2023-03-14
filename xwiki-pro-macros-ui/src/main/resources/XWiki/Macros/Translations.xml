@@ -108,6 +108,8 @@ rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
 rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
 rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
 rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+rendering.macro.microsoftStream.parameter.textWrap.name=Text Wrap
+rendering.macro.microsoftStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
 
 ## Team macro
 rendering.macro.team.name=Team
