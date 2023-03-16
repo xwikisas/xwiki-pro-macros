@@ -28,6 +28,10 @@ package com.xwiki.macros.internal;
 public enum AlignmentType
 {
     /**
+     * No alignment.
+     */
+    NONE("none"),
+    /**
      * Left alignment.
      */
     LEFT("left"),
