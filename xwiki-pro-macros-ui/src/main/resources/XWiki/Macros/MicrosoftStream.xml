@@ -427,10 +427,8 @@ $xwiki.currentContentSyntaxId)|No|true
 #macro (getStyle $alignment $textWrap $styleClass)
   ## For left and right alignment, consider if text should be wrapped around the video. If no value is set for textWrap,
   ## this will be false by default.
-  #if ($alignment == 'left')
-    #set ($styleClass = "#if($textWrap==true)pull-left#{else}msStreamMacro-left#end")
-  #elseif ($alignment == 'right')
-    #set ($styleClass = "#if($textWrap==true)pull-right#{else}msStreamMacro-right#end")
+  #if ($alignment == 'left' || $alignment == 'right')
+    #set ($styleClass = "#if ($textWrap == true)pull-${alignment}#{else}msStreamMacro-${alignment}#end")
   #elseif ($alignment == 'center')
     #set ($styleClass = 'msStreamMacro-center')
   #end
