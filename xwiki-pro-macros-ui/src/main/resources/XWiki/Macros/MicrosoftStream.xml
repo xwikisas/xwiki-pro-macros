@@ -78,6 +78,11 @@ $services.localization.render('rendering.macro.microsoftStream.parameter.autopla
 $xwiki.currentContentSyntaxId)|$services.rendering.escape(
 $services.localization.render('rendering.macro.microsoftStream.parameter.autoplay.description'),
 $xwiki.currentContentSyntaxId)|No|false
+|**textWrap**|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.textWrap.name'),
+$xwiki.currentContentSyntaxId)|$services.rendering.escape(
+$services.localization.render('rendering.macro.microsoftStream.parameter.textWrap.description'),
+$xwiki.currentContentSyntaxId)|No|true
 
 {{/velocity}}
 
@@ -196,6 +201,14 @@ $xwiki.currentContentSyntaxId)|No|false
 
   &amp;-center {
     text-align: center;
+  }
+
+  &amp;-left {
+    text-align: start;
+  }
+
+  &amp;-right {
+    text-align: end;
   }
 
   iframe {
@@ -411,13 +424,13 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
     <property>
       <code>{{velocity output="false"}}
-#macro (getAlignmentClass $alignment $alignmentClass)
-  #if ($alignment == 'left')
-    #set ($alignmentClass = 'pull-left')
-  #elseif ($alignment == 'right')
-    #set ($alignmentClass = 'pull-right')
+#macro (getStyle $alignment $textWrap $styleClass)
+  ## For left and right alignment, consider if text should be wrapped around the video. If no value is set for textWrap,
+  ## this will be false by default.
+  #if ($alignment == 'left' || $alignment == 'right')
+    #set ($styleClass = "#if ($textWrap == true)pull-${alignment}#{else}msStreamMacro-${alignment}#end")
   #elseif ($alignment == 'center')
-    #set ($alignmentClass = 'msStreamMacro-center')
+    #set ($styleClass = 'msStreamMacro-center')
   #end
 #end
 
@@ -453,7 +466,7 @@ $xwiki.currentContentSyntaxId)|No|false
 
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.MicrosoftStream'))
-  #getAlignmentClass($stringtool.lowerCase($xcontext.macro.params.alignment) $alignmentClass)
+  #getStyle($stringtool.lowerCase($xcontext.macro.params.alignment) $xcontext.macro.params.textWrap $styleClass)
   #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
   ## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
   #set ($autoplay = $xcontext.macro.params.autoplay)
@@ -472,7 +485,7 @@ $xwiki.currentContentSyntaxId)|No|false
   #end
   #set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
   {{html clean=false}}
-    &lt;p class="msStreamMacro $!escapetool.xml($alignmentClass)"&gt;
+    &lt;p class="msStreamMacro $!escapetool.xml($styleClass)"&gt;
       &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
         height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
       &lt;/iframe&gt;
@@ -821,7 +834,7 @@ $xwiki.currentContentSyntaxId)|No|false
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>NONE</defaultValue>
     </property>
     <property>
       <description>Position of the video relatively to its container. Accepted values are left, center and right.</description>
@@ -1065,6 +1078,84 @@ $xwiki.currentContentSyntaxId)|No|false
     </property>
     <property>
       <name>autoplay</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.MicrosoftStream</name>
+    <number>7</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>8a1c430c-d5c5-45fc-a24e-240a260a66ba</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description>Wrap text around the video. This applies only to left and right alignment.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>textWrap</name>
     </property>
     <property>
       <type>java.lang.Boolean</type>
