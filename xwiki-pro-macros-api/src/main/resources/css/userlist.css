@@ -3,12 +3,12 @@
 }
 
 /** Make sure table cells do not overflow when containing for instance long e-mail addresses. */
-.xwiki-userlist tr td {
+.xwiki-userlist td {
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.xwiki-userlist tr td.xwiki-userlist-user-avatar {
+.xwiki-userlist td.xwiki-userlist-user-avatar {
   width: 70px;
   text-align: center;
 }
