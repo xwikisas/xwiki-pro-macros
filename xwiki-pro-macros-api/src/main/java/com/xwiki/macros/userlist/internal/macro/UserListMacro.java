@@ -32,13 +32,12 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
-import org.xwiki.model.EntityType;
-import org.xwiki.model.reference.DocumentReferenceResolver;
+import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
-import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
+import org.xwiki.query.QueryFilter;
 import org.xwiki.query.QueryManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
@@ -73,12 +72,6 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     private QueryManager queryManager;
 
     @Inject
-    private DocumentReferenceResolver<String> referenceResolver;
-
-    @Inject
-    private EntityReferenceResolver<String> entityReferenceResolver;
-
-    @Inject
     private WikiDescriptorManager wikiDescriptorManager;
 
     @Inject
@@ -87,6 +80,10 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
 
     @Inject
     private WikiUserManager wikiUserManager;
+
+    @Inject
+    @Named("document")
+    private QueryFilter documentFilter;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -119,11 +116,9 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
             );
             query.bindValue("groups", groups);
         }
-
-        EntityReference wikiReference = entityReferenceResolver.resolve(wiki, EntityType.WIKI);
-        for (Object userName : query.setWiki(wiki).execute()) {
-            String trimmedUserName = ((String) userName).trim();
-            users.add(referenceResolver.resolve(trimmedUserName, wikiReference));
+        query.addFilter(this.documentFilter);
+        for (Object userReference : query.setWiki(wiki).execute()) {
+            users.add((DocumentReference) userReference);
         }
     }
 
@@ -145,7 +140,7 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
                 groupReferences = new GroupReferenceList();
             }
 
-            List<String> groups = new ArrayList<String>();
+            List<String> groups = new ArrayList<>();
             for (EntityReference group : groupReferences) {
                 groups.add(localSerializer.serialize(group));
             }

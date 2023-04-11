@@ -291,8 +291,7 @@
     #set ($groupName = $confluenceGroup)
   #end
   #if ("$!groupName" != '')
-    #set ($xwikiSpace = $services.model.resolveSpace('XWiki'))
-    #set ($groupReference = $services.model.resolveDocument($groupName, $xwikiSpace))
+    #set ($groupReference = $services.model.resolveDocument($groupName, 'group'))
     #set ($discard = $xwikiGroups.add($services.model.serialize($groupReference, 'local')))
   #end
 #end
