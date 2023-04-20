@@ -327,10 +327,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
   #template('attachment_macros.vm')
   #template('display_macros.vm')
   #initRequiredSkinExtensions()
-  ## $xwiki.jsfx.use('uicomponents/widgets/upload.js', {'forceSkinAction': true, 'language': ${xcontext.locale}})
-  ## $xwiki.ssfx.use('uicomponents/widgets/upload.css', true)
-  ## $xwiki.jsfx.use('js/xwiki/viewers/attachments.js', {'forceSkinAction': true, 'language': ${xcontext.locale}})
-  ## $xwiki.jsx.use('Confluence.Macros.Attachments', {'language': ${xcontext.locale}})
   #set ($confluenceAttachmentMacroIndex = $confluenceAttachmentMacroIndex + 1)
   #set ($confluenceAttachmentMacroId = "confluenceAttachments$confluenceAttachmentMacroIndex")
   ##
@@ -409,7 +405,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
   #end
 
   {{html clean="false" wiki="true"}}
-    ## #showConfluenceAttachmentsLiveData($document 'confluenceAttachments')
     #showConfluenceAttachments($document)
   {{/html}}
 
