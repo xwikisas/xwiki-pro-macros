@@ -70,5 +70,15 @@
       <artifactId>xwiki-platform-model</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-query-manager</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wiki-user-api</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
   </dependencies>
 </project>

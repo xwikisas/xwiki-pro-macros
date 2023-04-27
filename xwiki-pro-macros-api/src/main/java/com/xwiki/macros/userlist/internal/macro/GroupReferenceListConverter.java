@@ -30,33 +30,33 @@ import org.xwiki.properties.converter.AbstractConverter;
 import org.xwiki.properties.converter.ConversionException;
 import org.xwiki.text.StringUtils;
 
-import com.xwiki.macros.userlist.macro.UserReferenceList;
+import com.xwiki.macros.userlist.macro.GroupReferenceList;
 
 /**
- * XWiki Properties Bean Converter to convert Strings into {@link UserReferenceList}.
+ * XWiki Properties Bean Converter to convert Strings into {@link GroupReferenceList}.
  *
  * @version $Id$
  * @see org.xwiki.properties.converter.Converter
  */
 @Component
 @Singleton
-public class UserReferenceListConverter extends AbstractConverter<UserReferenceList>
+public class GroupReferenceListConverter extends AbstractConverter<GroupReferenceList>
 {
     @Inject
     private DocumentReferenceResolver<String> referenceResolver;
 
     @Override
-    protected <G extends UserReferenceList> G convertToType(Type targetType, Object value)
+    protected <G extends GroupReferenceList> G convertToType(Type targetType, Object value)
     {
-        G references = (G) new UserReferenceList();
+        G references = (G) new GroupReferenceList();
         if (value != null) {
             String valueString = value.toString().trim();
             if (!StringUtils.isEmpty(valueString)) {
-                String[] userNames = valueString.split(",");
-                for (String userName : userNames) {
-                    String trimmedUserName = userName.trim();
-                    if (StringUtils.isNotEmpty(trimmedUserName)) {
-                        references.add(referenceResolver.resolve(trimmedUserName));
+                String[] groupNames = valueString.split(",");
+                for (String groupName : groupNames) {
+                    String trimmedGroupName = groupName.trim();
+                    if (StringUtils.isNotEmpty(trimmedGroupName)) {
+                        references.add(referenceResolver.resolve(trimmedGroupName));
                     }
                 }
             }
@@ -66,7 +66,7 @@ public class UserReferenceListConverter extends AbstractConverter<UserReferenceL
     }
 
     @Override
-    protected String convertToString(UserReferenceList value)
+    protected String convertToString(GroupReferenceList value)
     {
         throw new ConversionException("not implemented yet");
     }
