@@ -155,6 +155,8 @@ rendering.macro.userList.parameter.users.name=Users
 rendering.macro.userList.parameter.users.description=List of users to be displayed
 rendering.macro.userList.parameter.properties.name=Properties
 rendering.macro.userList.parameter.properties.description=List of user properties to be displayed
+rendering.macro.userList.parameter.fixedTableLayout.name=Fixed table layout
+rendering.macro.userList.parameter.fixedTableLayout.description=If the user table should have fixed column width across tables displaying the same user properties
 rendering.macro.userList.isEmpty=The User List macro has an empty user list.
 rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.</content>
   <object>

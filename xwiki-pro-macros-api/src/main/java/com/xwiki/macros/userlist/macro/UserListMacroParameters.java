@@ -22,6 +22,7 @@ package com.xwiki.macros.userlist.macro;
 import java.util.Arrays;
 import java.util.List;
 
+import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
 
@@ -35,6 +36,11 @@ public class UserListMacroParameters
     private UserReferenceList users;
 
     private List<String> properties = Arrays.asList("avatar", "username");
+
+    /**
+     * User table layout style.
+     */
+    private boolean fixedTableLayout;
 
     /**
      * @return a list of users
@@ -74,5 +80,26 @@ public class UserListMacroParameters
     public void setProperties(List<String> properties)
     {
         this.properties = properties;
+    }
+
+    /**
+     * Sets the user list table layout style to "fixed".
+     *
+     * @param value true if the table layout should be fixed
+     */
+    @PropertyName("fixedTableLayout")
+    @PropertyDescription("Indicates whether the user table should use a fixed layout")
+    @PropertyAdvanced
+    public void setFixedTableLayout(boolean value)
+    {
+        this.fixedTableLayout = value;
+    }
+
+    /**
+     * @return true if the user table should use a fixed layout
+     */
+    public boolean isFixedTableLayout()
+    {
+        return fixedTableLayout;
     }
 }
