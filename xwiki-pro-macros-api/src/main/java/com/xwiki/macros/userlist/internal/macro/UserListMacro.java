@@ -129,6 +129,7 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
         Map<String, String> params = new HashMap<>();
         try {
             params.put("properties", StringUtils.join(parameters.getProperties(), ','));
+            params.put("fixedTableLayout", String.valueOf(parameters.isFixedTableLayout()));
 
             UserReferenceList users = parameters.getUsers();
             if (users == null) {
