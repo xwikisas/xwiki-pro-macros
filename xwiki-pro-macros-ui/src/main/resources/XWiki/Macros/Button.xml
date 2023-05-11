@@ -322,6 +322,9 @@ $services.localization.render('rendering.macro.button.description')
   #set ($darkenedColors = [])
   #darken($colors, $darkenedColors)
   {{html clean=false}}
+  ## #124: The Button macro deletes followup content when inserted from wysiwyg
+  ## If not in inline mode, wrap inside block in order to fix issue
+  #if (!$wikimacro.context.isInline())&lt;p&gt;#end
   &lt;a href="$url" #if($newTab == 'true')target="_blank"#end&gt;
     &lt;button
       style="
@@ -335,6 +338,7 @@ $services.localization.render('rendering.macro.button.description')
       $label
     &lt;/button&gt;
   &lt;/a&gt;
+  #if (!$wikimacro.context.isInline())&lt;/p&gt;#end
   {{/html}}
 #end
 {{/velocity}}
