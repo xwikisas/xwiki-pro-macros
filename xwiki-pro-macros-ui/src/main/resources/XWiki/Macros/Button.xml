@@ -323,7 +323,10 @@ $services.localization.render('rendering.macro.button.description')
   #darken($colors, $darkenedColors)
   {{html clean=false}}
   ## #124: The Button macro deletes followup content when inserted from wysiwyg
-  ## If not in inline mode, wrap inside block in order to fix issue
+  ## Wrap the macro output inside a block element if the context where the macro is inserted is not inline, e.g. if the
+  ## macro is inserted between paragraphs rather than between the text of a paragraph. Otherwise the generated HTML is
+  ## invalid which breaks the WYSIWYG editing because the browser tries to fix the invalid HTML and messes up the macro
+  ## output markers that protect the macro output.
   #if (!$wikimacro.context.isInline())&lt;p&gt;#end
   &lt;a href="$url" #if($newTab == 'true')target="_blank"#end&gt;
     &lt;button
