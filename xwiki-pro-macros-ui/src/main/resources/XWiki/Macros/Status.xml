@@ -358,7 +358,9 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
       </visibility>
     </class>
     <property>
-      <code>{{velocity}}
+      <code>{{include reference="Licenses.Code.VelocityMacros"/}}{{comment}}
+A comment is needed in order to skip extra spaces added and use this macro inline.
+{{/comment}}{{velocity}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
   #set ($color = $xcontext.macro.params.colour)
@@ -385,7 +387,6 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
 #if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
-  $xwiki.includeForm('Licenses.Code.VelocityMacros', false)
   {{error}}
     #getMissingLicenseMessage('proMacros.extension.name')
   {{/error}}
