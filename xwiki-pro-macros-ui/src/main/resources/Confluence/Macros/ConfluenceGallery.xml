@@ -125,7 +125,7 @@ The result is the following :
     <filesize>1289</filesize>
   </attachment>
   <object>
-    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <name>Confluence.Macros.ConfluenceGalleryMacro</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>d9819b4c-1d09-40bd-9808-7e705e9c2806</guid>
@@ -144,7 +144,7 @@ The result is the following :
         <displayFormType>select</displayFormType>
         <displayType/>
         <name>async_cached</name>
-        <number>12</number>
+        <number>13</number>
         <prettyName>Cached</prettyName>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
@@ -157,7 +157,7 @@ The result is the following :
         <largeStorage>0</largeStorage>
         <multiSelect>1</multiSelect>
         <name>async_context</name>
-        <number>13</number>
+        <number>14</number>
         <prettyName>Context elements</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator>, </separator>
@@ -173,7 +173,7 @@ The result is the following :
         <displayFormType>select</displayFormType>
         <displayType/>
         <name>async_enabled</name>
-        <number>11</number>
+        <number>12</number>
         <prettyName>Asynchronous rendering</prettyName>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
@@ -278,6 +278,16 @@ The result is the following :
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
+      <priority>
+        <disabled>0</disabled>
+        <name>priority</name>
+        <number>11</number>
+        <numberType>integer</numberType>
+        <prettyName>Priority</prettyName>
+        <size>10</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </priority>
       <supportsInlineMode>
         <disabled>0</disabled>
         <displayFormType>select</displayFormType>
@@ -413,6 +423,9 @@ The result is the following :
       <name>Confluence Gallery </name>
     </property>
     <property>
+      <priority/>
+    </property>
+    <property>
       <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
@@ -420,7 +433,7 @@ The result is the following :
     </property>
   </object>
   <object>
-    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <name>Confluence.Macros.ConfluenceGalleryMacro</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>ed7ca507-639d-47f1-b68c-5e5fb4bf873e</guid>
@@ -498,7 +511,7 @@ The result is the following :
     </property>
   </object>
   <object>
-    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <name>Confluence.Macros.ConfluenceGalleryMacro</name>
     <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>ea86fd93-88cd-4a08-9af8-7695770ae40d</guid>
@@ -576,7 +589,7 @@ The result is the following :
     </property>
   </object>
   <object>
-    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <name>Confluence.Macros.ConfluenceGalleryMacro</name>
     <number>2</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>14c677ca-9d32-4832-a4d8-b8015fecaec1</guid>
@@ -654,7 +667,7 @@ The result is the following :
     </property>
   </object>
   <object>
-    <name>Macros.Confluence Gallery Macro.WebHome</name>
+    <name>Confluence.Macros.ConfluenceGalleryMacro</name>
     <number>3</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>ef32b629-5a94-4b23-8a99-7845372949a9</guid>

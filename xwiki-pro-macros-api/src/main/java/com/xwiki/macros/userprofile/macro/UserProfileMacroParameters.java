@@ -25,6 +25,11 @@ import java.util.List;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
 
+/**
+ * The parameters of the {@link com.xwiki.macros.userprofile.internal.macro.UserProfileMacro}.
+ * @version $Id$
+ * @since 1.4
+ */
 public class UserProfileMacroParameters
 {
     private List<String> properties = Arrays.asList("company", "email", "phone", "address");

@@ -68,7 +68,7 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
-      <artifactId>macro-jwplayer</artifactId>
+      <artifactId>macro-jwplayer-ui</artifactId>
       <version>${jwplayer.version}</version>
       <type>xar</type>
     </dependency>

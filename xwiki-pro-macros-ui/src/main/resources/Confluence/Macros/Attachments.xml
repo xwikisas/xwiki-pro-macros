@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="Confluence.Macros.Attachments" locale="">
+<xwikidoc version="1.4" reference="Confluence.Macros.Attachments" locale="">
   <web>Confluence.Macros</web>
   <name>Attachments</name>
   <language/>
@@ -103,7 +103,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -123,7 +123,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -136,7 +135,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -180,24 +178,15 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <values>Optional|Mandatory|No content</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </contentType>
-      <defaultCategories>
-        <cache>0</cache>
+      <defaultCategory>
         <disabled>0</disabled>
-        <displayType>input</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>1</multiSelect>
-        <name>defaultCategories</name>
+        <name>defaultCategory</name>
         <number>4</number>
-        <prettyName>Default categories</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
+        <prettyName>Default category</prettyName>
+        <size>30</size>
         <unmodifiable>0</unmodifiable>
-        <values/>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </defaultCategories>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultCategory>
       <description>
         <contenttype>PureText</contenttype>
         <disabled>0</disabled>
@@ -205,7 +194,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -437,9 +425,10 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories>
-        <value>confluence</value>
-      </defaultCategories>
+      <defaultCategories>[confluence]</defaultCategories>
+    </property>
+    <property>
+      <defaultCategory/>
     </property>
     <property>
       <description>Confluence attachment macro support for XWiki</description>
@@ -488,7 +477,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -569,7 +557,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -648,7 +635,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -727,7 +713,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -806,7 +791,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
