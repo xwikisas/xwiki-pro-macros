@@ -58,7 +58,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
 
 
 {{code}}
-{{attachments
+{{confluence_attachments
   patterns=".*png"
   sortBy="name"
 /}}
