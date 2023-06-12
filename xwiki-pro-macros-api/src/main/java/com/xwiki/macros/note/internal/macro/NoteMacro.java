@@ -27,13 +27,13 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.Macro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.box.BoxMacroParameters;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
+import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.note.macro.NoteMacroParameters;
 
 /**
@@ -45,7 +45,7 @@ import com.xwiki.macros.note.macro.NoteMacroParameters;
 @Component
 @Named("note")
 @Singleton
-public class NoteMacro extends AbstractMacro<NoteMacroParameters>
+public class NoteMacro extends AbstractProMacro<NoteMacroParameters>
 {
     @Inject
     @Named("warning")
@@ -67,8 +67,8 @@ public class NoteMacro extends AbstractMacro<NoteMacroParameters>
     }
 
     @Override
-    public List<Block> execute(NoteMacroParameters parameters, String content, MacroTransformationContext context)
-        throws MacroExecutionException
+    protected List<Block> internalExecute(NoteMacroParameters parameters, String content,
+        MacroTransformationContext context) throws MacroExecutionException
     {
         BoxMacroParameters warningParams = new BoxMacroParameters();
         if (parameters.getTitle() != null)
