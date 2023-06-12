@@ -45,7 +45,9 @@ This is a bridge macro between Confluence Note macro and XWikis Warning macro.
 |=Parameter|=Description
 |**title**|The title of the note.
 
-= Example of usage =
+= Examples of usage =
+
+== Example 1 ==
 
 {{code}}
 {{note title="Note: "}}
@@ -57,5 +59,19 @@ Result :
 
 {{note title="Note: "}}
 This is my note with title.
+{{/note}}
+
+== Example 2 ==
+
+{{code}}
+{{note title="It supports XWiki syntax: "}}
+This is my note with title and a link [[XWiki Store>>https://store.xwiki.com]]
+{{/note}}
+{{/code}}
+
+Result :
+
+{{note title="It supports XWiki syntax: "}}
+This is my note with title and a link [[XWiki Store>>https://store.xwiki.com]]
 {{/note}}</content>
 </xwikidoc>

@@ -19,9 +19,13 @@
  */
 package com.xwiki.macros.note.macro;
 
+import org.xwiki.stability.Unstable;
+
 /**
  * @version $Id$
+ * @since 1.10.1
  */
+@Unstable
 public class NoteMacroParameters
 {
     private String title;
