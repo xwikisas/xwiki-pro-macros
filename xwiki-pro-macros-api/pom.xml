@@ -80,5 +80,10 @@
       <artifactId>xwiki-platform-wiki-user-api</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-macro-box</artifactId>
+      <version>${rendering.version}</version>
+    </dependency>
   </dependencies>
 </project>
