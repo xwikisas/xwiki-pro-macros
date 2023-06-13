@@ -47,6 +47,10 @@ import com.xwiki.macros.note.macro.NoteMacroParameters;
 @Singleton
 public class NoteMacro extends AbstractProMacro<NoteMacroParameters>
 {
+    // We want the note macro to have the exact same behaviour of the warning macro. We inject and execute it instead
+    // of instantiating a new macro block with id "warning". Going with the latter means that we wrap the
+    // content of the note macro with a warning macro. Subsequent calls to the note macro would add more and more
+    // warning macro wraps.
     @Inject
     @Named("warning")
     private Macro<BoxMacroParameters> warningMacro;
