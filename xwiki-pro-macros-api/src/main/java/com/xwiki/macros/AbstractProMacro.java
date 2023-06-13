@@ -46,7 +46,7 @@ import com.xwiki.licensing.Licensor;
  *
  * @param <P> the type of the macro parameters bean.
  * @version $Id$
- * @since 1.10.1
+ * @since 1.9.1
  */
 @Unstable
 public abstract class AbstractProMacro<P> extends AbstractMacro<P>

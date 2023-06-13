@@ -23,7 +23,7 @@ import org.xwiki.stability.Unstable;
 
 /**
  * @version $Id$
- * @since 1.10.1
+ * @since 1.9.1
  */
 @Unstable
 public class NoteMacroParameters

@@ -40,7 +40,7 @@ import com.xwiki.macros.note.macro.NoteMacroParameters;
  * A wrapper for the warning macro.
  *
  * @version $Id$
- * @since 1.10.1
+ * @since 1.9.1
  */
 @Component
 @Named("note")
