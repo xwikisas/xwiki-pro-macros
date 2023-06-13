@@ -33,12 +33,12 @@ import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
-import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
 
+import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.userprofile.macro.UserProfileMacroParameters;
 import com.xwiki.macros.userprofile.macro.UserReference;
 
@@ -50,7 +50,7 @@ import com.xwiki.macros.userprofile.macro.UserReference;
 @Component
 @Named("userProfile")
 @Singleton
-public class UserProfileMacro extends AbstractMacro<UserProfileMacroParameters>
+public class UserProfileMacro extends AbstractProMacro<UserProfileMacroParameters>
 {
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
@@ -65,7 +65,7 @@ public class UserProfileMacro extends AbstractMacro<UserProfileMacroParameters>
     }
 
     @Override
-    public List<Block> execute(UserProfileMacroParameters parameters, String content,
+    public List<Block> internalExecute(UserProfileMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
         Map<String, String> params = new HashMap<>();

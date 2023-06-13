@@ -49,6 +49,11 @@
       <groupId>org.webjars</groupId>
       <artifactId>jquery</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.xwiki.licensing</groupId>
+      <artifactId>application-licensing-licensor-api</artifactId>
+      <version>${licensing.version}</version>
+    </dependency>
     <!-- Dependencies needed by the User List and User Profile macros -->
     <dependency>
       <groupId>org.xwiki.commons</groupId>
@@ -79,6 +84,11 @@
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-wiki-user-api</artifactId>
       <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-macro-box</artifactId>
+      <version>${rendering.version}</version>
     </dependency>
   </dependencies>
 </project>

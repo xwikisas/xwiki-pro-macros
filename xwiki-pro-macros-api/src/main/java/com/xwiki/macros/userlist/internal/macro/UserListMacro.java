@@ -41,7 +41,6 @@ import org.xwiki.query.QueryFilter;
 import org.xwiki.query.QueryManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
-import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
@@ -51,6 +50,7 @@ import org.xwiki.wiki.user.UserScope;
 import org.xwiki.wiki.user.WikiUserManager;
 import org.xwiki.wiki.user.WikiUserManagerException;
 
+import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.userlist.macro.GroupReferenceList;
 import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 import com.xwiki.macros.userlist.macro.UserReferenceList;
@@ -63,7 +63,7 @@ import com.xwiki.macros.userlist.macro.UserReferenceList;
 @Component
 @Named("userList")
 @Singleton
-public class UserListMacro extends AbstractMacro<UserListMacroParameters>
+public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 {
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
@@ -123,7 +123,8 @@ public class UserListMacro extends AbstractMacro<UserListMacroParameters>
     }
 
     @Override
-    public List<Block> execute(UserListMacroParameters parameters, String content, MacroTransformationContext context)
+    public List<Block> internalExecute(UserListMacroParameters parameters, String content,
+        MacroTransformationContext context)
         throws MacroExecutionException
     {
         Map<String, String> params = new HashMap<>();
