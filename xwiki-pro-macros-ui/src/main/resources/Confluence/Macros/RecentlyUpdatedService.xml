@@ -216,8 +216,11 @@
   ## Add data to result
   #foreach ($property in $commentResponse.results)
     #if ($property.propertyname == 'date')
-      #set ($dateFormat = $datetool.getDateFormat("EEE MMM dd HH:mm:ss z yyyy", $datetool.getLocale(), $datetool.getTimeZone()))
-      #set ($date = $dateFormat.parse($property.propertyvalue_[0]))
+      #set ($date = $null)
+      #try('exception')
+        #set ($dateFormat = $datetool.getDateFormat("EEE MMM dd HH:mm:ss z yyyy", 'en', $datetool.getTimeZone()))
+        #set ($date = $dateFormat.parse($property.propertyvalue_[0]))
+      #end
       #set ($discard = $comment.put('date', $date))
     #elseif ($property.propertyname == 'author')
       #set ($discard = $comment.put('author', "$property.propertyvalue_[0]"))

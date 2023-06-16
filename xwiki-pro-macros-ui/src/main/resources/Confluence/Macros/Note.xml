@@ -65,13 +65,13 @@ This is my note with title.
 
 {{code}}
 {{note title="It supports XWiki syntax: "}}
-This is my note with title and a link [[XWiki Store>>https://store.xwiki.com]]
+This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.com]]
 {{/note}}
 {{/code}}
 
 Result :
 
 {{note title="It supports XWiki syntax: "}}
-This is my note with title and a link [[XWiki Store>>https://store.xwiki.com]]
+This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.com]]
 {{/note}}</content>
 </xwikidoc>
