@@ -730,6 +730,7 @@
           title='$escapedDisplayUser'
           width='$escapedSize'
           height='$escapedSize'
+          style="height: ${escapedSize}px"
         /&gt;
       #end
       &lt;span class='xwikiteam-username'&gt;$escapedDisplayUser&lt;/span&gt;
