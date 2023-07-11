@@ -394,7 +394,8 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>.xwikiteam .xwikiteam-ul {
+      <code>
+.xwikiteam .xwikiteam-ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -466,7 +467,10 @@
   align-self: center;
   padding: 1em;
 }
-
+.remove-height-auto
+{
+        height:revert-layer;
+}
 .xwikiteam:focus-within, .xwikiteam:hover {
   .xwikiteam-tools-link {
     visibility: visible;
@@ -724,13 +728,12 @@
       #else
         #set($escapedSize = $escapetool.xml($size))
         &lt;img
-          class='xwikiteam-avatar'
+          class='xwikiteam-avatar remove-height-auto'
           src='$escapetool.xml($return.url)'
           alt='$escapedDisplayUser'
           title='$escapedDisplayUser'
           width='$escapedSize'
           height='$escapedSize'
-          style="height: ${escapedSize}px"
         /&gt;
       #end
       &lt;span class='xwikiteam-username'&gt;$escapedDisplayUser&lt;/span&gt;
