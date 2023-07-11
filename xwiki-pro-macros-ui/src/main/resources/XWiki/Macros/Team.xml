@@ -394,8 +394,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>
-.xwikiteam .xwikiteam-ul {
+      <code>.xwikiteam .xwikiteam-ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -467,6 +466,7 @@
   align-self: center;
   padding: 1em;
 }
+
 .xwikiteam:focus-within, .xwikiteam:hover {
   .xwikiteam-tools-link {
     visibility: visible;
@@ -851,7 +851,9 @@
     #end
   #end
   {{html wiki=false clean=false}}
-
+  #*
+   The style was added to fix the issue where the height attribute of the img would be changed by the img css
+  *#
   #set($escapedSize = $escapetool.xml($size))
         &lt;style&gt;
           .fixedSize-$escapedSize
