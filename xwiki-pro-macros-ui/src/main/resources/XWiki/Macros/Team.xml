@@ -20,8 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="
-" locale="">
+<xwikidoc version="1.4" reference="XWiki.Macros.Team" locale="">
   <web>XWiki.Macros</web>
   <name>Team</name>
   <language/>
@@ -724,15 +723,8 @@
         #avatarInitials($displayUser $size $letterAvatarBgColor $letterAvatarFontColor)
       #else
         #set($escapedSize = $escapetool.xml($size))
-        &lt; style&gt;
-        .$escapedDisplayUser$escapedSize
-        {
-          height:${$escapedSize}px;
-        }
-        &lt; /style &gt;
-
         &lt;img
-          class='xwikiteam-avatar $escapedDisplayUser$escapedSize'
+          class='xwikiteam-avatar fixedSize-$escapedSize'
           src='$escapetool.xml($return.url)'
           alt='$escapedDisplayUser'
           title='$escapedDisplayUser'
@@ -859,6 +851,14 @@
     #end
   #end
   {{html wiki=false clean=false}}
+
+  #set($escapedSize = $escapetool.xml($size))
+        &lt;style&gt;
+          .fixedSize-$escapedSize
+          {
+          height:${escapedSize}px;
+          }
+        &lt;/style&gt;
   &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
     #if ($list.size() &gt; 0)
       &lt;ul class="xwikiteam-ul"&gt;
