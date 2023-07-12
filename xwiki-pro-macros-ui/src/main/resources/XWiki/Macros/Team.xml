@@ -851,9 +851,8 @@
     #end
   #end
   {{html wiki=false clean=false}}
-  #*
-   The style was added to fix the issue where the height attribute of the img would be changed by the img css
-  *#
+  ##Starting with XWiki version 13.10.4 and 14.1-rc-1, img tags have a height: auto set and this breaks the macro fixed size feature. For this, a specific size is added
+  ## https://jira.xwiki.org/browse/XWIKI-19432
   #set($escapedSize = $escapetool.xml($size))
         &lt;style&gt;
           .fixedSize-$escapedSize
