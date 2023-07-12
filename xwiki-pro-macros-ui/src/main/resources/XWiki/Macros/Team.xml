@@ -851,16 +851,16 @@
     #end
   #end
   {{html wiki=false clean=false}}
-  ##Starting with XWiki version 13.10.4 and 14.1-rc-1, img tags have a height: auto set and this breaks the macro fixed size feature. For this, a specific size is added
-  ## https://jira.xwiki.org/browse/XWIKI-19432
-  #set($escapedSize = $escapetool.xml($size))
-        &lt;style&gt;
-          .fixedSize-$escapedSize
-          {
-          height:${escapedSize}px;
-          }
-        &lt;/style&gt;
   &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
+  ## Starting with XWiki version 13.10.4 and 14.1-rc-1, img tags have a height: auto set and this breaks the macro fixed
+  ## size feature. For this, a specific size is added
+  ## Image not to scale on mobile XWIKI-19432
+  #set ($escapedSize = $escapetool.xml($size))
+  &lt;style&gt;
+    .fixedSize-$escapedSize {
+      height:${escapedSize}px;
+    }
+  &lt;/style&gt;
     #if ($list.size() &gt; 0)
       &lt;ul class="xwikiteam-ul"&gt;
         #foreach($user in $list)
