@@ -724,7 +724,7 @@
       #else
         #set($escapedSize = $escapetool.xml($size))
         &lt;img
-          class='xwikiteam-avatar'
+          class='xwikiteam-avatar fixedSize-$escapedSize'
           src='$escapetool.xml($return.url)'
           alt='$escapedDisplayUser'
           title='$escapedDisplayUser'
@@ -851,6 +851,16 @@
     #end
   #end
   {{html wiki=false clean=false}}
+  ## Starting with XWiki 13.10.4 and 14.1, img tags have a 'height: auto' style set, see XWIKI-19432: Image not to scale
+  ## on mobile. Since this breaks the macro fixed size feature, a specific size is added.
+  #set ($escapedSize = $escapetool.xml($size))
+  &lt;div&gt;
+    &lt;style&gt;
+      .fixedSize-$escapedSize {
+        height: ${escapedSize}px;
+      }
+    &lt;/style&gt;
+  &lt;/div&gt;
   &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
     #if ($list.size() &gt; 0)
       &lt;ul class="xwikiteam-ul"&gt;
