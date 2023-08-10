@@ -66,6 +66,253 @@ Not every parameters supported by the Confluence macro are supported by this bri
   <object>
     <name>Confluence.Macros.Attachments</name>
     <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>4802ce62-2503-45f8-ba47-d6bc6e0aba7c</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <restricted>0</restricted>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>require(['jquery'], function($) {
+  var enhanceUploadInputs = function() {
+    $.each($('.attachmentsUploadFile input[type=file]'), function() {
+      // Since the attachments liveData is refreshed on file upload, we don't need a response container.
+      new XWiki.FileUploader(this, {
+        'autoUpload': true,
+        'progressAutohide': true,
+        'responseContainer' : document.createElement('div'),
+        'responseURL' : ''
+      });
+    })
+  };
+
+  $(function() {
+    enhanceUploadInputs();
+  })
+
+  $(document).on('xwiki:html5upload:done', function(e) {
+    // Select the livedata above the upload form.
+    const associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
+    const liveDataObj = $(associatedLivedata).data('liveData');
+    liveDataObj.updateEntries();
+  });
+});
+</code>
+    </property>
+    <property>
+      <name>Upload</name>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>6231c3e7-68e8-4d8d-94dc-d2c263cea2b5</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <restricted>0</restricted>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.attachmentsMacroUploadFile legend {
+  font-size: 1em;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
+    </property>
+    <property>
+      <name>test</name>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>e02a27df-6c8d-42bb-85cf-8a9eb6f3d6fe</guid>
     <class>
@@ -321,6 +568,28 @@ Not every parameters supported by the Confluence macro are supported by this bri
   #showConfluenceAttachmentsLiveData($document $confluenceAttachmentMacroId)
 #end
 
+#macro (uploadFileForm $liveDataId)
+  #set ($upload = "$!wikimacro.parameters.upload")
+  #if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
+    &lt;form action="$attachmentsDoc.getURL("upload")" enctype="multipart/form-data" method="post" class="attachmentsMacroUploadFile"&gt;
+      &lt;div&gt;
+        ## CSRF prevention
+        &lt;input type="hidden" name="form_token" value="$!{services.csrf.getToken()}" /&gt;
+        &lt;fieldset&gt;
+          &lt;legend&gt;$services.localization.render('promacros.attachments.upload.title')&lt;/legend&gt;
+          &lt;div&gt;
+            #set ($inputID = "${liveDataId}-uploadFile")
+            &lt;label class="sr-only" for="${inputID}"&gt;
+              $services.localization.render('core.viewers.attachments.upload.file')
+            &lt;/label&gt;
+            &lt;input id="${inputID}" type="file" name="filepath" size="40" class="noitems" /&gt;
+          &lt;/div&gt;
+        &lt;/fieldset&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  #end
+#end
+
 ## Display a liveData with attachments from the specified document.
 #macro (showConfluenceAttachmentsLiveData $attachmentsDoc $liveDataId)
   #set ($liveDataConfig = {
@@ -382,11 +651,16 @@ Not every parameters supported by the Confluence macro are supported by this bri
     limit=5
   }}$jsontool.serialize($liveDataConfig){{/liveData}}
 
-  {{html clean="false"}}#deleteAttachmentModal(){{/html}}
+  {{html clean="false"}}
+    #uploadFileForm($liveDataId)
+    #deleteAttachmentModal()
+  {{/html}}
 #end
 
 
 #macro (executeMacro)
+  #set ($discard = $xwiki.jsx.use("Confluence.Macros.Attachments"))
+  #set ($discard = $xwiki.ssx.use("Confluence.Macros.Attachments"))
   #set ($document = $doc)
   #if ("$!wikimacro.parameters.page" != '')
     #set ($document = $xwiki.getDocument("$!wikimacro.parameters.page"))
@@ -839,6 +1113,85 @@ Not every parameters supported by the Confluence macro are supported by this bri
     </property>
     <property>
       <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>9</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>14589054-a0b9-43b5-afc7-a77c3b5d008f</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>upload</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
     </property>
   </object>
 </xwikidoc>
