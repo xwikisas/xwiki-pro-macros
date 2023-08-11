@@ -43,16 +43,16 @@ Not every parameters supported by the Confluence macro are supported by this bri
 * {{{ labels }}} is not supported since XWiki does not support attachment tags
 * {{{ preview }}} does not make sense for the XWiki macro as attachments are displayed differently
 * {{{ old }}} has not been implemented in this bridge macro because it does not make really sense for XWiki
-* {{{ upload }}} has not been implemented yet because it conflicts with the standard attachment panel upload
 * {{{ "created date" }}} value of the {{{ sortBy }}} property behave the same way as the {{{ "date" }}} value
 
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**patterns**|Comma-separated list of regular expressions, used to filter attachments by name.|No| 
+|**patterns**|Comma-separated list of regular expressions, used to filter attachments by name.|No|
 |**sortBy**|Sort attachments by {{{ date }}}, {{{ size }}} or {{{ name }}}|No|{{{ date }}}
 |**sortOrder**|Sort attachments in {{{ ascending }}} or {{{ descending }}} order|No|{{{ ascending }}}
-|**page**|Pages containing the attachments to display. Current page if empty.|No| 
+|**upload**|Allow users to attach new files|No|{{{ true }}}
+|**page**|Pages containing the attachments to display. Current page if empty.|No|
 
 = Example Usage =
 
@@ -67,7 +67,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <name>Confluence.Macros.Attachments</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>4802ce62-2503-45f8-ba47-d6bc6e0aba7c</guid>
+    <guid>31850ab9-d7bb-4184-973a-3c30235d7d48</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -103,7 +103,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -153,13 +152,12 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <property>
       <code>require(['jquery'], function($) {
   var enhanceUploadInputs = function() {
-    $.each($('.attachmentsUploadFile input[type=file]'), function() {
+    $.each($(".confluenceAttachmentsMacro input[type=file]"), function() {
       // Since the attachments liveData is refreshed on file upload, we don't need a response container.
       new XWiki.FileUploader(this, {
-        'autoUpload': true,
         'progressAutohide': true,
         'responseContainer' : document.createElement('div'),
-        'responseURL' : ''
+        'maxFilesize' : parseInt(this.readAttribute('data-max-file-size'))
       });
     })
   };
@@ -178,10 +176,10 @@ Not every parameters supported by the Confluence macro are supported by this bri
 </code>
     </property>
     <property>
-      <name>Upload</name>
+      <name>Confluence Attachments Macro</name>
     </property>
     <property>
-      <parse/>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>
@@ -191,7 +189,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <name>Confluence.Macros.Attachments</name>
     <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
-    <guid>6231c3e7-68e8-4d8d-94dc-d2c263cea2b5</guid>
+    <guid>c868de8e-f4de-4f95-b830-3a555f653f28</guid>
     <class>
       <name>XWiki.StyleSheetExtension</name>
       <customClass/>
@@ -227,7 +225,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -293,7 +290,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <cache>long</cache>
     </property>
     <property>
-      <code>.attachmentsMacroUploadFile legend {
+      <code>.confluenceAttachmentsMacro legend {
   font-size: 1em;
 }</code>
     </property>
@@ -301,10 +298,10 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <contentType>CSS</contentType>
     </property>
     <property>
-      <name>test</name>
+      <name>Confluence Attachments Macro</name>
     </property>
     <property>
-      <parse/>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>
@@ -571,7 +568,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
 #macro (uploadFileForm $liveDataId)
   #set ($upload = "$!wikimacro.parameters.upload")
   #if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
-    &lt;form action="$attachmentsDoc.getURL("upload")" enctype="multipart/form-data" method="post" class="attachmentsMacroUploadFile"&gt;
+    &lt;form action="$attachmentsDoc.getURL("upload")" enctype="multipart/form-data" method="post"&gt;
       &lt;div&gt;
         ## CSRF prevention
         &lt;input type="hidden" name="form_token" value="$!{services.csrf.getToken()}" /&gt;
@@ -582,7 +579,8 @@ Not every parameters supported by the Confluence macro are supported by this bri
             &lt;label class="sr-only" for="${inputID}"&gt;
               $services.localization.render('core.viewers.attachments.upload.file')
             &lt;/label&gt;
-            &lt;input id="${inputID}" type="file" name="filepath" size="40" class="noitems" /&gt;
+            &lt;input id="${inputID}" type="file" name="filepath" size="40" class="noitems"
+              data-max-file-size="$!escapetool.xml($xwiki.getSpacePreference('upload_maxsize'))"/&gt;
           &lt;/div&gt;
         &lt;/fieldset&gt;
       &lt;/div&gt;
@@ -667,7 +665,9 @@ Not every parameters supported by the Confluence macro are supported by this bri
   #end
 
   {{html clean="false" wiki="true"}}
-    #showConfluenceAttachments($document)
+    &lt;div class='confluenceAttachmentsMacro'&gt;
+      #showConfluenceAttachments($document)
+    &lt;/div&gt;
   {{/html}}
 
 #end
@@ -1119,7 +1119,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <name>Confluence.Macros.Attachments</name>
     <number>9</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>14589054-a0b9-43b5-afc7-a77c3b5d008f</guid>
+    <guid>d81fdd88-ad17-44bd-a5f6-b15172de65ee</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1143,7 +1143,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1179,10 +1178,10 @@ Not every parameters supported by the Confluence macro are supported by this bri
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>true</defaultValue>
     </property>
     <property>
-      <description/>
+      <description>Display an option for uploading files to the selected page.</description>
     </property>
     <property>
       <mandatory>0</mandatory>
