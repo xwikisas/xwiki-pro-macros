@@ -657,6 +657,11 @@ Not every parameters supported by the Confluence macro are supported by this bri
 
 
 #macro (executeMacro)
+  #set ($discard = $xwiki.ssfx.use('uicomponents/widgets/upload.css', true))
+  #set ($discard = $xwiki.jsfx.use('uicomponents/widgets/upload.js', {
+    'forceSkinAction': true,
+    'language': $xcontext.locale
+  }))
   #set ($discard = $xwiki.jsx.use("Confluence.Macros.Attachments"))
   #set ($discard = $xwiki.ssx.use("Confluence.Macros.Attachments"))
   #set ($document = $doc)
