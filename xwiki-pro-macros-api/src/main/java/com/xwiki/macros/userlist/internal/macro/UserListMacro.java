@@ -45,7 +45,6 @@ import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
-import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 import org.xwiki.wiki.user.UserScope;
 import org.xwiki.wiki.user.WikiUserManager;
 import org.xwiki.wiki.user.WikiUserManagerException;
@@ -70,9 +69,6 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 
     @Inject
     private QueryManager queryManager;
-
-    @Inject
-    private WikiDescriptorManager wikiDescriptorManager;
 
     @Inject
     @Named("local")
@@ -147,8 +143,8 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
                 groups.add(localSerializer.serialize(group));
             }
 
-            String mainWiki = wikiDescriptorManager.getMainWikiId();
-            String currentWiki = wikiDescriptorManager.getCurrentWikiId();
+            String mainWiki = getWikiDescriptorManager().getMainWikiId();
+            String currentWiki = getWikiDescriptorManager().getCurrentWikiId();
 
             if (!groups.isEmpty() || users.isEmpty()) {
                 // If no user is given or if at least one group is given, we add all users

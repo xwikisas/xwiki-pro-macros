@@ -130,4 +130,12 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 
     protected abstract List<Block> internalExecute(P parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException;
+
+    /**
+     * @return the wiki descriptor manager
+     */
+    public WikiDescriptorManager getWikiDescriptorManager()
+    {
+        return this.wikiDescriptorManager;
+    }
 }
