@@ -295,16 +295,20 @@ The result is the following :
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  #set($attachment = $wikimacro.parameters.get('att--filename'))
-  #if(!$attachment)
-    #set($attachment = $wikimacro.parameters.get('name'))
+  #set ($attachment = $services.rendering.escape(
+    $escapetool.css($wikimacro.parameters.get('att--filename')), $xwiki.currentContentSyntaxId))
+  #if (!$attachment)
+    #set ($attachment = $services.rendering.escape(
+      $escapetool.css($wikimacro.parameters.get('name'), $xwiki.currentContentSyntaxId)))
   #end
-  #set($page = $wikimacro.parameters.get('page'))
-  #set($width = $wikimacro.parameters.get('width'))
-  #set($height = $wikimacro.parameters.get('height'))
-  #set($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
-  #if("$!page" != '')
-    #set($attachment = "${page}@${attachment}")
+  #set ($page = $services.rendering.escape($wikimacro.parameters.get('page'), $xwiki.currentContentSyntaxId))
+  #set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
+  #set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+  #set ($autostartValue =
+    $services.rendering.escape($wikimacro.parameters.get('autostart'), $xwiki.currentContentSyntaxId))
+  #set ($autostart = "$!autostartValue.toLowerCase()" == 'true')
+  #if ("$!page" != '')
+    #set ($attachment = "${page}@${attachment}")
   #end
   {{jwplayer attachment="${attachment}" width="$!{width}" height="$!{height}" autostart="$!{autostart}" /}}
 #end
