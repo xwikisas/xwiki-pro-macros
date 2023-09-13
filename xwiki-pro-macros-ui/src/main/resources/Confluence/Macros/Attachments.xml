@@ -152,8 +152,8 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <property>
       <code>require(['jquery'], function($) {
   var enhanceUploadInputs = function() {
-    $.each($(".confluenceAttachmentsMacro input[type=file]"), function() {
-      // Since the attachments liveData is refreshed on file upload, we don't need a response container.
+    $.each($('.confluenceAttachmentsMacro input[type=file]'), function() {
+      // Since the attachments liveData is refreshed on file upload, there is no need for a response container.
       new XWiki.FileUploader(this, {
         'progressAutohide': true,
         'responseContainer' : document.createElement('div'),
@@ -167,10 +167,12 @@ Not every parameters supported by the Confluence macro are supported by this bri
   })
 
   $(document).on('xwiki:html5upload:done', function(e) {
-    // Select the livedata above the upload form.
-    const associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
-    const liveDataObj = $(associatedLivedata).data('liveData');
-    liveDataObj.updateEntries();
+    if ($(e.target).prop('id').startsWith('confluenceAttachments')) {
+      // Select the livedata above the upload form.
+      const associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
+      const liveDataObj = $(associatedLivedata).data('liveData');
+      liveDataObj.updateEntries();
+    }
   });
 });
 </code>
@@ -651,7 +653,6 @@ Not every parameters supported by the Confluence macro are supported by this bri
 
   {{html clean="false"}}
     #uploadFileForm($liveDataId)
-    #deleteAttachmentModal()
   {{/html}}
 #end
 
