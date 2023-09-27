@@ -57,6 +57,9 @@ rendering.macro.section.content.description=Add the Section content
 rendering.macro.section.parameter.border.name=Show Border
 rendering.macro.section.parameter.border.description=Select this option to draw a border around the section and columns.
 
+## Attachments macro
+promacros.attachments.upload.title=Upload files to the associated page
+
 ## Column macro
 rendering.macro.column.name=Column Macro
 rendering.macro.column.description=Add the column macro to a page to organize your content in columns. This macro is used in conjunction with the Section macro, and provides more flexibility than page layouts.

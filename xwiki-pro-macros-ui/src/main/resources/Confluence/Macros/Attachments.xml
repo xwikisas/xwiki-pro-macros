@@ -43,16 +43,16 @@ Not every parameters supported by the Confluence macro are supported by this bri
 * {{{ labels }}} is not supported since XWiki does not support attachment tags
 * {{{ preview }}} does not make sense for the XWiki macro as attachments are displayed differently
 * {{{ old }}} has not been implemented in this bridge macro because it does not make really sense for XWiki
-* {{{ upload }}} has not been implemented yet because it conflicts with the standard attachment panel upload
 * {{{ "created date" }}} value of the {{{ sortBy }}} property behave the same way as the {{{ "date" }}} value
 
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**patterns**|Comma-separated list of regular expressions, used to filter attachments by name.|No| 
+|**patterns**|Comma-separated list of regular expressions, used to filter attachments by name.|No|
 |**sortBy**|Sort attachments by {{{ date }}}, {{{ size }}} or {{{ name }}}|No|{{{ date }}}
 |**sortOrder**|Sort attachments in {{{ ascending }}} or {{{ descending }}} order|No|{{{ ascending }}}
-|**page**|Pages containing the attachments to display. Current page if empty.|No| 
+|**upload**|Allow users to attach new files|No|{{{ true }}}
+|**page**|Pages containing the attachments to display. Current page if empty.|No|
 
 = Example Usage =
 
@@ -67,7 +67,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
     <name>Confluence.Macros.Attachments</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>5ce8db0a-d360-4725-aa3a-c5d939b48c8c</guid>
+    <guid>31850ab9-d7bb-4184-973a-3c30235d7d48</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -161,6 +161,30 @@ Not every parameters supported by the Confluence macro are supported by this bri
 });
 
 require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function($, l10n) {
+  var enhanceUploadInputs = function() {
+    $.each($('.confluenceAttachmentsMacro input[type=file]'), function() {
+      // Since the attachments liveData is refreshed on file upload, there is no need for a response container.
+      new XWiki.FileUploader(this, {
+        'progressAutohide': true,
+        'responseContainer' : document.createElement('div'),
+        'maxFilesize' : parseInt(this.readAttribute('data-max-file-size'))
+      });
+    })
+  };
+
+  $(function() {
+    enhanceUploadInputs();
+  })
+
+  $(document).on('xwiki:html5upload:done', function(e) {
+    if ($(e.target).prop('id').startsWith('confluenceAttachments')) {
+      // Select the livedata above the upload form.
+      const associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
+      const liveDataObj = $(associatedLivedata).data('liveData');
+      liveDataObj.updateEntries();
+    }
+  });
+
   //
   // The delete action methods are similar to the ones from the attachments tab, but couldn't be reused. The problem is
   // that when the tab is not opened we cannot just load the attachments.js file, since it expects some elements to be
@@ -199,10 +223,132 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
       error: function() {
         notification.replace(new XWiki.widgets.Notification(l10n['failed'], 'error'));
       }
-    })
+    });
   });
 });
 </code>
+    </property>
+    <property>
+      <name>Confluence Attachments Macro</name>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>c868de8e-f4de-4f95-b830-3a555f653f28</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.confluenceAttachmentsMacro legend {
+  font-size: 1em;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
     </property>
     <property>
       <name>Confluence Attachments Macro</name>
@@ -497,6 +643,29 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   #showConfluenceAttachmentsLiveData($document $confluenceAttachmentMacroId)
 #end
 
+#macro (uploadFileForm $liveDataId)
+  #set ($upload = "$!wikimacro.parameters.upload")
+  #if ($upload == 'true' &amp;&amp; ($hasEdit || $hasAdmin) &amp;&amp; $xcontext.action == 'view')
+    &lt;form action="$attachmentsDoc.getURL("upload")" enctype="multipart/form-data" method="post"&gt;
+      &lt;div&gt;
+        ## CSRF prevention
+        &lt;input type="hidden" name="form_token" value="$!{services.csrf.getToken()}" /&gt;
+        &lt;fieldset&gt;
+          &lt;legend&gt;$services.localization.render('promacros.attachments.upload.title')&lt;/legend&gt;
+          &lt;div&gt;
+            #set ($inputID = "${liveDataId}-uploadFile")
+            &lt;label class="sr-only" for="${inputID}"&gt;
+              $services.localization.render('core.viewers.attachments.upload.file')
+            &lt;/label&gt;
+            &lt;input id="${inputID}" type="file" name="filepath" size="40" class="noitems"
+              data-max-file-size="$!escapetool.xml($xwiki.getSpacePreference('upload_maxsize'))"/&gt;
+          &lt;/div&gt;
+        &lt;/fieldset&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  #end
+#end
+
 ## Display a liveData with attachments from the specified document.
 #macro (showConfluenceAttachmentsLiveData $attachmentsDoc $liveDataId)
   #set ($liveDataConfig = {
@@ -559,13 +728,22 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     limit=5
   }}$jsontool.serialize($liveDataConfig){{/liveData}}
 
-  {{html clean="false"}}#deleteConfluenceAttachmentModal(){{/html}}
+  {{html clean="false"}}
+    #uploadFileForm($liveDataId)
+    #deleteConfluenceAttachmentModal()
+  {{/html}}
 #end
 
 
 #macro (executeMacro)
-  $xwiki.ssfx.use('js/xwiki/viewers/attachments.css', true)
+  #set ($discard = $xwiki.ssfx.use('js/xwiki/viewers/attachments.css', true))
+  #set ($discard = $xwiki.ssfx.use('uicomponents/widgets/upload.css', true))
+  #set ($discard = $xwiki.jsfx.use('uicomponents/widgets/upload.js', {
+    'forceSkinAction': true,
+    'language': $xcontext.locale
+  }))
   #set ($discard = $xwiki.jsx.use("Confluence.Macros.Attachments"))
+  #set ($discard = $xwiki.ssx.use("Confluence.Macros.Attachments"))
   #set ($document = $doc)
   #if ("$!wikimacro.parameters.page" != '')
     #set ($document = $xwiki.getDocument("$!wikimacro.parameters.page"))
@@ -1020,6 +1198,84 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     </property>
     <property>
       <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Attachments</name>
+    <number>9</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>d81fdd88-ad17-44bd-a5f6-b15172de65ee</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>true</defaultValue>
+    </property>
+    <property>
+      <description>Display an option for uploading files to the selected page.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>upload</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
     </property>
   </object>
 </xwikidoc>

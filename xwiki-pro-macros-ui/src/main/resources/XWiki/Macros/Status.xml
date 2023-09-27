@@ -453,11 +453,11 @@ A comment is needed in order to skip extra spaces added and use this macro inlin
 {{/comment}}{{velocity}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
-  #set ($color = $xcontext.macro.params.colour)
+  #set ($color = $escapetool.xml($xcontext.macro.params.colour))
   #if (!$color)
     #set ($color = 'Grey')
   #end
-  #set ($title = $xcontext.macro.params.title)
+  #set ($title = $escapetool.xml($xcontext.macro.params.title))
   #if (!$title)
     #set ($title = $color)
   #end
