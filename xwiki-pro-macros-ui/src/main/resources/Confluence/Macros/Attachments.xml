@@ -103,6 +103,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -150,7 +151,16 @@ Not every parameters supported by the Confluence macro are supported by this bri
       <cache>long</cache>
     </property>
     <property>
-      <code>require(['jquery'], function($) {
+      <code>define('xwiki-confluence-attachments-messages', {
+  prefix: 'core.viewers.attachments.delete.',
+  keys: [
+    'inProgress',
+    'done',
+    'error'
+  ]
+});
+
+require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function($, l10n) {
   var enhanceUploadInputs = function() {
     $.each($('.confluenceAttachmentsMacro input[type=file]'), function() {
       // Since the attachments liveData is refreshed on file upload, there is no need for a response container.
@@ -173,6 +183,47 @@ Not every parameters supported by the Confluence macro are supported by this bri
       const liveDataObj = $(associatedLivedata).data('liveData');
       liveDataObj.updateEntries();
     }
+  });
+
+  //
+  // The delete action methods are similar to the ones from the attachments tab, but couldn't be reused. The problem is
+  // that when the tab is not opened we cannot just load the attachments.js file, since it expects some elements to be
+  // already loaded and it produces errors.
+  //
+
+  /**
+   * Open the delete confirmation modal on liveData attachment delete button.
+   */
+  $(document).on('click', '.confluenceAttachmentsMacro .attachmentActions .actiondelete', function(e) {
+    e.preventDefault();
+    var modal = $(e.currentTarget).closest('.liveData').nextAll('.deleteConfluenceAttachment');
+    modal.data('relatedTarget', e.currentTarget);
+    modal.modal('show');
+  });
+
+  /**
+   * On delete confirmation, delete attachment and refresh liveData.
+   */
+  $(document).on('click', '.confluenceAttachmentsMacro .deleteConfluenceAttachment input.btn-danger', function(e) {
+    e.preventDefault();
+    var modal = $(e.currentTarget).closest('.deleteConfluenceAttachment');
+    var button = $(modal.data('relatedTarget'));
+    var liveData = button.closest('.liveData').data('liveData');
+    var notification;
+
+    $.ajax({
+      url : button.prop('href'),
+      beforeSend : function() {
+        notification = new XWiki.widgets.Notification(l10n['inProgress'], 'inprogress');
+      },
+      success : function() {
+        liveData.updateEntries()
+        notification.replace(new XWiki.widgets.Notification(l10n['done'], 'done'));
+      },
+      error: function() {
+        notification.replace(new XWiki.widgets.Notification(l10n['failed'], 'error'));
+      }
+    });
   });
 });
 </code>
@@ -555,12 +606,37 @@ Not every parameters supported by the Confluence macro are supported by this bri
   #end
 #end
 
+#macro (deleteConfluenceAttachmentModal)
+  ## Copied from the attachments tab code. The original macro cannot be used, since it will interfere with some js
+  ## specific to attachments tab. Precisely, if the attachments tab is already opened, everything is working correctly.
+  ## If it is not opened, we need to load the attachments.js code anyway, to use it's listeners, but there are parts
+  ## that rightfully assume that some elements are present on the page and errors will occur.
+  &lt;div class="modal fade deleteConfluenceAttachment" tabindex="-1" role="dialog"&gt;
+    &lt;div class="modal-dialog"&gt;
+      &lt;div class="modal-content"&gt;
+        &lt;div class="modal-header"&gt;
+          &lt;button type="button" class="close" data-dismiss="modal"&gt;&amp;times;&lt;/button&gt;
+          &lt;div class="modal-title"&gt;$services.localization.render('core.viewers.attachments.delete')&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-body"&gt;
+          &lt;div&gt;$services.localization.render('core.viewers.attachments.delete.confirm')&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-footer"&gt;
+          &lt;input type="button" class="btn btn-danger"  data-dismiss="modal"
+            value="$escapetool.xml($services.localization.render('core.viewers.attachments.delete'))"&gt;
+          &lt;input type="button" class="btn btn-default" data-dismiss="modal"
+            value="$escapetool.xml($services.localization.render('cancel'))"&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+#end
+
 #set ($confluenceAttachmentMacroIndex = -1)
 ## Code taken and adapted
 #macro (showConfluenceAttachments $document)
   #template('attachment_macros.vm')
   #template('display_macros.vm')
-  #initRequiredSkinExtensions()
   #set ($confluenceAttachmentMacroIndex = $confluenceAttachmentMacroIndex + 1)
   #set ($confluenceAttachmentMacroId = "confluenceAttachments$confluenceAttachmentMacroIndex")
   ##
@@ -599,7 +675,8 @@ Not every parameters supported by the Confluence macro are supported by this bri
         { 'id': 'filename', 'displayer': 'html' },
         { 'id': 'filesize', 'displayer': 'html' },
         { 'id': 'date', 'filter': 'date'},
-        { 'id': 'author', 'displayer': 'html' }
+        { 'id': 'author', 'displayer': 'html' },
+        { 'id': 'actions', 'displayer': 'html' }
       ],
       'entryDescriptor': {
         'idProperty': 'id'
@@ -644,7 +721,7 @@ Not every parameters supported by the Confluence macro are supported by this bri
 
   {{liveData
     id="$liveDataId"
-    properties="mimeType,filename,filesize,date,author"
+    properties="mimeType,filename,filesize,date,author,actions"
     source='liveTable'
     sourceParameters="$sourceParameters"
     sort="$liveDataSort"
@@ -653,11 +730,13 @@ Not every parameters supported by the Confluence macro are supported by this bri
 
   {{html clean="false"}}
     #uploadFileForm($liveDataId)
+    #deleteConfluenceAttachmentModal()
   {{/html}}
 #end
 
 
 #macro (executeMacro)
+  #set ($discard = $xwiki.ssfx.use('js/xwiki/viewers/attachments.css', true))
   #set ($discard = $xwiki.ssfx.use('uicomponents/widgets/upload.css', true))
   #set ($discard = $xwiki.jsfx.use('uicomponents/widgets/upload.js', {
     'forceSkinAction': true,
