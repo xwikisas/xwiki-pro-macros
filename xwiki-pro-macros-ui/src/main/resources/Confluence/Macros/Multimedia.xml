@@ -295,18 +295,20 @@ The result is the following :
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  #set($attachment = $wikimacro.parameters.get('att--filename'))
-  #if(!$attachment)
-    #set($attachment = $wikimacro.parameters.get('name'))
+  #set ($attachment = $wikimacro.parameters.get('att--filename'))
+  #if (!$attachment)
+    #set ($attachment = $wikimacro.parameters.get('name'))
   #end
-  #set($page = $wikimacro.parameters.get('page'))
-  #set($width = $wikimacro.parameters.get('width'))
-  #set($height = $wikimacro.parameters.get('height'))
-  #set($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
-  #if("$!page" != '')
-    #set($attachment = "${page}@${attachment}")
+  #set ($page = $services.model.resolveDocument($wikimacro.parameters.get('page')))
+  #set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
+  #set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+  #set ($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
+  #if ("$!page" != '')
+    #set ($attachRef = $services.model.createAttachmentReference($page, $attachment))
+    #set ($attachment = $services.model.serialize($attachRef, 'local'))
   #end
-  {{jwplayer attachment="${attachment}" width="$!{width}" height="$!{height}" autostart="$!{autostart}" /}}
+  {{jwplayer attachment="${services.rendering.escape($attachment, $xwiki.currentContentSyntaxId)}" width="$!{width}"
+    height="$!{height}" autostart="$!{autostart}" /}}
 #end
 {{/velocity}}
 
