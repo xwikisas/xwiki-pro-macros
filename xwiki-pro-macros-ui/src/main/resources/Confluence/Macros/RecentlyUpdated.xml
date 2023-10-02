@@ -181,6 +181,7 @@ require(['jquery'], $ =&gt; {
       const urlParams = [
         'xpage=plain',
         'outputSyntax=plain',
+        'fromAjax=true',
         'macroOptions=' + encodeURIComponent($macro.data('options')),
       ].join('&amp;');
       const url = MACRO_SERVICE_URL + '?' + urlParams;

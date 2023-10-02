@@ -65,46 +65,27 @@
 ## Query macros
 ## -----------------------------------------------------------------
 
-#macro (queryPages $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Document filters
-  #set ($discard = $fq.add('type:DOCUMENT'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
-  #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("author:($options.authors)"))
-  #end
-  #if ("$!options.tags" == '')
-    #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
+#macro (queryElements $type $options $return)
+  #if ($type == "attachment")
+    #set($typeField = "ATTACHMENT")
+    #set($authorField = "attauthor")
+    #set($versionField = "attdate")
+  #elseif ($type == "comment")
+    #set($typeField = "OBJECT_PROPERTY")
+    #set($authorField = "propertyvalue_")
+    #set($versionField = "_version_")
   #else
-    #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    #set($typeField = "DOCUMENT")
+    #set($authorField = "author")
+    #set($versionField = "date")
   #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "date desc"))
-  #set ($discard = $query.setOffset($options.offset))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Fix some properties
-  #foreach ($page in $response.results)
-    #set ($discard = $page.put('type', 'page'))
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
-
-#macro (queryBlogposts $options $return)
   #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Document filters
-  #set ($discard = $fq.add('type:DOCUMENT'))
+  #set ($discard = $fq.add("type:$typeField"))
+  #if ($type == "comment")
+    #set ($discard = $fq.add('class:XWiki.XWikiComments'))
+    #set ($discard = $fq.add('propertyname:(author)'))
+  #end
   #if ("$!options.wiki" != '')
     #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
@@ -112,91 +93,50 @@
     #set ($discard = $fq.add("space:($options.spaces)"))
   #end
   #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("author:($options.authors)"))
+    #set ($discard = $fq.add("$authorField:($options.authors)"))
   #end
-  #if ("$!options.tags" == '')
-    #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
+  #if ($type == 'page')
+    #if ("$!options.tags" == '')
+      #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
+    #else
+      #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
+      #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    #end
+  #elseif ($type == 'blogpost')
+    #if ("$!options.tags" == '')
+      #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
+    #else
+      #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
+      #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    #end
+  #end
+  ## Query params
+  #set ($discard = $query.bindValue('fq', $fq))
+  #set ($discard = $query.bindValue('sort', "$versionField desc"))
+  #set ($discard = $query.setOffset($options.offset))
+  #set ($discard = $query.setLimit($options.limit))
+  #set ($responses = $query.execute())
+  #if ($responses.isEmpty())
+    ## Return
+    #set ($return = $NULL)
+    #setVariable("$return" [])
   #else
-    #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
-    #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+    #set($response = $responses[0])
+    ## Fix some properties
+    #foreach ($element in $response.results)
+      #set ($discard = $element.put('type', $type))
+      #if ($type == "attachment")
+        #set ($discard = $element.put('date', $element.attdate[0]))
+        #set ($discard = $element.put('title_', $element.filename[0]))
+        #set ($discard = $element.put('author', $element.attauthor[0]))
+      #elseif ($type == "comment")
+        #addCommentData($element)
+      #end
+    #end
+    ## Return
+    #set ($return = $NULL)
+    #setVariable("$return" $response.results)
   #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "date desc"))
-  #set ($discard = $query.setOffset($options.offset))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Fix some properties
-  #foreach ($blogpost in $response.results)
-    #set ($discard = $blogpost.put('type', 'blogpost'))
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
-
-#macro (queryAttachments $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Attachment filters
-  #set ($discard = $fq.add('type:ATTACHMENT'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
-  #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("attauthor:($options.authors)"))
-  #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "attdate desc"))
-  #set ($discard = $query.setOffset($options.offset))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Fix some properties
-  #foreach ($attachment in $response.results)
-    #set ($discard = $attachment.put('type', 'attachment'))
-    #set ($discard = $attachment.put('date', $attachment.attdate[0]))
-    #set ($discard = $attachment.put('title_', $attachment.filename[0]))
-    #set ($discard = $attachment.put('author', $attachment.attauthor[0]))
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
-#end
-
-#macro (queryComments $options $return)
-  #set ($fq = [])
-  #set ($query = $services.query.createQuery('name:*', 'solr'))
-  ## Comment filters
-  #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
-  #set ($discard = $fq.add('class:XWiki.XWikiComments'))
-  #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
-  #end
-  #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
-  #end
-  #set ($discard = $fq.add('propertyname:(author)'))
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("propertyvalue_:($options.authors)"))
-  #end
-  ## Query params
-  #set ($discard = $query.bindValue('fq', $fq))
-  #set ($discard = $query.bindValue('sort', "_version_ desc"))
-  #set ($discard = $query.setOffset($options.offset))
-  #set ($discard = $query.setLimit($options.limit))
-  #set ($response = $query.execute()[0])
-  ## Add missing comment data &amp; fix some properties
-  #foreach ($comment in $response.results)
-    #set ($discard = $comment.put('type', 'comment'))
-    #addCommentData($comment)
-  #end
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $response)
 #end
 
 #macro (addCommentData $comment)
@@ -248,10 +188,10 @@
     #set ($typeOptions.offset = $typeMetadata.offset)
     #set ($typeOptions.limit = $options.limit + 1)
     ## Fetch results if needed
-    #if ($options.types.contains("$type") &amp;&amp; $typeMetadata.hasNext)
-      #evaluate ("#query${stringtool.capitalize($type)}s(${escapetool.d}typeOptions ${escapetool.d}response)")
-      #set ($typeMetadata.fetchedCountTotal = $response.results.size())
-      #set ($discard = $queryResponses.add($response.results))
+    #if ($options.types.contains($type) &amp;&amp; $typeMetadata.hasNext)
+      #queryElements($type $typeOptions $results)
+      #set ($typeMetadata.fetchedCountTotal = $results.size())
+      #set ($discard = $queryResponses.add($results))
     #else
       #set ($typeMetadata.fetchedCountTotal = 0)
     #end
@@ -488,7 +428,7 @@
 ## -----------------------------------------------------------------
 ## Fetch results
 ## -----------------------------------------------------------------
-#if ($xcontext.action == 'get')
+#if ("$!request.fromAjax" == "true")
   #set ($options = $jsontool.fromString($request.macroOptions))
   #fetchResults($options, $results)
   #displayResults($results $options)
