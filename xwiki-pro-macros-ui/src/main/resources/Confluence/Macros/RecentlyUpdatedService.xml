@@ -66,6 +66,7 @@
 ## -----------------------------------------------------------------
 
 #macro (queryElements $type $options $return)
+  #set ($fq = [])
   #if ($type == "attachment")
     #set($typeField = "ATTACHMENT")
     #set($authorField = "attauthor")
@@ -78,8 +79,10 @@
     #set($typeField = "DOCUMENT")
     #set($authorField = "author")
     #set($versionField = "date")
+    #if (!$services.user.getProperties().displayHiddenDocuments())
+      #set($discard = $fq.add("hidden:false"))
+    #end
   #end
-  #set ($fq = [])
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   #set ($discard = $fq.add("type:$typeField"))
   #if ($type == "comment")
