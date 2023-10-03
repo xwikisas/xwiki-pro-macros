@@ -167,68 +167,71 @@ There are only a few things that are not supported compared to the Confluence ma
 #[[
 
 require(['jquery'], $ =&gt; {
-  $(() =&gt; {
-    const MACRO_SERVICE_URL = new XWiki.Document(
-      XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)
-    ).getURL('get');
+  const MACRO_SERVICE_URL = new XWiki.Document(
+    XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)
+  ).getURL('get');
 
-    const $macros = $('.recently-updated-macro');
-
-    /*
-     * Query new results and append them to the page
-     */
-    const fetchMoreResultsHTML = function ($macro) {
-      const urlParams = [
-        'xpage=plain',
-        'outputSyntax=plain',
-        'fromAjax=true',
-        'macroOptions=' + encodeURIComponent($macro.data('options')),
-      ].join('&amp;');
-      const url = MACRO_SERVICE_URL + '?' + urlParams;
-      fetch(url)
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error('An error occured fetching new results.');
-        }
-        return response.text();
-      })
-      .then(function (html) {
-        // Append html results directly to the page
-        $macro.find('ul.results').append(html);
-        handleMetadata($macro);
-      });
+  /*
+   * Query new results and append them to the page
+   */
+  function showMore(event) {
+    const macro = event.target.closest('.recently-updated-macro');
+    if (!macro) {
+      console.log("Failed to show more");
+      return;
     }
 
-    /*
-     * Store fetched metadata for next result fetch
-     * Update fetch button according to whether there are more results to fetch
-     */
-    const handleMetadata = function ($macro) {
-      const $dataElement = $macro.find('.recently-updated-options');
-      if ($dataElement.length === 0) {
-        console.warn('No options were found when fetching new results')
-      } else {
-        $macro.data('options', $dataElement.attr('data-options'))
-        const hasNext = JSON.parse($dataElement.attr('data-has-next'));
-        if (!hasNext) {
-          $macro.find('button.show-more')
-            .replaceWith('&lt;div class="no-more-results"&gt;' + l10n['noMoreResults'] + '&lt;/div&gt;')
-        }
-        $dataElement.remove();
+    const urlParams = [
+      'xpage=plain',
+      'outputSyntax=plain',
+      'fromAjax=true',
+      'macroOptions=' + encodeURIComponent(macro.dataset.options),
+    ].join('&amp;');
+    const url = MACRO_SERVICE_URL + '?' + urlParams;
+    fetch(url)
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error('An error occured fetching new results.');
       }
-    };
-
-    // Init
-    $macros.each(function (i, macro) {
-      handleMetadata($(macro));
-    });
-
-    // Fetch new results
-    $macros.find('button.show-more').click(function (event) {
-      const $macro = $(event.target).closest('.recently-updated-macro');
-      fetchMoreResultsHTML($macro);
+      return response.text();
     })
-  })
+    .then(function (html) {
+      // Append html results directly to the page
+      $(macro.querySelector('ul.results')).append(html);
+      handleMetadata(macro);
+    });
+  }
+
+  /*
+   * Store fetched metadata for next result fetch
+   * Update fetch button according to whether there are more results to fetch
+   */
+  function handleMetadata(macro) {
+    const dataElement = macro.querySelector('.recently-updated-options');
+    if (dataElement) {
+      macro.dataset.options = dataElement.dataset.options;
+      const btn = macro.querySelector('button.show-more');
+      if (btn) {
+        if (dataElement.dataset.hasNext !== "true") {
+          $(btn).replaceWith('&lt;div class="no-more-results"&gt;' + l10n['noMoreResults'] + '&lt;/div&gt;');
+        } else {
+          btn.addEventListener('click', showMore);
+        }
+      }
+      dataElement.remove();
+    }
+  }
+
+  function init() {
+    for (const macro of document.querySelectorAll('.recently-updated-macro')) {
+      handleMetadata(macro);
+    }
+  }
+
+  $(() =&gt; {
+    $(document).on('xwiki:dom:updated', init);
+    init();
+  });
 });
 
 ]]#</code>
