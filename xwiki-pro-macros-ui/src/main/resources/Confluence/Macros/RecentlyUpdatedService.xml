@@ -79,9 +79,9 @@
     #set($typeField = "DOCUMENT")
     #set($authorField = "author")
     #set($versionField = "date")
-    #if (!$services.user.getProperties().displayHiddenDocuments())
-      #set($discard = $fq.add("hidden:false"))
-    #end
+  #end
+  #if (!$services.user.getProperties().displayHiddenDocuments())
+    #set($discard = $fq.add("hidden:false"))
   #end
   #set ($query = $services.query.createQuery('name:*', 'solr'))
   #set ($discard = $fq.add("type:$typeField"))
