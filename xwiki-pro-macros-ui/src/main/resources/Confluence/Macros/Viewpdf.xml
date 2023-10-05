@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="Confluence.Macros.Viewpdf" locale="">
+<xwikidoc version="1.4" reference="Confluence.Macros.Viewpdf" locale="">
   <web>Confluence.Macros</web>
   <name>Viewpdf</name>
   <language/>
@@ -260,13 +260,11 @@
 #if (!$filename)
   #set ($filename = $xcontext.macro.params.get('name'))
 #end
-#if ($xcontext.macro.context.isInline())(((#end
 #if ($hasPDFViewer)
   {{pdfviewer file="$filename" /}}
 #else
   {{office reference="$filename" /}}
 #end
-#if (${xcontext.macro.context.isInline()}))))#end
 {{/velocity}}</code>
     </property>
     <property>
@@ -294,7 +292,7 @@
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
