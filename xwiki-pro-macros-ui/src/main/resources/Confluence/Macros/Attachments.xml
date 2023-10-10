@@ -746,8 +746,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     'className': 'XWiki.AllAttachments',
     "\$doc": "$attachmentsDoc"
   })
-  ## Since attachmentsjson.vm was added starting with XWiki 14.6, we use a copy of its code for backwards
-  ## compatibility.
+  ## Since the correct attachmentsjson.vm was added in XWiki 14.8, we use a copy of its code for backwards compatibility.
   #supportsAttachJSON($supportsAttachJSON)
   #if ($supportsAttachJSON)
     #set ($discard = $sourceParams.put('template', 'xpart.vm'))

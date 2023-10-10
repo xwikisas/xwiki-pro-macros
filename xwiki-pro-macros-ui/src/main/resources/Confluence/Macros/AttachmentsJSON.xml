@@ -248,9 +248,8 @@
 {{/velocity}}
 
 {{velocity}}
-## This page should be deleted after upgrading the parent to a version of XWiki &gt;= 14.10.
-## The code was copied from attachmentsjson.vm for backwards compatibility, since it wasn't
-## present on the minimal supported version 13.10.
+## This page should be deleted after upgrading the parent to a version of XWiki &gt;= 14.8. The code was copied from
+## attachmentsjson.vm for backwards compatibility, since it wasn't present on the minimal supported version 13.10.
 #template('hierarchy_macros.vm')
 #if ($xcontext.action == 'get')
   #set ($offset = $numbertool.toNumber($request.offset).intValue())
