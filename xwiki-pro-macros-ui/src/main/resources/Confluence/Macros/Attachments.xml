@@ -183,12 +183,16 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   $(document).on('xwiki:html5upload:done', function(e) {
     if ($(e.target).prop('id').startsWith('confluenceAttachments')) {
       // Select the livedata above the upload form.
-      let associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
+      const uploadForm = $(e.target).closest('form');
+      let associatedLivedata = uploadForm.prevAll('.liveData').first();
+      // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
+      associatedLivedata = associatedLivedata.length &gt; 0 ?
+        associatedLivedata : uploadForm.prevAll('.xwiki-livedata').first();
       // We do not have access to a liveData object before XWiki 14.4.
-      if (associatedLivedata === undefined || $(associatedLivedata).data('liveData') === undefined) {
+      if (associatedLivedata.data('liveData') === undefined) {
         location.reload();
       } else {
-        $(associatedLivedata).data('liveData').updateEntries();
+        associatedLivedata.data('liveData').updateEntries();
       }
     }
   });
@@ -221,7 +225,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     var button = $(modal.data('relatedTarget'));
     let liveData = button.closest('.liveData');
     // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
-    liveData = liveData.length &gt; 0 ? liveData : $(e.currentTarget).closest('.xwiki-livedata');
+    liveData = liveData.length &gt; 0 ? liveData : button.closest('.xwiki-livedata');
     var notification;
 
     $.ajax({
@@ -230,8 +234,9 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         notification = new XWiki.widgets.Notification(l10n['inProgress'], 'inprogress');
       },
       success : function() {
-        if (liveData.length &gt; 0 &amp;&amp; liveData.data('liveData') !== undefined) {
-          liveData.data('liveData').updateEntries()
+        // We do not have access to a liveData object before XWiki 14.4.
+        if (liveData.data('liveData') !== undefined) {
+          liveData.data('liveData').updateEntries();
           notification.replace(new XWiki.widgets.Notification(l10n['done'], 'done'));
         } else {
           location.reload();
