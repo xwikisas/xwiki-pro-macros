@@ -185,11 +185,10 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
       // Select the livedata above the upload form.
       let associatedLivedata = $(e.target).closest('form').prevAll('.liveData')[0];
       // We do not have access to a liveData object before XWiki 14.4.
-      if (associatedLivedata == undefined) {
+      if (associatedLivedata === undefined || $(associatedLivedata).data('liveData') === undefined) {
         location.reload();
       } else {
-        const liveDataObj = $(associatedLivedata).data('liveData');
-        liveDataObj.updateEntries();
+        $(associatedLivedata).data('liveData').updateEntries();
       }
     }
   });
@@ -206,7 +205,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   $(document).on('click', '.confluenceAttachmentsMacro .attachmentActions .actiondelete', function(e) {
     e.preventDefault();
     let liveData = $(e.currentTarget).closest('.liveData');
-    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.10.
+    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
     liveData = liveData.length &gt; 0 ? liveData : $(e.currentTarget).closest('.xwiki-livedata');
     var modal = liveData.nextAll('.deleteConfluenceAttachment');
     modal.data('relatedTarget', e.currentTarget);
@@ -221,7 +220,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     var modal = $(e.currentTarget).closest('.deleteConfluenceAttachment');
     var button = $(modal.data('relatedTarget'));
     let liveData = button.closest('.liveData');
-    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.10.
+    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
     liveData = liveData.length &gt; 0 ? liveData : $(e.currentTarget).closest('.xwiki-livedata');
     var notification;
 
@@ -231,7 +230,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         notification = new XWiki.widgets.Notification(l10n['inProgress'], 'inprogress');
       },
       success : function() {
-        if (liveData.length &gt; 0) {
+        if (liveData.length &gt; 0 &amp;&amp; liveData.data('liveData') !== undefined) {
           liveData.data('liveData').updateEntries()
           notification.replace(new XWiki.widgets.Notification(l10n['done'], 'done'));
         } else {
@@ -695,6 +694,14 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   #end
 #end
 
+#macro (supportsAttachJSON $supportsAttachJSON)
+  ## The attachments.json code uses macros from attachment_macro.vm, so the existence of the attachments livedata macro
+  ## is an indicator that the template exists and is adapted for livedata.
+  #template('attachment_macros.vm')
+  #set ($macroResult = "#showAttachmentsLiveData($doc 'id')")
+  #set ($supportsAttachJSON = $macroResult.startsWith('{{liveData'))
+#end
+
 ## Display a liveData with attachments from the specified document.
 #macro (showConfluenceAttachmentsLiveData $attachmentsDoc $liveDataId)
   #set ($liveDataConfig = {
@@ -729,14 +736,20 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
       ))
     #end
   #end
-  ## After upgrading to a XWiki parent with a version &gt;= 14.10, the resultPage parameter should be replaced back by
-  ## {'template': 'xpart.vm', 'vm': 'attachmentsjson.vm'}.
-  #set ($sourceParameters = $escapetool.url({
+  #set ($sourceParams = {
     'translationPrefix': 'core.viewers.attachments.livetable.',
     'className': 'XWiki.AllAttachments',
-    "\$doc": "$attachmentsDoc",
-    'resultPage': 'Confluence.Macros.AttachmentsJSON'
-  }))
+    "\$doc": "$attachmentsDoc"
+  })
+  ## Since attachmentsjson.vm was added starting with XWiki 14.6, we use a copy of its code for backwards
+  ## compatibility.
+  #supportsAttachJSON($supportsAttachJSON)
+  #if ($supportsAttachJSON)
+    #set ($discard = $sourceParams.put('template', 'xpart.vm'))
+    #set ($discard = $sourceParams.put('vm', 'attachmentsjson.vm'))
+  #else
+    #set ($discard = $sourceParams.put('resultPage', 'Confluence.Macros.AttachmentsJSON'))
+  #end
   #getLiveDataSort($liveDataSort)
   #if ($invalidSortBy)
     {{warning}}
@@ -753,7 +766,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     id="$liveDataId"
     properties="mimeType,filename,filesize,date,author,actions"
     source='liveTable'
-    sourceParameters="$sourceParameters"
+    sourceParameters="$escapetool.url($sourceParams)"
     sort="$liveDataSort"
     limit=5
   }}$jsontool.serialize($liveDataConfig){{/liveData}}
