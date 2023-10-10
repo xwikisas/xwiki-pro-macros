@@ -368,7 +368,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
       <code>.confluenceAttachmentsMacro legend {
   font-size: 1em;
 }
- /* These should be deleted after upgrading to a XWiki parent &gt;= 14.10. */
+ /* These should be deleted after upgrading to a XWiki parent &gt;= 14.6. */
 .attachmentMimeType {
   color: $theme.textSecondaryColor;
   font-size: 32px;
