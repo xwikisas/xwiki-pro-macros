@@ -93,7 +93,15 @@
     #set ($discard = $fq.add("wiki:($options.wiki)"))
   #end
   #if ("$!options.spaces" != '')
-    #set ($discard = $fq.add("space:($options.spaces)"))
+    ## Note : this is only splitting the list of spaces based on the comma separator, however the documentation of the Recently Updated macro in Confluence DC specifies that spaces could also be separated per space. This would be causing an issue in XWiki because spaces can contain space chars in their name. See https://confluence.atlassian.com/doc/recently-updated-macro-139519.html
+    #foreach($space in $options.spaces.split(','))
+      #if ($foreach.count == 1)
+        #set($spaceSelector = "${escapetool.q}$!{space}${escapetool.q}")
+      #else
+        #set($spaceSelector = "$!{spaceSelector} OR ${escapetool.q}$!{space}${escapetool.q}")
+      #end
+    #end
+    #set ($discard = $fq.add("space_prefix:($!{spaceSelector})"))
   #end
   #if ("$!options.authors" != '')
     #set ($discard = $fq.add("$authorField:($options.authors)"))
