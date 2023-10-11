@@ -266,19 +266,20 @@
 #macro (executeMacro)
   #set($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
   #set($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
-  #set($filename = $xcontext.macro.params.get('att--filename'))
-  #if(!$filename)
-    #set($filename = $xcontext.macro.params.get('name'))
+  #set($unescapedFilename = $xcontext.macro.params.get('att--filename'))
+  #if(!$unescapedFilename)
+    #set($unescapedFilename = $xcontext.macro.params.get('name'))
   #end
-  #set($extension = $filename.substring($mathtool.add($filename.lastIndexOf('.'), 1)).toLowerCase())
+  #set($extension = $unescapedFilename.substring($mathtool.add($unescapedFilename.lastIndexOf('.'), 1)).toLowerCase())
+  #set($escapedFilename = $services.rendering.escape($unescapedFilename, $xwiki.currentContentSyntaxId))
   #if($extension == 'pdf' &amp;&amp; $hasPDFViewer)
 
-    {{pdfviewer file="${filename}" /}}
+    {{pdfviewer file="$escapedFilename" /}}
   #elseif($officeExtensions.contains($extension))
 
-    {{office reference="attach:${filename}" /}}
-  #elseif($doc.getAttachment($filename))
-    [[attach:${filename}]]
+    {{office reference="attach:$escapedFilename" /}}
+  #elseif($doc.getAttachment($unescapedFilename))
+    [[attach:$escapedFilename]]
   #end
 #end
 {{/velocity}}

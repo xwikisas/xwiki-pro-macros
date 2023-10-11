@@ -256,11 +256,12 @@
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  #set ($filename = $xcontext.macro.params.get('att--filename'))
-  #if (!$filename)
-    #set ($filename = $xcontext.macro.params.get('name'))
+  #set ($unescapedFilename = $xcontext.macro.params.get('att--filename'))
+  #if (!$unescapedFilename)
+    #set ($unescapedFilename = $xcontext.macro.params.get('name'))
   #end
-  {{office reference="$filename" /}}
+  #set($escapedFilename = $services.rendering.escape($unescapedFilename, $xwiki.currentContentSyntaxId))
+  {{office reference="$escapedFilename" /}}
 #end
 {{/velocity}}
 
