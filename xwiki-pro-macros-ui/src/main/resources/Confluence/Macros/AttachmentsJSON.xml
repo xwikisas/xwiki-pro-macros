@@ -1,0 +1,355 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.AttachmentsJSON" locale="">
+  <web>Confluence.Macros</web>
+  <name>AttachmentsJSON</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Confluence.Macros.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>AttachmentsJSON</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity output="false"}}
+## This code was copied from attachment_macros.vm for backwards compatibility, since
+## it's needed for constructing the attachments JSON response.
+#set ($validAttachmentProperties = ['filename', 'filesize', 'mimeType', 'date', 'author', 'version'])
+
+#macro (sortAttachments $attachments $by)
+  #set ($sortAttachmentsBy = $by)
+  #if ($validAttachmentProperties.indexOf($by) &lt; 0)
+    ## Default to sorting by file name.
+    #set ($sortAttachmentsBy = 'filename')
+  #end
+  ## Set attachment sorting direction.
+  #if ($sortAttachmentsBy == 'date')
+    ## Sort the dates descending.
+    #set ($sortAttachmentsBy = 'date:desc')
+  #else
+    ## Sort everthing else ascending.
+    #set ($sortAttachmentsBy = "$sortAttachmentsBy:asc")
+  #end
+  #set ($attachments = $collectiontool.sort($attachments, $sortAttachmentsBy))
+#end
+
+#macro (filterAttachments $attachments $patterns)
+  #set ($filteredAttachments = [])
+  #foreach ($attachment in $attachments)
+    #set ($mimeType = $attachment.mimeType.toLowerCase())
+    #set ($extension = $NULL)
+    #set ($extensionIndex = $attachment.filename.lastIndexOf('.'))
+    #if ($extensionIndex &gt;= 0)
+      #set ($extension = $attachment.filename.substring($mathtool.add($extensionIndex, 1)).toLowerCase())
+    #end
+    #foreach ($pattern in $patterns)
+      #if ($pattern == $extension || $mimeType.startsWith($pattern) || $mimeType.endsWith($pattern))
+        #set ($discard = $filteredAttachments.add($attachment))
+        #break
+      #end
+    #end
+  #end
+  #set ($attachments = $filteredAttachments)
+#end
+
+#macro (maybeApplyStringFilter $fieldName $defaultMatchType $constraints $queryParameters)
+  #if ("$!request.getParameter($fieldName)" != '' &amp;&amp; $request.getParameter("${fieldName}_match") != 'empty')
+    #set ($fieldNameWithAlias = $fieldName)
+    #if ($fieldName.indexOf('.') &lt; 0)
+      #set ($fieldNameWithAlias = 'attachment.' + $fieldName)
+    #end
+    #set ($matchType = $request.getParameter("${fieldName}_match"))
+    #if ("$!matchType" == '')
+      #set ($matchType = $defaultMatchType)
+    #end
+    #set ($parameterName = $fieldNameWithAlias.replace('.', '_'))
+    #if ($matchType == 'exact')
+      #set ($discard = $constraints.add("$fieldNameWithAlias = :$parameterName"))
+      #set ($parameterValue = $request.getParameter($fieldName))
+    #else
+      #set ($discard = $constraints.add("lower($fieldNameWithAlias) like lower(:$parameterName)"))
+      #set ($parameterValue = $request.getParameter($fieldName).trim())
+    #end
+    #set ($discard = $queryParameters.add({
+      'name': $parameterName,
+      'match': $matchType,
+      'value': $parameterValue
+    }))
+  #end
+#end
+
+#macro (maybeApplyIntegerRangeFilter $fieldName $constraints $queryParameters)
+  #set ($fieldValue = $request.getParameter($fieldName))
+  #set ($matchType = $request.getParameter("${fieldName}_match"))
+  #if ("$!fieldValue" != '' &amp;&amp; $matchType != 'empty')
+    #set ($range = $fieldValue.split('-'))
+    #set ($range = [$numbertool.toNumber($range.get(0)).intValue(), $numbertool.toNumber($range.get(1)).intValue()])
+    #applyRangeFilter($fieldName $range $constraints $queryParameters)
+  #end
+#end
+
+#macro (maybeApplyDateRangeFilter $fieldName $constraints $queryParameters)
+  #set ($fieldValue = $request.getParameter($fieldName))
+  #if ("$!fieldValue" != '')
+    #set ($dateRange = {})
+    #parseDateRange('' $fieldValue $dateRange)
+    #set ($range = [$dateRange.start,$dateRange.end])
+    #applyRangeFilter($fieldName $range $constraints $queryParameters)
+  #end
+#end
+
+#macro (applyRangeFilter $fieldName $range $constraints $queryParameters)
+  #set ($fieldNameWithAlias = $fieldName)
+  #if ($fieldName.indexOf('.') &lt; 0)
+    #set ($fieldNameWithAlias = 'attachment.' + $fieldName)
+  #end
+  #set ($parameterNamePrefix = $fieldNameWithAlias.replace('.', '_'))
+  #set ($start = $range.get(0))
+  #if ($start)
+    #set ($startParameterName = $parameterNamePrefix + '_start')
+    #set ($discard = $constraints.add("$fieldNameWithAlias &gt;= :$startParameterName"))
+    #set ($discard = $queryParameters.add({
+      'name': $startParameterName,
+      'match': 'exact',
+      'value': $start
+    }))
+  #end
+  #set ($end = $range.get(1))
+  #if ($end)
+    #set ($endParameterName = $parameterNamePrefix + '_end')
+    #set ($discard = $constraints.add("$fieldNameWithAlias &lt; :$endParameterName"))
+    #set ($discard = $queryParameters.add({
+      'name': $endParameterName,
+      'match': 'exact',
+      'value': $end
+    }))
+  #end
+#end
+
+#macro (displayAttachmentMimeType $attachment)
+  &lt;div class="attachmentMimeType" data-type="$!escapetool.xml($attachment.mimeType)"&gt;
+    #if ($attachment.isImage())
+      &lt;span title="$escapetool.xml($services.localization.render('core.viewers.attachments.mime.image'))"&gt;
+        &lt;img src="$escapetool.xml($xwiki.getURL($attachment.getReference(), 'download', 'width=48'))"
+          alt="$escapetool.xml($attachment.filename)"/&gt;
+      &lt;/span&gt;
+    #else
+      #mimetypeimg($attachment.mimeType.toLowerCase() $attachment.filename.toLowerCase())
+    #end
+  &lt;/div&gt;
+#end
+
+#macro (displayFileNameAndVersion $attachmentReference $attachment)
+  &lt;span class="name"&gt;
+    &lt;a href="$escapetool.xml($xwiki.getURL($attachment.getReference()))"
+      data-entity-type="$escapetool.xml($attachmentReference.type)"
+      data-entity-reference="$escapetool.xml($services.model.serialize($attachmentReference, 'default'))"
+      title="$escapetool.xml($services.localization.render('core.viewers.attachments.download'))"
+    &gt;$escapetool.xml($attachment.filename)&lt;/a&gt;
+  &lt;/span&gt;
+  &lt;sup&gt;
+    &lt;span class="version"&gt;
+      &lt;a href="$escapetool.xml($xwiki.getURL($attachmentReference, 'viewattachrev', $NULL))"
+        title="$escapetool.xml($services.localization.render('core.viewers.attachments.showHistory'))"
+      &gt;$escapetool.xml($attachment.version)&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/sup&gt;
+#end
+
+#macro (displayUserNameWithAvatar $userName)
+  &lt;div class="user" data-reference="$escapetool.xml($userName)"&gt;
+    &lt;span class="user-avatar-wrapper"&gt;
+      #getUserAvatarURL($userName $avatarURL 120)
+      &lt;img class="user-avatar" src="$escapetool.xml($avatarURL.url)" /&gt;
+    &lt;/span&gt;
+    $xwiki.getUserName($userName)
+  &lt;/div&gt;
+#end
+
+#macro (displayAttachmentSize $longSize)
+  &lt;span class="size" data-size="$!escapetool.xml($longSize)"&gt;#dynamicsize($longSize)&lt;/span&gt;
+#end
+
+#macro (displayAttachmentActions $attachment)
+  &lt;div class="attachmentActions"&gt;
+    #if ($services.officemanager.isConnected() &amp;&amp;
+        $services.officeviewer.isMimeTypeSupported($attachment.mimeType.toLowerCase()))
+      ## Link to preview office document.
+      &lt;a class="viewlink action" title="$escapetool.xml($services.localization.render(
+        'core.viewers.attachments.officeView.title'))" target="_blank"
+        href="$escapetool.xml($attachment.document.getURL('view', $escapetool.url({
+          'xpage': 'office',
+          'attachment': $attachment.filename
+        })))"&gt;
+          &lt;span class="action-icon"&gt;$services.icon.renderHTML('eye')&lt;/span&gt;&lt;span class="action-label"&gt;$escapetool.xml(
+            $services.localization.render('core.viewers.attachments.officeView'))
+          &lt;/span&gt;
+        &lt;/a&gt;
+    #end
+    #if ($hasEdit || $hasAdmin)
+      #set ($queryString = $escapetool.url({
+        'xpage': 'attachment/move',
+        'attachment': $services.model.serialize($attachment.getReference(), 'default')
+      }))
+      #set ($moveURL = $xwiki.getURL($attachment.document.documentReference, 'view', $queryString))
+      &lt;a class="move-attachment action" title="$escapetool.xml($services.localization.render(
+          'core.viewers.attachments.move.title'))" href="$escapetool.xml($moveURL#)"&gt;
+        &lt;span class="action-icon"&gt;$services.icon.renderHTML('edit')&lt;/span&gt;&lt;span class="action-label"&gt;$escapetool.xml(
+          $services.localization.render('core.viewers.attachments.move'))
+        &lt;/span&gt;
+      &lt;/a&gt;
+    #end
+    #if ($hasEdit || $hasAdmin)
+      ## Delete attachment link.
+      ## If a remote URL is provided, content will be loaded into .modal-content because of bootstrap.
+      ## By providing an anchor this behavior is stopped, without altering the URL functionality.
+      #set ($queryString = $escapetool.url({
+        'form_token': $services.csrf.token,
+        'xredirect': $options.redirect
+      }))
+      #set ($deleteURL = $xwiki.getURL($attachment.getReference(), 'delattachment', $queryString))
+      &lt;a class="actiondelete action" title="$escapetool.xml($services.localization.render(
+          'core.viewers.attachments.delete.title', [$attachment.filename]))" href="$escapetool.xml($deleteURL)"&gt;
+        &lt;span class="action-icon"&gt;$services.icon.renderHTML('cross')&lt;/span&gt;&lt;span class="action-label"&gt;$escapetool.xml(
+          $services.localization.render('core.viewers.attachments.delete'))
+        &lt;/span&gt;
+      &lt;/a&gt;
+    #end
+    #foreach($uix in $services.uix.getExtensions('org.xwiki.platform.attachment.actions'))
+      $services.rendering.render($uix.execute(), 'html/5.0')
+    #end
+  &lt;/div&gt;
+#end
+{{/velocity}}
+
+{{velocity}}
+## This page should be deleted after upgrading the parent to a version of XWiki &gt;= 14.8. The code was copied from
+## attachmentsjson.vm for backwards compatibility, since it wasn't present on the minimal supported version 13.10.
+#template('hierarchy_macros.vm')
+#if ($xcontext.action == 'get')
+  #set ($offset = $numbertool.toNumber($request.offset).intValue())
+  ## The offset sent by the live table starts at 1.
+  #set ($offset = $offset - 1)
+  #if (!$offset || $offset &lt; 0)
+    #set ($offset = 0)
+  #end
+  #set ($limit = $numbertool.toNumber($request.limit).intValue())
+  #if (!$limit)
+    #set ($limit = 15)
+  #end
+  ##
+  ## Apply live table filters.
+  ##
+  #set ($constraints = ['attachment.docId = doc.id', 'doc.id = :docId'])
+  #set ($queryParameters = [{
+    'name': 'docId',
+    'match': 'exact',
+    'value': $doc.getId()
+  }])
+  #maybeApplyStringFilter('mimeType' 'prefix' $constraints $queryParameters)
+  #maybeApplyStringFilter('filename' 'partial' $constraints $queryParameters)
+  #maybeApplyIntegerRangeFilter('filesize' $constraints $queryParameters)
+  #maybeApplyDateRangeFilter('date' $constraints $queryParameters)
+  #maybeApplyStringFilter('author' 'partial' $constraints $queryParameters)
+  #set ($whereClause = '')
+  #if ($constraints.size() &gt; 0)
+    #set ($whereClause = 'where ' + $stringtool.join($constraints, ' and '))
+  #end
+  ##
+  ## Determine the sort field and direction.
+  ##
+  #set ($validSortFields = ['mimeType', 'filename', 'doc.fullName', 'filesize', 'date', 'author'])
+  #set ($sortField = $request.sort)
+  #if (!$validSortFields.contains($sortField))
+    #set ($sortField = 'filename')
+  #end
+  #set ($caseInsensitiveSort = $sortField != 'date' &amp;&amp; $sortField != 'filesize')
+  #if (!$sortField.startsWith('doc.'))
+    #set ($sortField = "attachment.$sortField")
+  #end
+  #set ($direction = 'asc')
+  #if ("$!request.dir" == 'desc')
+    #set ($direction = 'desc')
+  #end
+  #if ($caseInsensitiveSort)
+    #set ($orderByClause = "order by lower($sortField) $direction, $sortField $direction")
+  #else
+    #set ($orderByClause = "order by $sortField $direction")
+  #end
+  ##
+  ## Compute the final query.
+  ##
+  #set ($query =  $services.query.hql("$whereClause $orderByClause"))
+  #set ($discard = $query.addFilter('attachment'))
+  #set ($discard = $query.setLimit($limit).setOffset($offset))
+  #foreach ($queryParameter in $queryParameters)
+    #if ($queryParameter.match == 'exact')
+      #set ($discard = $query.bindValue($queryParameter.name, $queryParameter.value))
+    #elseif ($queryParameter.match == 'prefix')
+      #set ($query = $query.bindValue($queryParameter.name).literal($queryParameter.value).anyChars().query())
+    #else
+      ## Partial match.
+      #set ($query = $query.bindValue($queryParameter.name).anyChars().literal($queryParameter.value).anyChars().query())
+    #end
+  #end
+  #set ($attachmentsReferences = $query.execute())
+  #set ($queryString = $escapetool.url({
+    'form_token': $services.csrf.token,
+    'xredirect': "$doc.getURL()#Attachments"
+  }))
+  #set ($results = {
+    "totalrows": $query.count(),
+    "returnedrows": $mathtool.min($attachmentsReferences.size(), $limit),
+    "offset": $mathtool.add($offset, 1),
+    "reqNo": $numbertool.toNumber($request.reqNo).intValue(),
+    "rows": []
+  })
+  #foreach ($attachmentReference in $attachmentsReferences)
+    #set ($hasAccess = $services.security.authorization.hasAccess('view', $attachmentReference))
+    #set ($row = {
+      'doc_viewable': $hasAccess
+    })
+    #if ($hasAccess)
+      #set ($attachment = $doc.getAttachment($attachmentReference.name))
+      #set ($authorReference = $services.model.resolveDocument($attachment.author))
+      #set ($discard = $row.putAll({
+        'id': $attachment.filename,
+        'filename': "#displayFileNameAndVersion($attachmentReference $attachment)",
+        'mimeType': "#displayAttachmentMimeType($attachment)",
+        'filesize': "#displayAttachmentSize($attachment.longSize)",
+        'date': $xwiki.formatDate($attachment.date),
+        'author': "#displayUserNameWithAvatar($attachment.author)",
+        'actions': "#displayAttachmentActions($attachment)"
+      }))
+    #end
+    #set ($discard = $results.rows.add($row))
+  #end
+  #jsonResponse($results)
+#end
+{{/velocity}}</content>
+</xwikidoc>

@@ -59,6 +59,8 @@ rendering.macro.section.parameter.border.description=Select this option to draw 
 
 ## Attachments macro
 promacros.attachments.upload.title=Upload files to the associated page
+## This should be removed after upgrading the XWiki parent to a version &gt;= 14.6.
+core.viewers.attachments.move=Move
 
 ## Column macro
 rendering.macro.column.name=Column Macro
