@@ -161,8 +161,8 @@ Not every parameters supported by the Confluence macro are supported by this bri
 });
 
 require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function($, l10n) {
-  var enhanceUploadInputs = function() {
-    $.each($('.confluenceAttachmentsMacro input[type=file]'), function() {
+  var enhanceUploadInputs = function(liveDataElems) {
+    $.each(liveDataElems.find('input[type=file]'), function() {
       // Since the attachments liveData is refreshed on file upload, there is no need for a response container.
       new XWiki.FileUploader(this, {
         'progressAutohide': true,
@@ -173,21 +173,20 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   };
 
   $(function() {
-    enhanceUploadInputs();
+    enhanceUploadInputs($('.confluenceAttachmentsMacro'));
   })
 
   $(document).on('xwiki:dom:updated', function(e, data) {
-    enhanceUploadInputs();
+    let liveDataElems = $(data.elements).find('.confluenceAttachmentsMacro');
+    enhanceUploadInputs(liveDataElems);
   });
 
   $(document).on('xwiki:html5upload:done', function(e) {
     if ($(e.target).prop('id').startsWith('confluenceAttachments')) {
       // Select the livedata above the upload form.
       const uploadForm = $(e.target).closest('form');
-      let associatedLivedata = uploadForm.prevAll('.liveData').first();
-      // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
-      associatedLivedata = associatedLivedata.length &gt; 0 ?
-        associatedLivedata : uploadForm.prevAll('.xwiki-livedata').first();
+      // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
+      let associatedLivedata = uploadForm.prevAll('.liveData, .xwiki-livedata').first();
       // We do not have access to a liveData object before XWiki 14.4.
       if (associatedLivedata.data('liveData') === undefined) {
         location.reload();
@@ -208,9 +207,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
    */
   $(document).on('click', '.confluenceAttachmentsMacro .attachmentActions .actiondelete', function(e) {
     e.preventDefault();
-    let liveData = $(e.currentTarget).closest('.liveData');
-    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
-    liveData = liveData.length &gt; 0 ? liveData : $(e.currentTarget).closest('.xwiki-livedata');
+    // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
+    let liveData = $(e.currentTarget).closest('.liveData, .xwiki-livedata');
     var modal = liveData.nextAll('.deleteConfluenceAttachment');
     modal.data('relatedTarget', e.currentTarget);
     modal.modal('show');
@@ -223,9 +221,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     e.preventDefault();
     var modal = $(e.currentTarget).closest('.deleteConfluenceAttachment');
     var button = $(modal.data('relatedTarget'));
-    let liveData = button.closest('.liveData');
-    // This should be deleted after upgrading the XWiki parent to a version &gt;= 14.4.
-    liveData = liveData.length &gt; 0 ? liveData : button.closest('.xwiki-livedata');
+    // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
+    let liveData = button.closest('.liveData, .xwiki-livedata');
     var notification;
 
     $.ajax({
