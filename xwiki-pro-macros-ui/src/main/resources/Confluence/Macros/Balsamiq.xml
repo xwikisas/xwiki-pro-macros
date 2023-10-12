@@ -290,12 +290,12 @@ The wireframe preview is an attachment added to the parent page. For example, fo
   #if("$!alignment" != '')
     #set($imageAlignment = $alignment.toLowerCase())
   #end
-  #set($attchmentName = "${attachmentNamePrefix}_${resourceID}_${attachmentNameSuffix}.png")
-  #set($attachment = $doc.getAttachment($attchmentName))
+  #set($attachmentName = "${attachmentNamePrefix}_${resourceID}_${attachmentNameSuffix}.png")
+  #set($attachment = $doc.getAttachment($attachmentName))
   ## Display
   #if($attachment)
     (% style="text-align: ${imageAlignment}"%)(((
-      [[image:${attchmentName}]]
+      [[image:$services.rendering.escape($attachmentName, $xwiki.currentContentSyntaxId)]]
     )))
   #end
 #end

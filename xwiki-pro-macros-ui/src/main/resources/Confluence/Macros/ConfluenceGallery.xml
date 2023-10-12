@@ -339,7 +339,7 @@ The result is the following :
   #set ($pages = $pagesString.split(','))
   ## Display the gallery title if it is set (newlines are needed for the following macro calls to be standalone)
   #if ("$!title" != '')
-    ==$title==
+    ==$services.rendering.escape($title, $xwiki.currentContentSyntaxId)==
   #end
   ## add the current page to the page list if no pages were given
   #if ("$!pagesString" == '')
@@ -378,7 +378,7 @@ The result is the following :
   #if ($attachments.size() &gt; 0)
     {{gallery}}
     #foreach ($attachment in $attachments)
-      [[image:$attachment]]
+      [[image:$services.rendering.escape($attachment, $xwiki.currentContentSyntaxId)]]
     #end
     {{/gallery}}
   #end

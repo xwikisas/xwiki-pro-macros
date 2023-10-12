@@ -301,7 +301,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
     #set($attachment = $doc.getAttachment($attachmentName))
   #end
   #if($attachment)
-    [[image:${attachmentName}]]
+    [[image:$services.rendering.escape($attachmentName, $xwiki.currentContentSyntaxId)]]
   #end
 #end
 {{/velocity}}

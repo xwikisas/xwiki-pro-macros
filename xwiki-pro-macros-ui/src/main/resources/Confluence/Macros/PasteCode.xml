@@ -422,7 +422,7 @@ class Simple{
         $title
       )))
     #end
-    {{code language="$!{language}"}}
+    {{code language="$services.rendering.escape("$!language", $xwiki.currentContentSyntaxId)"}}
       $wikimacro.content
     {{/code}}
   )))

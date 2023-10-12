@@ -320,7 +320,7 @@ $services.localization.render('rendering.macro.button.description')
   #end
   #set ($darkenedColors = [])
   #darken($colors, $darkenedColors)
-  {{html clean=false}}
+  {{html clean=false wiki=false}}
   ## #124: The Button macro deletes followup content when inserted from wysiwyg
   ## Wrap the macro output inside a block element if the context where the macro is inserted is not inline, e.g. if the
   ## macro is inserted between paragraphs rather than between the text of a paragraph. Otherwise the generated HTML is
