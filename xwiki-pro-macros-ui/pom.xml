@@ -77,5 +77,11 @@
       <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.xwiki.diagram</groupId>
+      <artifactId>application-diagram</artifactId>
+      <type>xar</type>
+      <version>1.19.1</version>
+    </dependency>
   </dependencies>
 </project>
