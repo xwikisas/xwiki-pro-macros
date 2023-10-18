@@ -19,7 +19,7 @@
  */
 package com.xwiki.macros.userlist.macro;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.xwiki.model.reference.EntityReference;
 
@@ -29,6 +29,6 @@ import org.xwiki.model.reference.EntityReference;
  *
  * @version $Id$
  */
-public class UserReferenceList extends ArrayList<EntityReference>
+public class UserReferenceList extends HashSet<EntityReference>
 {
 }
