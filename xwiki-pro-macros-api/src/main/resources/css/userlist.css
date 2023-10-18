@@ -12,3 +12,38 @@
   width: 70px;
   text-align: center;
 }
+
+@media only screen and (max-width: 767px) {
+  table.xwiki-userlist, table.xwiki-userlist td, table.xwiki-userlist tr, table.xwiki-userlist tbody {
+    display: block;
+  }
+
+  table.xwiki-userlist td:first-child, table.xwiki-userlist td.xwiki-userlist-user-avatar:first-child+td {
+    border-top: none;
+  }
+
+  table.xwiki-userlist td {
+    min-height: 1.5em;
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  table.xwiki-userlist td:not(:first-child):not(.xwiki-userlist-user-avatar:last-child):not(.xwiki-userlist-user-avatar:first-child + td) {
+    /* This is all table cells that are not the first (including the avatar), not the avatar if it's the last, and not the first after the avatar if it's the first */
+    border: none;
+    border-top: 1px solid #eee;
+  }
+
+  table.xwiki-userlist td.xwiki-userlist-user-avatar:first-child, table.xwiki-userlist td.xwiki-userlist-user-avatar:last-child {
+    float: right;
+    border-top: none;
+  }
+
+  table.xwiki-userlist tr {
+    border-top: 1px solid #ddd;
+    padding-top: 1ex;
+  }
+  table.xwiki-userlist tr:last-child {
+    border-bottom: 1px solid #ddd;
+  }
+}
