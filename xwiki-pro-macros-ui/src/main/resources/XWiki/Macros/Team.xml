@@ -700,7 +700,7 @@
   &gt;
     &lt;span class="xwikiteam-avatar-initials-inner"&gt;
       &lt;span class="xwikiteam-avatar-initials-letters" style="color: $escapedLetterAvatarFontColor"&gt;
-        #foreach($firstLetter in $name.toUpperCase().split("[\s-]"))$escapetool.xml($firstLetter.charAt(0))#end
+        #foreach($firstLetter in $name.toUpperCase().split("[\s\[\]-]+"))$escapetool.xml($firstLetter.charAt(0))#end
       &lt;/span&gt;
     &lt;/span&gt;
   &lt;/span&gt;
