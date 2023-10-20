@@ -82,6 +82,9 @@ rendering.macro.userlister.parameter.groups.description=List of Confluence user 
 rendering.macro.userlister.parameter.online.name=Online
 rendering.macro.userlister.parameter.online.description=Ignored parameter, present for compatibility purpose only
 
+## Profile Picture Macro
+rendering.macro.profilepicture.parameter.User.name=The user to show
+rendering.macro.profilepicture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
 ## Content Report Table Macro
 contentReportTable.header.modified=Modified</content>
   <object>
