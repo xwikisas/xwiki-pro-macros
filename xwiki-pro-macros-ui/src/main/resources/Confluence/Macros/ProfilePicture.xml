@@ -41,16 +41,15 @@
 
 == Parameters ==
 
-|= Parameter |= Name |= Description |= Default
-| User | {{translation key='rendering.macro.profilepicture.parameter.User.name'/}} | {{translation key='rendering.macro.profilepicture.parameter.User.description'/}} | auto
+|= Parameter |= Name |= Description
+| User | {{translation key='rendering.macro.profilepicture.parameter.User.name'/}} | {{translation key='rendering.macro.profilepicture.parameter.User.description'/}}
 
 == Examples ==
 
 
 {{code}}{{profile-picture User="XWiki.Admin" /}}{{/code}}
 
-{{profile-picture User="XWiki.Admin" /}}
-</content>
+{{profile-picture User="XWiki.Admin" /}}</content>
   <object>
     <name>Confluence.Macros.ProfilePicture</name>
     <number>0</number>
