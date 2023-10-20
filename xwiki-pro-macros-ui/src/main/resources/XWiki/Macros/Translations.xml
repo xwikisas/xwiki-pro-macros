@@ -114,6 +114,8 @@ rendering.macro.microsoftStream.parameter.textWrap.description=Wrap text around 
 ## Team macro
 rendering.macro.team.name=Team
 rendering.macro.team.description=Display avatars of the members of a team.
+rendering.macro.team.parameter.users.name=Users
+rendering.macro.team.parameter.users.description=Restrict to this list of user names (don't prefix with the wiki identifier)
 rendering.macro.team.parameter.tag.name=Tag
 rendering.macro.team.parameter.tag.description=Tag that users need to have to be shown
 rendering.macro.team.parameter.size.name=Size

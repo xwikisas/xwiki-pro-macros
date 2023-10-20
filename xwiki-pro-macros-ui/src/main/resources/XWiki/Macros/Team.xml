@@ -42,6 +42,7 @@
 
 |= Parameter |= Name |= Description |= Default
 | tag | {{translation key='rendering.macro.team.parameter.tag.name'/}} | {{translation key='rendering.macro.team.parameter.tag.description'/}} |
+| users | {{translation key='rendering.macro.team.parameter.users.name'/}} | {{translation key='rendering.macro.team.parameter.users.description'/}} |
 | size | {{translation key='rendering.macro.team.parameter.size.name'/}} | {{translation key='rendering.macro.team.parameter.size.description'/}} | 60
 | showUsernames | {{translation key='rendering.macro.team.parameter.showUsernames.name'/}} | {{translation key='rendering.macro.team.parameter.showUsernames.description'/}} | false
 | letterAvatarBgColor | {{translation key='rendering.macro.team.parameter.letterAvatarBgColor.name'/}} | {{translation key='rendering.macro.team.parameter.letterAvatarBgColor.description'/}} | #0A6
@@ -736,8 +737,15 @@
     &lt;/a&gt;
   &lt;/li&gt;
 #end
-#macro (addUsersFromWiki $list $wiki $limit)
-  #set($l = $services.query.hql($hql).setLimit($limit).setWiki($wiki).execute())
+#macro (addUsersFromWiki $list $wiki $limit $tag $userList)
+  #set($q = $services.query.hql($hql).setLimit($limit).setWiki($wiki))
+  #if ("$!tag" != "")
+    #set($q = $q.bindValue('tag', $tag))
+  #end
+  #if(!$userList.empty)
+    #set($q = $q.bindValue('users', $userList))
+  #end
+  #set($l = $q.execute())
   #foreach($username in $l)
     #set($discard = $list.add("$wiki:$username"))
   #end
@@ -747,6 +755,7 @@
   #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
   #set($pictureList = {})
   #set($tag = $wikimacro.parameters.tag)
+  #set($users = $wikimacro.parameters.users)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
   #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
@@ -800,6 +809,13 @@
   #if("$!limit" == "")
     #set($limit = 100)
   #end
+  #if(!$users || $users == "")
+    #set($userList = [])
+    #set($userswhere = '')
+  #else
+    #set($userswhere = 'and doc.fullName in :users')
+    #set($userList = $users.split(","))
+  #end
   #if(!$tag || $tag == "")
     #set($tagselect = "")
     #set($tagwhere = "")
@@ -815,7 +831,7 @@
       obj3.className = 'XWiki.TagClass' and
       obj3.id = tagprop.id.id and
       tagprop.id.name = 'tags' and
-      list = '$tag'
+      list = ':tag'
     ")
   #end
   #set($hql = ",
@@ -836,18 +852,19 @@
       prop.id.name = 'active' and
       prop.value = 1
       $tagwhere
+      $userswhere
     ORDER BY doc.name
   ")
   #set($list = [])
   #if ($scope == "global")
-    #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+    #addUsersFromWiki($list $xcontext.mainWikiName $limit $tag $userList)
   #elseif ($scope == "local")
-    #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+    #addUsersFromWiki($list $services.wiki.currentWikiId $limit $tag $userList)
   #elseif ($scope == "both")
-    #addUsersFromWiki($list $services.wiki.currentWikiId $limit)
+    #addUsersFromWiki($list $services.wiki.currentWikiId $limit $tag $userList)
     #if($list.size() &lt; $limit)
       #set($limit = $limit - $list.size())
-      #addUsersFromWiki($list $xcontext.mainWikiName $limit)
+      #addUsersFromWiki($list $xcontext.mainWikiName $limit $tag $userList)
     #end
   #end
   {{html wiki=false clean=false}}
@@ -1638,6 +1655,85 @@
     </property>
     <property>
       <name>scope</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Team</name>
+    <number>10</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>b954ade2-fc36-411f-bf88-630e78ec5207</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Comma-separated list of users to show.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>users</name>
     </property>
     <property>
       <type/>
