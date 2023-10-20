@@ -41,10 +41,10 @@ $services.localization.render('rendering.macro.status.description')
 
 == Parameters ==
 
-|=Name|=Description|=Default
-|colour|$services.localization.render('rendering.macro.status.parameter.colour.description')|Grey
-|title|$services.localization.render('rendering.macro.status.parameter.title.description')|Colour value(e.g.:Grey)
-|subtle|$services.localization.render('rendering.macro.status.parameter.subtle.description')|false
+|=Parameter|=Name|=Description|=Default
+|colour|$services.localization.render('rendering.macro.status.parameter.colour.name')|$services.localization.render('rendering.macro.status.parameter.colour.description')|Grey
+|title|$services.localization.render('rendering.macro.status.parameter.title.name')|$services.localization.render('rendering.macro.status.parameter.title.description')|Colour value(e.g.:Grey)
+|subtle|$services.localization.render('rendering.macro.status.parameter.subtle.name')|$services.localization.render('rendering.macro.status.parameter.subtle.description')|false
 
 == Examples ==
 
