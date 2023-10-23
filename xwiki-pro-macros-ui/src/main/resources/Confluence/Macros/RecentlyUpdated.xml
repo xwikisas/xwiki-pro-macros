@@ -825,7 +825,10 @@ require(['jquery'], $ =&gt; {
   ## (adds extra quotes / spaces at the beginning and end of the string)
   #set ($searchRegex = '(?:^|$|,)\s*([-+]?)')
   #set ($replacement = '" $1"')
-  #set ($formatted = $!stringtool.replaceAll($serializedList, $searchRegex, $replacement))
+  #if (!$serializedList)
+    #set($serializedList = "")
+  #end
+  #set ($formatted = $serializedList.replace($searchRegex, $replacement))
   ## Remove extra quotes / spaces at the beginning and end of the string
   #set ($formatted = $!stringtool.substring($formatted, 2, -2))
   ## Return
