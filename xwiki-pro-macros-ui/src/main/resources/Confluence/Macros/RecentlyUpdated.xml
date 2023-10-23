@@ -383,7 +383,7 @@ require(['jquery'], $ =&gt; {
             grid-area: metadata;
             .text-muted-smaller();
 
-            .result-last-author-avatar img.avatar {
+            .result-last-author-avatar img {
               display: inline-block;
               width: 1em;
               height: 1em;
@@ -411,7 +411,7 @@ require(['jquery'], $ =&gt; {
           column-gap: 0.6rem;
 
           &amp;.collapsed {
-            .result-last-author-avatar img.avatar {
+            .result-last-author-avatar img {
               display: none;
             }
 
