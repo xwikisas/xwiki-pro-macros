@@ -882,7 +882,7 @@
       #addUsersFromWiki($list $xcontext.mainWikiName $limit $tag $userList)
     #end
   #end
-  {{html wiki=false clean=false}}
+  {{html clean=false}}
   ## Starting with XWiki 13.10.4 and 14.1, img tags have a 'height: auto' style set, see XWIKI-19432: Image not to scale
   ## on mobile. Since this breaks the macro fixed size feature, a specific size is added.
   #set ($escapedSize = $escapetool.xml($size))
