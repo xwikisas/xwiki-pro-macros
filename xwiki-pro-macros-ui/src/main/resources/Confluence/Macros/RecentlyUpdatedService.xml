@@ -377,8 +377,12 @@
 #end
 
 #macro (displayResult_social $result $options)
-  #set ($socialThemeIsSameAuthor = $result.author.equals($options.socialThemePreviousAuthor))
-  #set ($options.socialThemePreviousAuthor = $result.author)
+  #set ($normalizedAuthor = "$result.author")
+  #if (!$normalizedAuthor.contains(":"))
+    #set($normalizedAuthor = "$xcontext.getDatabase():$normalizedAuthor")
+  #end
+  #set ($socialThemeIsSameAuthor = $normalizedAuthor.equals($options.socialThemePreviousAuthor))
+  #set ($options.socialThemePreviousAuthor = $normalizedAuthor)
   #set ($socialThemeCollapseClass = '')
   #if ($socialThemeIsSameAuthor)
     #set ($socialThemeCollapseClass = 'collapsed')
