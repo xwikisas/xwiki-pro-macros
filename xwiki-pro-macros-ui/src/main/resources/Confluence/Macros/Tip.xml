@@ -301,7 +301,7 @@ This is my tip with a title.
       <defaultCategory/>
     </property>
     <property>
-      <description/>
+      <description>Confluence Tip macro bridge to the XWiki Success macro</description>
     </property>
     <property>
       <id>tip</id>
