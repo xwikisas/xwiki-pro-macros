@@ -335,7 +335,7 @@ The result is the following :
   #set($query = $services.query.hql($statement))
   #set($discard = $query.bindValues($params))
   #if("$!maxResults" != '')
-   #set($discard = $query.setLimit($mathtool.toNumber($maxResults)).addFilter('currentlanguage'))
+   #set($discard = $query.setLimit($numbertool.toNumber($maxResults)).addFilter('currentlanguage'))
   #end
   #set($results = $query.execute())
   ## Table display
