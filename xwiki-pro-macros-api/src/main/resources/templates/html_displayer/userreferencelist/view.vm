@@ -48,7 +48,7 @@
             #foreach ($propertyName in $propertyNames)
               <td class="xwiki-userlist-user-$escapetool.xml($propertyName)">
                 #if ($propertyName == 'avatar')
-                  #mediumUserAvatar($user)
+                  #largeUserAvatar($user)
                 #elseif ($propertyName == 'username')
                   $xwiki.getUserName($user)
                 #else

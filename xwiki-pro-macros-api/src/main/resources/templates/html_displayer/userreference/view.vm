@@ -33,7 +33,7 @@
       <div class="media">
         <div class="media-left">
           <a href="$xwiki.getURL($userReference)" title="$escapetool.xml($xwiki.getUserName($userId, false))">
-            #mediumUserAvatar($userId)
+            #largeUserAvatar($userId)
           </a>
         </div>
         <div class="media-body">
