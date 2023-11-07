@@ -38,7 +38,7 @@
   <hidden>true</hidden>
   <content>= Description =
 
-This macro id a bridge for the Confluence Balsamiq Wireframe macro. It displays the image preview of the mockup, as it was migrated from Confluence.
+This macro is a bridge for the Confluence Balsamiq Wireframe macro. It displays the image preview of the mockup, as it was migrated from Confluence.
 The wireframe preview is an attachment added to the parent page. For example, for a wireframe identified with //MyWireframeID//, there will be an attachment on the parent page of this form: //&lt;balsamiq_MyWireframeID[_branchID].png//. This means that there will be a prefix called **balsamiq** followed by an underscore (**_**), then the resource identifier (**MyWireframeID** in this case), then an arbitrary suffix (if it is set, by default it will be called **Master**). So, here are some filenames matching our example :
 * //balsamiq_MyWireframeID_Master.png//
 * //balsamiq_MyWireframeID.png//
