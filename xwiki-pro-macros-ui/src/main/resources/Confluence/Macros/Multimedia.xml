@@ -44,7 +44,7 @@ The Multimedia macro is a bridge between Confluence and XWiki. It uses the [[JW 
 
 |=Parameter|=Description|=Required|=Default
 |**page**|The page to which the multimedia file is attached|No|
-|**name**|File name of the attached multimedia file.|Yes|
+|**name**|File name of the attached multimedia file.|No|
 |**width**|The player width, in pixels. If not defined, the player tries to determine automatically the width from the played media file.|No|
 |**height**|The player height, in pixels. If not defined, the player tries to determine automatically the height from the played media file.|No|
 |**autostart**|If the parameter is set to true then the video or audio file will start playing as soon as the page is loaded.|No|false
@@ -299,16 +299,20 @@ The result is the following :
   #if (!$attachment)
     #set ($attachment = $wikimacro.parameters.get('name'))
   #end
-  #set ($page = $services.model.resolveDocument($wikimacro.parameters.get('page')))
-  #set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
-  #set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
-  #set ($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
-  #if ("$!page" != '')
-    #set ($attachRef = $services.model.createAttachmentReference($page, $attachment))
-    #set ($attachment = $services.model.serialize($attachRef, 'local'))
+  #if ($attachment)
+    #set ($page = $services.model.resolveDocument($wikimacro.parameters.get('page')))
+    #set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
+    #set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+    #set ($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
+    #if ("$!page" != '')
+      #set ($attachRef = $services.model.createAttachmentReference($page, $attachment))
+      #set ($attachment = $services.model.serialize($attachRef, 'local'))
+    #end
+    {{jwplayer attachment="${services.rendering.escape($attachment, $xwiki.currentContentSyntaxId)}" width="$!{width}"
+      height="$!{height}" autostart="$!{autostart}" /}}
+  #else
+    Please provide the filename of the media to play in the name parameter.
   #end
-  {{jwplayer attachment="${services.rendering.escape($attachment, $xwiki.currentContentSyntaxId)}" width="$!{width}"
-    height="$!{height}" autostart="$!{autostart}" /}}
 #end
 {{/velocity}}
 
@@ -328,16 +332,16 @@ The result is the following :
 {{/velocity}}</code>
     </property>
     <property>
-      <contentDescription>The content to be marked for use by other macros.</contentDescription>
+      <contentDescription/>
     </property>
     <property>
       <contentJavaType/>
     </property>
     <property>
-      <contentType/>
+      <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategories/>
     </property>
     <property>
       <description>Bridge for the Confluence Multimedia macro.</description>
@@ -424,88 +428,10 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description/>
-    </property>
-    <property>
-      <mandatory/>
-    </property>
-    <property>
-      <name>att--filename</name>
-    </property>
-    <property>
-      <type/>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.Multimedia</name>
-    <number>1</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>0774e29e-c874-46e9-8ee6-929b33cbbd0c</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue>false</defaultValue>
-    </property>
-    <property>
       <description>File name</description>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory/>
     </property>
     <property>
       <name>name</name>
@@ -516,9 +442,9 @@ The result is the following :
   </object>
   <object>
     <name>Confluence.Macros.Multimedia</name>
-    <number>2</number>
+    <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>81940726-f6b0-4d36-b288-d75b99087c2c</guid>
+    <guid>0774e29e-c874-46e9-8ee6-929b33cbbd0c</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -594,9 +520,9 @@ The result is the following :
   </object>
   <object>
     <name>Confluence.Macros.Multimedia</name>
-    <number>3</number>
+    <number>2</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>348f079a-edd2-411f-aa74-8eac5ff948fe</guid>
+    <guid>81940726-f6b0-4d36-b288-d75b99087c2c</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -672,9 +598,9 @@ The result is the following :
   </object>
   <object>
     <name>Confluence.Macros.Multimedia</name>
-    <number>4</number>
+    <number>3</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>1578c4a9-c380-4864-b06c-9ca2170df22d</guid>
+    <guid>348f079a-edd2-411f-aa74-8eac5ff948fe</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -750,9 +676,9 @@ The result is the following :
   </object>
   <object>
     <name>Confluence.Macros.Multimedia</name>
-    <number>5</number>
+    <number>4</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>48aaaa15-39a6-4876-82a8-0430b7d7eba2</guid>
+    <guid>1578c4a9-c380-4864-b06c-9ca2170df22d</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -821,6 +747,84 @@ The result is the following :
     </property>
     <property>
       <name>autostart</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Multimedia</name>
+    <number>5</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>48aaaa15-39a6-4876-82a8-0430b7d7eba2</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Alias for the name parameter. Please use the name parameter instead.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>att--filename</name>
     </property>
     <property>
       <type/>
