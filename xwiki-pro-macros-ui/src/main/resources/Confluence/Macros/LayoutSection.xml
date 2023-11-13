@@ -36,7 +36,7 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>The Layout Section macro is usually used with [[Layout&gt;&gt;Confluence.Macros.Layout]](see more layout examples) and [[Layout Cell&gt;&gt;Confluence.Macros.LayoutCell]] macros.
+  <content>The Layout Section Confluence bridge macro is usually used with [[Layout&gt;&gt;Confluence.Macros.Layout]](see more layout examples) and [[Layout Cell&gt;&gt;Confluence.Macros.LayoutCell]] macros.
 
 {{code}}
 {{layout-section ac:type="three_with_sidebars"}}
@@ -476,7 +476,7 @@ On the other hand, we denounce with righteous indignation.
       <defaultCategory>content</defaultCategory>
     </property>
     <property>
-      <description/>
+      <description>Confluence bridge macro to define a section of a layout, used inside the layout macro and containing layout cells.</description>
     </property>
     <property>
       <id>layout-section</id>
