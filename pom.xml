@@ -34,7 +34,7 @@
   <name>XWiki Pro - Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
-    <licensing.version>1.24.1</licensing.version>
+    <licensing.version>1.24.3</licensing.version>
     <pdfviewer.version>2.5.2</pdfviewer.version>
     <jwplayer.version>2.1.10</jwplayer.version>
   </properties>
