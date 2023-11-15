@@ -50,6 +50,8 @@ confluencediagram.modal.btn.close=Close
 confluencediagram.modal.btn.confirm=Confirm
 confluencediagram.delete.success=The editable diagram was successfully deleted.
 confluencediagram.delete.error=The diagram could not be deleted.
+confluence.nonefound=None found
+
 ## Section macro
 rendering.macro.section.name=Section Macro
 rendering.macro.section.description=Add the Section macro to a page to organize your content in sections and columns. This macro is used in conjunction with the Column macro, and provides more flexibility than page layouts.
@@ -74,6 +76,7 @@ rendering.macro.note.name=Note
 rendering.macro.note.description=Add a Note macro to your page to make important information stand out. The macro is used to format your text in a colored panel.
 rendering.macro.note.parameter.title.name=Title
 rendering.macro.note.parameter.title.description=Set the title of this note.
+
 ## Userlister macro
 rendering.macro.userlister.name=User Lister
 rendering.macro.userlister.description=Confluence bridge macro to list users of groups
@@ -85,6 +88,13 @@ rendering.macro.userlister.parameter.online.description=Ignored parameter, prese
 ## Profile Picture Macro
 rendering.macro.profilepicture.parameter.User.name=The user to show
 rendering.macro.profilepicture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
+
+## Contributors Macro
+confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
+confluencecontributors.watchesnotsupported=Note: listing people watching pages is not supported
+confluencecontributors.pages=Pages:
+confluencecontributors.nopages=(none)
+
 ## Content Report Table Macro
 contentReportTable.header.modified=Modified</content>
   <object>
