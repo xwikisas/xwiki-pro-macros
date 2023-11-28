@@ -73,6 +73,12 @@
       <type>xar</type>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.contrib.mathjax</groupId>
+      <artifactId>macro-mathjax-ui</artifactId>
+      <version>${mathjax.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
       <version>${platform.version}</version>

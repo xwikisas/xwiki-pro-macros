@@ -37,6 +37,8 @@
     <licensing.version>1.24.3</licensing.version>
     <pdfviewer.version>2.5.2</pdfviewer.version>
     <jwplayer.version>2.1.10</jwplayer.version>
+    <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->
+    <mathjax.version>1.0.5</mathjax.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
