@@ -37,13 +37,22 @@
   table.xwiki-userlist td.xwiki-userlist-user-avatar:first-child, table.xwiki-userlist td.xwiki-userlist-user-avatar:last-child {
     float: right;
     border-top: none;
+    margin-bottom: 1ex;
   }
 
   table.xwiki-userlist tr {
     border-top: 1px solid #ddd;
     padding-top: 1ex;
   }
+
   table.xwiki-userlist tr:last-child {
     border-bottom: 1px solid #ddd;
+  }
+
+  table.xwiki-userlist tr::after {
+    clear: both;
+    content: ;
+    display: block;
+    content: "";
   }
 }
