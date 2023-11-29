@@ -90,4 +90,17 @@
       <version>1.19.1</version>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <!-- Use a more recent version of the xar plugin so xar:format removes unwanted
+           fields from more recent versions of XWiki, in particular
+           originalMetadataAuthor.
+           See https://github.com/xwikisas/xwiki-pro-macros/issues/170  -->
+      <plugin>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
+        <version>15.9</version>
+      </plugin>
+    </plugins>
+  </build>
 </project>
