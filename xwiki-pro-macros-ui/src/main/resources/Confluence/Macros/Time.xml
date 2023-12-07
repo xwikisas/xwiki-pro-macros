@@ -37,13 +37,11 @@
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>
-The Anchor macro implements the Confluence Anchro macro by bridging it to the [[XWiki id macro&gt;&gt;url:https://extensions.xwiki.org/xwiki/bin/view/Extension/Id%20Macro]]. It supports the same parameter "name"
+The Time Confluence bridge macro show the time given in its datetime parameter.
 
 {{time datetime="2023-10-11"/}}
 
 == Example ==
-
-Anchor "test"
 
 {{code}}
 {{time datetime="2023-10-11"/}}
