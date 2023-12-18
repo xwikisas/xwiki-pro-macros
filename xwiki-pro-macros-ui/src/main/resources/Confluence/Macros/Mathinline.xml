@@ -278,7 +278,7 @@ See also:
 #end##
 ## try to avoid injection by removing the possibility to close the mathjax macro. Its content is not XWiki-parsed IIUC.
 #set ($mathinlineexpression = $mathinlineexpression.replace("{{/", "{{ /"))
-{{mathjax}}${escapetool.d}${escapetool.d} $mathinlineexpression ${escapetool.d}${escapetool.d}{{/mathjax}}
+{{mathjax}}\($mathinlineexpression\){{/mathjax}}
 {{/velocity}}
 </code>
     </property>
