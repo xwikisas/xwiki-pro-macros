@@ -268,8 +268,14 @@ The Time Confluence bridge macro show the time given in its datetime parameter.
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
 #if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #set ($datetime = $escapetool.xml($!wikimacro.parameters.datetime))
+  #if ("!datetime" == '')
+    {{warning}}
+      $services.localization.render('xwikipro.macro.empty', 'time', 'datetime')
+    {{warning}}
+  #end
   {{html clean=false}}
-    &lt;time datetime="$escapetool.xml($wikimacro.parameters.datetime)"&gt;$escapetool.xml($wikimacro.parameters.datetime)&lt;/time&gt;
+    &lt;time datetime="$datetime"&gt;$datetime&lt;/time&gt;
   {{/html}}
 #else
   {{error}}

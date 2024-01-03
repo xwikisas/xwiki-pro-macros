@@ -36,7 +36,10 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
+  <content>## General
+xwikipro.macro.empty=Empty [{0}] macro. Please specify the [{1}] parameter.
+
+confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
 confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an editable diagram. You can always go back to this preview.
 confluencediagram.create.confirm=Convert
 confluencediagram.create.success=The diagram has been converted.
