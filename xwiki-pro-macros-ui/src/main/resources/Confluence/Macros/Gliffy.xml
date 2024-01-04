@@ -411,7 +411,7 @@ The result is the following:
       <description/>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>1</mandatory>
     </property>
     <property>
       <name>name</name>
