@@ -393,7 +393,7 @@ $xwiki.currentContentSyntaxId)|No|false
       <description>The URL to the Microsoft Stream video.</description>
     </property>
     <property>
-      <mandatory>0</mandatory>
+      <mandatory>1</mandatory>
     </property>
     <property>
       <name>uri</name>

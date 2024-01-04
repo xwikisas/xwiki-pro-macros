@@ -368,7 +368,7 @@
       <description/>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>1</mandatory>
     </property>
     <property>
       <name>att--filename</name>
