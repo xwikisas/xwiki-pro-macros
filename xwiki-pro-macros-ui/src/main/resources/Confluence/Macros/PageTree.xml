@@ -279,7 +279,7 @@ This macro is a bridge for the Confluence Page Tree macro. It displays the list 
 
   #else
     #if ("$!root" == "" || "$root" == "@home")
-      #set($spaces = $doc.getDocumentReference().getSpacesReferences())
+      #set($spaces = $doc.getDocumentReference().getSpaceReferences())
       #set($space = $spaces[0])
     #elseif ("$!root" == "@parent")
       #set($space = $doc.getDocumentReference().getLastSpaceReference().getParent())
@@ -419,7 +419,7 @@ This macro is a bridge for the Confluence Page Tree macro. It displays the list 
       <description/>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>root</name>
