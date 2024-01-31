@@ -82,7 +82,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     public ExcerptIncludeMacro()
     {
         super("Excerpt include",
-            "Bridge for the Confluence Excerpt Include macro, include excerpts from other documents",
+            "Bridge for the Confluence Excerpt Include macro, includes excerpts from other documents",
             ExcerptIncludeMacroParameters.class);
     }
 
@@ -121,6 +121,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         for (Block block : blocks) {
             MacroBlock macroBlock = (MacroBlock) block;
             if ("excerpt".equals(macroBlock.getId())) {
+                // Use a document clone that has only the excerpt macro as content, to be displayed.
                 XWikiDocument documentClone = document.clone();
                 try {
                     documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
