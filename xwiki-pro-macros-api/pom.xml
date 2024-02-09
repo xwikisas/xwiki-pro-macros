@@ -90,5 +90,10 @@
       <artifactId>xwiki-rendering-macro-box</artifactId>
       <version>${rendering.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-rendering-macro-include</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
   </dependencies>
 </project>
