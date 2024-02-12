@@ -109,7 +109,8 @@ public class ExcerptIncludeMacroRunnable extends AbstractExcerptIncludeRunnable
         DocumentReference oldReference, XWikiContext xcontext) throws XWikiException
     {
         XDOM backlinkDocXDOM = document.getXDOM();
-        List<Block> macroBlocks = backlinkDocXDOM.getBlocks(new MacroBlockMatcher("excerpt-include"), Block.Axes.CHILD);
+        List<Block> macroBlocks =
+            backlinkDocXDOM.getBlocks(new MacroBlockMatcher("excerpt-include"), Block.Axes.DESCENDANT);
 
         String newReferenceString =
             compactEntityReferenceSerializer.serialize(newReference, document.getDocumentReference());

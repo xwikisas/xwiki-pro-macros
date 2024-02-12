@@ -47,16 +47,16 @@ import com.xwiki.macros.excerptinclude.internal.ExcerptIncludeMacroRunnable;
 import com.xwiki.macros.excerptinclude.internal.ExcerptQueueEntry;
 
 /**
- * Listens to rename of pages and starts a thread for updating references of the excerpt-include macro.
+ * Listens to rename of excerpt pages and starts a thread for updating references of the excerpt-include macro.
  *
  * @version $Id$
  * @since 1.14.4
  */
 @Component
-@Named(PageRenameListener.ROLE_HINT)
+@Named(ExcerptPageRenameListener.ROLE_HINT)
 @Singleton
 @Unstable
-public class PageRenameListener extends AbstractEventListener implements Disposable
+public class ExcerptPageRenameListener extends AbstractEventListener implements Disposable
 {
     /**
      * The role hint of the document.
@@ -83,7 +83,7 @@ public class PageRenameListener extends AbstractEventListener implements Disposa
     /**
      * Constructor.
      */
-    public PageRenameListener()
+    public ExcerptPageRenameListener()
     {
         super(ROLE_HINT, new DocumentCreatedEvent());
     }
@@ -99,7 +99,7 @@ public class PageRenameListener extends AbstractEventListener implements Disposa
             XWikiDocument currentDoc = (XWikiDocument) source;
             XDOM backlinkDocXDOM = currentDoc.getXDOM();
             List<Block> excerptMacroBlocks = backlinkDocXDOM.getBlocks(new MacroBlockMatcher("excerpt"),
-                Block.Axes.CHILD);
+                Block.Axes.DESCENDANT);
             if (excerptMacroBlocks.isEmpty()) {
                 return;
             }

@@ -88,7 +88,7 @@ public class ExcerptIncludeMacroListener extends AbstractEventListener
         XWikiContext context = (XWikiContext) data;
 
         List<Block> macroBlocks =
-            document.getXDOM().getBlocks(new MacroBlockMatcher("excerpt-include"), Block.Axes.CHILD);
+            document.getXDOM().getBlocks(new MacroBlockMatcher("excerpt-include"), Block.Axes.DESCENDANT);
 
         if (!macroBlocks.isEmpty()) {
             try {
