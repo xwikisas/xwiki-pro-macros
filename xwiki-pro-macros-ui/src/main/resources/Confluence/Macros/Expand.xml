@@ -154,43 +154,35 @@ Hello 👀
       <cache>long</cache>
     </property>
     <property>
-      <code>.confluence-expand-macro {
+      <code>.confluence-expand-macro .glyphicon {
+  margin-right: 0.5rem;
+  transform: rotate(0deg);
+  transition: transform 0.3s;
+}
 
-  .panel-heading {
-    padding: 0;
-    .panel-title {
-      font-size: 1em;
+.confluence-expand-macro[open] .glyphicon {
+  transform: rotate(90deg);
+}
 
-      a {
-        display: block;
-        padding: @panel-heading-padding;
+.confluence-expand-macro .panel-title {
+  padding: @panel-heading-padding;
+}
 
-        p {
-          display: inline;
-        }
+.confluence-expand-macro .panel-body {
+  transition: linear 0.3s;
+}
 
-        .glyphicon {
-          margin-right: 0.5rem;
-          transform: rotate(0deg);
-          transition: transform 0.1s;
-        }
-        &amp;[aria-expanded="true"] .glyphicon {
-          transform: rotate(90deg);
-        }
-      }
-    }
-  }
+.confluence-expand-macro summary {
+  font-size: 1em;
+}
 
-  .panel-collapse {
-    .panel-body {
-      display: block;
-      &amp;::before { content: none; }
-      &amp;::after { content: none; }
+.confluence-expand-macro summary:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
 
-      &amp; &gt; *:first-child { margin-top: 0; }
-      &amp; &gt; *:last-child { margin-bottom: 0; }
-    }
-  }
+.confluence-expand-macro[open] summary {
+  border-bottom: 1px solid @panel-default-border;
 }</code>
     </property>
     <property>
@@ -412,38 +404,20 @@ Hello 👀
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   $xwiki.ssx.use('Confluence.Macros.Expand')
-  #if (!$expandMacroColllapseId)
-    #set ($expandMacroColllapseId = 0)
-  #else
-    #set ($expandMacroColllapseId = $expandMacroColllapseId + 1)
-  #end
   #set ($opened = $xcontext.action == 'edit')
-  #set ($accordionId = "accordion-$escapetool.xml($expandMacroColllapseId)")
-  #set ($toggleId = "toggle-$expandMacroColllapseId")
-  #set ($expandId = "collapse-$expandMacroColllapseId")
 
   {{html clean="false" wiki="true"}}
-  &lt;div class="panel-group confluence-expand-macro" id="${accordionId}" role="tablist"&gt;
-    &lt;div class="panel panel-default"&gt;
-      &lt;div class="panel-heading" role="tab" id="${toggleId}"&gt;
-        &lt;h4 class="panel-title"&gt;
-          &lt;a
-            role="button"
-            data-toggle="collapse"
-            data-parent="#${accordionId}"
-            href="#${expandId}"
-            #if($opened)aria-expanded="true"#end
-            aria-controls="${expandId}"
-          &gt;&lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;{{wikimacroparameter name="title" /}}&lt;/a&gt;
-        &lt;/h4&gt;
-      &lt;/div&gt;
-      &lt;div id="${expandId}" class="panel-collapse collapse #if($opened)in#end" role="tabpanel" aria-labelledby="${toggleId}"&gt;
-        &lt;div class="panel-body"&gt;
-          {{wikimacrocontent /}}
-        &lt;/div&gt;
-      &lt;/div&gt;
+  &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
+    &lt;summary&gt;
+      &lt;div class="panel-title"&gt;
+      &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
+      $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
+     &lt;/div&gt;
+    &lt;/summary&gt;
+    &lt;div class="panel-body"&gt;
+      {{wikimacrocontent /}}
     &lt;/div&gt;
-   &lt;/div&gt;
+  &lt;/details&gt;
   {{/html}}
 #end
 {{/velocity}}
