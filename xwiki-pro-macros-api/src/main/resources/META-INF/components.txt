@@ -4,4 +4,3 @@ com.xwiki.macros.userprofile.internal.macro.UserReferenceConverter
 com.xwiki.macros.userlist.internal.macro.UserListMacro
 com.xwiki.macros.userlist.internal.macro.UserReferenceListConverter
 com.xwiki.macros.userlist.internal.macro.GroupReferenceListConverter
-com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacro
