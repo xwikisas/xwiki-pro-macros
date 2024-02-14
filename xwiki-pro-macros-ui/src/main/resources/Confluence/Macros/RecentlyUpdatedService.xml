@@ -59,11 +59,38 @@
   "comment": 'commented'
 })
 
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Query macros
-## -----------------------------------------------------------------
+## See https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#escaping-special-characters
+## And https://jira.xwiki.org/browse/XCOMMONS-2926
+#set($solrSpecialChars = ['+', '-', '&amp;&amp;', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '\'])
+#set($escapedSolrSpecialChars = ['\+', '\-', '\&amp;&amp;', '\||', '\!', '\(', '\)', '\{', '\}', '\[', '\]', '\^', '\"', '\~', '\*', '\?', '\:', '\/', '\\'])
+#macro(escapeSolr $v)
+$stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
+#end
+
+#macro (addSolrParameterListWithSign $listString $fq $fieldName $onlyComma)
+  #if ("$!$listString" != '')
+    #set ($solrList = " ")
+    #set ($sep = "[\s]*,[\s]*|[\s]+")
+    #if ("$onlyComma" == "true")
+      #set ($sep = ",")
+    #end
+    #foreach ($signedV in $listString.split($sep))
+      #set ($signedV = $signedV.trim())
+      #if ($signedV.startsWith("-") || $signedV.startsWith("+"))
+        #set ($sign = $signedV.charAt(0))
+        #set ($v = $signedV.substring(1))
+      #else
+        #set ($sign = "")
+        #set ($v = $signedV)
+      #end
+      #set ($solrList = "$solrList $sign#escapeSolr($v)")
+    #end
+    #set($solrList = $solrList.trim())
+    #if (!$solrList.isEmpty())
+      #set ($discard = $fq.add("$fieldName:($solrList)"))
+    #end
+  #end
+#end
 
 #macro (queryElements $type $options $return)
   #set ($fq = [])
@@ -90,35 +117,23 @@
     #set ($discard = $fq.add('propertyname:(author)'))
   #end
   #if ("$!options.wiki" != '')
-    #set ($discard = $fq.add("wiki:($options.wiki)"))
+    #set ($discard = $fq.add("wiki:(#escapeSolr($options.wiki))"))
   #end
-  #if ("$!options.spaces" != '')
-    ## Note : this is only splitting the list of spaces based on the comma separator, however the documentation of the Recently Updated macro in Confluence DC specifies that spaces could also be separated per space. This would be causing an issue in XWiki because spaces can contain space chars in their name. See https://confluence.atlassian.com/doc/recently-updated-macro-139519.html
-    #foreach($space in $options.spaces.split(','))
-      #if ($foreach.count == 1)
-        #set($spaceSelector = "${escapetool.q}$!{space}${escapetool.q}")
-      #else
-        #set($spaceSelector = "$!{spaceSelector} OR ${escapetool.q}$!{space}${escapetool.q}")
-      #end
-    #end
-    #set ($discard = $fq.add("space_prefix:($!{spaceSelector})"))
-  #end
-  #if ("$!options.authors" != '')
-    #set ($discard = $fq.add("$authorField:($options.authors)"))
-  #end
+  #addSolrParameterListWithSign($options.spaces, $fq, "space_prefix", true)
+  #addSolrParameterListWithSign($options.authors, $fq, $authorField)
   #if ($type == 'page')
     #if ("$!options.tags" == '')
       #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
     #else
       #set ($discard = $fq.add('class:(-Blog.BlogPostClass AND XWiki.TagClass)'))
-      #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+      #addSolrParameterListWithSign($options.tags, $fq, "property.XWiki.TagClass.tags_string")
     #end
   #elseif ($type == 'blogpost')
     #if ("$!options.tags" == '')
       #set ($discard = $fq.add('class:(Blog.BlogPostClass)'))
     #else
       #set ($discard = $fq.add('class:(Blog.BlogPostClass AND XWiki.TagClass)'))
-      #set ($discard = $fq.add("property.XWiki.TagClass.tags_string:($options.tags)"))
+      #addSolrParameterListWithSign($options.tags, $fq, "property.XWiki.TagClass.tags_string")
     #end
   #end
   ## Query params
@@ -156,8 +171,8 @@
   #set ($query = $services.query.createQuery("name:$comment.name", 'solr'))
   #set ($discard = $fq.add('type:OBJECT_PROPERTY'))
   #set ($discard = $fq.add('class:XWiki.XWikiComments'))
-  #set ($discard = $fq.add("wiki:($comment.wiki)"))
-  #set ($discard = $fq.add("space:($comment.space)"))
+  #set ($discard = $fq.add("wiki:(#escapeSolr($comment.wiki))"))
+  #set ($discard = $fq.add("space:(#escapeSolr($comment.space))"))
   #set ($discard = $fq.add("number:($comment.number)"))
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
@@ -438,11 +453,6 @@
 {{/velocity}}
 
 {{velocity}}
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## -----------------------------------------------------------------
-## Fetch results
-## -----------------------------------------------------------------
 #if ("$!request.fromAjax" == "true")
   #set ($options = $jsontool.fromString($request.macroOptions))
   #fetchResults($options, $results)

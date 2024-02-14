@@ -815,52 +815,6 @@ require(['jquery'], $ =&gt; {
 ## Parameter formatting macros
 ## -----------------------------------------------------------------
 
-## Format serialized comma-separated list coming from macro parameters
-## so that it can be used inside a solr filter query parameter
-## * Escape spaces inside values by wrapping them inside quotes,
-##   making sure "+" and "-" filter modifiers stay outside the quotes
-## * Remove commas so that values are separated only by spaces
-#macro (formatSerializedList $serializedList $return)
-  ## Wrap each value around quotes and replace commas by spaces
-  ## (adds extra quotes / spaces at the beginning and end of the string)
-  #set ($searchRegex = '(?:^|$|,)\s*([-+]?)')
-  #set ($replacement = '" $1"')
-  #if (!$serializedList)
-    #set($serializedList = "")
-  #end
-  #set ($formatted = $serializedList.replace($searchRegex, $replacement))
-  ## Remove extra quotes / spaces at the beginning and end of the string
-  #set ($formatted = $!stringtool.substring($formatted, 2, -2))
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $formatted)
-#end
-
-## Format serialized comma-separated author list coming from macro parameters
-## Author format is different between comments and document metadata
-## ("xwiki:" wiki prefix is missing from comments author metadata),
-## so add both versions in the formatted serialized list
-#macro (formatSerializedAuthorList $serializedAuthorList $return)
-  #set ($authorsList = [])
-  #set ($splittedAuthorList = $!stringtool.split($serializedAuthorList, ','))
-  #foreach ($author in $splittedAuthorList)
-    #set ($author = $!stringtool.strip($author))
-    #set ($modifier = '')
-    #if ($author.startsWith('-'))
-      #set ($modifier = '-')
-      #set ($author = $author.substring(1))
-    #end
-    #set ($resolvedAuthor = $services.model.resolveDocument($author))
-    #set ($discard = $authorsList.add("${modifier}${author}"))
-    #set ($discard = $authorsList.add("${modifier}${services.model.serialize($resolvedAuthor, 'default')}"))
-  #end
-  #set ($authors = $!stringtool.join($authorsList, ','))
-  #formatSerializedList($authors, $authors)
-  ## Return
-  #set ($return = $NULL)
-  #setVariable("$return" $authors)
-#end
-
 ## Format serialized comma-separated types list coming from macro parameters
 ## Return a list containing all the types of results that need to be displayed
 #macro (parseTypes $serializedTypeList $return)
@@ -907,9 +861,7 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Authors
-  #set ($confluenceAuthorsString = "$!stringtool.strip($!wikimacro.parameters.author)")
-  #formatSerializedAuthorList($confluenceAuthorsString, $authors)
-  #set ($options.authors = $authors)
+  #set ($options.authors = "$!stringtool.strip($!wikimacro.parameters.author)")
 
   ## Wiki &amp; Spaces
   #set ($confluenceSpacesString = "$!stringtool.strip($!wikimacro.parameters.spaces)")
@@ -939,14 +891,11 @@ require(['jquery'], $ =&gt; {
     #set ($options.wiki = $NULL)
   #else
     ## Search in specified spaces
-    #formatSerializedList($confluenceSpacesString, $spaces)
-    #set ($options.spaces = $spaces)
+    #set ($options.spaces = $confluenceSpacesString)
   #end
 
   ## Tags
-  #set ($confluenceLabelString = "$!stringtool.strip($!wikimacro.parameters.labels)")
-  #formatSerializedList($confluenceLabelString, $tags)
-  #set ($options.tags = $tags)
+  #set ($options.tags = "$!stringtool.strip($!wikimacro.parameters.labels)")
 
   ## Types
   #set ($confluenceTypesString = "$!stringtool.strip($!wikimacro.parameters.types)")
