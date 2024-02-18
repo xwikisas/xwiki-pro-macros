@@ -345,8 +345,6 @@ $services.localization.render('rendering.macro.button.description')
 #end
 {{/velocity}}
 
-{{include reference="Licenses.Code.VelocityMacros"/}}
-
 {{velocity}}
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
@@ -354,9 +352,7 @@ $services.localization.render('rendering.macro.button.description')
 #if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
-  {{error}}
-    #getMissingLicenseMessage('proMacros.extension.name')
-  {{/error}}
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
 #end
 {{/velocity}}</code>
     </property>

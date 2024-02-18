@@ -448,9 +448,7 @@ Add a new status macro.{{status title="Improvement" colour="Green" subtle="true"
       <async_enabled/>
     </property>
     <property>
-      <code>{{include reference="Licenses.Code.VelocityMacros"/}}{{comment}}
-A comment is needed in order to skip extra spaces added and use this macro inline.
-{{/comment}}{{velocity}}
+      <code>{{velocity}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.Status'))
   #set ($color = $escapetool.xml($xcontext.macro.params.colour))
@@ -477,9 +475,7 @@ A comment is needed in order to skip extra spaces added and use this macro inlin
 #if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
-  {{error}}
-    #getMissingLicenseMessage('proMacros.extension.name')
-  {{/error}}
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
 #end
 {{/velocity}}</code>
     </property>

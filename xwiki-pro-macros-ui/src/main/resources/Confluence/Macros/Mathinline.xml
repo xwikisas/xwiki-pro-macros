@@ -270,15 +270,21 @@ See also:
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}##
-## The license check is missing: it's not convenient for inline stuff.
-#set ($mathinlineexpression ="$!wikimacro.parameters.body")##
-#if ($mathinlineexpression.startsWith("--uriencoded--"))##
-  #set ($mathinlineexpression = $util.decodeURI($mathinlineexpression.substring(14)))##
-#end##
-## try to avoid injection by removing the possibility to close the mathjax macro. Its content is not XWiki-parsed IIUC.
-#set ($mathinlineexpression = $mathinlineexpression.replace("{{/", "{{ /"))
-{{mathjax}}\($mathinlineexpression\){{/mathjax}}
+      <code>{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #set ($mathinlineexpression ="$!wikimacro.parameters.body")##
+  #if ($mathinlineexpression.startsWith("--uriencoded--"))##
+    #set ($mathinlineexpression = $util.decodeURI($mathinlineexpression.substring(14)))##
+  #end##
+  ## try to avoid injection by removing the possibility to close the mathjax macro. Its content is not XWiki-parsed IIUC.
+  #set ($mathinlineexpression = $mathinlineexpression.replace("{{/", "{{ /"))
+  {{mathjax}}\($mathinlineexpression\){{/mathjax}}
+#else
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
+#end
 {{/velocity}}
 </code>
     </property>

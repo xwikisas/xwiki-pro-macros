@@ -261,9 +261,7 @@ The Time Confluence bridge macro show the time given in its datetime parameter.
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{include reference="Licenses.Code.VelocityMacros"/}}
-
-{{velocity}}##
+      <code>{{velocity}}##
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
@@ -273,9 +271,7 @@ The Time Confluence bridge macro show the time given in its datetime parameter.
     &lt;time datetime="$!datetime"&gt;$!datetime&lt;/time&gt;
   {{/html}}
 #else
-  {{error}}
-    #getMissingLicenseMessage('proMacros.extension.name')
-  {{/error}}
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
 #end
 {{/velocity}}</code>
     </property>
