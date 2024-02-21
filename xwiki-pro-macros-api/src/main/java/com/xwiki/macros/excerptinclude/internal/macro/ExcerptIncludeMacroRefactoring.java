@@ -38,7 +38,6 @@ import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.macro.MacroRefactoring;
 import org.xwiki.rendering.macro.MacroRefactoringException;
-import org.xwiki.stability.Unstable;
 import org.xwiki.text.StringUtils;
 
 /**
@@ -50,7 +49,6 @@ import org.xwiki.text.StringUtils;
 @Component
 @Singleton
 @Named("excerpt-include")
-@Unstable
 public class ExcerptIncludeMacroRefactoring implements MacroRefactoring
 {
     @Inject
