@@ -181,8 +181,13 @@ Hello 👀
   text-decoration: underline;
 }
 
-.confluence-expand-macro[open] summary {
-  border-bottom: 1px solid @panel-default-border;
+.confluence-expand-macro.panel &gt; .panel-body, .confluence-expand-macro &gt; summary {
+  background: unset;
+  border: none;
+}
+
+.confluence-expand-macro.panel {
+  background: unset;
 }</code>
     </property>
     <property>
