@@ -143,6 +143,14 @@
     </property>
     <property>
       <code>
+/*** Confluence useless tags */
+
+p.auto-cursor-target&gt;br:first-child:last-child, p.auto-cursor-target:has(br:first-child:last-child) {
+  /* Causes too much whitespace.
+   * We may want to consider removing them during the conversion in Confluence-XML */
+  display:none;
+}
+
 /*** Confluence "highlight" (background) colors */
 
 [data-highlight-colour] {
