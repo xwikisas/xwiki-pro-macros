@@ -160,7 +160,7 @@ Hello 👀
   transition: transform 0.3s;
 }
 
-.confluence-expand-macro[open] .glyphicon {
+.confluence-expand-macro[open] > summary .glyphicon {
   transform: rotate(90deg);
 }
 
