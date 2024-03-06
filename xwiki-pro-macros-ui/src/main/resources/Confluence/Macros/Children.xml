@@ -20,14 +20,13 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.Expand" locale="">
+<xwikidoc version="1.4" reference="Confluence.Macros.Children" locale="">
   <web>Confluence.Macros</web>
-  <name>Expand</name>
+  <name>Children</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Confluence.Macros</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -36,178 +35,33 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>The expand macro is a bridge between Confluence and XWiki. It provides an expandable / collapsible section for writting content.
+  <content>The Children Pages macro is a bridge between Confluence and XWiki. It uses the document tree macro to display the children of a given page.
+
+Only the page parameter of the associated confluence macro is supported at the moment.
 
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**title**|Text displayed on the collaspse toggle|No|Click here to expand...
-
+|**page**|The reference of a document|No|
 
 = Example Usage =
 
-{{expand}}
-Hello 👀
-{{/expand}}</content>
+Display the children of the current page
+
+{{code}}
+{{confluence_children/}}
+{{/code}}
+
+Display the children of a custom page
+
+{{code}}
+{{confluence_children page="Main.WebHome"/}}
+{{/code}}</content>
   <object>
-    <name>Confluence.Macros.Expand</name>
-    <number>0</number>
-    <className>XWiki.StyleSheetExtension</className>
-    <guid>f0033524-8b36-48d8-860c-d8f017f65656</guid>
-    <class>
-      <name>XWiki.StyleSheetExtension</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <cache>
-        <cache>0</cache>
-        <defaultValue>long</defaultValue>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>cache</name>
-        <number>5</number>
-        <prettyName>Caching policy</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>long|short|default|forbid</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </cache>
-      <code>
-        <contenttype>PureText</contenttype>
-        <disabled>0</disabled>
-        <editor>PureText</editor>
-        <name>code</name>
-        <number>2</number>
-        <prettyName>Code</prettyName>
-        <rows>20</rows>
-        <size>50</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
-      <contentType>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>contentType</name>
-        <number>6</number>
-        <prettyName>Content Type</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>CSS|LESS</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </contentType>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <parse>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>parse</name>
-        <number>4</number>
-        <prettyName>Parse content</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </parse>
-      <use>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>use</name>
-        <number>3</number>
-        <prettyName>Use this extension</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>currentPage|onDemand|always</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </use>
-    </class>
-    <property>
-      <cache>long</cache>
-    </property>
-    <property>
-      <code>.confluence-expand-macro .glyphicon {
-  margin-right: 0.5rem;
-  transform: rotate(0deg);
-  transition: transform 0.3s;
-}
-
-.confluence-expand-macro[open] &gt; summary .glyphicon {
-  transform: rotate(90deg);
-}
-
-.confluence-expand-macro .panel-title {
-  padding: @panel-heading-padding;
-}
-
-.confluence-expand-macro .panel-body {
-  transition: linear 0.3s;
-}
-
-.confluence-expand-macro summary {
-  font-size: 1em;
-}
-
-.confluence-expand-macro summary:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.confluence-expand-macro.panel &gt; .panel-body, .confluence-expand-macro &gt; summary {
-  background: unset;
-  border: none;
-}
-
-.confluence-expand-macro.panel {
-  background: unset;
-}</code>
-    </property>
-    <property>
-      <contentType>LESS</contentType>
-    </property>
-    <property>
-      <name/>
-    </property>
-    <property>
-      <parse>0</parse>
-    </property>
-    <property>
-      <use>onDemand</use>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.Expand</name>
+    <name>Confluence.Macros.Children</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
-    <guid>72da528c-3f27-4d5e-893f-76e92efc02a2</guid>
+    <guid>9627621b-89ed-43d5-8de8-c9a675c7a7af</guid>
     <class>
       <name>XWiki.WikiMacroClass</name>
       <customClass/>
@@ -406,62 +260,31 @@ Hello 👀
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity output="false"}}
-#macro (executeMacro)
-  $xwiki.ssx.use('Confluence.Macros.Expand')
-  #set ($opened = $xcontext.action == 'edit')
-
-  {{html clean="false" wiki="true"}}
-  &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
-    &lt;summary&gt;
-      &lt;div class="panel-title"&gt;
-      &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
-      $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
-     &lt;/div&gt;
-    &lt;/summary&gt;
-    &lt;div class="panel-body"&gt;
-      {{wikimacrocontent /}}
-    &lt;/div&gt;
-  &lt;/details&gt;
-  {{/html}}
-#end
-{{/velocity}}
-
-{{velocity}}
-## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
-## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
-## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
-  #executeMacro
-#else
-  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
-#end
+      <code>{{velocity}}
+#set ($root = "document:$!wikimacro.parameters.page")
+{{documentTree showAttachments="false" showTranslations="false" root="$services.rendering.escape($root, 'xwiki/2.1')" limit="$services.rendering.escape($!wikimacro.parameters.first, 'xwiki/2.1')"/}}
 {{/velocity}}</code>
     </property>
     <property>
       <contentDescription/>
     </property>
     <property>
-      <contentJavaType>Wiki</contentJavaType>
+      <contentJavaType/>
     </property>
     <property>
-      <contentType>Optional</contentType>
+      <contentType>No content</contentType>
     </property>
     <property>
       <defaultCategory/>
     </property>
     <property>
-      <description>Add the Expand macro to your page to provide content in an expandable / collapsible section. 
-
-This is one of Confluence's most popular macros. It's great for: visually reducing the amount of information on a page, breaking process information down into clickable steps, hiding background or obsolete information, while still keeping it on the page for future reference.
-
-The macro is collapsed by default, people need to click each one to expand it. There's no way to expand all macros on a page at once, however all Expand macros are automatically expanded when you print or export the page to PDF.</description>
+      <description>A wrapper for the document tree macro that supports confluence parameter names.</description>
     </property>
     <property>
-      <id>expand</id>
+      <id>confluence_children</id>
     </property>
     <property>
-      <name>Expand</name>
+      <name>Children Pages</name>
     </property>
     <property>
       <priority/>
@@ -474,10 +297,10 @@ The macro is collapsed by default, people need to click each one to expand it. 
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Expand</name>
+    <name>Confluence.Macros.Children</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>451060ef-8496-4488-8084-686ebc77ca48</guid>
+    <guid>a1b79306-ea16-49b3-90c4-8620c0bdd904</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -536,19 +359,97 @@ The macro is collapsed by default, people need to click each one to expand it. 
       </type>
     </class>
     <property>
-      <defaultValue>Click here to expand...</defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description>Defines the text that appears next to the expand/collapse icon.</description>
+      <description>The reference of the page whose children will be displayed.</description>
     </property>
     <property>
       <mandatory>0</mandatory>
     </property>
     <property>
-      <name>title</name>
+      <name>page</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>org.xwiki.model.reference.DocumentReference</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Children</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>892608c3-46ce-4979-954a-ccd4f9cdf525</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The number of children that will be displayed initially</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>first</name>
+    </property>
+    <property>
+      <type>java.lang.Integer</type>
     </property>
   </object>
 </xwikidoc>
