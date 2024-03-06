@@ -43,6 +43,7 @@ Only the page parameter of the associated confluence macro is supported at the m
 
 |=Parameter|=Description|=Required|=Default
 |**page**|The reference of a document|No|
+|**first**|The number of children that will be displayed initially|No|
 
 = Example Usage =
 
@@ -52,10 +53,10 @@ Display the children of the current page
 {{confluence_children/}}
 {{/code}}
 
-Display the children of a custom page
+Display the first 10 children of a custom page
 
 {{code}}
-{{confluence_children page="Main.WebHome"/}}
+{{confluence_children page="Main.WebHome" first="10"/}}
 {{/code}}</content>
   <object>
     <name>Confluence.Macros.Children</name>

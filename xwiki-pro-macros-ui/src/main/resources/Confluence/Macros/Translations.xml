@@ -88,6 +88,14 @@ rendering.macro.userlister.parameter.groups.description=List of Confluence user 
 rendering.macro.userlister.parameter.online.name=Online
 rendering.macro.userlister.parameter.online.description=Ignored parameter, present for compatibility purpose only
 
+# Children macro
+rendering.macro.confluence_children.name=Children Pages
+rendering.macro.confluence_children.description=A wrapper for the document tree macro that supports confluence parameter names.
+rendering.macro.confluence_children.parameter.page.name=Page
+rendering.macro.confluence_children.parameter.page.description=The reference of the page whose children will be displayed.
+rendering.macro.confluence_children.parameter.first.name=Number of children
+rendering.macro.confluence_children.parameter.first.description=The number of children that will be displayed initially
+
 ## Profile Picture Macro
 rendering.macro.profilepicture.parameter.User.name=The user to show
 rendering.macro.profilepicture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
