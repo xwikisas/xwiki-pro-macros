@@ -415,8 +415,8 @@ Hello 👀
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
       &lt;div class="panel-title"&gt;
-      &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
-      $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
+        &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
+        $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
      &lt;/div&gt;
     &lt;/summary&gt;
     &lt;div class="panel-body"&gt;
