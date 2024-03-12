@@ -174,8 +174,15 @@ On the other hand, we denounce with righteous indignation.
     <property>
       <code>.macro-layout-section {
   margin-bottom: 20px;
+}
+
+.macro-section, .macro-layout-section {
   display: flex;
   flex-direction: row;
+}
+
+.macro-layout-section.single .macro-layout-cell {
+  flex-basis: 100%;
 }
 .macro-layout-section.two_equal .macro-layout-cell {
   flex-basis: 50%;
