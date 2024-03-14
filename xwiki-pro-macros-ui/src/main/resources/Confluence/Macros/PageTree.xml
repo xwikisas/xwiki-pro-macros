@@ -43,7 +43,7 @@ This macro is a bridge for the Confluence Page Tree macro. It displays the list 
 = Parameters =
 
 |=Parameter|=Description|=Accepted values|=Default value|=Mandatory
-|**root**|The space to show.|**@home** (list the pages under the home page of the space), **@self **(under this page), **@none** (all the pages of the space),** @parent** (all the pages in the parent space), or the name of a space|**@home**|No
+|**root**|The space to show.|**@home** (list the pages under the home page of the space), **@self **(under this page), **@none** (all the pages of the space), **@parent** (all the pages in the parent space), or the name of a space|**@home**|No
 
 = Example of usage =
 

@@ -62,7 +62,7 @@ Possible values are:
 )))
 |showCount|Show count|false|Show the contribution count for each user.
 |showLastTime|Show last time|false|Show the last contribution time for each user.
-|page|Page|current|The page for which to list the contributions. If both page and space are empty,  the current page is used.
+|page|Page|current|The page for which to list the contributions. If both page and space are empty, the current page is used.
 |spaces|Spaces|current|(((
 Space(s) containing the page specified in the page parameter, or the space(s) to search. Several spaces can be specified using commas.
 

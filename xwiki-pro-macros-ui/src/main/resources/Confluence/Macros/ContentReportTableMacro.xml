@@ -454,7 +454,7 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description>Label(s) to report on</description>
+      <description>Label(s) to report on</description>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -532,7 +532,7 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description>Space(s) to report on</description>
+      <description>Space(s) to report on</description>
     </property>
     <property>
       <mandatory/>
