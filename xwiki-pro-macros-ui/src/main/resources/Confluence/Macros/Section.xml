@@ -241,9 +241,6 @@ Content in the column 4
     <property>
       <code>.hasBorder .macro-column {
   border: 1px dashed grey;
-}
-.macro-section {
-  display:flex;
 }</code>
     </property>
     <property>

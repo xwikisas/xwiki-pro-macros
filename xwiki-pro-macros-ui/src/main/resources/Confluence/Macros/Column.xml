@@ -209,6 +209,7 @@ Content in the column 4
     </property>
     <property>
       <code>.macro-column {
+  display: table-cell;
   padding: 5px;
 }</code>
     </property>
