@@ -97,7 +97,7 @@
       <groupId>com.xwiki.diagram</groupId>
       <artifactId>application-diagram</artifactId>
       <type>xar</type>
-      <version>1.19.1</version>
+      <version>1.20.1</version>
     </dependency>
   </dependencies>
 </project>
