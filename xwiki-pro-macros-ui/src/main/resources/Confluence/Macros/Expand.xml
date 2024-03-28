@@ -420,7 +420,9 @@ Hello 👀
      &lt;/div&gt;
     &lt;/summary&gt;
     &lt;div class="panel-body"&gt;
+
       {{wikimacrocontent /}}
+
     &lt;/div&gt;
   &lt;/details&gt;
   {{/html}}
