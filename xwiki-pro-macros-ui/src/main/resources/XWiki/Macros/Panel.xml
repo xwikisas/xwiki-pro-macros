@@ -212,7 +212,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
 }
 .macro-border {
   margin-bottom: 10px;
-  overflow: scroll;
+  overflow: hidden;
 }</code>
     </property>
     <property>
