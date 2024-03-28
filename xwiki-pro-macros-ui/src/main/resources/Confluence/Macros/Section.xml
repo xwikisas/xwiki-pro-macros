@@ -241,6 +241,19 @@ Content in the column 4
     <property>
       <code>.hasBorder .macro-column {
   border: 1px dashed grey;
+}
+.macro-section
+{
+  display:flex;
+}
+.macro-section {
+  display:flex;
+}
+
+.macro-section &gt; .xwiki-metadata-container.cke_widget_editable
+{
+  display:flex;
+  width:100%;
 }</code>
     </property>
     <property>
