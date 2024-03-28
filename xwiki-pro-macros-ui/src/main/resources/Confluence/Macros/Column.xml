@@ -437,7 +437,7 @@ Content in the column 4
   #if ("$!xcontext.macro.params.width" != '')
     #set ($style = "style='width: $xcontext.macro.params.width'")
   #end
-  (% class="macro-column" $style %)(((
+  (% class="macro-column" data-width="$xcontext.macro.params.width" $style %)(((
     {{wikimacrocontent /}}
   )))
 #end
