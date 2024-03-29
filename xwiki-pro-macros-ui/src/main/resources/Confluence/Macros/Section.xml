@@ -242,7 +242,7 @@ $(document).on('xwiki:dom:updated', function(event, data) {
       <parse/>
     </property>
     <property>
-      <use/>
+      <use>onDemand</use>
     </property>
   </object>
   <object>
@@ -355,9 +355,6 @@ $(document).on('xwiki:dom:updated', function(event, data) {
 }
 .macro-section
 {
-  display:flex;
-}
-.macro-section {
   display:flex;
 }
 
