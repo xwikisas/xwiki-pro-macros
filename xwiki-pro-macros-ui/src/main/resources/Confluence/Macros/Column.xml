@@ -435,9 +435,9 @@ Content in the column 4
   #set ($style = '')
   #set ($extraCssClass = 'withWidth')
   #if ("$!xcontext.macro.params.width" != '')
-    #set ($style = "style='width: $xcontext.macro.params.width'")
+    #set ($style = "style='width: $escapetool.xml($xcontext.macro.params.width)'")
   #end
-  (% class="macro-column" data-width="$xcontext.macro.params.width" $style %)(((
+  (% class="macro-column" data-width="$escapetool.xml($xcontext.macro.params.width)" $style %)(((
     {{wikimacrocontent /}}
   )))
 #end
