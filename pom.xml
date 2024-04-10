@@ -35,7 +35,7 @@
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
     <licensing.version>1.25</licensing.version>
-    <pdfviewer.version>2.5.2</pdfviewer.version>
+    <pdfviewer.version>2.5.4</pdfviewer.version>
     <jwplayer.version>2.1.10</jwplayer.version>
     <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->
     <mathjax.version>1.0.5</mathjax.version>
