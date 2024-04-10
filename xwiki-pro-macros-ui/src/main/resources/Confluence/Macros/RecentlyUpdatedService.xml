@@ -242,8 +242,10 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
       #if ($resultList.size() &gt; 0)
         ## Flag result if it is the most recent found until now
         #set ($date = $resultList[0].date)
-        #if ($mostRecentDate == $NULL || $datetool.difference($mostRecentDate, $date).getMilliseconds() &gt; 0)
-          #set ($mostRecentDate = $date)
+        #if ("$!mostRecentDate" == "" || $datetool.difference($mostRecentDate, $date).getMilliseconds() &gt; 0)
+          #if ("$!date" != "")
+            #set ($mostRecentDate = $date)
+          #end
           #set ($listIndex = $foreach.index)
         #end
       #end
