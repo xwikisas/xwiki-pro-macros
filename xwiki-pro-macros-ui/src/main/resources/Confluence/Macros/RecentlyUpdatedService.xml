@@ -61,8 +61,8 @@
 
 ## See https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#escaping-special-characters
 ## And https://jira.xwiki.org/browse/XCOMMONS-2926
-#set($solrSpecialChars = ['+', '-', '&amp;&amp;', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '\'])
-#set($escapedSolrSpecialChars = ['\+', '\-', '\&amp;&amp;', '\||', '\!', '\(', '\)', '\{', '\}', '\[', '\]', '\^', '\"', '\~', '\*', '\?', '\:', '\/', '\\'])
+#set($solrSpecialChars = ['+', '-', '&amp;&amp;', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '\', ' '])
+#set($escapedSolrSpecialChars = ['\+', '\-', '\&amp;&amp;', '\||', '\!', '\(', '\)', '\{', '\}', '\[', '\]', '\^', '\"', '\~', '\*', '\?', '\:', '\/', '\\', '\ '])
 #macro(escapeSolr $v)
 $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 #end
