@@ -278,16 +278,19 @@ This macro is a bridge for the Confluence Page Tree macro. It displays the list 
     {{documentTree showSpaces="true"/}}
 
   #else
-    #if ($root.endsWith("@self") || $root == "")
-      ## Saw something like "SPACEKEY.@self", so let's use endsWith.
+    #if ($root.endsWith("@self") || $root.endsWith(".@self.WebHome") || $root == "" || $root == "WebHome")
+      ## Some content were migrated with "SPACEKEY.@self" and some with "SPACEKEY.@self.WebHome".
+      ## New content don't have @self, see https://jira.xwiki.org/projects/CONFLUENCE/issues/CONFLUENCE-236
       #set($space = $doc.getDocumentReference().getParent())
     #elseif ($root.endsWith("@home"))
       #set($spaces = $doc.getDocumentReference().getSpaceReferences())
       #set($space = $spaces[0])
     #elseif ($root.endsWith("@parent"))
       #set($space = $doc.getDocumentReference().getLastSpaceReference().getParent())
-    #else
+    #elseif ($root.endsWith("@parent"))
       #set($space = $services.model.resolveSpace($root, "default"))
+    #elseif ($root.endsWith(".WebHome"))
+      #set($space = $services.model.resolveSpace($root.substring(0, $root.length() - 8), "default"))
     #end
 
     {{documentTree showSpaces="true" root="space:$services.model.serialize($space)"/}}

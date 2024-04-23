@@ -872,6 +872,7 @@ require(['jquery'], $ =&gt; {
     || $confluenceSpacesString.equals('@self')
   )
     ## Search in current space
+    ## Newly migrated content don't have @self, see https://jira.xwiki.org/projects/CONFLUENCE/issues/CONFLUENCE-236
     #set ($options.spaces = $doc.space)
   #elseif (
     $confluenceSpacesString.equals('@global')
