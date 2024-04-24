@@ -99,5 +99,12 @@
       <type>xar</type>
       <version>1.20.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>location-search-macro</artifactId>
+      <version>1.2</version>
+      <type>xar</type>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>
