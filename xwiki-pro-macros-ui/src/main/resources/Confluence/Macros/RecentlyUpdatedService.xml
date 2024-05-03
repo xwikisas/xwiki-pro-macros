@@ -141,15 +141,14 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   #set ($discard = $query.bindValue('sort', "$versionField desc"))
   #set ($discard = $query.setOffset($options.offset))
   #set ($discard = $query.setLimit($options.limit))
-  #set ($responses = $query.execute())
-  #if ($responses.isEmpty())
+  #set ($results = $query.execute())
+  #if ($results.isEmpty())
     ## Return
     #set ($return = $NULL)
     #setVariable("$return" [])
   #else
-    #set($response = $responses[0])
     ## Fix some properties
-    #foreach ($element in $response.results)
+    #foreach ($element in $results[0].results)
       #set ($discard = $element.put('type', $type))
       #if ($type == "attachment")
         #set ($discard = $element.put('date', $element.attdate[0]))
@@ -161,7 +160,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #end
     ## Return
     #set ($return = $NULL)
-    #setVariable("$return" $response.results)
+    #setVariable("$return" $results[0].results)
   #end
 #end
 
@@ -178,9 +177,8 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.setOffset(0))
   #set ($discard = $query.setLimit(3))
-  #set ($commentResponse = $query.execute()[0])
   ## Add data to result
-  #foreach ($property in $commentResponse.results)
+  #foreach ($property in $query.execute()[0].results)
     #if ($property.propertyname == 'date')
       #set ($date = $null)
       #try('exception')
@@ -198,7 +196,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 
 ## For each possible type of result,
 ## fetch new results by executing the associated query
-#macro (fetchResults_queries $queryResponses $options)
+#macro (fetchResults_queries $queryResults $options)
   #foreach ($type in $TYPES)
     #set ($typeMetadata = $options.typesMetadata.get("$type"))
     ## Customize options for query
@@ -217,7 +215,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #if ($options.types.contains($type) &amp;&amp; $typeMetadata.hasNext)
       #queryElements($type $typeOptions $results)
       #set ($typeMetadata.fetchedCountTotal = $results.size())
-      #set ($discard = $queryResponses.add($results))
+      #set ($discard = $queryResults.add($results))
     #else
       #set ($typeMetadata.fetchedCountTotal = 0)
     #end
@@ -311,9 +309,9 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 #end
 
 #macro (fetchResults $options $return)
-  #set ($queryResponses = [])
-  #fetchResults_queries($queryResponses, $options)
-  #fetchResults_mergeSortLimit($queryResponses $options $results)
+  #set ($queryResults = [])
+  #fetchResults_queries($queryResults, $options)
+  #fetchResults_mergeSortLimit($queryResults $options $results)
   #fetchResults_resolveProperties($results)
   #fetchResults_updateMetadata($results, $options)
   ## Return
