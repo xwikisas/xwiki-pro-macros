@@ -102,7 +102,7 @@
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>location-search-macro</artifactId>
-      <version>1.2</version>
+      <version>${locationsearch.version}</version>
       <type>xar</type>
       <optional>true</optional>
     </dependency>

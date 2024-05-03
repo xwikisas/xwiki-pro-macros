@@ -39,6 +39,7 @@
     <jwplayer.version>2.1.10</jwplayer.version>
     <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->
     <mathjax.version>1.0.5</mathjax.version>
+    <locationsearch.version>1.3</locationsearch.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
