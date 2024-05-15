@@ -68,7 +68,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 #end
 
 #macro (addSolrParameterListWithSign $listString $fq $fieldName $onlyComma, $forAuthors)
-  #if ("$!$listString" != '')
+  #if ("$!listString" != '')
     #set ($solrList = " ")
     #set ($sep = "[\s]*,[\s]*|[\s]+")
     #if ("$onlyComma" == "true")
