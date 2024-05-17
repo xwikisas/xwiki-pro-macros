@@ -67,8 +67,8 @@
 $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 #end
 
-#macro (addSolrParameterListWithSign $listString $fq $fieldName $onlyComma)
-  #if ("$!$listString" != '')
+#macro (addSolrParameterListWithSign $listString $fq $fieldName $onlyComma, $forAuthors)
+  #if ("$!listString" != '')
     #set ($solrList = " ")
     #set ($sep = "[\s]*,[\s]*|[\s]+")
     #if ("$onlyComma" == "true")
@@ -83,7 +83,11 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
         #set ($sign = "")
         #set ($v = $signedV)
       #end
-      #set ($solrList = "$solrList $sign#escapeSolr($v)")
+      #set ($escaped = "#escapeSolr($v)")
+      #if ($forAuthors &amp;&amp; !$v.contains(":"))
+        #set ($solrList = "$solrList $sign*\:$escaped")
+      #end
+      #set ($solrList = "$solrList $sign$escaped")
     #end
     #set($solrList = $solrList.trim())
     #if (!$solrList.isEmpty())
@@ -120,7 +124,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #set ($discard = $fq.add("wiki:(#escapeSolr($options.wiki))"))
   #end
   #addSolrParameterListWithSign($options.spaces, $fq, "space_prefix", true)
-  #addSolrParameterListWithSign($options.authors, $fq, $authorField)
+  #addSolrParameterListWithSign($options.authors, $fq, $authorField, false, true)
   #if ($type == 'page')
     #if ("$!options.tags" == '')
       #set ($discard = $fq.add('class:(-Blog.BlogPostClass)'))
