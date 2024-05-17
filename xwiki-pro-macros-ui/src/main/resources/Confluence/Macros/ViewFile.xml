@@ -165,8 +165,26 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>div.modal-body &gt; div &gt; iframe {
-    max-height: 75vh; !important
+      <code>.pdfViewContent &gt; div &gt; iframe {
+    max-height: 75vh;
+}
+
+.viewFileContentThumb .modal-dialog {
+  max-height: 90vh;
+  width: 80%;
+}
+
+.viewFileContentThumb .modal-body {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.viewFilePresentationContentThumb .modal-dialog {
+  height:90%;
+  width:90%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }</code>
     </property>
     <property>
@@ -393,7 +411,7 @@
   #if ($height &amp;&amp; !$height.contains("%"))
     #set($height = $height + "px")
   #end
-  &lt;div class="box" style="width: $width; height: $height; overflow: auto;"&gt;
+  &lt;div class="box" style="width: $escapetool.xml($width); height: $escapetool.xml($height); overflow: auto;"&gt;
 
   {{office reference="attach:$escapedFilename" /}}
 
@@ -406,16 +424,16 @@
   #if ($height &amp;&amp; !$height.contains("%"))
     #set($height = $height + "px")
   #end
-  &lt;div style="width: $width; height: $height; overflow: auto;"&gt;
+  &lt;div style="width: $escapetool.xml($width); height: $escapetool.xml($height); overflow: auto;"&gt;
 
     {{office reference="attach:$escapedFilename" /}}
 
   &lt;/div&gt;
 #end
-#macro (displayContent $escapedFilename, $modalId)
-  &lt;div class="modal fade" id="$modalId" tabindex="-1" role="dialog"
+#macro (displayContent $escapedFilename, $modalId, $extension)
+  &lt;div class="modal fade viewFileContentThumb" id="${modalId}" tabindex="-1" role="dialog"
       aria-labelledby="${modalId}Label"&gt;
-    &lt;div class="modal-dialog" style="max-height: 90vh; width: 80%;" role="document"&gt;
+    &lt;div class="modal-dialog" role="document"&gt;
       &lt;div class="modal-content"&gt;
         &lt;div class="modal-header"&gt;
           &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
@@ -424,14 +442,18 @@
             $escapetool.xml($services.localization.render('rendering.macro.viewFiles.modal.title'))
           &lt;/div&gt;
         &lt;/div&gt;
-        &lt;div class="modal-body" style="max-height: 80vh; overflow: auto"&gt;
+        &lt;div class="modal-body"&gt;
+        #if ($extension == 'pdf')
+          &lt;div class='pdfViewContent'&gt;
 
-        #if ($modalId.contains('pdf'))
-          {{pdfviewer file="$escapedFilename" /}}
+            {{pdfviewer file="$escapedFilename" /}}
+
+          &lt;/div&gt;
         #else
-          {{office reference="attach:$escapedFilename" /}}
-        #end
 
+          {{office reference="attach:$escapedFilename" /}}
+
+        #end
         &lt;/div&gt;
         &lt;div class="modal-footer"&gt;
           &lt;button type="button" class="btn btn-default" data-dismiss="modal"&gt;
@@ -442,9 +464,9 @@
   &lt;/div&gt;
 #end
 #macro (displayPresentationContent $escapedFilename, $modalId)
-  &lt;div class="modal fade" id="$modalId" tabindex="-1" role="dialog"
+  &lt;div class="modal fade viewFilePresentationContentThumb" id="${modalId}" tabindex="-1" role="dialog"
       aria-labelledby="${modalId}Label"&gt;
-    &lt;div class="modal-dialog" style="height:90%; width:90%; display:flex; flex-direction:column; align-items:center;" role="document"&gt;
+    &lt;div class="modal-dialog" role="document"&gt;
       &lt;div class="modal-content"&gt;
         &lt;div class="modal-header"&gt;
           &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
@@ -480,7 +502,6 @@
   #set($width = $xcontext.macro.params.get('width'))
   #set($height = $xcontext.macro.params.get('height'))
   #set($display = $xcontext.macro.params.get('display'))
-  #set($idName = $unescapedFilename.replaceAll("[^a-zA-Z]", ""))
   {{html wiki="true" clean="false"}}
     #if ($display == 'FULL')
       #if ($presentationExtensions.contains($extension))
@@ -503,14 +524,14 @@
       #end
     #elseif ($display == 'THUMBNAIL')
       #if (($extension == 'pdf' &amp;&amp; $hasPDFViewer) || $officeExtensions.contains($extension))
-        #set ($modalId = $idName + 'DisplayContentModal')
+        #set ($modalId = $escapetool.xml($unescapedFilename.replaceAll("[^a-zA-Z]", "") + 'DisplayContentModal'))
         &lt;div&gt;
           &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;$escapedFilename&lt;/a&gt;
         &lt;/div&gt;
         #if ($presentationExtensions.contains($extension))
           #displayPresentationContent($escapedFilename, $modalId)
         #else
-          #displayContent($escapedFilename, $modalId)
+          #displayContent($escapedFilename, $modalId, $extension)
         #end
       #elseif($doc.getAttachment($unescapedFilename))
         #set ($downloadUrl = $xwiki.getAttachmentURL($doc.getFullName(), $unescapedFilename))
@@ -710,7 +731,7 @@
       <defaultValue>100%</defaultValue>
     </property>
     <property>
-      <description>The viewer width, accepts values in pixels or in percentage.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -789,7 +810,7 @@
       <defaultValue>1000</defaultValue>
     </property>
     <property>
-      <description>The viewer height, accepts values in pixels.</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -868,7 +889,7 @@
       <defaultValue>full</defaultValue>
     </property>
     <property>
-      <description>Display type.</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
