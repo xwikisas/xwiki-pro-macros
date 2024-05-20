@@ -492,7 +492,8 @@
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.ViewFile'))
   #set($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
   #set($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
-  #set($presentationExtensions = [ 'ppt', 'pptx', 'odp'])
+  #set($presentationExtensions = [ 'ppt', 'pptx', 'odp' ])
+  #set($spreadsheetExtensions = [ 'xls', 'xlsx', 'ods' ])
   #set($unescapedFilename = $xcontext.macro.params.get('att--filename'))
   #if(!$unescapedFilename)
     #set($unescapedFilename = $xcontext.macro.params.get('name'))
@@ -525,12 +526,29 @@
     #elseif ($display == 'THUMBNAIL')
       #if (($extension == 'pdf' &amp;&amp; $hasPDFViewer) || $officeExtensions.contains($extension))
         #set ($modalId = $escapetool.xml($unescapedFilename.replaceAll("[^a-zA-Z]", "") + 'DisplayContentModal'))
-        &lt;div&gt;
-          &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;$escapedFilename&lt;/a&gt;
-        &lt;/div&gt;
         #if ($presentationExtensions.contains($extension))
+          &lt;div class="buttonwrapper"&gt;
+            &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
+              $services.icon.render('file-powerpoint') $escapedFilename&lt;/a&gt;
+          &lt;/div&gt;
           #displayPresentationContent($escapedFilename, $modalId)
         #else
+          #if($extension == 'pdf')
+            &lt;div class="buttonwrapper"&gt;
+              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
+                $services.icon.render('file-pdf') $escapedFilename&lt;/a&gt;
+            &lt;/div&gt;
+          #elseif($spreadsheetExtensions.contains($extension))
+            &lt;div class="buttonwrapper"&gt;
+              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
+                $services.icon.render('file-excel') $escapedFilename&lt;/a&gt;
+            &lt;/div&gt;
+          #else
+            &lt;div class="buttonwrapper"&gt;
+              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
+                $services.icon.render('file-word') $escapedFilename&lt;/a&gt;
+            &lt;/div&gt;
+          #end
           #displayContent($escapedFilename, $modalId, $extension)
         #end
       #elseif($doc.getAttachment($unescapedFilename))
