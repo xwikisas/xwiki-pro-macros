@@ -185,6 +185,10 @@
   display:flex;
   flex-direction:column;
   align-items:center;
+}
+
+.thumbnailButton button: hover {
+  text-decoration: underline;
 }</code>
     </property>
     <property>
@@ -404,7 +408,12 @@
     </property>
     <property>
       <code>{{velocity output="false"}}
-#macro(customBox $width $height $escapedFilename)
+#macro (renderThumbnailButton $fileType $escapedFilename)
+  &lt;div class="buttonwrapper thumbnailButton"&gt;
+    &lt;button data-toggle="modal" data-target="#${modalId}"&gt;$services.icon.render("${fileType}") $escapedFilename&lt;/button&gt;
+  &lt;/div&gt;
+#end
+#macro (customBox $width $height $escapedFilename)
   #if ($width &amp;&amp; !$width.contains("%"))
     #set($width = $width + "px")
   #end
@@ -413,11 +422,11 @@
   #end
   &lt;div class="box" style="width: $escapetool.xml($width); height: $escapetool.xml($height); overflow: auto;"&gt;
 
-  {{office reference="attach:$escapedFilename" /}}
+    {{office reference="attach:$escapedFilename" /}}
 
   &lt;/div&gt;
 #end
-#macro(customPresentationBox $width $height $escapedFilename)
+#macro (customPresentationBox $width $height $escapedFilename)
   #if ($width &amp;&amp; !$width.contains("%"))
     #set($width = $width + "px")
   #end
@@ -477,7 +486,7 @@
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
 
-        {{office reference="attach:$escapedFilename" /}}
+          {{office reference="attach:$escapedFilename" /}}
 
         &lt;/div&gt;
         &lt;div class="modal-footer"&gt;
@@ -527,27 +536,15 @@
       #if (($extension == 'pdf' &amp;&amp; $hasPDFViewer) || $officeExtensions.contains($extension))
         #set ($modalId = $escapetool.xml($unescapedFilename.replaceAll("[^a-zA-Z]", "") + 'DisplayContentModal'))
         #if ($presentationExtensions.contains($extension))
-          &lt;div class="buttonwrapper"&gt;
-            &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
-              $services.icon.render('file-powerpoint') $escapedFilename&lt;/a&gt;
-          &lt;/div&gt;
+          #renderThumbnailButton('file-powerpoint', $escapedFilename)
           #displayPresentationContent($escapedFilename, $modalId)
         #else
           #if($extension == 'pdf')
-            &lt;div class="buttonwrapper"&gt;
-              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
-                $services.icon.render('file-pdf') $escapedFilename&lt;/a&gt;
-            &lt;/div&gt;
+            #renderThumbnailButton('file-pdf', $escapedFilename)
           #elseif($spreadsheetExtensions.contains($extension))
-            &lt;div class="buttonwrapper"&gt;
-              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
-                $services.icon.render('file-excel') $escapedFilename&lt;/a&gt;
-            &lt;/div&gt;
+            #renderThumbnailButton('file-excel', $escapedFilename)
           #else
-            &lt;div class="buttonwrapper"&gt;
-              &lt;a href="#${modalId}" data-toggle="modal" data-target="#${modalId}"&gt;
-                $services.icon.render('file-word') $escapedFilename&lt;/a&gt;
-            &lt;/div&gt;
+            #renderThumbnailButton('file-word', $escapedFilename)
           #end
           #displayContent($escapedFilename, $modalId, $extension)
         #end
