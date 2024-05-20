@@ -410,7 +410,9 @@
       <code>{{velocity output="false"}}
 #macro (renderThumbnailButton $fileType $escapedFilename)
   &lt;div class="buttonwrapper thumbnailButton"&gt;
-    &lt;button data-toggle="modal" data-target="#${modalId}"&gt;$services.icon.render("${fileType}") $escapedFilename&lt;/button&gt;
+    &lt;button data-toggle="modal" data-target="#${modalId}" title="$escapetool.xml($services.localization.render(
+      'rendering.macro.viewFile.thumbnail.button.title'))"&gt;$services.icon.render("${fileType}") $escapedFilename
+    &lt;/button&gt;
   &lt;/div&gt;
 #end
 #macro (customBox $width $height $escapedFilename)
@@ -448,7 +450,7 @@
           &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
             &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;&lt;/button&gt;
           &lt;div id="${modalId}Label" class="modal-title"&gt;
-            $escapetool.xml($services.localization.render('rendering.macro.viewFiles.modal.title'))
+            $escapetool.xml($services.localization.render('rendering.macro.viewFile.modal.title'))
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
@@ -481,7 +483,7 @@
           &lt;button type="button" class="close" data-dismiss="modal" aria-label="Close"&gt;
             &lt;span aria-hidden="true"&gt;&amp;times;&lt;/span&gt;&lt;/button&gt;
           &lt;div id="${modalId}Label" class="modal-title"&gt;
-            $escapetool.xml($services.localization.render('rendering.macro.viewFiles.modal.title'))
+            $escapetool.xml($services.localization.render('rendering.macro.viewFile.modal.title'))
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class="modal-body"&gt;
