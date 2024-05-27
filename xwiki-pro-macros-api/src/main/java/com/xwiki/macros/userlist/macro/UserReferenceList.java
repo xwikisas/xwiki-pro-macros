@@ -31,4 +31,5 @@ import org.xwiki.model.reference.EntityReference;
  */
 public class UserReferenceList extends HashSet<EntityReference>
 {
+    private static final long serialVersionUID = 1L;
 }

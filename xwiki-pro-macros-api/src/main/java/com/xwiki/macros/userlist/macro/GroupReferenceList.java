@@ -34,4 +34,5 @@ import org.xwiki.stability.Unstable;
 @Unstable
 public class GroupReferenceList extends ArrayList<EntityReference>
 {
+    private static final long serialVersionUID = 1L;
 }
