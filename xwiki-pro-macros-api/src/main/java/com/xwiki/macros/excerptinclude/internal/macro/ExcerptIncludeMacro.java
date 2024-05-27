@@ -28,6 +28,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
@@ -106,12 +107,6 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
             throw new MacroExecutionException(String.format("Failed to get document for reference [%s]", reference), e);
         }
 
-        if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
-            throw new MacroExecutionException(
-                String.format("Current user [%s] doesn't have view rights on document [%s]",
-                    xcontext.getUserReference(), reference));
-        }
-
         List<Block> blocks =
             document.getXDOM().getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
 
@@ -121,19 +116,31 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         displayParameters.setExecutionContextIsolated(true);
         for (Block block : blocks) {
             MacroBlock macroBlock = (MacroBlock) block;
-            if ("excerpt".equals(macroBlock.getId())) {
+            String name = macroBlock.getParameter("name");
+            if (name == null) {
+                name = "";
+            }
+            if ("excerpt".equals(macroBlock.getId()) && StringUtils.equals(name, parameters.getName())) {
+                String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
+                boolean allowUnprivileged = unprivileged != null
+                    && ("1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged));
+                if (!allowUnprivileged) {
+                    checkAccess(reference, xcontext);
+                }
+
                 // Use a document clone that has only the excerpt macro as content, to be displayed.
                 XWikiDocument documentClone = document.clone();
                 try {
                     documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
                 } catch (XWikiException e) {
-                    throw new RuntimeException(e);
+                    throw new MacroExecutionException("Could not include the excerpt", e);
                 }
                 displayContent = contentDisplayer.display(documentClone, displayParameters);
             }
         }
         // If there is no excerpts macro, display the entire content.
         if (displayContent == null) {
+            checkAccess(reference, xcontext);
             displayContent = contentDisplayer.display(document, displayParameters);
         }
 
@@ -146,5 +153,14 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                     Collections.singletonList(displayContent))))));
 
         return Collections.singletonList(tableBlock);
+    }
+
+    private void checkAccess(DocumentReference reference, XWikiContext xcontext) throws MacroExecutionException
+    {
+        if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
+            throw new MacroExecutionException(
+                String.format("Current user [%s] doesn't have view rights on document [%s]",
+                    xcontext.getUserReference(), reference));
+        }
     }
 }

@@ -41,7 +41,13 @@ public class ExcerptIncludeMacroParameters
     private DocumentReference reference;
 
     /**
+     * @see #getName()
+     */
+    private String name = "";
+
+    /**
      * Retrieves the reference to the document from which the excerpt is to be included.
+     * @since 1.14.5
      *
      * @return A {@link DocumentReference} object representing the document reference.
      */
@@ -55,12 +61,34 @@ public class ExcerptIncludeMacroParameters
      *
      * @param reference A {@link DocumentReference} object representing the document reference.
      */
-    @PropertyDescription("The reference of the resource to display")
+    @PropertyDescription("The reference of the document containing the excerpt to display")
     @PropertyId("0")
     @PropertyMandatory
     @PropertyName("Reference")
     public void setReference(DocumentReference reference)
     {
         this.reference = reference;
+    }
+
+    /**
+     * @return the name of the excerpt to be included.
+     * @since 1.18.0
+     */
+    public String getName()
+    {
+        return this.name;
+    }
+
+    /**
+     * Sets the name of the excerpt to be included.
+     *
+     * @param name the name to set.
+     * @since 1.18.0
+     */
+    @PropertyDescription("The name of the excerpt to be displayed")
+    @PropertyName("Name")
+    public void setName(String name)
+    {
+        this.name = name == null ? "" : name;
     }
 }
