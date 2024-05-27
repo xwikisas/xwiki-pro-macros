@@ -113,19 +113,14 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
             new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()))))
         {
             return internalExecute(parameters, content, context);
-        } else {
-            String extensionName = localizationManager.getTranslationPlain("proMacros.extension.name");
-            String licenseAdminURL = accessBridge.getDocumentURL(
-                new DocumentReference(XWIKI_PREFERENCES, new WikiReference(wikiDescriptorManager.getMainWikiId())),
-                "admin", "editor=globaladmin&section=Licenses", "");
-            return Collections.singletonList(new MacroBlock(
-                "error",
-                Collections.emptyMap(),
-                localizationManager.getTranslationPlain("licensor.missingLicense", extensionName, "[[",
-                    ">>path:" + licenseAdminURL + "]]"),
-                context.isInline())
-            );
         }
+
+        return Collections.singletonList(new MacroBlock(
+            "missingLicenseMessage",
+            Collections.singletonMap("extensionName", "proMacros.extension.name"),
+            null,
+            context.isInline())
+        );
     }
 
     protected abstract List<Block> internalExecute(P parameters, String content, MacroTransformationContext context)
