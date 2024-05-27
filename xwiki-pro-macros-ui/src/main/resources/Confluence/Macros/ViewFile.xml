@@ -903,13 +903,13 @@
       </type>
     </class>
     <property>
-      <defaultValue>full</defaultValue>
+      <defaultValue>FULL</defaultValue>
     </property>
     <property>
       <description/>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory/>
     </property>
     <property>
       <name>display</name>
