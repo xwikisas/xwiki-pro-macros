@@ -70,7 +70,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
      * @param contentDescriptor the content descriptor of the macro.
      * @param parametersBeanClass the class of the parameters bean of this class.
      */
-    public AbstractProMacro(String name, String description,
+    protected AbstractProMacro(String name, String description,
         ContentDescriptor contentDescriptor, Class<?> parametersBeanClass)
     {
         super(name, description, contentDescriptor, parametersBeanClass);
@@ -83,7 +83,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
      * @param description the description of the macro.
      * @param parametersBeanClass the class of the parameters bean of this class.
      */
-    public AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
+    protected AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
     {
         super(name, description, parametersBeanClass);
     }
