@@ -32,6 +32,7 @@ import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
+import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
@@ -67,6 +68,9 @@ import com.xwiki.macros.excerptinclude.macro.ExcerptIncludeMacroParameters;
 @Unstable
 public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroParameters>
 {
+    @Inject
+    private ContextualLocalizationManager localizationManager;
+
     @Inject
     private ContextualAuthorizationManager contextualAuthorization;
 
@@ -122,8 +126,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
             }
             if ("excerpt".equals(macroBlock.getId()) && StringUtils.equals(name, parameters.getName())) {
                 String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
-                boolean allowUnprivileged = unprivileged != null
-                    && ("1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged));
+                boolean allowUnprivileged = "1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged);
                 if (!allowUnprivileged) {
                     checkAccess(reference, xcontext);
                 }
@@ -138,10 +141,20 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 displayContent = contentDisplayer.display(documentClone, displayParameters);
             }
         }
-        // If there is no excerpts macro, display the entire content.
         if (displayContent == null) {
-            checkAccess(reference, xcontext);
-            displayContent = contentDisplayer.display(document, displayParameters);
+            if (StringUtils.isEmpty(parameters.getName())) {
+                // If there is no excerpts macro and a name was not provided, display the entire content.
+                checkAccess(reference, xcontext);
+                displayContent = contentDisplayer.display(document, displayParameters);
+            } else {
+                displayContent = new XDOM(Collections.singletonList(new MacroBlock(
+                    "error",
+                    Collections.emptyMap(),
+                    localizationManager.getTranslationPlain("rendering.macro.excerptinclude.namedexcerptnotfound",
+                        parameters.getName(), reference),
+                    context.isInline())
+                ));
+            }
         }
 
         TableBlock tableBlock = new TableBlock(Arrays.asList(

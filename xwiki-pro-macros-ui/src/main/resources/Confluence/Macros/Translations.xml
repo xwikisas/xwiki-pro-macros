@@ -96,6 +96,9 @@ rendering.macro.confluence_children.parameter.page.description=The reference of 
 rendering.macro.confluence_children.parameter.first.name=Number of children
 rendering.macro.confluence_children.parameter.first.description=The number of children that will be displayed initially
 
+# Excerpt Include macro
+rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
+
 ## Profile Picture Macro
 rendering.macro.profilepicture.parameter.User.name=The user to show
 rendering.macro.profilepicture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
