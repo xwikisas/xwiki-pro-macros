@@ -26,7 +26,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.xwiki.bridge.DocumentAccessBridge;
-import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.model.reference.WikiReference;
@@ -53,12 +52,6 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 {
     private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
         "Macros"), "WebHome");
-
-    private static final LocalDocumentReference XWIKI_PREFERENCES = new LocalDocumentReference("XWiki",
-        "XWikiPreferences");
-
-    @Inject
-    private ContextualLocalizationManager localizationManager;
 
     @Inject
     private Licensor licensor;
