@@ -1,3 +1,8 @@
+com.xwiki.macros.confluence.ConfluenceSpacesScriptService
+com.xwiki.macros.confluence.ConfluenceScriptService
+com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils
+com.xwiki.macros.confluence.internal.ProConfluenceIdResolver
+com.xwiki.macros.confluence.internal.ProConfluenceSpaceResolver
 com.xwiki.macros.userprofile.internal.macro.UserProfileMacro
 com.xwiki.macros.userprofile.internal.macro.UserReferenceConverter
 com.xwiki.macros.userlist.internal.macro.UserListMacro

@@ -73,6 +73,18 @@
       <artifactId>xwiki-rendering-macro-box</artifactId>
       <version>${rendering.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.cql</groupId>
+      <artifactId>aqlparser</artifactId>
+      <version>0.0.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.cql</groupId>
+      <artifactId>query</artifactId>
+      <version>0.0.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <build>
    <plugins>
