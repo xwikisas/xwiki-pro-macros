@@ -160,19 +160,7 @@ rendering.macro.userList.parameter.properties.description=List of user propertie
 rendering.macro.userList.parameter.fixedTableLayout.name=Fixed table layout
 rendering.macro.userList.parameter.fixedTableLayout.description=If the user table should have fixed column width across tables displaying the same user properties
 rendering.macro.userList.isEmpty=The User List macro has an empty user list.
-rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.
-
-## View Files macro
-com.xwiki.macros.viewfile.DisplayType.FULL=Full
-com.xwiki.macros.viewfile.DisplayType.THUMBNAIL=Thumbnail
-rendering.macro.view-file.parameter.display.name=Display
-rendering.macro.view-file.parameter.display.description=Display type. Default value set to Full.
-rendering.macro.view-file.parameter.height.name=Height
-rendering.macro.view-file.parameter.height.description=The viewer height, accepts values in pixels. The default value is 1000.
-rendering.macro.view-file.parameter.width.name=Width
-rendering.macro.view-file.parameter.width.description=The viewer width, accepts values in pixels or in percentage. Default value set at 100%.
-rendering.macro.viewFile.modal.title=Content view
-rendering.macro.viewFile.thumbnail.button.title=View file content</content>
+rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>

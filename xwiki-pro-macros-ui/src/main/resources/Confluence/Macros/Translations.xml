@@ -110,7 +110,21 @@ confluencecontributors.pages=Pages:
 confluencecontributors.nopages=(none)
 
 ## Content Report Table Macro
-contentReportTable.header.modified=Modified</content>
+contentReportTable.header.modified=Modified
+
+
+## View Files macro
+com.xwiki.macros.viewfile.DisplayType.full=Full
+com.xwiki.macros.viewfile.DisplayType.thumbnail=Thumbnail
+rendering.macro.view-file.parameter.display.name=Display
+rendering.macro.view-file.parameter.display.description=Display type. Default value set to Full.
+rendering.macro.view-file.parameter.height.name=Height
+rendering.macro.view-file.parameter.height.description=The viewer height, accepts values in pixels. The default value is 1000.
+rendering.macro.view-file.parameter.width.name=Width
+rendering.macro.view-file.parameter.width.description=The viewer width, accepts values in pixels or in percentage. Default value set at 100%.
+rendering.macro.viewFile.modal.title=Content view
+rendering.macro.viewFile.thumbnail.button.title=View file content
+rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.</content>
   <object>
     <name>Confluence.Macros.Translations</name>
     <number>0</number>
