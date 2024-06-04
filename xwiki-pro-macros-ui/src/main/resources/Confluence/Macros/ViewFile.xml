@@ -36,9 +36,40 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{view-file name="Test.ppt" /}}
+  <content>The view-file macro displays attachments in a document, in place or as thumbnail and offers a preview.
 
-{{view-file name="TestPDF.pdf" /}}</content>
+Limitation: the thumbnail is actually only an icon for now.
+
+= Parameters =
+
+|=Parameter|=Description|=Required|=Default
+|display|Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place|no|thumbnail (button in inline mode)
+|name|The attachment reference to display|if att-filename is not given|
+|width|The width of the view in % or px (e.g. 100%, 100px)|no|100% for the full view or 100px for the thumbnail
+|height|The height of the view in % or px (e.g. 100%, 100px)|no|1000px for the full view or 100px for the thumbnail
+|att-filename|Alias of name|If name is not given|
+
+= Example Usage =
+
+Thumbnails side by side:
+
+{{view-file display="thumbnail" name="Test.ppt"/}} {{view-file display="thumbnail" name="TestPDF.pdf"/}}
+
+Or standalone:
+
+{{view-file name="Test.ppt"/}}
+
+In a paragraph: {{view-file name="Test.ppt"/}}
+
+
+Full PDF:
+
+{{view-file display="full" name="TestPDF.pdf"/}}
+
+Full Presentation:
+
+{{view-file display="full" name="Test.ppt"/}}
+</content>
   <attachment>
     <filename>Test.ppt</filename>
     <mimetype>application/vnd.ms-powerpoint</mimetype>
@@ -59,6 +90,138 @@
     <content>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ePwyMBU7Nf5c9PzTr5tfqL/Y/9LuZe902PT9VxmvZl6XvFF/c+At623/u5h3EzO577HvKz+Yfuj5GPTx7qeMT59+A/eE8/sKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqClsvSUNDQmFzZWQgNSAwIFJdCmVuZG9iago3IDAgb2JqCjw8IC9UeXBlIC9NZXRhZGF0YQovU3VidHlwZSAvWE1MCi9MZW5ndGggMTUgMCBSCgo+PgpzdHJlYW0KPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4NCg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+DQo8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPg0KPHJkZjpEZXNjcmlwdGlvbiB4bWxuczpwZGY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGRmLzEuMy8iIHJkZjphYm91dD0iIj4NCjxwZGY6UERGVmVyc2lvbj4xLjQ8L3BkZjpQREZWZXJzaW9uPg0KPHBkZjpQcm9kdWNlcj5BcGFjaGUgRk9QIFZlcnNpb24gMC45MzwvcGRmOlByb2R1Y2VyPg0KPC9yZGY6RGVzY3JpcHRpb24+DQo8cmRmOkRlc2NyaXB0aW9uIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgcmRmOmFib3V0PSIiPg0KPHhtcDpDcmVhdGVEYXRlPjIwMDctMDUtMjhUMTQ6MDI6NTErMDI6MDA8L3htcDpDcmVhdGVEYXRlPg0KPC9yZGY6RGVzY3JpcHRpb24+DQo8cmRmOkRlc2NyaXB0aW9uIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgcmRmOmFib3V0PSIiPg0KPGRjOmRhdGU+MjAwNy0wNS0yOFQxNDowMjo1MSswMjowMDwvZGM6ZGF0ZT4NCjwvcmRmOkRlc2NyaXB0aW9uPg0KPC9yZGY6UkRGPg0KPC94OnhtcG1ldGE+DQo8P3hwYWNrZXQgZW5kPSJyIj8+DQoNCgplbmRzdHJlYW0KZW5kb2JqCjkg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cGUgL1BhZ2UKL1BhcmVudCAxIDAgUgovTWVkaWFCb3ggWyAwIDAgNTk1IDc5MiBdCi9UcmltQm94IFsgMCAwIDU5NSA3OTIgXQovQmxlZWRCb3ggWyAwIDAgNTk1IDc5MiBdCi9SZXNvdXJjZXMgMyAwIFIKL0NvbnRlbnRzIDIzIDAgUgovQW5ub3RzIDIyIDAgUgo+PgplbmRvYmoKMjQgMCBvYmoKMzQ2CmVuZG9iagoyNSAwIG9iago8PCAvVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL05hbWUgL0Y1Ci9CYXNlRm9udCAvVGltZXMtUm9tYW4KL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgPj4KZW5kb2JqCjI2IDAgb2JqCjw8IC9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovTmFtZSAvRjEKL0Jhc2VGb250IC9IZWx2ZXRpY2EKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgPj4KZW5kb2JqCjI3IDAgb2JqCjw8IC9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovTmFtZSAvRjQKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZE9ibGlxdWUKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgPj4KZW5kb2JqCjEgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzCi9Db3VudCAzCi9LaWRzIFs4IDAgUiAxNyAwIFIgMjEgMCBSIF0gPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDEgMCBSCi9NZXRhZGF0YSA3IDAgUgo+PgplbmRvYmoKMyAwIG9iago8PAovRm9udCA8PAogIC9GNSAyNSAwIFIKICAvRjEgMjYgMCBSCiAgL0Y0IDI3IDAgUgo+PgovUHJvY1NldCBbIC9QREYgL0ltYWdlQiAvSW1hZ2VDIC9UZXh0IF0KL0NvbG9yU3BhY2UgPDwKICAvRGVmYXVsdFJHQiA2IDAgUgo+Pgo+PgplbmRvYmoKeHJlZgowIDI4CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwNjgxNyAwMDAwMCBuIAowMDAwMDA2ODg5IDAwMDAwIG4gCjAwMDAwMDY5NTQgMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDI3ODkgMDAwMDAgbiAKMDAwMDAwMjgyMiAwMDAwMCBuIAowMDAwMDA0OTYwIDAwMDAwIG4gCjAwMDAwMDM1OTggMDAwMDAgbiAKMDAwMDAwNDkyMCAwMDAwMCBuIAowMDAwMDAzNzk4IDAwMDAwIG4gCjAwMDAwMDQwMTAgMDAwMDAgbiAKMDAwMDAwNDIyMCAwMDAwMCBuIAowMDAwMDA1MTMzIDAwMDAwIG4gCjAwMDAwMDUxNTQgMDAwMDAgbiAKMDAwMDAwNTE3NCAwMDAwMCBuIAowMDAwMDA1NjQyIDAwMDAwIG4gCjAwMDAwMDU2MTYgMDAwMDAgbiAKMDAwMDAwNTE5NCAwMDAwMCBuIAowMDAwMDA1ODE2IDAwMDAwIG4gCjAwMDAwMDYyODUgMDAwMDAgbiAKMDAwMDAwNjI1OSAwMDAwMCBuIAowMDAwMDA1ODM2IDAwMDAwIG4gCjAwMDAwMDY0NTkgMDAwMDAgbiAKMDAwMDAwNjQ3OSAwMDAwMCBuIAowMDAwMDA2NTg5IDAwMDAwIG4gCjAwMDAwMDY2OTcgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSAyOAovUm9vdCAyIDAgUgovSW5mbyA0IDAgUgovSUQgWzw3MkJCRTVDODQ2M0QwQTU4OENGMDhGM0Y4QTFFMUZEOT4gPDcyQkJFNUM4NDYzRDBBNTg4Q0YwOEYzRjhBMUUxRkQ5Pl0KPj4Kc3RhcnR4cmVmCjcxMDQKJSVFT0YK</content>
     <filesize>7818</filesize>
   </attachment>
+  <object>
+    <name>Confluence.Macros.ViewFile</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>34f3f685-d016-4536-a434-8504b67dbd43</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <restricted>0</restricted>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>window.addEventListener("DOMContentLoaded", function () {
+  "use strict";
+  document.addEventListener("click", async function (e) {
+    if (("" + document.getElementById("xwikicontent")?.contentEditable) == "true") {
+      return;
+    }
+    const viewFile = e.target?.closest(".viewFileThumbnail");
+    if (viewFile &amp;&amp; viewFile.dataset.preview === 'true') {
+      const popup = new XWiki.widgets.ModalPopup();
+      popup.createDialog();
+      popup.setContent("&lt;span class='fa fa-spinner'&gt;&lt;/span&gt;");
+      popup.dialogBox.classList.add("viewFileModal");
+      popup.dialogBox.style.top = "2.5vh";
+      popup.dialogBox.style.width = "95vw";
+      popup.dialogBox.style.height = "95vh";
+      const a = e.target.closest('a');
+      const downloadLink = document.createElement("a");
+      downloadLink.download = true;
+      downloadLink.textContent = a.textContent;
+      downloadLink.className = "fa fa-download button button-primary viewFileModal-downloadLink";
+      downloadLink.href = a.href;
+      popup.dialogBox.insertBefore(downloadLink, popup.dialogBox.firstChild)
+      popup.showDialog();
+      e.preventDefault();
+      const response = await fetch(XWiki.contextPath + "/wiki/" + XWiki.currentWiki + "/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=" + encodeURIComponent(viewFile.dataset.ref));
+      popup.setContent(await response.text());
+      const gallery = popup.dialogBox.querySelector(".gallery");
+      if (gallery) {
+        new XWiki.Gallery(gallery);
+      }
+    }
+  });
+});</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
   <object>
     <name>Confluence.Macros.ViewFile</name>
     <number>0</number>
@@ -293,7 +456,7 @@ span.viewFileThumbnailCard {
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -368,15 +531,24 @@ span.viewFileThumbnailCard {
         <values>Optional|Mandatory|No content</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </contentType>
-      <defaultCategory>
+      <defaultCategories>
+        <cache>0</cache>
         <disabled>0</disabled>
-        <name>defaultCategory</name>
+        <displayType>input</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>defaultCategories</name>
         <number>4</number>
-        <prettyName>Default category</prettyName>
-        <size>30</size>
+        <prettyName>Default categories</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultCategory>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </defaultCategories>
       <description>
         <contenttype>PureText</contenttype>
         <disabled>0</disabled>
@@ -617,10 +789,10 @@ span.viewFileThumbnailCard {
       <contentJavaType/>
     </property>
     <property>
-      <contentType>Optional</contentType>
+      <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategories/>
     </property>
     <property>
       <description>Show files using PDF Viewer Macro or Office Viewer</description>
@@ -635,7 +807,7 @@ span.viewFileThumbnailCard {
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>0</supportsInlineMode>
+      <supportsInlineMode>1</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
@@ -694,29 +866,40 @@ span.viewFileThumbnailCard {
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
       <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>Alias of name (here for compatibility reasons)</description>
     </property>
     <property>
-      <mandatory>1</mandatory>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>att--filename</name>
     </property>
     <property>
-      <type>org.xwiki.model.reference.AttachmentReference</type>
+      <type/>
     </property>
   </object>
   <object>
@@ -773,20 +956,31 @@ span.viewFileThumbnailCard {
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
-      <defaultValue>100%</defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>The width of the view in % or px (e.g. 100%, 100px)</description>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -852,23 +1046,34 @@ span.viewFileThumbnailCard {
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
-      <defaultValue>1000</defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>The height of the view in % or px (e.g. 100%, 100px)</description>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>height</name>
@@ -931,29 +1136,130 @@ span.viewFileThumbnailCard {
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
-      <defaultValue>FULL</defaultValue>
+      <defaultValue/>
     </property>
     <property>
-      <description/>
+      <description>Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place</description>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>display</name>
     </property>
     <property>
-      <type>com.xwiki.macros.viewfile.DisplayType</type>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ViewFile</name>
+    <number>4</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>488a92e9-7446-45d4-863a-eb4ad2b5c1f3</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The attachment reference to display</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>name</name>
+    </property>
+    <property>
+      <type/>
     </property>
   </object>
 </xwikidoc>
