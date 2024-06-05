@@ -742,9 +742,7 @@ span.viewFileThumbnailCard {
       #set($height = $height + "px")
     #end
   #end
-  #if ($xcontext.action == "edit" || $request.outputSyntax == "annotatedhtml")
-    #set ($display = "button")
-  #elseif (($display == 'FULL' || $display == 'full') &amp;&amp; ($wikimacro.context.isInline()))
+  #if (($display == 'FULL' || $display == 'full') &amp;&amp; ($wikimacro.context.isInline() || ($xcontext.action == "edit" || $request.outputSyntax == "annotatedhtml")))
     #set ($display = "thumbnail")
   #end
   #if ($display == 'FULL' || $display == 'full')
@@ -899,7 +897,7 @@ span.viewFileThumbnailCard {
       <name>att--filename</name>
     </property>
     <property>
-      <type/>
+      <type>org.xwiki.model.reference.AttachmentReference</type>
     </property>
   </object>
   <object>
@@ -1169,7 +1167,7 @@ span.viewFileThumbnailCard {
       <name>display</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.macros.internal.ViewFileDisplay</type>
     </property>
   </object>
   <object>
@@ -1259,7 +1257,7 @@ span.viewFileThumbnailCard {
       <name>name</name>
     </property>
     <property>
-      <type/>
+      <type>org.xwiki.model.reference.AttachmentReference</type>
     </property>
   </object>
 </xwikidoc>
