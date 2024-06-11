@@ -27,38 +27,18 @@
     <artifactId>xwiki-pro-macros-parent</artifactId>
     <version>1.18.4-SNAPSHOT</version>
   </parent>
-  <artifactId>xwiki-pro-macros</artifactId>
+  <artifactId>xwiki-pro-macros-ui</artifactId>
   <packaging>xar</packaging>
-  <name>XWiki Pro - Macros</name>
-  <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
+  <name>Pro Macros</name>
+  <description>Supercharge XWiki’s functionality with Pro Macros. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
-    <!-- The list of documents that have an implicit unlimited free license. The users can view these documents without
-      buying a license or getting a trial license, but they cannot edit or delete them. -->
-    <xwiki.extension.licensing.publicDocuments>
-    </xwiki.extension.licensing.publicDocuments>
-    <!-- Name to display by the Extension Manager -->
-    <xwiki.extension.name>Pro Macros</xwiki.extension.name>
     <xwiki.extension.category>macro</xwiki.extension.category>
-    <!-- Don't run CLIRR here since there's no Java code. -->
-    <xwiki.clirr.skip>true</xwiki.clirr.skip>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xwiki-pro-macros-api</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-licensor-api</artifactId>
       <version>${licensing.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-office-ui</artifactId>
-      <version>${platform.version}</version>
-      <type>xar</type>
     </dependency>
     <dependency>
       <groupId>com.xwiki.pdfviewer</groupId>
@@ -67,37 +47,9 @@
       <type>xar</type>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>macro-jwplayer-ui</artifactId>
-      <version>${jwplayer.version}</version>
-      <type>xar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.contrib.mathjax</groupId>
-      <artifactId>macro-mathjax-ui</artifactId>
-      <version>${mathjax.version}</version>
-      <type>xar</type>
-      <exclusions>
-        <!-- this is not needed for current versions of the mathjax macro and
-        can be removed as soon as we can update the version, when we drop
-        support for XWiki 13.X.
-        See https://github.com/xwikisas/xwiki-pro-macros/issues/185 -->
-        <exclusion>
-          <groupId>org.xwiki.contrib.mathjax</groupId>
-          <artifactId>macro-mathjax-latex</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
       <version>${platform.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.xwiki.diagram</groupId>
-      <artifactId>application-diagram</artifactId>
-      <type>xar</type>
-      <version>1.20.1</version>
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
@@ -105,6 +57,11 @@
       <version>${locationsearch.version}</version>
       <type>xar</type>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-api</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 </project>

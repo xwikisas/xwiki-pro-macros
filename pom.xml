@@ -31,7 +31,7 @@
   <artifactId>xwiki-pro-macros-parent</artifactId>
   <version>1.18.4-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>XWiki Pro - Macros - Parent POM</name>
+  <name>Pro Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
     <licensing.version>1.25</licensing.version>
@@ -39,6 +39,7 @@
     <jwplayer.version>2.1.10</jwplayer.version>
     <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->
     <mathjax.version>1.0.5</mathjax.version>
+    <diagram.version>1.20.1</diagram.version>
     <locationsearch.version>1.3</locationsearch.version>
   </properties>
   <issueManagement>
@@ -69,8 +70,46 @@
     </repository>
   </repositories>
   <modules>
-    <module>xwiki-pro-macros-api</module>
+    <module>xwiki-pro-macros-confluence-bridges</module>
     <module>xwiki-pro-macros-ui</module>
+    <module>xwiki-pro-macros-api</module>
     <module>xwiki-pro-macros-xip</module>
   </modules>
+  <build>
+    <plugins>
+      <!--
+        Legacy dependencies on XWiki modules are banned, but the expression used to match them is a bit too broad and
+        match com.xwiki.pro:xwiki-pro-macros-confluence-legacy-*, which we legitimately need to depend on.
+        This was fixed in XWiki 15.2.
+        Just setting <xwiki.enforcer.no-legacy-dependencies.exclude> didn't work.
+        Please remove after updating parent to 15.10+.
+        See https://github.com/xwiki/xwiki-commons/commit/20234ab0c16cacfe1e6d512e69c9d97963027120#diff-620392375b2a7e9b47793566f467244d365c5b3819e406b6cd16e4485ef2ffd4
+        See https://matrix.to/#/!ikPtGZaGWtyblizzlR:matrix.xwiki.com/$1718030516769Wnanc:matrix.xwiki.com
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-no-legacy-dependencies</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>${xwiki.enforcer.no-legacy-dependencies.skip}</skip>
+              <rules>
+                <xwikiBannedDependencies implementation="org.xwiki.tool.enforcer.XWikiBannedDependencies">
+                  <searchTransitive>true</searchTransitive>
+                  <message>Don't depend on a XWiki Legacy module!</message>
+                  <excludes>
+                    <exclude>.*xwiki.*:xwiki-commons-legacy-*|.*xwiki.*:xwiki-rendering-legacy-*|.*xwiki.*:xwiki-platform-legacy-*|com.xwiki.pro:xwiki-pro-macros-confluence-legacy-*</exclude>
+                  </excludes>
+                </xwikiBannedDependencies>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

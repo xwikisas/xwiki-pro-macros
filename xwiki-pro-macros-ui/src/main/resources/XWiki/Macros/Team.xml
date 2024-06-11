@@ -129,7 +129,6 @@
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -331,7 +330,6 @@
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -549,7 +547,6 @@
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -562,7 +559,6 @@
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -631,7 +627,6 @@
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -996,7 +991,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1075,7 +1069,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1154,7 +1147,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1233,7 +1225,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1312,7 +1303,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1391,7 +1381,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1470,7 +1459,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1549,7 +1537,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1628,7 +1615,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1707,7 +1693,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

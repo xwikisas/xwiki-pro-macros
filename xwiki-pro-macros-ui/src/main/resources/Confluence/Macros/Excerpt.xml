@@ -48,7 +48,7 @@ The Excerpt macro is a bridge between Confluence and XWiki. It allows the user t
 
 = Example of usage =
 
-Example of excerpt with HTML :
+Example of excerpt with a table in it:
 
 {{code}}
 {{excerpt}}
@@ -57,14 +57,14 @@ Example of excerpt with HTML :
 {{/excerpt}}
 {{/code}}
 
-The result is the following :
+The result is the following:
 
 {{excerpt}}
 |=Title1|=Title2|=Title3
 |Text1|Text2|Text3
 {{/excerpt}}
 
-Example of hidden excerpt :
+Example of hidden excerpt:
 
 {{code}}
 {{excerpt hidden="true"}}
@@ -72,7 +72,7 @@ My hidden content.
 {{/excerpt}}
 {{/code}}
 
-The result is the following :
+The result is the following:
 
 {{excerpt hidden="true"}}
 My hidden content.
@@ -117,7 +117,7 @@ My hidden content.
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -192,15 +192,24 @@ My hidden content.
         <values>Optional|Mandatory|No content</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </contentType>
-      <defaultCategory>
+      <defaultCategories>
+        <cache>0</cache>
         <disabled>0</disabled>
-        <name>defaultCategory</name>
+        <displayType>input</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>defaultCategories</name>
         <number>4</number>
-        <prettyName>Default category</prettyName>
-        <size>30</size>
+        <prettyName>Default categories</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultCategory>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </defaultCategories>
       <description>
         <contenttype>PureText</contenttype>
         <disabled>0</disabled>
@@ -320,7 +329,7 @@ My hidden content.
       <contentType>Optional</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategories/>
     </property>
     <property>
       <description>Bridge for the Confluence Excerpt macro. It marks part of the page's content for use by other macros.</description>
