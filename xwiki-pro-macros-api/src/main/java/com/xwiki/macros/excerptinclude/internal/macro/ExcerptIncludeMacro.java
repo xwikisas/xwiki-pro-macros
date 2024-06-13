@@ -19,9 +19,10 @@
  */
 package com.xwiki.macros.excerptinclude.internal.macro;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,11 +37,6 @@ import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
-import org.xwiki.rendering.block.TableBlock;
-import org.xwiki.rendering.block.TableCellBlock;
-import org.xwiki.rendering.block.TableHeadCellBlock;
-import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -141,9 +137,10 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 displayContent = contentDisplayer.display(documentClone, displayParameters);
             }
         }
+
         if (displayContent == null) {
             if (StringUtils.isEmpty(parameters.getName())) {
-                // If there is no excerpts macro and a name was not provided, display the entire content.
+                // If there is no excerpt macro and a name was not provided, display the entire content.
                 checkAccess(reference, xcontext);
                 displayContent = contentDisplayer.display(document, displayParameters);
             } else {
@@ -157,15 +154,28 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
             }
         }
 
-        TableBlock tableBlock = new TableBlock(Arrays.asList(
-            new TableRowBlock(
-                Collections.singletonList(new TableHeadCellBlock(
-                    Collections.singletonList(new WordBlock(document.getTitle()))))),
-            new TableRowBlock(
-                Collections.singletonList(new TableCellBlock(
-                    Collections.singletonList(displayContent))))));
+        if (parameters.isNopanel()) {
+            return Collections.singletonList(displayContent);
+        }
 
-        return Collections.singletonList(tableBlock);
+        Map<String, String> panelParameters = new HashMap<>(1);
+        panelParameters.put("classes", "macro-excerpt-include");
+        panelParameters.put("title", document.getTitle());
+
+        XWikiDocument docForRendering = new XWikiDocument(null);
+        String excerptContent;
+        try {
+            docForRendering.setContent(displayContent);
+            excerptContent = docForRendering.getContent();
+        } catch (XWikiException e) {
+            excerptContent = "{{error}}\n"
+                + localizationManager.getTranslationPlain("rendering.macro.excerptinclude.renderfailure")
+                + "\n{{/error}}";
+        }
+
+        MacroBlock panel = new MacroBlock("panel", panelParameters, excerptContent, false);
+
+        return Collections.singletonList(panel);
     }
 
     private void checkAccess(DocumentReference reference, XWikiContext xcontext) throws MacroExecutionException

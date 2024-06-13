@@ -5,6 +5,6 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="CyclomaticComplexity|ClassFanOutComplexity"
+  <suppress checks="CyclomaticComplexity|ClassFanOutComplexity|NPathComplexity|ExecutableStatementCount"
             files="src/main/java/com/xwiki/macros/excerptinclude/internal/macro/ExcerptIncludeMacro?.java"/>
 </suppressions>

@@ -46,6 +46,11 @@ public class ExcerptIncludeMacroParameters
     private String name = "";
 
     /**
+     * @see #isNopanel()
+     */
+    private boolean nopanel;
+
+    /**
      * Retrieves the reference to the document from which the excerpt is to be included.
      * @since 1.14.5
      *
@@ -90,5 +95,28 @@ public class ExcerptIncludeMacroParameters
     public void setName(String name)
     {
         this.name = name == null ? "" : name;
+    }
+
+
+    /**
+     * @return the name of the excerpt to be included.
+     * @since 1.19.0
+     */
+    public boolean isNopanel()
+    {
+        return this.nopanel;
+    }
+
+    /**
+     * Sets the name of the excerpt to be included.
+     *
+     * @param nopanel the name to set.
+     * @since 1.19.0
+     */
+    @PropertyDescription("The name of the excerpt to be displayed")
+    @PropertyName("Name")
+    public void setNopanel(boolean nopanel)
+    {
+        this.nopanel = nopanel;
     }
 }
