@@ -82,6 +82,14 @@ rendering.macro.userlister.parameter.groups.description=List of Confluence user 
 rendering.macro.userlister.parameter.online.name=Online
 rendering.macro.userlister.parameter.online.description=Ignored parameter, present for compatibility purpose only
 
+
+## Details Summary macro
+rendering.macro.detailssummary.firstcolumn=Document
+rendering.macro.detailssummary.lastModified=Last modified
+rendering.macro.detailssummary.creator=Creator
+rendering.macro.detailssummary.tags=Tags
+rendering.macro.detailssummary.noresults=No results.
+
 # Children macro
 rendering.macro.confluence_children.name=Children Pages
 rendering.macro.confluence_children.description=A wrapper for the document tree macro that supports confluence parameter names.

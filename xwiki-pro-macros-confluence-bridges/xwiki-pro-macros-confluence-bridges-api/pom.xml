@@ -24,17 +24,24 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.xwiki.pro</groupId>
-    <artifactId>xwiki-pro-macros-parent</artifactId>
+    <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
     <version>1.18.4-SNAPSHOT</version>
   </parent>
-  <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
-  <version>1.18.4-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Pro Macros - Confluence bridges - Parent POM</name>
-  <description>Bridges for various Confluence macros. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
-  <modules>
-    <module>xwiki-pro-macros-confluence-bridges-legacy</module>
-    <module>xwiki-pro-macros-confluence-bridges-ui</module>
-    <module>xwiki-pro-macros-confluence-bridges-api</module>
-  </modules>
+  <artifactId>xwiki-pro-macros-confluence-bridges-api</artifactId>
+  <packaging>jar</packaging>
+  <name>Pro Macros - Confluence bridges API</name>
+  <description>The API needed for the XWiki Pro Confluence bridges.</description>
+  <dependencies>
+    <!-- Dependencies needed by the User List and User Profile macros -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-oldcore</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-component-api</artifactId>
+      <version>${commons.version}</version>
+    </dependency>
+  </dependencies>
 </project>
