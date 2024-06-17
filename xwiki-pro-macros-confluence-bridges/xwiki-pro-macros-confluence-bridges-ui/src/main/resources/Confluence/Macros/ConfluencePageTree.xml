@@ -288,6 +288,8 @@ This macro is a bridge for the Confluence Page Tree macro. It displays the list 
       #set($space = $services.model.resolveSpace($root, "default"))
     #elseif ($root.endsWith(".WebHome"))
       #set($space = $services.model.resolveSpace($root.substring(0, $root.length() - 8), "default"))
+    #else
+      #set($space = $services.model.resolveSpace($root))
     #end
 
     {{documentTree showSpaces="true" root="space:$services.model.serialize($space)"/}}
