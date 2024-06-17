@@ -130,11 +130,15 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 // Use a document clone that has only the excerpt macro as content, to be displayed.
                 XWikiDocument documentClone = document.clone();
                 try {
+                    macroBlock.setParameter("hidden", "false");
                     documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
                 } catch (XWikiException e) {
                     throw new MacroExecutionException("Could not include the excerpt", e);
                 }
                 displayContent = contentDisplayer.display(documentClone, displayParameters);
+                if (displayContent != null) {
+                    break;
+                }
             }
         }
 
