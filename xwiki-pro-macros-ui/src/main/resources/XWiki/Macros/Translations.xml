@@ -166,6 +166,7 @@ confluencecontributors.nopages=(none)
 
 # Excerpt Include macro
 rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
+rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
 
 ## User Profile macro
 rendering.macro.userProfile.name=User Profile
