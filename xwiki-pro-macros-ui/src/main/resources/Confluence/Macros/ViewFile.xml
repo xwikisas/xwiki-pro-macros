@@ -657,9 +657,13 @@ span.viewFileThumbnailCard {
     #set ($elem = "div")
   #end
   #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
-  #set ($thumbail = "#displayAttachmentMimeType($attachment)")
+  #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
+  #if ($thumbnail.charAt(0) == '#')
+    ## #displayAttachmentMimeType is not supported (before July 2022)
+    #set ($thumbnail = '&lt;div class="attachmentMimeType"&gt;&lt;span&gt;&lt;span class="fa fa-paperclip" aria-hidden="true"&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;')
+  #end
   #if ($elem == "span")
-    #set ($thumbail = $thumbail.replace('&lt;/div&gt;', '&lt;/span&gt;').replace('&lt;div ', '&lt;span '))
+    #set ($thumbnail = $thumbnail.replace('&lt;/div&gt;', '&lt;/span&gt;').replace('&lt;div ', '&lt;span '))
   #end
 
   {{html clean=false}}
@@ -669,7 +673,7 @@ span.viewFileThumbnailCard {
        #if ($thumbnailStyle == "Button") class="button button-primary" #end
        title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))"
     &gt;
-      $thumbail
+      $thumbnail
       &lt;span class="viewFileName"&gt;$escapetool.xml($attachmentRef.getName())&lt;/span&gt;
     &lt;/a&gt;
   &lt;/$elem&gt;
