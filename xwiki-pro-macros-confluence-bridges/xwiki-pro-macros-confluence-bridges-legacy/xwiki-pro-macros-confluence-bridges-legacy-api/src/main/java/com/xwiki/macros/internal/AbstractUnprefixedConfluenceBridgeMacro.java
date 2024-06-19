@@ -27,9 +27,11 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
+import org.xwiki.rendering.macro.wikibridge.WikiMacroParameters;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.macro.Macro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.MacroId;
@@ -70,11 +72,8 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
     public MacroDescriptor getDescriptor()
     {
         Macro<P> macro = getMacro();
-        if (macro == null) {
-            return null;
-        }
 
-        final MacroDescriptor descriptor = macro.getDescriptor();
+        final MacroDescriptor descriptor = macro == null ? null : macro.getDescriptor();
 
         final String id = getId();
 
@@ -110,7 +109,12 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
     {
         Macro<P> macro = getMacro();
         if (macro == null) {
-            return Collections.emptyList();
+            return Collections.singletonList(new MacroBlock(
+                "error",
+                Collections.emptyMap(),
+         "Could not find the Confluence bridge [" + getConfluenceBridgeId() + "].",
+                context.isInline()
+            ));
         }
         return macro.execute(parameters, content, context);
     }
@@ -148,31 +152,39 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
         @Override
         public String getName()
         {
-            return LEGACY_UNPREFIXED + descriptor.getName();
+            return LEGACY_UNPREFIXED + (descriptor == null ? getFallbackName() : descriptor.getName());
+        }
+
+        private String getFallbackName()
+        {
+            return "Confluence bridge for " + id;
         }
 
         @Override
         public String getDescription()
         {
-            return "Legacy Unprefixed " + descriptor.getDescription();
+            return "Legacy Unprefixed " + (
+                descriptor == null
+                    ? (getFallbackName() + " (failed to get the description of this macro)")
+                    : descriptor.getDescription());
         }
 
         @Override
         public Class<?> getParametersBeanClass()
         {
-            return descriptor.getParametersBeanClass();
+            return descriptor == null ? WikiMacroParameters.class : descriptor.getParametersBeanClass();
         }
 
         @Override
         public ContentDescriptor getContentDescriptor()
         {
-            return descriptor.getContentDescriptor();
+            return descriptor == null ? null : descriptor.getContentDescriptor();
         }
 
         @Override
         public Map<String, ParameterDescriptor> getParameterDescriptorMap()
         {
-            return descriptor.getParameterDescriptorMap();
+            return descriptor == null ? Collections.emptyMap() : descriptor.getParameterDescriptorMap();
         }
 
         @Override
