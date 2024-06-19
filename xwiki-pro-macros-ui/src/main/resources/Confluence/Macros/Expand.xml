@@ -409,10 +409,9 @@ Hello 👀
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   $xwiki.ssx.use('Confluence.Macros.Expand')
-  #set ($opened = $xcontext.action == 'edit')
-  #set ($export = $request.getParameter('format'))
+  #set ($opened = $xcontext.action == 'edit' || $request.getParameter('format') == "html-print")
   {{html clean="false" wiki="true"}}
-  &lt;details class="confluence-expand-macro panel panel-default" #if ($opened || $!export == "html-print")open#end&gt;
+  &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
       &lt;div class="panel-title"&gt;
         &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
