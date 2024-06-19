@@ -840,7 +840,7 @@
       obj3.className = 'XWiki.TagClass' and
       obj3.id = tagprop.id.id and
       tagprop.id.name = 'tags' and
-      list = ':tag'
+      list = :tag
     ")
   #end
   #set($hql = ",
