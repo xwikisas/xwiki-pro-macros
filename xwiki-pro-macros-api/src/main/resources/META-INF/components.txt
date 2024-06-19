@@ -10,3 +10,4 @@ com.xwiki.macros.userlist.internal.macro.UserReferenceListConverter
 com.xwiki.macros.userlist.internal.macro.GroupReferenceListConverter
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacro
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacroRefactoring
+com.xwiki.macros.script.ProMacroLicensingScriptService
