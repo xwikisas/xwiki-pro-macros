@@ -34,6 +34,27 @@
     individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
     <xwiki.extension.category>macro</xwiki.extension.category>
+    <!-- Workaround for https://github.com/xwikisas/xwiki-pro/issues/34 
+         Please remove as soon as possible when we handled the issue.
+         Here are listed documents that contain javascript and stylesheet
+         extensions as well as shared code and macro services.
+         Macros listed here are still restricted because they have code checking
+         for valid license. -->
+    <xwiki.extension.licensing.publicDocuments>
+      Confluence.Code.ConfluenceStyleSheet,
+      Confluence.Macros.CommonCode,
+      Confluence.Macros.AttachmentsJSON,
+      Confluence.Macros.Translations,
+      Confluence.Macros.ConfluenceAttachments,
+      Confluence.Macros.ConfluenceColumn,
+      Confluence.Macros.ConfluenceContentbylabel,
+      Confluence.Macros.ConfluenceLayoutSection,
+      Confluence.Macros.ConfluencePasteCodeMacro,
+      Confluence.Macros.ConfluenceSection,
+      Confluence.Macros.DiagramClass,
+      Confluence.Macros.DiagramService,
+      Confluence.Macros.DiagramMacros
+    </xwiki.extension.licensing.publicDocuments>
   </properties>
   <dependencies>
     <dependency>
