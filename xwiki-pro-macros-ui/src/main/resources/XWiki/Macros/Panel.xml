@@ -223,7 +223,18 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   border-radius: 8px 8px 0px 0px;
 }
 
-</code>
+/* style for the excerpt-include macro */
+.macro-excerpt-include.macro-panel &gt; .macro-border {
+  border: 1px solid;
+}
+
+.macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-title {
+  border-bottom: 1px solid;
+}
+
+.macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-content {
+  padding-bottom: 1ex;
+}</code>
     </property>
     <property>
       <contentType/>

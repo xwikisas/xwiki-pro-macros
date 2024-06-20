@@ -142,19 +142,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>.macro-excerpt-include.macro-panel &gt; .macro-border {
-  border: 1px solid;
-}
-
-.macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-title {
-  border-bottom: 1px solid;
-}
-
-.macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-content {
-  padding-bottom: 1ex;
-}
-
-/*** Confluence useless tags */
+      <code>/*** Confluence useless tags */
 
 p.auto-cursor-target&gt;br:first-child:last-child, p.auto-cursor-target:has(br:first-child:last-child) {
   /* Causes too much whitespace.
