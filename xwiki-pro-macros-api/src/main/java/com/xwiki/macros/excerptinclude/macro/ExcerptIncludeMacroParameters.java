@@ -113,8 +113,8 @@ public class ExcerptIncludeMacroParameters
      * @param nopanel the name to set.
      * @since 1.19.0
      */
-    @PropertyDescription("The name of the excerpt to be displayed")
-    @PropertyName("Name")
+    @PropertyDescription("Disable the panel")
+    @PropertyName("no panel")
     public void setNopanel(boolean nopanel)
     {
         this.nopanel = nopanel;
