@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.slf4j.Logger;
 import org.xwiki.rendering.macro.wikibridge.WikiMacroParameters;
@@ -49,7 +51,8 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
     protected static final int PRIORITY = 900;
 
     @Inject
-    private ComponentManager componentManager;
+    @Named("context")
+    private Provider<ComponentManager> contextComponentManagerProvider;
 
     @Inject
     private Logger logger;
@@ -85,7 +88,7 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
         Macro<P> macro;
         String confluenceBridgeId = getConfluenceBridgeId();
         try {
-            macro = componentManager.getInstance(Macro.class, confluenceBridgeId);
+            macro = contextComponentManagerProvider.get().getInstance(Macro.class, confluenceBridgeId);
         } catch (ComponentLookupException e) {
             logger.error("Could not find macro [{}]", confluenceBridgeId, e);
             return null;
