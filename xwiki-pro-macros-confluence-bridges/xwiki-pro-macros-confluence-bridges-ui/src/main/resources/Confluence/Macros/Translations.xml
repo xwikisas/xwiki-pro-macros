@@ -56,8 +56,8 @@ confluencediagram.delete.error=The diagram could not be deleted.
 confluence.nonefound=None found
 
 ## Section macro
-rendering.macro.section.name=Section Macro
-rendering.macro.section.description=Add the Section macro to a page to organize your content in sections and columns. This macro is used in conjunction with the Column macro, and provides more flexibility than page layouts.
+rendering.macro.section.name=Confluence bridge for Section
+rendering.macro.section.description=Confluence bridge for the Section macro.
 rendering.macro.section.content.description=Add the Section content
 rendering.macro.section.parameter.border.name=Show Border
 rendering.macro.section.parameter.border.description=Select this option to draw a border around the section and columns.
@@ -68,8 +68,8 @@ promacros.attachments.upload.title=Upload files to the associated page
 core.viewers.attachments.move=Move
 
 ## Column macro
-rendering.macro.column.name=Column Macro
-rendering.macro.column.description=Add the column macro to a page to organize your content in columns. This macro is used in conjunction with the Section macro, and provides more flexibility than page layouts.
+rendering.macro.column.name=Confluence bridge for Column
+rendering.macro.column.description=Confluence bridge for the Column macro.
 rendering.macro.column.content.description=Add the Column content
 rendering.macro.column.parameter.width.name=Width
 rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
@@ -91,8 +91,8 @@ rendering.macro.detailssummary.tags=Tags
 rendering.macro.detailssummary.noresults=No results.
 
 # Children macro
-rendering.macro.confluence_children.name=Children Pages
-rendering.macro.confluence_children.description=A wrapper for the document tree macro that supports confluence parameter names.
+rendering.macro.confluence_children.name=Confluence bridge for Children
+rendering.macro.confluence_children.description=Confluence bridge for the Children macro using the XWiki document tree macro.
 rendering.macro.confluence_children.parameter.page.name=Page
 rendering.macro.confluence_children.parameter.page.description=The reference of the page whose children will be displayed.
 rendering.macro.confluence_children.parameter.first.name=Number of children

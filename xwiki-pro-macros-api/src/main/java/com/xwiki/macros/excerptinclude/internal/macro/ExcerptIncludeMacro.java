@@ -84,7 +84,8 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     public ExcerptIncludeMacro()
     {
         super("Excerpt include",
-            "Bridge for the Confluence Excerpt Include macro, includes excerpts from other document.",
+            "Includes excerpts from other documents into the current page. The included pages need to contain the "
+                + "simple `excerpt` macro.",
             ExcerptIncludeMacroParameters.class);
     }
 
