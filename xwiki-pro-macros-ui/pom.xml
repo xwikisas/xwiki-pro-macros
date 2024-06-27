@@ -43,7 +43,7 @@
       Confluence.Macros.Expand,
       Confluence.Macros.RecentlyUpdated,
       Confluence.Macros.RecentlyUpdatedService,
-      Confluence.Macros.ViewFile
+      Confluence.Macros.ViewFile,
       Confluence.Macros.ViewFileService,
       XWiki.Macros.Panel,
       XWiki.Macros.Status,
