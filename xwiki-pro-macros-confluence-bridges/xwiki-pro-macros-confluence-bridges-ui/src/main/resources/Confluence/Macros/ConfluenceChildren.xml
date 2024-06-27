@@ -453,7 +453,7 @@ Display the first 10 children of a custom page:
       <defaultValue/>
     </property>
     <property>
-      <description>The number of children that will be displayed initially</description>
+      <description>The number of children that will be displayed initially. In case there is only one child remaining beyond this limit, all children will be displayed.</description>
     </property>
     <property>
       <mandatory>0</mandatory>
