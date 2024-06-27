@@ -40,7 +40,7 @@
     <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->
     <mathjax.version>1.0.5</mathjax.version>
     <diagram.version>1.20.1</diagram.version>
-    <locationsearch.version>1.4.1</locationsearch.version>
+    <locationsearch.version>1.4.3</locationsearch.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>
