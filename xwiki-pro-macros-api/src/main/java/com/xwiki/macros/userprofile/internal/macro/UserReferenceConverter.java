@@ -26,8 +26,8 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.reference.DocumentReferenceResolver;
+import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.properties.converter.AbstractConverter;
-import org.xwiki.properties.converter.ConversionException;
 import org.xwiki.text.StringUtils;
 
 import com.xwiki.macros.userprofile.macro.UserReference;
@@ -45,6 +45,9 @@ public class UserReferenceConverter extends AbstractConverter<UserReference>
     @Inject
     private DocumentReferenceResolver<String> referenceResolver;
 
+    @Inject
+    private EntityReferenceSerializer<String> serializer;
+
     @Override
     protected <G extends UserReference> G convertToType(Type targetType, Object value)
     {
@@ -61,6 +64,9 @@ public class UserReferenceConverter extends AbstractConverter<UserReference>
     @Override
     protected String convertToString(UserReference value)
     {
-        throw new ConversionException("not implemented yet");
+        if (value == null) {
+            return null;
+        }
+        return this.serializer.serialize(value);
     }
 }
