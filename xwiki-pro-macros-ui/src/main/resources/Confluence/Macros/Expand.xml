@@ -164,8 +164,11 @@ Hello 👀
   transform: rotate(90deg);
 }
 
-.confluence-expand-macro .panel-title {
+.confluence-expand-macro {
   padding: @panel-heading-padding;
+}
+.panel-title {
+  padding: 5px;
 }
 
 .confluence-expand-macro .panel-body {
@@ -422,10 +425,10 @@ Hello 👀
   {{html clean="false" wiki="true"}}
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
-      &lt;div class="panel-title"&gt;
+      &lt;span class="panel-title"&gt;
         &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
         $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
-     &lt;/div&gt;
+     &lt;/span&gt;
     &lt;/summary&gt;
     &lt;div class="panel-body"&gt;
 
