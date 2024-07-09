@@ -109,7 +109,6 @@
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -122,7 +121,6 @@
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -191,7 +189,6 @@
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -268,7 +265,7 @@
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   {{team users="$services.rendering.escape($wikimacro.parameters.User, $xwiki.currentContentSyntaxId)" /}}
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
@@ -334,7 +331,6 @@
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

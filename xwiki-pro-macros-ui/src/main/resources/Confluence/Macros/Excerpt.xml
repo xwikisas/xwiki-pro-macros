@@ -38,17 +38,19 @@
   <hidden>true</hidden>
   <content>= Description =
 
-The Excerpt macro is a bridge between Confluence and XWiki. It allows the user to mark part of the page's content for use by other macros.
+The Excerpt macro is a bridge between Confluence and XWiki. It allows the user to mark part of the page's content for use by other macros, for exemple {excerpt-include}}.
 
 = Parameters =
 
 |=Parameter|=Description|=Default
 |**atlassian-macro-output-type**|The ouput type. It can be either BLOCK or INLINE.|INLINE
 |**hidden**|If true, the content of the macro will be hidden.|false
+|**name**|The name of the excerpt, for named includes.|false
+|**allowUnprivilegedInclude**|Allow this excerpt to be seen even for people who don't have view rights on this page when included|false
 
 = Example of usage =
 
-Example of excerpt with HTML :
+Example of excerpt with a table in it:
 
 {{code}}
 {{excerpt}}
@@ -57,26 +59,48 @@ Example of excerpt with HTML :
 {{/excerpt}}
 {{/code}}
 
-The result is the following :
+The result is the following:
 
 {{excerpt}}
 |=Title1|=Title2|=Title3
 |Text1|Text2|Text3
 {{/excerpt}}
 
-Example of hidden excerpt :
+Example of named hidden excerpt:
 
 {{code}}
-{{excerpt hidden="true"}}
+{{excerpt hidden="true" name="myexcerpt"}}
 My hidden content.
 {{/excerpt}}
 {{/code}}
 
-The result is the following :
+The result is the following:
 
-{{excerpt hidden="true"}}
+{{excerpt hidden="true" name="myexcerpt"}}
 My hidden content.
-{{/excerpt}}</content>
+{{/excerpt}}
+
+(yes, nothing, this is intended!)
+
+Let's include this hidden excerpt:
+
+{{code}}
+{{excerpt-include 0="Excerpt" name="myexcerpt"/}}
+{{/code}}
+
+Result:
+
+{{excerpt-include 0="Excerpt" name="myexcerpt"/}}
+
+Without the panel:
+
+{{code}}
+{{excerpt-include 0="Excerpt" name="myexcerpt" nopanel="true"/}}
+{{/code}}
+
+Result:
+
+{{excerpt-include 0="Excerpt" name="myexcerpt" nopanel="true"/}}</content>
   <object>
     <name>Confluence.Macros.Excerpt</name>
     <number>0</number>
@@ -117,7 +141,7 @@ My hidden content.
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.parameters=Request parameters|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -282,20 +306,16 @@ My hidden content.
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  ## BLOCK / INLINE
-  #set($outputType = $wikimacro.parameters.get('atlassian-macro-output-type'))
   #set($hidden = $wikimacro.parameters.get('hidden'))
-  #set($displayAsBlock = "$!outputType" != '' &amp;&amp; $outputType.toLowerCase() == 'block')
-  #if("$!hidden" == 'true')
-    (% class="hidden" %)
-  #end
-  #if($displayAsBlock)
-    (((
-  #end
+  #if("$!hidden" != 'true')
+    #set($outputType = $wikimacro.parameters.get('atlassian-macro-output-type'))
+    #set($displayAsBlock = "$!outputType" != '' &amp;&amp; $outputType.toLowerCase() == 'block')
+    #if ($displayAsBlock)
+
     {{wikimacrocontent /}}
-  #if($displayAsBlock)
-    )))
-  #end
+
+    #else{{wikimacrocontent /}}#end##
+  #end##
 #end
 {{/velocity}}
 
@@ -303,8 +323,8 @@ My hidden content.
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
-  #executeMacro
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro##
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
 #end
@@ -320,7 +340,7 @@ My hidden content.
       <contentType>Optional</contentType>
     </property>
     <property>
-      <defaultCategory>content</defaultCategory>
+      <defaultCategory/>
     </property>
     <property>
       <description>Bridge for the Confluence Excerpt macro. It marks part of the page's content for use by other macros.</description>
@@ -410,7 +430,7 @@ My hidden content.
       <description/>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>atlassian-macro-output-type</name>
@@ -485,16 +505,172 @@ My hidden content.
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description/>
+      <description>Whether the excerpt should be hidden from the page</description>
     </property>
     <property>
-      <mandatory/>
+      <mandatory>0</mandatory>
     </property>
     <property>
       <name>hidden</name>
     </property>
     <property>
       <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Excerpt</name>
+    <number>2</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>2a24a3a6-c4cc-4418-ab12-872659b47414</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The name of the excerpt, for named includes.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>name</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Excerpt</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>7962e923-4d5e-409d-a75a-30c31c25f593</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description>Allow this excerpt to be seen even for people who don't have view rights on this page when included</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>allowUnprivilegedInclude</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
     </property>
   </object>
 </xwikidoc>

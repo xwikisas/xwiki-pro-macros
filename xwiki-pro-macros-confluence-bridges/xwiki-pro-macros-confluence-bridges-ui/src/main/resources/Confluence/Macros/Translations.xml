@@ -1,0 +1,137 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.Translations" locale="">
+  <web>Confluence.Macros</web>
+  <name>Translations</name>
+  <language/>
+  <defaultLanguage>en</defaultLanguage>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>plain/1.0</syntaxId>
+  <hidden>true</hidden>
+  <content>## General
+xwikipro.macro.empty=Empty [{0}] macro. Please specify the [{1}] parameter.
+
+confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
+confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an editable diagram. You can always go back to this preview.
+confluencediagram.create.confirm=Convert
+confluencediagram.create.success=The diagram has been converted.
+confluencediagram.create.error=Could not convert the diagram.
+confluencediagram.create.message=Converted diagram.
+confluencediagram.delete=The above diagram was converted from a Confluence diagram. If you are not satisfied with the result, you can click on the button below to go back to the preview of the original diagram.
+confluencediagram.delete.link=Revert diagram conversion
+confluencediagram.modal.title=Back to Confluence diagram preview
+confluencediagram.modal.text=Are you sure you want to revert the conversion of the diagram ? By confirming, you will delete the current editable diagram and the original preview of the diagram will be displayed. This action is irreversible.
+confluencediagram.modal.btn.close=Close
+confluencediagram.modal.btn.confirm=Confirm
+confluencediagram.delete.success=The editable diagram was successfully deleted.
+confluencediagram.delete.error=The diagram could not be deleted.
+confluence.nonefound=None found
+
+## Section macro
+rendering.macro.section.name=Confluence bridge for Section
+rendering.macro.section.description=Confluence bridge for the Section macro.
+rendering.macro.section.content.description=Add the Section content
+rendering.macro.section.parameter.border.name=Show Border
+rendering.macro.section.parameter.border.description=Select this option to draw a border around the section and columns.
+
+## Attachments macro
+promacros.attachments.upload.title=Upload files to the associated page
+## This should be removed after upgrading the XWiki parent to a version &gt;= 14.6.
+core.viewers.attachments.move=Move
+
+## Column macro
+rendering.macro.column.name=Confluence bridge for Column
+rendering.macro.column.description=Confluence bridge for the Column macro.
+rendering.macro.column.content.description=Add the Column content
+rendering.macro.column.parameter.width.name=Width
+rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+
+## Userlister macro
+rendering.macro.userlister.name=User Lister
+rendering.macro.userlister.description=Confluence bridge macro to list users of groups
+rendering.macro.userlister.parameter.groups.name=Groups
+rendering.macro.userlister.parameter.groups.description=List of Confluence user groups, separated by a comma. A wildcard means all wiki users.
+rendering.macro.userlister.parameter.online.name=Online
+rendering.macro.userlister.parameter.online.description=Ignored parameter, present for compatibility purpose only
+
+
+## Details Summary macro
+rendering.macro.detailssummary.firstcolumn=Document
+rendering.macro.detailssummary.lastModified=Last modified
+rendering.macro.detailssummary.creator=Creator
+rendering.macro.detailssummary.tags=Tags
+rendering.macro.detailssummary.noresults=No results.
+
+# Children macro
+rendering.macro.confluence_children.name=Confluence bridge for Children
+rendering.macro.confluence_children.description=Confluence bridge for the Children macro using the XWiki document tree macro.
+rendering.macro.confluence_children.parameter.page.name=Page
+rendering.macro.confluence_children.parameter.page.description=The reference of the page whose children will be displayed.
+rendering.macro.confluence_children.parameter.first.name=Number of children
+rendering.macro.confluence_children.parameter.first.description=The number of children that will be displayed initially</content>
+  <object>
+    <name>Confluence.Macros.Translations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>9fa6e657-325d-49aa-96a1-70d1a418117d</guid>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <property>
+      <scope>WIKI</scope>
+    </property>
+  </object>
+</xwikidoc>

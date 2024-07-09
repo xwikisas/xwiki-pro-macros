@@ -1,0 +1,105 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.DiagramService" locale="">
+  <web>Confluence.Macros</web>
+  <name>DiagramService</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity output="false"}}
+#macro(getUniquePageReference $space $return)
+  #set($id = $mathtool.random(1, 1000000000))
+  #set($uniquePageName = 'Diagram' + $id)
+  #if($xwiki.getDocument($services.model.resolveDocument("${space}.${uniquePageName}")).isNew())
+    #set($return = $NULL)
+    #setVariable("$return" "${space}.${uniquePageName}")
+  #else
+    #getUniquePageReference($space $return)
+  #end
+#end
+{{/velocity}}
+
+{{velocity}}
+#set($createDiagram = "$!request.action" == 'create')
+#set($deleteDiagram = "$!request.action" == 'delete')
+#set($page = $request.page)
+#set($diagramName = $request.diagramName)
+#if($createDiagram &amp;&amp; "$!page" != '' &amp;&amp; "$!diagramName" != '')
+  #set($pageReference = $services.model.resolveDocument($page))
+  #if($services.security.authorization.hasAccess('edit', $pageReference))
+    #set($pageDoc = $xwiki.getDocument($page))
+    #set($diagramAttach = $pageDoc.getAttachment($diagramName))
+    #set($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
+    #if($diagramAttach)
+      #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
+      #set($diagramContent = $diagramAttach.getContentAsString())
+      #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
+      #if($diagramContent.contains('&lt;mxfile ') &amp;&amp; $diagramContent.contains('&lt;diagram '))
+        ## Drawio
+        #set($xml = $diagramContent)
+      #else
+        #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
+      #end
+      #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
+      #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
+      #set($discard = $diagramDoc.setContent($xml))
+      #set($discard = $diagramDoc.setTitle('Diagram'))
+      #set($diagramObj = $diagramDoc.newObject('Confluence.Macros.DiagramClass'))
+      #set($discard = $diagramObj.set('page', $page))
+      #set($discard = $diagramObj.set('diagramName', $diagramName))
+      #set($discard = $diagramDoc.addObject($diagramObj))
+      #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
+      #set($discard = $diagramDoc.save($services.localization.render('confluencediagram.create.message')))
+    #else
+      ## Bad Request
+      $response.setStatus(400)
+    #end
+  #else
+    ## Unauthorized
+    $response.setStatus(401)
+  #end
+#elseif($deleteDiagram &amp;&amp; "$!page" != '')
+  #set($pageReference = $services.model.resolveDocument($page))
+  #if($services.security.authorization.hasAccess('delete', $pageReference))
+    ## Delete
+    $xwiki.getDocument($pageReference).delete()
+  #else
+    ## Unauthorized
+    $response.setStatus(401)
+  #end
+#else
+  ## Bad Request
+  $response.setStatus(400)
+#end
+{{/velocity}}</content>
+</xwikidoc>

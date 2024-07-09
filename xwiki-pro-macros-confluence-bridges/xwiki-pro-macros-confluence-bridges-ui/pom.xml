@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.xwiki.pro</groupId>
+    <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
+    <version>1.19.7-SNAPSHOT</version>
+  </parent>
+  <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
+  <packaging>xar</packaging>
+  <name>Pro Macros - Confluence bridges</name>
+  <description>Provides compatibility with Atlassian Confluence macros imported during migrations. Can be purchased
+    individually or part of the XWiki Pro package. Try them free.</description>
+  <properties>
+    <xwiki.extension.category>macro</xwiki.extension.category>
+    <!-- Workaround for https://github.com/xwikisas/xwiki-pro/issues/34 
+         Please remove as soon as possible when we handled the issue.
+         Here are listed documents that contain javascript and stylesheet
+         extensions as well as shared code and macro services.
+         Macros listed here are still restricted because they have code checking
+         for valid license. -->
+    <xwiki.extension.licensing.publicDocuments>
+      Confluence.Code.ConfluenceStyleSheet,
+      Confluence.Macros.CommonCode,
+      Confluence.Macros.AttachmentsJSON,
+      Confluence.Macros.Translations,
+      Confluence.Macros.ConfluenceAttachments,
+      Confluence.Macros.ConfluenceColumn,
+      Confluence.Macros.ConfluenceContentbylabel,
+      Confluence.Macros.ConfluenceLayoutSection,
+      Confluence.Macros.ConfluencePasteCodeMacro,
+      Confluence.Macros.ConfluenceSection,
+      Confluence.Macros.DiagramClass,
+      Confluence.Macros.DiagramService,
+      Confluence.Macros.DiagramMacros
+    </xwiki.extension.licensing.publicDocuments>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.xwiki.licensing</groupId>
+      <artifactId>application-licensing-licensor-api</artifactId>
+      <version>${licensing.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.pdfviewer</groupId>
+      <artifactId>macro-pdfviewer-ui</artifactId>
+      <version>${pdfviewer.version}</version>
+      <type>xar</type>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>macro-jwplayer-ui</artifactId>
+      <version>${jwplayer.version}</version>
+      <type>xar</type>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.mathjax</groupId>
+      <artifactId>macro-mathjax-ui</artifactId>
+      <version>${mathjax.version}</version>
+      <type>xar</type>
+      <exclusions>
+        <!-- this is not needed for current versions of the mathjax macro and
+        can be removed as soon as we can update the version, when we drop
+        support for XWiki 13.X.
+        See https://github.com/xwikisas/xwiki-pro-macros/issues/185 -->
+        <exclusion>
+          <groupId>org.xwiki.contrib.mathjax</groupId>
+          <artifactId>macro-mathjax-latex</artifactId>
+        </exclusion>
+      </exclusions>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.diagram</groupId>
+      <artifactId>application-diagram</artifactId>
+      <type>xar</type>
+      <version>${diagram.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-ui</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-confluence-bridges-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

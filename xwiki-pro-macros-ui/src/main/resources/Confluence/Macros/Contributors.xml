@@ -27,7 +27,7 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Confluence.Macros.WebHome</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -181,7 +181,6 @@ Result:
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
-        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -194,7 +193,6 @@ Result:
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -263,7 +261,6 @@ Result:
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -514,7 +511,7 @@ Result:
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
@@ -579,7 +576,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -669,7 +665,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -759,7 +754,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -849,7 +843,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -939,7 +932,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1029,7 +1021,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1119,7 +1110,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1209,7 +1199,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1299,7 +1288,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1389,7 +1377,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1479,7 +1466,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1569,7 +1555,6 @@ Result:
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

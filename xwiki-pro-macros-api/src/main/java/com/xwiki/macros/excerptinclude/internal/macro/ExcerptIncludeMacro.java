@@ -19,26 +19,24 @@
  */
 package com.xwiki.macros.excerptinclude.internal.macro;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
+import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
-import org.xwiki.rendering.block.TableBlock;
-import org.xwiki.rendering.block.TableCellBlock;
-import org.xwiki.rendering.block.TableHeadCellBlock;
-import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -67,6 +65,9 @@ import com.xwiki.macros.excerptinclude.macro.ExcerptIncludeMacroParameters;
 public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroParameters>
 {
     @Inject
+    private ContextualLocalizationManager localizationManager;
+
+    @Inject
     private ContextualAuthorizationManager contextualAuthorization;
 
     @Inject
@@ -83,7 +84,8 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     public ExcerptIncludeMacro()
     {
         super("Excerpt include",
-            "Bridge for the Confluence Excerpt Include macro, includes excerpts from other document.",
+            "Includes excerpts from other documents into the current page. The included pages need to contain the "
+                + "simple `excerpt` macro.",
             ExcerptIncludeMacroParameters.class);
     }
 
@@ -106,45 +108,106 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
             throw new MacroExecutionException(String.format("Failed to get document for reference [%s]", reference), e);
         }
 
+        XDOM displayContent = null;
+
+        if (document.isNew()) {
+            displayContent = getErrorXDOM(
+                localizationManager.getTranslationPlain("rendering.macro.excerptinclude.referenceexcerptnotfound",
+                    reference), context);
+        } else {
+            displayContent = getExcerpt(parameters.getName(), document, reference, context);
+        }
+
+        if (parameters.isNopanel()) {
+            return Collections.singletonList(displayContent);
+        }
+
+        Map<String, String> panelParameters = new HashMap<>(1);
+        panelParameters.put("classes", "macro-excerpt-include");
+        panelParameters.put("title", document.getTitle());
+
+        XWikiDocument docForRendering = new XWikiDocument(null);
+        String excerptContent;
+        try {
+            docForRendering.setContent(displayContent);
+            excerptContent = docForRendering.getContent();
+        } catch (XWikiException e) {
+            excerptContent = "{{error}}\n"
+                + localizationManager.getTranslationPlain("rendering.macro.excerptinclude.renderfailure")
+                + "\n{{/error}}";
+        }
+
+        MacroBlock panel = new MacroBlock("panel", panelParameters, excerptContent, false);
+
+        return Collections.singletonList(panel);
+    }
+
+    private XDOM getExcerpt(String name, XWikiDocument document, DocumentReference reference,
+        MacroTransformationContext context) throws MacroExecutionException
+    {
+        XWikiContext xcontext = contextProvider.get();
+        List<Block> blocks =
+            document.getXDOM().getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
+
+        DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
+        displayParameters.setContentTransformed(true);
+        displayParameters.setExecutionContextIsolated(true);
+        XDOM displayContent = null;
+        for (Block block : blocks) {
+            MacroBlock macroBlock = (MacroBlock) block;
+            String candidateName = macroBlock.getParameter("name");
+            if (candidateName == null) {
+                candidateName = "";
+            }
+            if ("excerpt".equals(macroBlock.getId()) && StringUtils.equals(candidateName, name)) {
+                String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
+                boolean allowUnprivileged = "1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged);
+                if (!allowUnprivileged) {
+                    checkAccess(reference, xcontext);
+                }
+
+                // Use a document clone that has only the excerpt macro as content, to be displayed.
+                XWikiDocument documentClone = document.clone();
+                try {
+                    macroBlock.setParameter("hidden", "false");
+                    documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
+                } catch (XWikiException e) {
+                    throw new MacroExecutionException("Could not include the excerpt", e);
+                }
+                displayContent = contentDisplayer.display(documentClone, displayParameters);
+                if (displayContent != null) {
+                    break;
+                }
+            }
+        }
+
+        if (displayContent == null) {
+            if (StringUtils.isEmpty(name)) {
+                // If there is no excerpt macro and a name was not provided, display the entire content.
+                checkAccess(reference, xcontext);
+                displayContent = contentDisplayer.display(document, displayParameters);
+            } else {
+                displayContent = getErrorXDOM(
+                    localizationManager.getTranslationPlain("rendering.macro.excerptinclude.namedexcerptnotfound",
+                        name, reference), context);
+            }
+        }
+
+        return displayContent;
+    }
+
+    private XDOM getErrorXDOM(String message, MacroTransformationContext context)
+    {
+        return new XDOM(Collections.singletonList(new MacroBlock(
+            "error", Collections.emptyMap(), message, context.isInline())));
+    }
+
+    private void checkAccess(DocumentReference reference, XWikiContext xcontext) throws MacroExecutionException
+    {
         if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
             throw new MacroExecutionException(
                 String.format("Current user [%s] doesn't have view rights on document [%s]",
                     xcontext.getUserReference(), reference));
         }
-
-        List<Block> blocks =
-            document.getXDOM().getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
-
-        XDOM displayContent = null;
-        DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
-        displayParameters.setContentTransformed(true);
-        displayParameters.setExecutionContextIsolated(true);
-        for (Block block : blocks) {
-            MacroBlock macroBlock = (MacroBlock) block;
-            if ("excerpt".equals(macroBlock.getId())) {
-                // Use a document clone that has only the excerpt macro as content, to be displayed.
-                XWikiDocument documentClone = document.clone();
-                try {
-                    documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
-                } catch (XWikiException e) {
-                    throw new RuntimeException(e);
-                }
-                displayContent = contentDisplayer.display(documentClone, displayParameters);
-            }
-        }
-        // If there is no excerpts macro, display the entire content.
-        if (displayContent == null) {
-            displayContent = contentDisplayer.display(document, displayParameters);
-        }
-
-        TableBlock tableBlock = new TableBlock(Arrays.asList(
-            new TableRowBlock(
-                Collections.singletonList(new TableHeadCellBlock(
-                    Collections.singletonList(new WordBlock(document.getTitle()))))),
-            new TableRowBlock(
-                Collections.singletonList(new TableCellBlock(
-                    Collections.singletonList(displayContent))))));
-
-        return Collections.singletonList(tableBlock);
     }
 }

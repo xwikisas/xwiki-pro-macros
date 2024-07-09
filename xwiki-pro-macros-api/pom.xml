@@ -25,30 +25,13 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-parent</artifactId>
-    <version>1.16.4-SNAPSHOT</version>
+    <version>1.19.7-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-api</artifactId>
   <packaging>jar</packaging>
-  <name>XWiki Pro - Macros API</name>
+  <name>Pro Macros - API</name>
   <description>The API needed for the XWiki Pro Macros.</description>
   <dependencies>
-    <!-- We need this XAR dependency because it provides the icon picker that we use in the velocity template that we
-    link to one of the Button Macro parameters. -->
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-icon-ui</artifactId>
-      <version>${platform.version}</version>
-      <type>xar</type>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>requirejs</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>jquery</artifactId>
-    </dependency>
     <dependency>
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-licensor-api</artifactId>
@@ -90,5 +73,28 @@
       <artifactId>xwiki-rendering-macro-box</artifactId>
       <version>${rendering.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.cql</groupId>
+      <artifactId>aqlparser</artifactId>
+      <version>0.0.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.cql</groupId>
+      <artifactId>query</artifactId>
+      <version>0.0.2</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
+  <build>
+   <plugins>
+     <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-checkstyle-plugin</artifactId>
+       <configuration>
+         <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+       </configuration>
+     </plugin>
+    </plugins>
+  </build>
 </project>

@@ -29,6 +29,8 @@ import org.xwiki.model.reference.EntityReference;
  */
 public class UserReference extends DocumentReference
 {
+    private static final long serialVersionUID = 1L;
+
     /**
      * Default constructor.
      * @param reference an EntityReference

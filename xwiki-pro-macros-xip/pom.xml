@@ -25,13 +25,19 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-parent</artifactId>
-    <version>1.16.4-SNAPSHOT</version>
+    <version>1.19.7-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-xip</artifactId>
-  <name>XWiki Pro - Macros XIP</name>
+  <name>Pro Macros - XIP</name>
   <packaging>xip</packaging>
-  <description>XIP for offline installation of the Pro Macro</description>
+  <description>XIP for offline installation of the Pro Macros</description>
   <dependencies>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-ui</artifactId>
+      <version>${project.version}</version>
+      <type>pom</type>
+    </dependency>
     <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros</artifactId>

@@ -1,0 +1,1555 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceContentbylabel" locale="">
+  <web>Confluence.Macros</web>
+  <name>ConfluenceContentbylabel</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <parent>WebHome</parent>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Confluence bridge for Content by label</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content> The contentbylabel macro is a bridge between Confluence and XWiki. It displays a list of documents given a list of tags or a complex query in the Confluence Query Language (CQL) syntax.
+
+= Parameters =
+
+|=Parameter|=Description|=Required|=Default
+|**labels**|A list of tags to use, separated by a comma or a space. This value is ignored if the cql parameter is set.|If cql is not given|(empty)
+|**operator**|Whether all the tags should match (AND), or any (OR). This value is ignored if the cql parameter is set.|No|(((
+OR
+)))
+|**max**|Maximum number of results|No|(unset)
+|**sort**|What to sort on. The only supported values are "modified", "creation" and "title" for now. Ignored if an ##order by## clause is present in the cql parameter.|No|(unset)
+|**reverse**|Whether to reverse the sort (true) or not (false).|No|false
+|**spaces**|Confluence spaces in which to search. ##@self## for the current space. ##@all## for everywhere. This value is ignored if the cql parameter is set.|No|(empty)
+|**title**|A title to display before the results|No|(empty)
+|**cql**|A query written in the Confluence Query Language (CQL) syntax defining the list of documents to show. [[See the documentation&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/CQL/#HSyntax]].|If labels is not given.|(empty)
+|**showSpaces**|Whether to display the Confluence space in which the documents are (true) or not (false).|No|true
+|**showLabels**|Whether to display the tags of the documents (true) or not (false).|No|true
+|**type**|What Confluence type of objects to show. This value is ignored if the cql parameter is set. Only known value: page.|No|(empty)
+|**excerpt**|**This parameter is ignored.** Whether to show excerpts of documents (true) or not (false).|No|false
+|**excerptType**|**This parameter is ignored.** Whether to show "##simple##" excerpts or "##rich content##" excerpt.|No|(unset)
+
+= Example Usage =
+
+{{code}}
+{{confluence_contentbylabel cql="label = 'contentbylabelexample' and space = currentSpace()" showSpace="false" sort="title" title="This is the title of a contentbylabel macro" max="5" reverse="true" type="page" labels="contentbylabelexample" spaces="@self"/}}
+{{/code}}
+
+Result:
+
+{{confluence_contentbylabel cql="label = 'contentbylabelexample' and space = currentSpace()" showSpace="false" sort="title" title="This is the title of a contentbylabel macro" max="5" reverse="true" type="page" labels="contentbylabelexample" spaces="@self"/}}</content>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>1c0bcc9b-19ed-422c-bc74-24d09f3dc31b</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.confluence-contentbylabel {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.confluence-contentbylabel-taglist {
+  display: block;
+  list-style: none;
+  margin-bottom: 0.5ex;
+  font-size: smaller;
+}
+
+.confluence-contentbylabel-taglist li {
+  display: inline-block;
+}
+
+.confluence-contentbylabel-taglist li:not(:last-child) {
+  margin-right: 1ex;
+}</code>
+    </property>
+    <property>
+      <contentType>CSS</contentType>
+    </property>
+    <property>
+      <name>confluencecontentbylabel</name>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>always</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>0</number>
+    <className>XWiki.TagClass</className>
+    <guid>48cc4cf6-7423-49fd-a1e1-d6c8c8ce537e</guid>
+    <class>
+      <name>XWiki.TagClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <tags>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>tags</name>
+        <number>1</number>
+        <prettyName>Tags</prettyName>
+        <relationalStorage>1</relationalStorage>
+        <separator>|</separator>
+        <separators>|,</separators>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </tags>
+    </class>
+    <property>
+      <tags>
+        <value>contentbylabelexample</value>
+      </tags>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>baced3fb-5524-4e46-aa0e-3b48cf5b9d73</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>13</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>14</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>, </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>12</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>10</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>9</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content availability</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategories>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>defaultCategories</name>
+        <number>4</number>
+        <prettyName>Default categories</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </defaultCategories>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <priority>
+        <disabled>0</disabled>
+        <name>priority</name>
+        <number>11</number>
+        <numberType>integer</numberType>
+        <prettyName>Priority</prettyName>
+        <size>10</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </priority>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <async_cached>0</async_cached>
+    </property>
+    <property>
+      <async_context>
+        <value>action</value>
+      </async_context>
+    </property>
+    <property>
+      <async_enabled>0</async_enabled>
+    </property>
+    <property>
+      <code>{{include reference="Confluence.Macros.CommonCode" /}}
+
+{{velocity output=false}}
+
+## See https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#escaping-special-characters
+## And https://jira.xwiki.org/browse/XCOMMONS-2926
+#set ($solrSpecialChars = ['+', '-', '&amp;&amp;', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '\', ' '])
+#set ($escapedSolrSpecialChars = ['\+', '\-', '\&amp;&amp;', '\||', '\!', '\(', '\)', '\{', '\}', '\[', '\]', '\^', '\"', '\~', '\*', '\?', '\:', '\/', '\\', '\ '])
+
+#macro (escapeSolr $v)
+$stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
+#end
+
+#macro (contentbylabellink $d)
+&lt;a href="$escapetool.xml($d.getURL('view'))"&gt;##
+$escapetool.xml($d.getDisplayTitle())##
+&lt;/a&gt;##
+#end
+
+#macro (getSpaceFacet $space)
+#set ($facetNumber = $space.getReversedReferenceChain().size() - 1)
+#if ($space.getRoot().getType().toString() == "WIKI"))
+#set ($facetNumber = $facetNumber - 1)
+#escapeSolr("$facetNumber/${serializer.serialize($space)}.")##
+#end
+#end
+
+#macro (executeMacro)
+  #if ("$!xcontext.macro.params.title" != "")
+  **$services.rendering.escape($xcontext.macro.params.title, $xwiki.currentContentSyntaxId)**
+  #end
+  #set ($results = $NULL)
+  #getCQLMacroResults($xcontext.macro $results)
+  #if ($results.empty)
+    No results.
+  #else
+    #set ($tagsDoc = $xwiki.getDocument("Main.Tags"))
+
+    {{html clean=false}}
+    &lt;ul class="confluence-contentbylabel"&gt;
+    #foreach ($r in $results)
+      &lt;li&gt;
+        &lt;div class="xitemcontainer"&gt;
+        $services.icon.renderHTML('page')
+        #set ($d = $xwiki.getDocument($r.fullname))
+        #contentbylabellink($d)
+        #if ($xcontext.macro.params.showSpace != "false")
+          #set ($confluenceSpace = $services.confluence.spaces.getConfluenceSpace($d))
+          #if ("$!confluenceSpace" != "")
+            &amp;nbsp;(#contentbylabellink($xwiki.getDocument($confluenceSpace)))
+          #end
+        #end
+        #if ($xcontext.macro.params.showLabels != "false")
+          &lt;ul class="confluence-contentbylabel-taglist"&gt;
+          #foreach ($tag in $r['property.XWiki.TagClass.tags_string'])
+            &lt;li&gt;
+              &lt;a href='$escapetool.xml($tagsDoc.getURL("view", "do=viewTag&amp;tag=$escapetool.url($tag)"))'&gt;
+                $escapetool.xml($tag)##
+              &lt;/a&gt;
+            &lt;/li&gt;
+          #end
+          &lt;/ul&gt;
+        #end
+      &lt;/il&gt;
+    #end
+    &lt;/ul&gt;
+    {{/html}}
+
+  #end
+#end
+{{/velocity}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
+#end
+{{/velocity}}
+</code>
+    </property>
+    <property>
+      <contentDescription/>
+    </property>
+    <property>
+      <contentJavaType/>
+    </property>
+    <property>
+      <contentType>No content</contentType>
+    </property>
+    <property>
+      <defaultCategories/>
+    </property>
+    <property>
+      <description>Confluence Bridge for the Content by label macro</description>
+    </property>
+    <property>
+      <id>confluence_contentbylabel</id>
+    </property>
+    <property>
+      <name>Confluence bridge for Content by label</name>
+    </property>
+    <property>
+      <priority/>
+    </property>
+    <property>
+      <supportsInlineMode>0</supportsInlineMode>
+    </property>
+    <property>
+      <visibility/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>a8c6093b-4ea2-489b-9e90-91fe9ab501ce</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>The CQL query to use to find items</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>cql</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>13e1ddb2-3c7a-4a82-b84e-a99b37ec4e21</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>A title to display before the results</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>title</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>2</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>3e79cd67-ffc9-433a-b6d1-c610cdefe2af</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>true</defaultValue>
+    </property>
+    <property>
+      <description>Whether to display the Confluence space in which the documents are</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>showSpace</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>3</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>7131e522-07a1-4d26-87bd-f3201e74ec77</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>true</defaultValue>
+    </property>
+    <property>
+      <description>Whether to display the tags of the documents.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>showLabels</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>4</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>23dd6cb6-d7cf-404b-a0b0-d3c9c9dfcc2b</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Maximum number of results</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>max</name>
+    </property>
+    <property>
+      <type>java.lang.Integer</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>5</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>c6426e7a-5f05-45ce-b71f-8ca251c22786</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>What to sort on. The only supported values are "modified", "creation" and "title" for now. Ignored if an ##order by## clause is present in the cql parameter.</description>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>sort</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>6</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>e3f3b6c7-8ca8-4751-98f1-d715197b81ab</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description>Whether to reverse the sort</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>reverse</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>7</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>3c883d66-d39b-4be3-bd1e-a2634ff74d73</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>What Confluence type of objects to show. This value is ignored if the cql parameter is set. Known value: page.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>type</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>8</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>61629fe5-d201-402f-a987-1eade33b9871</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>A space-separated list of tags to use. This value is ignored if the cql parameter is set.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>labels</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>9</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>8fab67bb-f0a9-437f-ba03-34414e10d362</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>OR</defaultValue>
+    </property>
+    <property>
+      <description>Whether all the tags should match (AND), or any (OR). This value is ignored if the cql parameter is set.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>operator</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.ConfluenceContentbylabel</name>
+    <number>10</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>dad4ba1c-dfa2-475a-b149-d7f4024acf72</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description>Confluence spaces in which to search. @self for the current space. @all for everywhere. This value is ignored if the cql parameter is set.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>spaces</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+</xwikidoc>

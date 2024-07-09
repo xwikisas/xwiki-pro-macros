@@ -1,0 +1,110 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.5" reference="Confluence.Macros.CommonCode" locale="">
+  <web>Confluence.Macros</web>
+  <name>CommonCode</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>CommonCode</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>{{velocity output="false"}}
+#macro (getCQLMacroResults $wikimacro $results)
+  #set ($results = $NULL)
+  #set ($cql = $wikimacro.params.cql)
+  #if ("$!cql" == "")
+    #if ("$!xcontext.macro.params.operator" == "AND" || "$!xcontext.macro.params.operator" == "and")
+      #set ($operator = "AND")
+    #else
+      #set ($operator = "OR")
+    #end
+    #set ($labels = $wikimacro.params.labels)
+    #if ("$!labels" != "")
+      #set ($labelList = $labels.split("\s*,\s*|\s+"))
+      #set ($stringifiedLabels = [])
+      #set ($cql = "")
+      #foreach ($label in $labelList)
+        #if ($foreach.first)
+          #set ($join = "")
+        #else
+          #set ($join = " $operator ")
+        #end
+        #set ($cql = "${cql}${join}label = ${jsontool.serialize($label)}")
+      #end
+      #set ($cql = "(${cql})")
+      #set ($type = $wikimacro.params.type)
+      #if ("$!type" != "")
+        #set ($cql = "$cql AND type = ${jsontool.serialize($type)}")
+      #end
+    #end
+  #end
+  #set ($query = $services.query.createQuery($cql, "cql"))
+  #set ($fq = "")
+  #if ("$!xcontext.macro.params.cql" == "")
+    #set ($spaces = "$!xcontext.macro.params.spaces")
+    #if (!$spaces.isEmpty() &amp;&amp; !$spaces.contains("@all"))
+      #foreach ($space in $spaces.split("\s*,\s*|\s+"))
+        #set ($s = $services.confluence.spaces.getSloppySpace($space))
+        #if ($objecttool.isNotNull($s))
+          #set ($fq = "$fq #getSpaceFacet($s)")
+        #end
+      #end
+    #end
+  #end
+  #if ("$!type" == "")
+      #set ($fq = "$fq type:DOCUMENT")
+  #end
+  #if (!$fq.trim().isEmpty())
+    #set ($discard = $query.bindValue("fq", $fq.trim()))
+  #end
+  #if ("$!xcontext.macro.params.max" != "")
+    #set ($limit = $numbertool.toNumber($wikimacro.params.max))
+    #if ($objecttool.isNotNull($limit))
+      #set ($discard = $query.setLimit($limit))
+    #end
+  #end
+  #if ("$!xcontext.macro.params.sort" == "modified")
+    #set ($sortField = "date")
+  #elseif ("$!xcontext.macro.params.sort" == "creation")
+    #set ($sortField = "creationdate")
+  #else
+    #set ($sortField = "title_sort")
+  #end
+  #if ("$!xcontext.macro.params.reverse" == "true")
+    #set ($sortAsc = "desc")
+  #else
+    #set ($sortAsc = "asc")
+  #end
+  #set ($discard = $query.bindValue("sort", "$sortField $sortAsc"))
+  #setVariable("$results" $query.execute()[0].results)
+#end
+{{/velocity}}</content>
+</xwikidoc>

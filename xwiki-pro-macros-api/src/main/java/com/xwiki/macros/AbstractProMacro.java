@@ -26,7 +26,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.xwiki.bridge.DocumentAccessBridge;
-import org.xwiki.localization.ContextualLocalizationManager;
+import org.xwiki.extension.ExtensionId;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.model.reference.WikiReference;
@@ -51,14 +51,10 @@ import com.xwiki.licensing.Licensor;
 @Unstable
 public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 {
+    private static final ExtensionId PRO_MACROS_EXT_ID = new ExtensionId("com.xwiki.pro:xwiki-pro-macros");
+
     private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
         "Macros"), "WebHome");
-
-    private static final LocalDocumentReference XWIKI_PREFERENCES = new LocalDocumentReference("XWiki",
-        "XWikiPreferences");
-
-    @Inject
-    private ContextualLocalizationManager localizationManager;
 
     @Inject
     private Licensor licensor;
@@ -77,7 +73,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
      * @param contentDescriptor the content descriptor of the macro.
      * @param parametersBeanClass the class of the parameters bean of this class.
      */
-    public AbstractProMacro(String name, String description,
+    protected AbstractProMacro(String name, String description,
         ContentDescriptor contentDescriptor, Class<?> parametersBeanClass)
     {
         super(name, description, contentDescriptor, parametersBeanClass);
@@ -90,7 +86,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
      * @param description the description of the macro.
      * @param parametersBeanClass the class of the parameters bean of this class.
      */
-    public AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
+    protected AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
     {
         super(name, description, parametersBeanClass);
     }
@@ -109,23 +105,18 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     public List<Block> execute(P parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        if (licensor.hasLicensure(
+        if (licensor.hasLicensure(PRO_MACROS_EXT_ID) || licensor.hasLicensure(
             new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()))))
         {
             return internalExecute(parameters, content, context);
-        } else {
-            String extensionName = localizationManager.getTranslationPlain("proMacros.extension.name");
-            String licenseAdminURL = accessBridge.getDocumentURL(
-                new DocumentReference(XWIKI_PREFERENCES, new WikiReference(wikiDescriptorManager.getMainWikiId())),
-                "admin", "editor=globaladmin&section=Licenses", "");
-            return Collections.singletonList(new MacroBlock(
-                "error",
-                Collections.emptyMap(),
-                localizationManager.getTranslationPlain("licensor.missingLicense", extensionName, "[[",
-                    ">>path:" + licenseAdminURL + "]]"),
-                context.isInline())
-            );
         }
+
+        return Collections.singletonList(new MacroBlock(
+            "missingLicenseMessage",
+            Collections.singletonMap("extensionName", "proMacros.extension.name"),
+            null,
+            context.isInline())
+        );
     }
 
     protected abstract List<Block> internalExecute(P parameters, String content, MacroTransformationContext context)

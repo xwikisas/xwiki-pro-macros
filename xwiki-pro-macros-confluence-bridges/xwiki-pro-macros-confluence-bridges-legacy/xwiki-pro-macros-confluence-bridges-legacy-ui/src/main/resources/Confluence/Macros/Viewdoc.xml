@@ -1,0 +1,399 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.4" reference="Confluence.Macros.Viewdoc" locale="">
+  <web>Confluence.Macros</web>
+  <name>Viewdoc</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Legacy Confluence Bridge for Office Word</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>This is a legacy, unprefixed Confluence bridge for the ViewDOC macro. Please use view-file instead.
+
+{{code}}
+{{viewdoc att--filename="DOCExample.doc"/}}
+{{/code}}
+
+{{viewdoc att--filename="DOCExample.doc"/}}</content>
+  <attachment>
+    <filename>DOCExample.doc</filename>
+    <mimetype>application/msword</mimetype>
+    <charset>UTF-8</charset>
+    <author>xwiki:XWiki.Admin</author>
+    <version>1.1</version>
+    <comment/>
+    <content>0M8R4KGxGuEAAAAAAAAAAAAAAAAAAAAAOwADAP7/CQAGAAAAAAAAAAAAAAABAAAAHAAAAAAAAAAAEAAAAgAAAAEAAAD+////AAAAAAAAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////9//////////7///8EAAAABQAAAAYAAAAHAAAACAAAAP7///8KAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAFAAAABUAAAAWAAAAFwAAABgAAAAZAAAAGgAAABsAAAD+////HQAAAP7//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////1IAbwBvAHQAIABFAG4AdAByAHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAUA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/v///wAAAAAAAAAAAQAAAP7////+////BAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGQAAABoAAAAbAAAAHAAAAB0AAAAeAAAAHwAAACAAAAAhAAAAIgAAACMAAAAkAAAAJQAAACYAAAAnAAAAKAAAACkAAAAqAAAA/v///ywAAAAtAAAA/v///y8AAAD+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8BAP7/AwoAAP////8GCQIAAAAAAMAAAAAAAABGGAAAAE1pY3Jvc29mdCBXb3JkLURva3VtZW50AAoAAABNU1dvcmREb2MAEAAAAFdvcmQuRG9jdW1lbnQuOAD0ObJxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASABcACgABAFsADwAAAAAAAAAAAF4AABDx/wIAXgAAAAYATgBvAHIAbQBhAGwAAAALAAAAMSQBKiQBQSQAADMAQioAT0oDAFFKAwBDShgAbUgMBHNIDARLSAIAUEoEAG5IBAh0SAQIXkoFAGFKGABfSDkEAAAAVgACEAEBEgFWAAAACQBIAGUAYQBkAGkAbgBnACAAMgAAABQAAgBAJgEKJgELRgEAE6TIABSkeAAeAE9KAwBRSgMAQ0okADUIAVBKBABeSgUAYUokAFwIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQAVxDy//EANAAAAA8AUwB0AHIAbwBuAGcAIABFAG0AcABoAGEAcwBpAHMAAAAGADUIAVwIAUYA/h8BABIBRgAAAAcASABlAGEAZABpAG4AZwAAAA0AEAATpPAAFKR4AAYkAQAYAE9KBgBRSgYAQ0ocAFBKBwBeSgUAYUocADQAQhABABIBNAAAAAkAVABlAHgAdAAgAEIAbwBkAHkAAAAQABEAEmQUAQEAE6QAABSkjAAAACAALxARASIBIAAAAAQATABpAHMAdAAAAAIAEgAEAF5KCABAACIQAQAyAUAAAAAHAEMA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABjBwAAYgIAAAAAAAAAAAAAsAQAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIAgAAHgAAAIQEAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACcBAAACAAAAAAAAAAAAAAApAQAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFcAaABhAHQAIABpAHMAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0APwANAEwAbwByAGUAbQAgAEkAcABzAHUAbQAgAGkAcwAgAHMAaQBtAHAAbAB5ACAAZAB1AG0AbQB5ACAAdABlAHgAdAAgAG8AZgAgAHQAaABlACAAcAByAGkAbgB0AGkAbgBnACAAYQBuAGQAIAB0AHkAcABlAHMAZQB0AHQAaQBuAGcAIABpAG4AZAB1AHMAdAByAHkALgAgAEwAbwByAGUAbQAgAEkAcABzAHUAbQAgAGgAYQBzACAAYgBlAGUAbgAgAHQAaABlACAAaQBuAGQAdQBzAHQAcgB5ACcAcwAgAHMAdABhAG4AZABhAHIAZAAgAGQAdQBtAG0AeQAgAHQAZQB4AHQAIABlAHYAZQByACAAcwBpAG4AYwBlACAAdABoAGUAIAAxADUAMAAwAHMALAAgAHcAaABlAG4AIABhAG4AIAB1AG4AawBuAG8AdwBuACAAcAByAGkAbgB0AGUAcgAgAHQAbwBvAGsAIABhACAAZwBhAGwAbABlAHkAIABvAGYAIAB0AHkAcABlACAAYQBuAGQAIABzAGMAcgBhAG0AYgBsAGUAZAAgAGkAdAAgAHQAbwAgAG0AYQBrAGUAIABhACAAdAB5AHAAZQAgAHMAcABlAGMAaQBtAGUAbgAgAGIAbwBvAGsALgAgAEkAdAAgAGgAYQBzACAAcwB1AHIAdgBpAHYAZQBkACAAbgBvAHQAIABvAG4AbAB5ACAAZgBpAHYAZQAgAGMAZQBuAHQAdQByAGkAZQBzACwAIABiAHUAdAAgAGEAbABzAG8AIAB0AGgAZQAgAGwAZQBhAHAAIABpAG4AdABvACAAZQBsAGUAYwB0AHIAbwBuAGkAYwAgAHQAeQBwAGUAcwBlAHQAdABpAG4AZwAsACAAcgBlAG0AYQBpAG4AaQBuAGcAIABlAHMAcwBlAG4AdABpAGEAbABsAHkAIAB1AG4AYwBoAGEAbgBnAGUAZAAuACAASQB0ACAAdwBhAHMAIABwAG8AcAB1AGwAYQByAGkAcwBlAGQAIABpAG4AIAB0AGgAZQAgADEAOQA2ADAAcwAgAHcAaQB0AGgAIAB0AGgAZQAgAHIAZQBsAGUAYQBzAGUAIABvAGYAIABMAGUAdAByAGEAcwBlAHQAIABzAGgAZQBlAHQAcwAgAGMAbwBuAHQAYQBpAG4AaQBuAGcAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0AIABwAGEAcwBzAGEAZwBlAHMALAAgAGEAbgBkACAAbQBvAHIAZQAgAHIAZQBjAGUAbgB0AGwAeQAgAHcAaQB0AGgAIABkAGUAcwBrAHQAbwBwACAAcAB1AGIAbABpAHMAaABpAG4AZwAgAHMAbwBmAHQAdwBhAHIAZQAgAGwAaQBrAGUAIABBAGwAZAB1AHMAIABQAGEAZwBlAE0AYQBrAGUAcgAgAGkAbgBjAGwAdQBkAGkAbgBnACAAdgBlAHIAcwBpAG8AbgBzACAAbwBmACAATABvAHIAZQBtACAASQBwAHMAdQBtAC4ADQBXAGgAeQAgAGQAbwAgAHcAZQAgAHUAcwBlACAAaQB0AD8ADQBJAHQAIABpAHMAIABhACAAbABvAG4AZwAgAGUAcwB0AGEAYgBsAGkAcwBoAGUAZAAgAGYAYQBjAHQAIAB0AGgAYQB0ACAAYQAgAHIAZQBhAGQAZQByACAAdwBpAGwAbAAgAGIAZQAgAGQAaQBzAHQAcgBhAGMAdABlAGQAIABiAHkAIAB0AGgAZQAgAHIAZQBhAGQAYQBiAGwAZQAgAGMAbwBuAHQAZQBuAHQAIABvAGYAIABhACAAcABhAGcAZQAgAHcAaABlAG4AIABsAG8AbwBrAGkAbgBnACAAYQB0ACAAaQB0AHMAIABsAGEAeQBvAHUAdAAuACAAVABoAGUAIABwAG8AaQBuAHQAIABvAGYAIAB1AHMAaQBuAGcAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0AIABpAHMAIAB0AGgAYQB0ACAAaQB0ACAAaABhAHMAIABhACAAbQBvAHIAZQAtAG8AcgAtAGwAZQBzAHMAIABuAG8AcgBtAGEAbAAgAGQAaQBzAHQAcgBpAGIAdQB0AGkAbwBuACAAbwBmACAAbABlAHQAdABlAHIAcwAsACAAYQBzACAAbwBwAHAAbwBzAGUAZAAgAHQAbwAgAHUAcwBpAG4AZwAgACcAQwBvAG4AdABlAG4AdAAgAGgAZQByAGUALAAgAGMAbwBuAHQAZQBuAHQAIABoAGUAcgBlACcALAAgAG0AYQBrAGkAbgBnACAAaQB0ACAAbABvAG8AawAgAGwAaQBrAGUAIAByAGUAYQBkAGEAYgBsAGUAIABFAG4AZwBsAGkAcwBoAC4AIABNAGEAbgB5ACAAZABlAHMAawB0AG8AcAAgAHAAdQBiAGwAaQBzAGgAaQBuAGcAIABwAGEAYwBrAGEAZwBlAHMAIABhAG4AZAAgAHcAZQBiACAAcABhAGcAZQAgAGUAZABpAHQAbwByAHMAIABuAG8AdwAgAHUAcwBlACAATABvAHIAZQBtACAASQBwAHMAdQBtACAAYQBzACAAdABoAGUAaQByACAAZABlAGYAYQB1AGwAdAAgAG0AbwBkAGUAbAAgAHQAZQB4AHQALAAgAGEAbgBkACAAYQAgAHMAZQBhAHIAYwBoACAAZgBvAHIAIAAnAGwAbwByAGUAbQAgAGkAcABzAHUAbQAnACAAdwBpAGwAbAAgAHUAbgBjAG8AdgBlAHIAIABtAGEAbgB5ACAAdwBlAGIAIABzAGkAdABlAHMAIABzAHQAaQBsAGwAIABpAG4AIAB0AGgAZQBpAHIAIABpAG4AZgBhAG4AYwB5AC4AIABWAGEAcgBpAG8AdQBzACAAdgBlAHIAcwBpAG8AbgBzACAAaABhAHYAZQAgAGUAdgBvAGwAdgBlAGQAIABvAHYAZQByACAAdABoAGUAIAB5AGUAYQByAHMALAAgAHMAbwBtAGUAdABpAG0AZQBzACAAYgB5ACAAYQBjAGMAaQBkAGUAbgB0ACwAIABzAG8AbQBlAHQAaQBtAGUAcwAgAG8AbgAgAHAAdQByAHAAbwBzAGUAIAAoAGkAbgBqAGUAYwB0AGUAZAAgAGgAdQBtAG8AdQByACAAYQBuAGQAIAB0AGgAZQAgAGwAaQBrAGUAKQAuAA0ADQBXAGgAZQByAGUAIABkAG8AZQBzACAAaQB0ACAAYwBvAG0AZQAgAGYAcgBvAG0APwANAEMAbwBuAHQAcgBhAHIAeQAgAHQAbwAgAHAAbwBwAHUAbABhAHIAIABiAGUAbABpAGUAZgAsACAATABvAHIAZQBtACAASQBwAHMAdQBtACAAaQBzACAAbgBvAHQAIABzAGkAbQBwAGwAeQAgAHIAYQBuAGQAbwBtACAAdABlAHgAdAAuACAASQB0ACAAaABhAHMAIAByAG8AbwB0AHMAIABpAG4AIABhACAAcABpAGUAYwBlACAAbwBmACAAYwBsAGEAcwBzAGkAYwBhAGwAIABMAGEAdABpAG4AIABsAGkAdABlAHIAYQB0AHUAcgBlACAAZgByAG8AbQAgADQANQAgAEIAQwAsACAAbQBhAGsAaQBuAGcAIABpAHQAIABvAHYAZQByACAAMgAwADAAMAAgAHkAZQBhAHIAcwAgAG8AbABkAC4AIABSAGkAYwBoAGEAcgBkACAATQBjAEMAbABpAG4AdABvAGMAawAsACAAYQAgAEwAYQB0AGkAbgAgAHAAcgBvAGYAZQBzAHMAbwByACAAYQB0ACAASABhAG0AcABkAGUAbgAtAFMAeQBkAG4AZQB5ACAAQwBvAGwAbABlAGcAZQAgAGkAbgAgAFYAaQByAGcAaQBuAGkAYQAsACAAbABvAG8AawBlAGQAIAB1AHAAIABvAG4AZQAgAG8AZgAgAHQAaABlACAAbQBvAHIAZQAgAG8AYgBzAGMAdQByAGUAIABMAGEAdABpAG4AIAB3AG8AcgBkAHMALAAgAGMAbwBuAHMAZQBjAHQAZQB0AHUAcgAsACAAZgByAG8AbQAgAGEAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0AIABwAGEAcwBzAGEAZwBlACwAIABhAG4AZAAgAGcAbwBpAG4AZwAgAHQAaAByAG8AdQBnAGgAIAB0AGgAZQAgAGMAaQB0AGUAcwAgAG8AZgAgAHQAaABlACAAdwBvAHIAZAAgAGkAbgAgAGMAbABhAHMAcwBpAGMAYQBsACAAbABpAHQAZQByAGEAdAB1AHIAZQAsACAAZABpAHMAYwBvAHYAZQByAGUAZAAgAHQAaABlACAAdQBuAGQAbwB1AGIAdABhAGIAbABlACAAcwBvAHUAcgBjAGUALgAgAEwAbwByAGUAbQAgAEkAcABzAHUAbQAgAGMAbwBtAGUAcwAgAGYAcgBvAG0AIABzAGUAYwB0AGkAbwBuAHMAIAAxAC4AMQAwAC4AMwAyACAAYQBuAGQAIAAxAC4AMQAwAC4AMwAzACAAbwBmACAAIgBkAGUAIABGAGkAbgBpAGIAdQBzACAAQgBvAG4AbwByAHUAbQAgAGUAdAAgAE0AYQBsAG8AcgB1AG0AIgAgACgAVABoAGUAIABFAHgAdAByAGUAbQBlAHMAIABvAGYAIABHAG8AbwBkACAAYQBuAGQAIABFAHYAaQBsACkAIABiAHkAIABDAGkAYwBlAHIAbwAsACAAdwByAGkAdAB0AGUAbgAgAGkAbgAgADQANQAgAEIAQwAuACAAVABoAGkAcwAgAGIAbwBvAGsAIABpAHMAIABhACAAdAByAGUAYQB0AGkAcwBlACAAbwBuACAAdABoAGUAIAB0AGgAZQBvAHIAeQAgAG8AZgAgAGUAdABoAGkAYwBzACwAIAB2AGUAcgB5ACAAcABvAHAAdQBsAGEAcgAgAGQAdQByAGkAbgBnACAAdABoAGUAIABSAGUAbgBhAGkAcwBzAGEAbgBjAGUALgAgAFQAaABlACAAZgBpAHIAcwB0ACAAbABpAG4AZQAgAG8AZgAgAEwAbwByAGUAbQAgAEkAcABzAHUAbQAsACAAIgBMAG8AcgBlAG0AIABpAHAAcwB1AG0AIABkAG8AbABvAHIAIABzAGkAdAAgAGEAbQBlAHQALgAuACIALAAgAGMAbwBtAGUAcwAgAGYAcgBvAG0AIABhACAAbABpAG4AZQAgAGkAbgAgAHMAZQBjAHQAaQBvAG4AIAAxAC4AMQAwAC4AMwAyAC4ADQBUAGgAZQAgAHMAdABhAG4AZABhAHIAZAAgAGMAaAB1AG4AawAgAG8AZgAgAEwAbwByAGUAbQAgAEkAcABzAHUAbQAgAHUAcwBlAGQAIABzAGkAbgBjAGUAIAB0AGgAZQAgADEANQAwADAAcwAgAGkAcwAgAHIAZQBwAHIAbwBkAHUAYwBlAGQAIABiAGUAbABvAHcAIABmAG8AcgAgAHQAaABvAHMAZQAgAGkAbgB0AGUAcgBlAHMAdABlAGQALgAgAFMAZQBjAHQAaQBvAG4AcwAgADEALgAxADAALgAzADIAIABhAG4AZAAgADEALgAxADAALgAzADMAIABmAHIAbwBtACAAIgBkAGUAIABGAGkAbgBpAGIAdQBzACAAQgBvAG4AbwByAHUAbQAgAGUAdAAgAE0AYQBsAG8AcgB1AG0AIgAgAGIAeQAgAEMAaQBjAGUAcgBvACAAYQByAGUAIABhAGwAcwBvACAAcgBlAHAAcgBvAGQAdQBjAGUAZAAgAGkAbgAgAHQAaABlAGkAcgAgAGUAeABhAGMAdAAgAG8AcgBpAGcAaQBuAGEAbAAgAGYAbwByAG0ALAAgAGEAYwBjAG8AbQBwAGEAbgBpAGUAZAAgAGIAeQAgAEUAbgBnAGwAaQBzAGgAIAB2AGUAcgBzAGkAbwBuAHMAIABmAHIAbwBtACAAdABoAGUAIAAxADkAMQA0ACAAdAByAGEAbgBzAGwAYQB0AGkAbwBuACAAYgB5ACAASAAuACAAUgBhAGMAawBoAGEAbQAuAA0AVwBoAGUAcgBlACAAYwBhAG4AIABJACAAZwBlAHQAIABzAG8AbQBlAD8ADQBUAGgAZQByAGUAIABhAHIAZQAgAG0AYQBuAHkAIAB2AGEAcgBpAGEAdABpAG8AbgBzACAAbwBmACAAcABhAHMAcwBhAGcAZQBzACAAbwBmACAATABvAHIAZQBtACAASQBwAHMAdQBtACAAYQB2AGEAaQBsAGEAYgBsAGUALAAgAGIAdQB0ACAAdABoAGUAIABtAGEAagBvAHIAaQB0AHkAIABoAGEAdgBlACAAcwB1AGYAZgBlAHIAZQBkACAAYQBsAHQAZQByAGEAdABpAG8AbgAgAGkAbgAgAHMAbwBtAGUAIABmAG8AcgBtACwAIABiAHkAIABpAG4AagBlAGMAdABlAGQAIABoAHUAbQBvAHUAcgAsACAAbwByACAAcgBhAG4AZABvAG0AaQBzAGUAZAAgAHcAbwByAGQAcwAgAHcAaABpAGMAaAAgAGQAbwBuACcAdAAgAGwAbwBvAGsAIABlAHYAZQBuACAAcwBsAGkAZwBoAHQAbAB5ACAAYgBlAGwAaQBlAHYAYQBiAGwAZQAuACAASQBmACAAeQBvAHUAIABhAHIAZQAgAGcAbwBpAG4AZwAgAHQAbwAgAHUAcwBlACAAYQAgAHAAYQBzAHMAYQBnAGUAIABvAGYAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0ALAAgAHkAbwB1ACAAbgBlAGUAZAAgAHQAbwAgAGIAZQAgAHMAdQByAGUAIAB0AGgAZQByAGUAIABpAHMAbgAnAHQAIABhAG4AeQB0AGgAaQBuAGcAIABlAG0AYgBhAHIAcgBhAHMAcwBpAG4AZwAgAGgAaQBkAGQAZQBuACAAaQBuACAAdABoAGUAIABtAGkAZABkAGwAZQAgAG8AZgAgAHQAZQB4AHQALgAgAEEAbABsACAAdABoAGUAIABMAG8AcgBlAG0AIABJAHAAcwB1AG0AIABnAGUAbgBlAHIAYQB0AG8AcgBzACAAbwBuACAAdABoAGUAIABJAG4AdABlAHIA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFIAbwBvAHQAIABFAG4AdAByAHkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAUA//////////8BAAAABgkCAAAAAADAAAAAAAAARgAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAMAAAAAAAAAQBDAG8AbQBwAE8AYgBqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAAgACAAAABAAAAP////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAagAAAAAAAAABAE8AbABlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgACAP////8DAAAA/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAUAAAAAAAAADEAVABhAGIAbABlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAAIA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAMUJAAAAAAAABQBTAHUAbQBtAGEAcgB5AEkAbgBmAG8AcgBtAGEAdABpAG8AbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAgAFAAAABgAAAP////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArAAAArAAAAAAAAABXAG8AcgBkAEQAbwBjAHUAbQBlAG4AdAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGgACAP///////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAAAnJAAAAAAAAAUARABvAGMAdQBtAGUAbgB0AFMAdQBtAG0AYQByAHkASQBuAGYAbwByAG0AYQB0AGkAbwBuAAAAAAAAAAAAAAA4AAIA////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALgAAAHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+////AAAAAAAAAAA=</content>
+    <filesize>15872</filesize>
+  </attachment>
+  <object>
+    <name>Confluence.Macros.Viewdoc</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroClass</className>
+    <guid>7d3952c1-2205-4121-9089-f5a3679628ef</guid>
+    <class>
+      <name>XWiki.WikiMacroClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <async_cached>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_cached</name>
+        <number>13</number>
+        <prettyName>Cached</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_cached>
+      <async_context>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>async_context</name>
+        <number>14</number>
+        <prettyName>Context elements</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>, </separator>
+        <separators>|, </separators>
+        <size>5</size>
+        <unmodifiable>0</unmodifiable>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </async_context>
+      <async_enabled>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType/>
+        <name>async_enabled</name>
+        <number>12</number>
+        <prettyName>Asynchronous rendering</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </async_enabled>
+      <code>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <name>code</name>
+        <number>10</number>
+        <prettyName>Macro code</prettyName>
+        <rows>20</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentDescription>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>contentDescription</name>
+        <number>9</number>
+        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </contentDescription>
+      <contentJavaType>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentJavaType</name>
+        <number>8</number>
+        <picker>1</picker>
+        <prettyName>Macro content type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentJavaType>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>7</number>
+        <prettyName>Macro content availability</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Optional|Mandatory|No content</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <defaultCategories>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>1</multiSelect>
+        <name>defaultCategories</name>
+        <number>4</number>
+        <prettyName>Default categories</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </defaultCategories>
+      <description>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>description</name>
+        <number>3</number>
+        <prettyName>Macro description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <id>
+        <disabled>0</disabled>
+        <name>id</name>
+        <number>1</number>
+        <prettyName>Macro id</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </id>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Macro name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <priority>
+        <disabled>0</disabled>
+        <name>priority</name>
+        <number>11</number>
+        <numberType>integer</numberType>
+        <prettyName>Priority</prettyName>
+        <size>10</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </priority>
+      <supportsInlineMode>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>supportsInlineMode</name>
+        <number>5</number>
+        <prettyName>Supports inline mode</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </supportsInlineMode>
+      <visibility>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>visibility</name>
+        <number>6</number>
+        <prettyName>Macro visibility</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Current User|Current Wiki|Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </visibility>
+    </class>
+    <property>
+      <async_cached>0</async_cached>
+    </property>
+    <property>
+      <async_context/>
+    </property>
+    <property>
+      <async_enabled>0</async_enabled>
+    </property>
+    <property>
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
+  #set ($unescapedFilename = $xcontext.macro.params.get('att--filename'))
+  #if (!$unescapedFilename)
+    #set ($unescapedFilename = $xcontext.macro.params.get('name'))
+  #end
+  #set($escapedFilename = $services.rendering.escape($unescapedFilename, $xwiki.currentContentSyntaxId))
+  {{office reference="$escapedFilename" /}}
+#end
+{{/velocity}}
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro
+#else
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
+#end
+{{/velocity}}</code>
+    </property>
+    <property>
+      <contentDescription/>
+    </property>
+    <property>
+      <contentJavaType/>
+    </property>
+    <property>
+      <contentType>Optional</contentType>
+    </property>
+    <property>
+      <defaultCategories>Deprecated</defaultCategories>
+    </property>
+    <property>
+      <description>Legacy Confluence bridge for View Office Word.</description>
+    </property>
+    <property>
+      <id>viewdoc</id>
+    </property>
+    <property>
+      <name>Legacy Confluence bridge for View Office Word</name>
+    </property>
+    <property>
+      <priority/>
+    </property>
+    <property>
+      <supportsInlineMode>0</supportsInlineMode>
+    </property>
+    <property>
+      <visibility>Current Wiki</visibility>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Viewdoc</name>
+    <number>0</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>1ce64910-dc7d-4c2b-b030-696b2a3e71d2</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>1</mandatory>
+    </property>
+    <property>
+      <name>att--filename</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+</xwikidoc>
