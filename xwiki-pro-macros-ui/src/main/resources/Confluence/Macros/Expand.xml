@@ -417,8 +417,8 @@ Hello 👀
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  $xwiki.ssx.use('Confluence.Macros.Expand')
-  #set ($opened = $xcontext.action == 'edit' || $request.getParameter('format') == "html-print")
+  #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
+  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export')
   {{html clean="false" wiki="true"}}
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
