@@ -164,12 +164,11 @@ Hello 👀
   transform: rotate(90deg);
 }
 
-.confluence-expand-macro {
+.confluence-expand-macro .panel-title{
   padding: @panel-heading-padding;
+  display: block;
 }
-.panel-title {
-  padding: 5px;
-}
+
 .confluence-expand-macro .panel-body {
   transition: linear 0.3s;
 }
