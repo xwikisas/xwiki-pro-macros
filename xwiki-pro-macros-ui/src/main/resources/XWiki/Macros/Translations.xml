@@ -153,6 +153,15 @@ rendering.macro.userList.parameter.fixedTableLayout.description=If the user tabl
 rendering.macro.userList.isEmpty=The User List macro has an empty user list.
 rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.
 
+## Tag list
+rendering.macro.tagList.name=Tag list
+rendering.macro.tagList.description=Show a list of all the macros in your instance.
+rendering.macro.tagList.parameter.spaces.description=List of spaces for witch you want to see the tags. The elements must be separated by commas.
+rendering.macro.tagList.parameter.spaces.name=Spaces
+rendering.macro.tagList.parameter.excludedTags.description=List of tags that you want to exclude. The elements must be separated by commas.
+rendering.macro.tagList.parameter.excludedTags.name=Excluded tags
+rendering.macro.taglist.notags=As you and your team add tags to the content, this area will fill up.
+
 #### Confluence Bridges in the generic pro macro package
 
 ## Content Report Table macro
