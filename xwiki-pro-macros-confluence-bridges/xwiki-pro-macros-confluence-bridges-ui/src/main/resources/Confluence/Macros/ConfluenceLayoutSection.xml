@@ -197,8 +197,7 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
     margin: 0;
   }
 }
-.macro-layout-cell {
-}</code>
+</code>
     </property>
     <property>
       <contentType>LESS</contentType>
