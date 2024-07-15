@@ -192,12 +192,12 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
 }
 
 .macro-layout-section {
+  gap: 32px;
   h1, h2, h3, h4, h5, h6 {
     margin: 0;
   }
 }
 .macro-layout-cell {
-  margin-left: 32px;
 }</code>
     </property>
     <property>
