@@ -36,7 +36,30 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{tagList/}}</content>
+  <content>= Description =
+
+This macro will show a list with all the tags that are present on your instance.
+
+= Parameters =
+
+|=Parameter|=Description|=Required|=Default
+|**spaces**|Comma-separated list of spaces that are used to filter the tags.|No|
+|**excludedTags**|Comma-separated list of tag that are excluded from the final output.|No|
+
+= Example Usage =
+
+
+{{code}}
+{{tagList 
+  spaces='Confluence'
+  excludedTags='content-report'
+/}}
+{{/code}}
+
+{{tagList 
+  spaces='Confluence'
+  excludedTags='content-report'
+/}}</content>
   <object>
     <name>Confluence.Macros.Taglist</name>
     <number>0</number>
@@ -147,7 +170,7 @@
   display:flex;
   flex-wrap:wrap;
   list-style-type:none;
-  gap: 30px;
+  gap: 1em;
   padding: 0px;
 }
 .glossaryBinElement
@@ -161,7 +184,7 @@
   margin-bottom: 10px;
   padding-bottom: 10px;
   font-weight: bold;
-  border-color: #cccccc;
+  border-color: @pagination-border;
 }
 
 .glossaryBinRoot
@@ -177,7 +200,7 @@
       <name/>
     </property>
     <property>
-      <parse/>
+      <parse>0</parse>
     </property>
     <property>
       <use/>
@@ -397,10 +420,11 @@
   &lt;ul class="glossaryListRoot"&gt;
   #foreach($key in $bins.keySet())
     &lt;li&gt;
-      &lt;div class="glossaryBinTitle"&gt;$key&lt;/div&gt;
+      &lt;div class="glossaryBinTitle"&gt;$escapetool.xml($key)&lt;/div&gt;
       &lt;ul class="glossaryBinRoot"&gt;
         #foreach($element in $bins.get($key))
-          &lt;li class="glossaryBinElement"&gt;&lt;a href="$baseUrl?do=viewTag&amp;tag=$element"&gt;$element&lt;/a&gt;&lt;/li&gt;
+          #set ($escapedElement = $escapetool.xml($element))
+          &lt;li class="glossaryBinElement"&gt;&lt;a href="$baseUrl?do=viewTag&amp;tag=$escapedElement"&gt;$escapedElement&lt;/a&gt;&lt;/li&gt;
         #end
       &lt;/ul&gt;
     &lt;/li&gt;
@@ -409,8 +433,8 @@
 #end
 
 #macro(createHtmlStructure, $tags, $limit)
-  #set ($baseUrl = $xwiki.getDocument('Main.Tags').getURL())
-  #set ($bins = $services.taglist.getBins1($tags))
+  #set ($baseUrl = $escapetool.xml($xwiki.getDocument('Main.Tags').getURL()))
+  #set ($bins = $services.taglist.getBins($tags))
   #createLists($bins, $baseUrl)
 #end
 
@@ -420,9 +444,6 @@
   #set ($spacesList = $spaces.split(','))
   #set ($excludedTags = "$!xcontext.macro.params.excludedTags")
   #set ($excludedTagsList = $stringtool.split($excludedTags, ','))
-  #set ($bins = {})
-  #set ($limit = 0)
-  #set ($b = $space != "")
   #if ($spaces != "")
     #set ($spacesString = $services.taglist.parseSpaces($spaces))
     #set ($tags = $xwiki.tag.getTagCountForSpaces($spacesString).keySet())
@@ -432,13 +453,13 @@
   #excludeTags($tags, $excludedTagsList)
   #set ($limit = $tags.size())
 
-  {{html}}
   #if ($limit &gt; 0)
-    #createHtmlStructure($tags, $limit)
+    {{html}}
+      #createHtmlStructure($tags, $limit)
+    {{/html}}
   #else
-    &lt;div&gt;$services.localization.render("rendering.macro.taglist.notags")&lt;/div&gt;
+    {{info}}$services.localization.render("rendering.macro.taglist.notags"){{/info}}
   #end
-  {{/html}}
 
 #end
 #if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
@@ -456,9 +477,6 @@
     </property>
     <property>
       <contentType>No content</contentType>
-    </property>
-    <property>
-      <defaultCategories>[]</defaultCategories>
     </property>
     <property>
       <defaultCategory/>

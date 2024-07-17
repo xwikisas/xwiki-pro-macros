@@ -85,7 +85,9 @@ public class TagListScriptingService implements ScriptService
         StringBuilder key = new StringBuilder();
         char binSeparator = '-';
 
-        // Limit the number of entries in a bin
+        // We want to split the tags into multiple bins and determine the right size for the bins dynamically without
+        // hardcoding the value. To do this, we need a formula, and I've chosen to use the Rice rule since it is the
+        // simplest. More info: https://medium.com/@maxmarkovvision/optimal-number-of-bins-for-histograms-3d7c48086fde
         int totalEntries = tags.size();
         int binLimit = (int) (2 * Math.round(Math.pow(totalEntries, 1.0 / 3.0)));
 
