@@ -666,7 +666,7 @@ span.viewFileThumbnailCard {
     #set ($thumbnail = $thumbnail.replace('&lt;/div&gt;', '&lt;/span&gt;').replace('&lt;div ', '&lt;span '))
   #end
 
-  {{html clean=false}}
+  {{html}}
   &lt;$elem class="viewFileThumbnail viewFileThumbnail$thumbnailStyle" $style data-preview="$previewSupported" data-ref="$escapetool.xml($services.model.serialize($attachmentRef, 'default'))"&gt;
     &lt;a href="$escapetool.xml($xwiki.getURL($attachmentRef))"
        download="download"
