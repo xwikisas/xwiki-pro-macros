@@ -56,6 +56,8 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
         "Macros"), "WebHome");
 
+    private static final String DEFAULT_CATEGORY = DEFAULT_CATEGORY_CONTENT;
+
     @Inject
     private Licensor licensor;
 
@@ -77,6 +79,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
         ContentDescriptor contentDescriptor, Class<?> parametersBeanClass)
     {
         super(name, description, contentDescriptor, parametersBeanClass);
+        setDefaultCategory(DEFAULT_CATEGORY);
     }
 
     /**
@@ -89,6 +92,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     protected AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
     {
         super(name, description, parametersBeanClass);
+        setDefaultCategory(DEFAULT_CATEGORY);
     }
 
     /**
