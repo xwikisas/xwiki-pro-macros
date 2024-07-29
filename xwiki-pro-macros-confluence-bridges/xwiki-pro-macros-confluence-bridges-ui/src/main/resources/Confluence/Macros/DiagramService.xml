@@ -64,22 +64,29 @@
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
       #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
-      #if($diagramContent.contains('&lt;mxfile ') &amp;&amp; $diagramContent.contains('&lt;diagram '))
+      #if($diagramContent.contains('&lt;mxfile ') &amp;&amp; ($diagramContent.contains('&lt;diagram ') || $diagramContent.contains('&lt;diagram&gt;')))
         ## Drawio
         #set($xml = $diagramContent)
       #else
         #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
       #end
-      #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
-      #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
-      #set($discard = $diagramDoc.setContent($xml))
-      #set($discard = $diagramDoc.setTitle('Diagram'))
-      #set($diagramObj = $diagramDoc.newObject('Confluence.Macros.DiagramClass'))
-      #set($discard = $diagramObj.set('page', $page))
-      #set($discard = $diagramObj.set('diagramName', $diagramName))
-      #set($discard = $diagramDoc.addObject($diagramObj))
-      #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
-      #set($discard = $diagramDoc.save($services.localization.render('confluencediagram.create.message')))
+      #if ("$!xml" != '')
+        #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
+        #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
+        #set($discard = $diagramDoc.setContent($xml))
+        #set($discard = $diagramDoc.setTitle('Diagram'))
+        #set($diagramObj = $diagramDoc.newObject('Confluence.Macros.DiagramClass'))
+        #set($discard = $diagramObj.set('page', $page))
+        #set($discard = $diagramObj.set('diagramName', $diagramName))
+        #set($discard = $diagramDoc.addObject($diagramObj))
+        #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
+        #set($discard = $diagramDoc.save($services.localization.render('confluencediagram.create.message')))
+      #else
+        ## Bad Request
+        #set($logger = $services.logging.getLogger('com.xwiki.macros.diagram.DiagramService'))
+        #set($discard = $logger.warn("could not convert diagram from [{}]; no data found", $diagramAttach.getReference()))
+        $response.setStatus(400)
+      #end
     #else
       ## Bad Request
       $response.setStatus(400)
