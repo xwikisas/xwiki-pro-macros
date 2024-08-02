@@ -11,5 +11,5 @@ com.xwiki.macros.userlist.internal.macro.GroupReferenceListConverter
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacro
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacroRefactoring
 com.xwiki.macros.script.ProMacroLicensingScriptService
-com.xwiki.macros.script.TagListScriptingService
+com.xwiki.macros.script.TagListScriptService
 

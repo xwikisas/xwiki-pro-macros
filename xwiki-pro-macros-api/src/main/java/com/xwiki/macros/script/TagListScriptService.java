@@ -41,7 +41,7 @@ import org.xwiki.stability.Unstable;
 @Named("taglist")
 @Singleton
 @Unstable
-public class TagListScriptingService implements ScriptService
+public class TagListScriptService implements ScriptService
 {
     private static final String DIGIT_BLOCK = "DIGITS";
 
