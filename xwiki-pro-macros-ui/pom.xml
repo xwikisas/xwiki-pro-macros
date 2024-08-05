@@ -76,6 +76,12 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>com.xwiki.date</groupId>
+      <artifactId>macro-date-ui</artifactId>
+      <type>xar</type>
+      <version>${datemacro.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros-api</artifactId>
       <version>${project.version}</version>
