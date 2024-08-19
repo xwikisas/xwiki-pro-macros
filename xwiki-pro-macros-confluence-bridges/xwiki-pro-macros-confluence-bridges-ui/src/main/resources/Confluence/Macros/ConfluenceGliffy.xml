@@ -324,7 +324,7 @@ The result is the following:
       <defaultCategories>Confluence</defaultCategories>
     </property>
     <property>
-      <description>Confluence Bridge for the Gliffy macro. By default it displays the PNG file used by the Gliffy macro to preview the diagram. The user has the option to convert the Drawio diagram into an XWiki Diagram for being able to modify it.</description>
+      <description>Confluence Bridge for the Gliffy macro. By default it displays the PNG file used by the Gliffy macro to preview the diagram. The user has the option to convert the diagram into an XWiki Diagram for being able to modify it.</description>
     </property>
     <property>
       <id>confluence_gliffy</id>
