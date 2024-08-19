@@ -110,7 +110,7 @@
     (% class="confluence-diagram-container" %)(((
       ## The diagram exists -&gt; display it
       #if($displayDiagram &amp;&amp; $diagram)
-        {{diagram reference="$diagram" cached="false" /}}
+        {{diagram reference="$services.rendering.escape($diagram, $xwiki.currentContentSyntaxId)" cached="false" /}}
 
         #if($diagram &amp;&amp; $xcontext.action != 'export')
           ##
