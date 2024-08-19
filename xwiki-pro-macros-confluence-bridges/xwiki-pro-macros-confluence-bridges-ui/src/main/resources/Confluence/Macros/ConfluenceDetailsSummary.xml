@@ -290,40 +290,42 @@ Bridges are there for compatibility with content migrated from Confluence and t
   #end
   #set ($results = $NULL)
   #getCQLMacroResults($xcontext.macro $results)
-  #set ($showLastModified = "$!xcontext.macro.params.showLastModified")
-  #set ($showLastModified = $showLastModified.equalsIgnoreCase("true"))
-  #set ($showPageLabels = "$!xcontext.macro.params.showPageLabels")
-  #set ($showPageLabels = $showPageLabels.equalsIgnoreCase("true"))
-  #set ($showCreator = "$!xcontext.macro.params.showCreator")
-  #set ($showCreator = $showCreator.equalsIgnoreCase("true"))
-  #set ($showAnyMetadata = $showLastModified || $showPageLabels || $showCreator)
-  #set ($details = $services.confluence.details.getDetails("$!xcontext.macro.params.id", "$!xcontext.macro.params.headings", $results))
-  #if ($details.size() &lt; 2)
-    $services.localization.render('rendering.macro.detailssummary.noresults')
-  #else
-    #foreach ($row in $details)
-      #if ($foreach.first)
-        |=$title##
-        #foreach ($cell in $row)
-          |=$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)##
-        #end##
-        #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
-        #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
-        #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
+  #if ($results != $NULL)
+    #set ($showLastModified = "$!xcontext.macro.params.showLastModified")
+    #set ($showLastModified = $showLastModified.equalsIgnoreCase("true"))
+    #set ($showPageLabels = "$!xcontext.macro.params.showPageLabels")
+    #set ($showPageLabels = $showPageLabels.equalsIgnoreCase("true"))
+    #set ($showCreator = "$!xcontext.macro.params.showCreator")
+    #set ($showCreator = $showCreator.equalsIgnoreCase("true"))
+    #set ($showAnyMetadata = $showLastModified || $showPageLabels || $showCreator)
+    #set ($details = $services.confluence.details.getDetails("$!xcontext.macro.params.id", "$!xcontext.macro.params.headings", $results))
+    #if ($details.size() &lt; 2)
+      $services.localization.render('rendering.macro.detailssummary.noresults')
+    #else
+      #foreach ($row in $details)
+        #if ($foreach.first)
+          |=$title##
+          #foreach ($cell in $row)
+            |=$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)##
+          #end##
+          #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
+          #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
+          #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
 
-      #else
-        #if ($showAnyMetadata)
-          #set ($d = $xwiki.getDocument($row.get(0)))
-        #end##
-        #foreach ($cell in $row)
-          |#if ($foreach.first)[[$cell]]#{else}$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)#end##
-        #end##
-        #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
-        #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
-        #if ($showPageLabels)|#showTags($d)#end|
+        #else
+          #if ($showAnyMetadata)
+            #set ($d = $xwiki.getDocument($row.get(0)))
+          #end##
+          #foreach ($cell in $row)
+            |#if ($foreach.first)[[$cell]]#{else}$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)#end##
+          #end##
+          #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
+          #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
+          #if ($showPageLabels)|#showTags($d)#end|
+        #end
       #end
-    #end
 
+    #end
   #end
 #end
 {{/velocity}}

@@ -491,41 +491,43 @@ $escapetool.xml($d.getDisplayTitle())##
   #end
   #set ($results = $NULL)
   #getCQLMacroResults($xcontext.macro $results)
-  #if ($results.empty)
-    No results.
-  #else
-    #set ($tagsDoc = $xwiki.getDocument("Main.Tags"))
+  #if ($results != $NULL)
+    #if ($results.empty)
+      No results.
+    #else
+      #set ($tagsDoc = $xwiki.getDocument("Main.Tags"))
 
-    {{html clean=false}}
-    &lt;ul class="confluence-contentbylabel"&gt;
-    #foreach ($r in $results)
-      &lt;li&gt;
-        &lt;div class="xitemcontainer"&gt;
-        $services.icon.renderHTML('page')
-        #set ($d = $xwiki.getDocument($r.fullname))
-        #contentbylabellink($d)
-        #if ($xcontext.macro.params.showSpace != "false")
-          #set ($confluenceSpace = $services.confluence.spaces.getConfluenceSpace($d))
-          #if ("$!confluenceSpace" != "")
-            &amp;nbsp;(#contentbylabellink($xwiki.getDocument($confluenceSpace)))
+      {{html clean=false}}
+      &lt;ul class="confluence-contentbylabel"&gt;
+      #foreach ($r in $results)
+        &lt;li&gt;
+          &lt;div class="xitemcontainer"&gt;
+          $services.icon.renderHTML('page')
+          #set ($d = $xwiki.getDocument($r.fullname))
+          #contentbylabellink($d)
+          #if ($xcontext.macro.params.showSpace != "false")
+            #set ($confluenceSpace = $services.confluence.spaces.getConfluenceSpace($d))
+            #if ("$!confluenceSpace" != "")
+              &amp;nbsp;(#contentbylabellink($xwiki.getDocument($confluenceSpace)))
+            #end
           #end
-        #end
-        #if ($xcontext.macro.params.showLabels != "false")
-          &lt;ul class="confluence-contentbylabel-taglist"&gt;
-          #foreach ($tag in $r['property.XWiki.TagClass.tags_string'])
-            &lt;li&gt;
-              &lt;a href='$escapetool.xml($tagsDoc.getURL("view", "do=viewTag&amp;tag=$escapetool.url($tag)"))'&gt;
-                $escapetool.xml($tag)##
-              &lt;/a&gt;
-            &lt;/li&gt;
+          #if ($xcontext.macro.params.showLabels != "false")
+            &lt;ul class="confluence-contentbylabel-taglist"&gt;
+            #foreach ($tag in $r['property.XWiki.TagClass.tags_string'])
+              &lt;li&gt;
+                &lt;a href='$escapetool.xml($tagsDoc.getURL("view", "do=viewTag&amp;tag=$escapetool.url($tag)"))'&gt;
+                  $escapetool.xml($tag)##
+                &lt;/a&gt;
+              &lt;/li&gt;
+            #end
+            &lt;/ul&gt;
           #end
-          &lt;/ul&gt;
-        #end
-      &lt;/il&gt;
+        &lt;/il&gt;
+      #end
+      &lt;/ul&gt;
+      {{/html}}
+
     #end
-    &lt;/ul&gt;
-    {{/html}}
-
   #end
 #end
 {{/velocity}}

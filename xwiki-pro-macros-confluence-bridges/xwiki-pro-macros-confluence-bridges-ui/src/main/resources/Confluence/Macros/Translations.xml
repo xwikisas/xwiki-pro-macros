@@ -38,6 +38,7 @@
   <hidden>true</hidden>
   <content>## General
 xwikipro.macro.empty=Empty [{0}] macro. Please specify the [{1}] parameter.
+rendering.macros.confluence.missingcql=Please provide labels or a CQL expression.
 
 confluencediagram.installRequired=In order to use this macro, the Diagram application needs to be installed. To install, {0}click here{1}.
 confluencediagram.create=The above image is a preview of a diagram created in Confluence. If you want to modify it, click on the button below to convert it into an editable diagram. You can always go back to this preview.

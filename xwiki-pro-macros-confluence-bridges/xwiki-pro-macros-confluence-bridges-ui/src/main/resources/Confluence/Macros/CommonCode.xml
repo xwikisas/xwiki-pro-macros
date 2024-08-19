@@ -66,45 +66,53 @@
       #end
     #end
   #end
-  #set ($query = $services.query.createQuery($cql, "cql"))
-  #set ($fq = "")
-  #if ("$!xcontext.macro.params.cql" == "")
-    #set ($spaces = "$!xcontext.macro.params.spaces")
-    #if (!$spaces.isEmpty() &amp;&amp; !$spaces.contains("@all"))
-      #foreach ($space in $spaces.split("\s*,\s*|\s+"))
-        #set ($s = $services.confluence.spaces.getSloppySpace($space))
-        #if ($objecttool.isNotNull($s))
-          #set ($fq = "$fq #getSpaceFacet($s)")
+  #if ("$!cql" == "")
+
+{{error}}
+$services.localization.render("rendering.macros.confluence.missingcql", $xwiki.currentContentSyntaxId)
+{{/error}}
+
+  #else
+    #set ($query = $services.query.createQuery($cql, "cql"))
+    #set ($fq = "")
+    #if ("$!xcontext.macro.params.cql" == "")
+      #set ($spaces = "$!xcontext.macro.params.spaces")
+      #if (!$spaces.isEmpty() &amp;&amp; !$spaces.contains("@all"))
+        #foreach ($space in $spaces.split("\s*,\s*|\s+"))
+          #set ($s = $services.confluence.spaces.getSloppySpace($space))
+          #if ($objecttool.isNotNull($s))
+            #set ($fq = "$fq #getSpaceFacet($s)")
+          #end
         #end
       #end
     #end
-  #end
-  #if ("$!type" == "")
-      #set ($fq = "$fq type:DOCUMENT")
-  #end
-  #if (!$fq.trim().isEmpty())
-    #set ($discard = $query.bindValue("fq", $fq.trim()))
-  #end
-  #if ("$!xcontext.macro.params.max" != "")
-    #set ($limit = $numbertool.toNumber($wikimacro.params.max))
-    #if ($objecttool.isNotNull($limit))
-      #set ($discard = $query.setLimit($limit))
+    #if ("$!type" == "")
+        #set ($fq = "$fq type:DOCUMENT")
     #end
+    #if (!$fq.trim().isEmpty())
+      #set ($discard = $query.bindValue("fq", $fq.trim()))
+    #end
+    #if ("$!xcontext.macro.params.max" != "")
+      #set ($limit = $numbertool.toNumber($wikimacro.params.max))
+      #if ($objecttool.isNotNull($limit))
+        #set ($discard = $query.setLimit($limit))
+      #end
+    #end
+    #if ("$!xcontext.macro.params.sort" == "modified")
+      #set ($sortField = "date")
+    #elseif ("$!xcontext.macro.params.sort" == "creation")
+      #set ($sortField = "creationdate")
+    #else
+      #set ($sortField = "title_sort")
+    #end
+    #if ("$!xcontext.macro.params.reverse" == "true")
+      #set ($sortAsc = "desc")
+    #else
+      #set ($sortAsc = "asc")
+    #end
+    #set ($discard = $query.bindValue("sort", "$sortField $sortAsc"))
+    #setVariable("$results" $query.execute()[0].results)
   #end
-  #if ("$!xcontext.macro.params.sort" == "modified")
-    #set ($sortField = "date")
-  #elseif ("$!xcontext.macro.params.sort" == "creation")
-    #set ($sortField = "creationdate")
-  #else
-    #set ($sortField = "title_sort")
-  #end
-  #if ("$!xcontext.macro.params.reverse" == "true")
-    #set ($sortAsc = "desc")
-  #else
-    #set ($sortAsc = "asc")
-  #end
-  #set ($discard = $query.bindValue("sort", "$sortField $sortAsc"))
-  #setVariable("$results" $query.execute()[0].results)
 #end
 {{/velocity}}</content>
 </xwikidoc>
