@@ -41,8 +41,9 @@
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**title**|Text displayed on the collaspse toggle|No|Click here to expand...
+|**title**|Text displayed on the collaspse toggle|No|(empty)
 
+Note: if no title is provided, the title of the first panel or the first header appearing in the content will be used. if there is no such header or panel title, "Click here to expand…" will be used.
 
 = Example Usage =
 
@@ -425,7 +426,14 @@ Hello 👀
     &lt;summary&gt;
       &lt;span class="panel-title"&gt;
         &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
-        $services.rendering.escape($escapetool.xml("${wikimacro.parameters.title}"), 'xwiki/2.1')
+        #set ($title = $wikimacro.parameters.title)
+        #if ("$!title" == "")
+          #set ($title = $services.promacroexpand.getAutoTitle($wikimacro.content, $xwiki.currentContentSyntaxId))
+          #if ("$!title" == "")
+            #set ($title = $services.localization.render("rendering.macro.expand.defaultexpandtitle"))
+          #end
+        #end
+        $services.rendering.escape($escapetool.xml($title), $xwiki.currentContentSyntaxId)
      &lt;/span&gt;
     &lt;/summary&gt;
     &lt;div class="panel-body"&gt;
@@ -537,17 +545,28 @@ The macro is collapsed by default, people need to click each one to expand it. T
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
-      <defaultValue>Click here to expand...</defaultValue>
+      <defaultValue/>
     </property>
     <property>
       <description>Defines the text that appears next to the expand/collapse icon.</description>

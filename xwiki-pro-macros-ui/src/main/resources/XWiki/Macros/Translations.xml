@@ -81,6 +81,9 @@ rendering.macro.panel.parameter.width.description=If specified, sets the width o
 rendering.macro.panel.parameter.classes.name=CSS classes
 rendering.macro.panel.parameter.classes.description= If specified adds css classes to the panel.
 
+## Expand macro
+rendering.macro.expand.defaultexpandtitle=Click here to expand...
+
 ## Status macro
 rendering.macro.status.name=Status
 rendering.macro.status.description=Insert a colored label in the text to highlight the status of an item.
