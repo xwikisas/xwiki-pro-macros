@@ -429,7 +429,7 @@ This macro is a bridge for the Confluence Column macro. This macro is used in co
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
