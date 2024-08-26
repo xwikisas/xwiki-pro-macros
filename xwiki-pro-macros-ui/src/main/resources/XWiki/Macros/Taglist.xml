@@ -20,8 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.Taglist" locale="">
-  <web>Confluence.Macros</web>
+<xwikidoc version="1.4" reference="XWiki.Macros.Taglist" locale="">
+  <web>XWiki.Macros</web>
   <name>Taglist</name>
   <language/>
   <defaultLanguage/>
@@ -61,7 +61,7 @@ This macro will show a list with all the tags that are present on your instance.
   excludedTags='content-report'
 /}}</content>
   <object>
-    <name>Confluence.Macros.Taglist</name>
+    <name>XWiki.Macros.Taglist</name>
     <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
     <guid>9c3d18ec-1786-4efc-9810-246e3396dfb3</guid>
@@ -207,7 +207,7 @@ This macro will show a list with all the tags that are present on your instance.
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Taglist</name>
+    <name>XWiki.Macros.Taglist</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>9a92d54a-fca1-4bd1-9413-ffbd1c988ea1</guid>
@@ -501,7 +501,7 @@ This macro will show a list with all the tags that are present on your instance.
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Taglist</name>
+    <name>XWiki.Macros.Taglist</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>6b66160b-79a1-4419-979c-bb40e564e038</guid>
@@ -579,7 +579,7 @@ This macro will show a list with all the tags that are present on your instance.
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Taglist</name>
+    <name>XWiki.Macros.Taglist</name>
     <number>1</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>eb24e5fc-fcbd-45d1-a4d8-c7b4f9c6f9be</guid>
