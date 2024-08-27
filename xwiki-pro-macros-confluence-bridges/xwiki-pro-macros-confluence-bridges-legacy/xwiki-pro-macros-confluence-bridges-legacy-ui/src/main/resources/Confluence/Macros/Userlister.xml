@@ -31,18 +31,18 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Userlister</title>
+  <title>Legacy Confluence Bridge for Userlister</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{translation key="rendering.macro.userlister.description"/}}
+  <content>This is a legacy, unprefixed Confluence bridge for the Userlister macro. Please use UserList macro instead.
 
 == Parameters ==
 
 |= Parameter |= Name |= Description |= Default
-| groups | {{translation key="rendering.macro.userlister.parameter.groups.name"/}} | {{translation key="rendering.macro.userlister.parameter.groups.description"/}} | 
-| online | {{translation key="rendering.macro.userlister.parameter.online.name"/}} | {{translation key="rendering.macro.userlister.parameter.online.description"/}} |
+| groups | Groups | List of Confluence user groups, separated by a comma. A wildcard means all wiki users. |
+| online | Online | Ignored parameter, present for compatibility purpose only |
 
 == Examples ==
 
@@ -322,13 +322,13 @@
       <defaultCategory/>
     </property>
     <property>
-      <description>This macro displays the members of the given group(s).</description>
+      <description>Legacy Confluence bridge for User Lister.</description>
     </property>
     <property>
       <id>userlister</id>
     </property>
     <property>
-      <name>User Lister</name>
+      <name>Legacy Confluence bridge for User Lister</name>
     </property>
     <property>
       <priority/>

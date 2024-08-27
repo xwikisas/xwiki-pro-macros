@@ -75,15 +75,6 @@ rendering.macro.column.content.description=Add the Column content
 rendering.macro.column.parameter.width.name=Width
 rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
 
-## Userlister macro
-rendering.macro.userlister.name=User Lister
-rendering.macro.userlister.description=Confluence bridge macro to list users of groups
-rendering.macro.userlister.parameter.groups.name=Groups
-rendering.macro.userlister.parameter.groups.description=List of Confluence user groups, separated by a comma. A wildcard means all wiki users.
-rendering.macro.userlister.parameter.online.name=Online
-rendering.macro.userlister.parameter.online.description=Ignored parameter, present for compatibility purpose only
-
-
 ## Details Summary macro
 rendering.macro.detailssummary.firstcolumn=Document
 rendering.macro.detailssummary.lastModified=Last modified
