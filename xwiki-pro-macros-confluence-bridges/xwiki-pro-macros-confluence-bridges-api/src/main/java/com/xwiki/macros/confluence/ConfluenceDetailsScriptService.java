@@ -19,7 +19,6 @@
  */
 package com.xwiki.macros.confluence;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,9 +45,6 @@ import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.BlockMatcher;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
-import org.xwiki.rendering.macro.Macro;
-import org.xwiki.rendering.macro.descriptor.ContentDescriptor;
-import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.script.service.ScriptService;
@@ -58,6 +54,7 @@ import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
 
+import static com.xwiki.macros.confluence.internal.XDOMUtils.getMacroXDOM;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
@@ -91,39 +88,6 @@ public class ConfluenceDetailsScriptService implements ScriptService
     @Inject
     private Logger logger;
 
-    private XDOM parse(String text, String syntaxId)
-    {
-        XDOM result;
-        try {
-            Parser parser = this.componentManagerProvider.get().getInstance(Parser.class, syntaxId);
-            result = parser.parse(new StringReader(text));
-        } catch (Exception e) {
-            result = null;
-        }
-        return result;
-    }
-
-    private XDOM getMacroXDOM(MacroBlock macroBlock, String syntaxId) throws ComponentLookupException
-    {
-        ComponentManager componentManager = componentManagerProvider.get();
-        if (componentManager.hasComponent(Macro.class, macroBlock.getId())) {
-            ContentDescriptor macroContentDescriptor =
-                 ((Macro<?>) componentManager.getInstance(Macro.class, macroBlock.getId()))
-                     .getDescriptor()
-                     .getContentDescriptor();
-
-            if (macroContentDescriptor != null && macroContentDescriptor.getType().equals(Block.LIST_BLOCK_TYPE)
-                && StringUtils.isNotBlank(macroBlock.getContent()))
-            {
-                return parse(macroBlock.getContent(), syntaxId);
-            }
-        } else if (StringUtils.isNotBlank(macroBlock.getContent())) {
-            // Just assume that the macro content is wiki syntax if we don't know the macro.
-            logger.debug("Calling parse on unknown macro [{}] with syntax [{}]", macroBlock.getId(), syntaxId);
-            return parse(macroBlock.getContent(), syntaxId);
-        }
-        return null;
-    }
 
     private XDOM findDetailsMacro(XDOM xdom, String syntaxId, String id)
     {
@@ -132,10 +96,10 @@ public class ConfluenceDetailsScriptService implements ScriptService
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
                     if (StringUtils.equals(defaultString(id), defaultString(macroBlock.getParameter(ID)))) {
-                        return getMacroXDOM(macroBlock, syntaxId);
+                        return getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     }
                 } else {
-                    XDOM macroXDOM = getMacroXDOM(macroBlock, syntaxId);
+                    XDOM macroXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     if (macroXDOM != null) {
                         return findDetailsMacro(macroXDOM, syntaxId, id);
                     }

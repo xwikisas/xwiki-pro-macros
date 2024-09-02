@@ -1,1 +1,2 @@
 com.xwiki.macros.confluence.ConfluenceDetailsScriptService
+com.xwiki.macros.confluence.ConfluenceOutgoingLinksMacro

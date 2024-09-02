@@ -19,7 +19,6 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
-
 <xwikidoc version="1.4" reference="Confluence.Macros.Translations" locale="">
   <web>Confluence.Macros</web>
   <name>Translations</name>
@@ -74,6 +73,10 @@ rendering.macro.column.description=Confluence bridge for the Column macro.
 rendering.macro.column.content.description=Add the Column content
 rendering.macro.column.parameter.width.name=Width
 rendering.macro.column.parameter.width.description=The width of the column. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+
+## Outgoing Links macro
+rendering.macro.confluence_outgoinglinks.noresults=No outgoing links found
+rendering.macro.confluence_outgoinglinks.noresults=No outgoing links found
 
 ## Details Summary macro
 rendering.macro.detailssummary.firstcolumn=Document
