@@ -95,7 +95,8 @@ public class ConfluenceDetailsScriptService implements ScriptService
         for (MacroBlock macroBlock : macros) {
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
-                    if (StringUtils.equals(defaultString(id), defaultString(macroBlock.getParameter(ID)))) {
+                    String dId = defaultString(id);
+                    if (dId.isEmpty() || StringUtils.equals(dId, defaultString(macroBlock.getParameter(ID)))) {
                         return getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     }
                 } else {
