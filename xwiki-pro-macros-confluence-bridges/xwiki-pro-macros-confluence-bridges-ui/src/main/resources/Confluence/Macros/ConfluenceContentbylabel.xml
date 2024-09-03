@@ -462,27 +462,10 @@ Result:
 
 {{velocity output=false}}
 
-## See https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#escaping-special-characters
-## And https://jira.xwiki.org/browse/XCOMMONS-2926
-#set ($solrSpecialChars = ['+', '-', '&amp;&amp;', '||', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '/', '\', ' '])
-#set ($escapedSolrSpecialChars = ['\+', '\-', '\&amp;&amp;', '\||', '\!', '\(', '\)', '\{', '\}', '\[', '\]', '\^', '\"', '\~', '\*', '\?', '\:', '\/', '\\', '\ '])
-
-#macro (escapeSolr $v)
-$stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
-#end
-
 #macro (contentbylabellink $d)
 &lt;a href="$escapetool.xml($d.getURL('view'))"&gt;##
 $escapetool.xml($d.getDisplayTitle())##
 &lt;/a&gt;##
-#end
-
-#macro (getSpaceFacet $space)
-#set ($facetNumber = $space.getReversedReferenceChain().size() - 1)
-#if ($space.getRoot().getType().toString() == "WIKI"))
-#set ($facetNumber = $facetNumber - 1)
-#escapeSolr("$facetNumber/${serializer.serialize($space)}.")##
-#end
 #end
 
 #macro (executeMacro)
