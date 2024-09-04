@@ -9,4 +9,5 @@
             files="src/main/java/com/xwiki/macros/excerptinclude/internal/macro/ExcerptIncludeMacro\.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity|ReturnCount"
             files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
+  <suppress checks="CyclomaticComplexity" files="AbstractShowHideIfMacro.java"/>
 </suppressions>
