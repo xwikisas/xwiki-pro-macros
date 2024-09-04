@@ -93,11 +93,6 @@
       ## Parameter for the drawio macro
       #set($diagramName = $xcontext.macro.params.diagramName)
     #end
-    ## Get original document
-    #set ($originalDoc = $xcontext.macro.params.originalDocumentRef)
-    #if ("$!originalDoc" != "")
-      #set ($doc = $xwiki.getDocument($originalDoc))
-    #end
     ## "Constants"
     #set($previewImageName = "${diagramName}.png")
     #set($previewImage = $doc.getAttachment($previewImageName))
@@ -137,11 +132,9 @@
       ## Display the preview image if it exists
       #if($previewImage &amp;&amp; !$displayDiagram)
         (% class="thumbnail" %)(((
-          #if("$!originalDoc" == "")
+
           [[image:$services.rendering.escape($previewImageName, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))]]
-          #else
-            {{html clean='false'}}&lt;img src='$xwiki.getDocument($originalDoc).getAttachmentURL($previewImageName, 'download')'/&gt;{{/html}}
-          #end
+
           ##
           ## Display a button allowing the user to create an XWiki diagram
           #if ($services.security.authorization.hasAccess('edit', $doc.documentReference) &amp;&amp; $xcontext.action != 'export')
