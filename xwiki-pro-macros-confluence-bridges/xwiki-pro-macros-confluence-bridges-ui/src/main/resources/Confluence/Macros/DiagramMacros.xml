@@ -95,7 +95,7 @@
     #end
     ## Get original document
     #set ($originalDoc = $xcontext.macro.params.originalDocumentRef)
-    #if ("$!originalDoc" != "")
+    #if ("$!originalDoc" != '')
       #set ($doc = $xwiki.getDocument($originalDoc))
     #end
     ## "Constants"
@@ -137,7 +137,7 @@
       ## Display the preview image if it exists
       #if($previewImage &amp;&amp; !$displayDiagram)
         (% class="thumbnail" %)(((
-          #if("$!originalDoc" == "")
+          #if("$!originalDoc" == '')
             [[image:$services.rendering.escape($previewImageName, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))]]
           #else
             {{html clean='false'}}&lt;img src='$xwiki.getDocument($originalDoc).getAttachmentURL($previewImageName, 'download')'/&gt;{{/html}}
