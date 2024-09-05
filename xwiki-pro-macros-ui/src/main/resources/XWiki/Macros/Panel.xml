@@ -45,6 +45,7 @@ $services.localization.render('rendering.macro.panel.description')
 
 |= Parameter |= Name |= Default value |= Description
 | title | $services.localization.render('rendering.macro.panel.parameter.title.name') | - | $services.localization.render('rendering.macro.panel.parameter.title.description')
+| footer | $services.localization.render('rendering.macro.panel.parameter.footer.name') | - | $services.localization.render('rendering.macro.panel.parameter.footer.description')
 | bgColor | $services.localization.render('rendering.macro.panel.parameter.bgColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.bgColor.description')
 | contentTextColor | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.description')
 | width | $services.localization.render('rendering.macro.panel.parameter.width.name') | - | $services.localization.render('rendering.macro.panel.parameter.width.description')
@@ -55,6 +56,8 @@ $services.localization.render('rendering.macro.panel.description')
 | borderRadius| $services.localization.render('rendering.macro.panel.parameter.borderRadius.name')|8px 8px 0px 0px| $services.localization.render('rendering.macro.panel.parameter.borderRadius.description')
 | titleBGColor | $services.localization.render('rendering.macro.panel.parameter.titleBGColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.titleBGColor.description')
 | titleColor | $services.localization.render('rendering.macro.panel.parameter.titleColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.titleColor.description')
+| footerBGColor | $services.localization.render('rendering.macro.panel.parameter.footerBGColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.footerBGColor.description')
+| footerColor | $services.localization.render('rendering.macro.panel.parameter.footerColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.footerColor.description')
 {{/velocity}}
 
 = Examples =
@@ -71,15 +74,15 @@ Content of the panel
 Content of the panel
 {{/panel}}
 
-== Panel with title and colors ==
+== Panel with title, content, footer and colors ==
 
-{{panel bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" width="50%" title="Title of the panel"}}
+{{panel bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" width="50%" footerBGColor="#2a8af7" footerColor="#faafff" title="Title of the panel" footer="Footer of the panel"}}
 Content of the panel
 {{/panel}}
 
 == Panel with title and colors and border ==
 
-{{panel bgColor="#dbf4ff" borderColor="#2a8af7" titleBGColor="#2a8af7" titleColor="#ffffff" title="Title of the panel"}}
+{{panel borderColor="#2a8af7" bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" title="Title of the panel"}}
 Content of the panel
 {{/panel}}
 
@@ -89,11 +92,11 @@ Content of the panel
 Content of the panel
 {{/panel}}
 
-{{panel classes="col-sm-6" bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" title="Title of the panel"}}
+{{panel bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" classes="col-sm-6" title="Title of the panel"}}
 Content of the panel
 {{/panel}}
 
-{{panel classes="col-sm-6" bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" title="Title of the panel"}}
+{{panel bgColor="#dbf4ff" titleBGColor="#2a8af7" titleColor="#ffffff" classes="col-sm-6" title="Title of the panel"}}
 Content of the panel
 {{/panel}}
 
@@ -206,7 +209,8 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <cache>long</cache>
     </property>
     <property>
-      <code>.macro-panel-title,
+      <code>.macro-panel-footer,
+.macro-panel-title,
 .macro-panel-content {
   padding: 10px 10px 1px 10px;
 }
@@ -223,6 +227,11 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   border-radius: 8px 8px 0px 0px;
 }
 
+.macro-panel.macro-border:has(.macro-panel-footer)
+{
+  border-radius: 8px 8px 8px 8px;
+}
+
 /* style for the excerpt-include macro */
 .macro-excerpt-include.macro-panel &gt; .macro-border {
   border: 1px solid;
@@ -233,6 +242,10 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
 }
 
 .macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-content {
+  padding-bottom: 1ex;
+}
+
+.macro-excerpt-include.macro-panel &gt; .macro-border &gt; .macro-panel-footer {
   padding-bottom: 1ex;
 }</code>
     </property>
@@ -475,6 +488,9 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #set ($titleColor = "$!xcontext.macro.params.titleColor")
   #set ($width = "$!xcontext.macro.params.width")
   #set ($classes = "$!xcontext.macro.params.classes")
+  #set ($panelFooter = "$!xcontext.macro.params.footer")
+  #set ($footerBGColor = "$!xcontext.macro.params.footerBGColor")
+  #set ($footerColor = "$!xcontext.macro.params.footerColor")
   ## Panel border style
   #set ($panelBorderStyle = '')
   #if ($width != '')
@@ -499,6 +515,14 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #end
   #if ($titleColor != '')
     #set ($panelTitleStyle = "${panelTitleStyle}color: $titleColor; ")
+  #end
+  ## Panel footer style.
+  #set ($panelFooterStyle = '')
+  #if ($footerBGColor != '')
+    #set ($panelFooterStyle = "${panelFooterStyle}background-color: $footerBGColor; ")
+  #end
+  #if ($footerColor != '')
+    #set ($panelFooterStyle = "${panelFooterStyle}color: $footerColor; ")
   #end
   ## Panel content style.
   #set ($panelContentStyle = '')
@@ -540,7 +564,16 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
         $!xcontext.macro.content
       #end
     )))
-  )))
+    #if( $panelFooter != '')
+      (% class="macro-panel-footer" style="$panelFooterStyle"%)(((
+        ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
+        #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacroparameter')))
+          {{wikimacroparameter name="footer" /}}
+        #else
+          $panelFooter
+        #end
+      )))
+    #end
   #if ("$!classes" != '')
     )))
   #end
@@ -1563,6 +1596,276 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     </property>
     <property>
       <name>borderRadius</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>12</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>529fb142-1cde-4c77-bb25-8f50a2eb8cad</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>footerBGColor</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>13</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>481aa989-d3e9-4a59-ae44-66d3a524c493</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>footer</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>14</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>31836119-ece2-46f3-ac63-18b8b74dbbd2</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>footerColor</name>
     </property>
     <property>
       <type/>
