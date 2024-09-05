@@ -32,12 +32,13 @@ import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
+import org.xwiki.user.group.WikiTarget;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
-import com.xwiki.macros.showhideif.macro.MacroParameter;
 import com.xwiki.macros.internal.grouplist.GroupReferenceList;
 import com.xwiki.macros.internal.userlist.UserReferenceList;
+import com.xwiki.macros.showhideif.macro.MacroParameter;
 
 /**
  * Base class for macros hide-if and show-if. This is mainly used to define if the constraint match or not.
@@ -95,12 +96,12 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
             if (!CollectionUtils.isEmpty(groupsParam)) {
                 Collection<DocumentReference> userGroupsMember = null;
                 try {
-                    userGroupsMember = groupManager.getMembers(userReference, true);
+                    userGroupsMember = groupManager.getGroups(userReference, WikiTarget.ALL, true);
                 } catch (GroupException e) {
                     throw new MacroExecutionException(
                         "Can't check for group member", e);
                 }
-                boolean res = CollectionUtils.intersection(userGroupsMember, groupsParam).isEmpty();
+                boolean res = !CollectionUtils.intersection(userGroupsMember, groupsParam).isEmpty();
                 matchAnyRes |= res;
                 matchAllRes &= res;
             }
