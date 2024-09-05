@@ -545,17 +545,17 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #else
     #set ($macroBorderClass = "$macroBorderClass macro-panel")
   #end
-  (% class="$macroBorderClass" style="$escapetool.xml($panelBorderStyle)" %)(((
+  (% class="$macroBorderClass" style="$services.rendering.escape($panelBorderStyle, 'xwiki/2.1')" %)(((
     #if( $panelTitle != '')
-      (% class="macro-panel-title" style="$escapetool.xml($panelTitleStyle)"%)(((
+      (% class="macro-panel-title" style="$services.rendering.escape($panelTitleStyle, 'xwiki/2.1')"%)(((
         {{wikimacroparameter name="title" /}}
       )))
     #end
-    (% class="macro-panel-content" style="$escapetool.xml($panelContentStyle)"%)(((
+    (% class="macro-panel-content" style="$services.rendering.escape($panelContentStyle, 'xwiki/2.1')"%)(((
       {{wikimacrocontent /}}
     )))
     #if( $panelFooter != '')
-      (% class="macro-panel-footer" style="$escapetool.xml($panelFooterStyle)"%)(((
+      (% class="macro-panel-footer" style="$services.rendering.escape($panelFooterStyle, 'xwiki/2.1')"%)(((
         ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
         {{wikimacroparameter name="footer" /}}
       )))
