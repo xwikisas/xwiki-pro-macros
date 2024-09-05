@@ -545,33 +545,19 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #else
     #set ($macroBorderClass = "$macroBorderClass macro-panel")
   #end
-  (% class="$macroBorderClass" style="$panelBorderStyle" %)(((
+  (% class="$macroBorderClass" style="$escapetool.xml($panelBorderStyle)" %)(((
     #if( $panelTitle != '')
-      (% class="macro-panel-title" style="$panelTitleStyle"%)(((
-        ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
-        #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacroparameter')))
-          {{wikimacroparameter name="title" /}}
-        #else
-          $panelTitle
-        #end
+      (% class="macro-panel-title" style="$escapetool.xml($panelTitleStyle)"%)(((
+        {{wikimacroparameter name="title" /}}
       )))
     #end
-    (% class="macro-panel-content" style="$panelContentStyle"%)(((
-      ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
-      #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacrocontent')))
-        {{wikimacrocontent /}}
-      #else
-        $!xcontext.macro.content
-      #end
+    (% class="macro-panel-content" style="$escapetool.xml($panelContentStyle)"%)(((
+      {{wikimacrocontent /}}
     )))
     #if( $panelFooter != '')
-      (% class="macro-panel-footer" style="$panelFooterStyle"%)(((
+      (% class="macro-panel-footer" style="$escapetool.xml($panelFooterStyle)"%)(((
         ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
-        #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacroparameter')))
-          {{wikimacroparameter name="footer" /}}
-        #else
-          $panelFooter
-        #end
+        {{wikimacroparameter name="footer" /}}
       )))
     #end
   #if ("$!classes" != '')
