@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.userlist.internal.macro;
+package com.xwiki.macros.internal.userlist;
 
 import java.lang.reflect.Type;
 
@@ -29,8 +29,6 @@ import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.properties.converter.AbstractConverter;
 import org.xwiki.properties.converter.ConversionException;
 import org.xwiki.text.StringUtils;
-
-import com.xwiki.macros.userlist.macro.UserReferenceList;
 
 /**
  * XWiki Properties Bean Converter to convert Strings into {@link UserReferenceList}.

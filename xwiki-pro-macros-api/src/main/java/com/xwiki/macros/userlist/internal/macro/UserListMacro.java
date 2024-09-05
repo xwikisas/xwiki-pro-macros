@@ -50,9 +50,9 @@ import org.xwiki.wiki.user.WikiUserManager;
 import org.xwiki.wiki.user.WikiUserManagerException;
 
 import com.xwiki.macros.AbstractProMacro;
-import com.xwiki.macros.userlist.macro.GroupReferenceList;
+import com.xwiki.macros.internal.grouplist.GroupReferenceList;
 import com.xwiki.macros.userlist.macro.UserListMacroParameters;
-import com.xwiki.macros.userlist.macro.UserReferenceList;
+import com.xwiki.macros.internal.userlist.UserReferenceList;
 
 /**
  * This macro displays a list of users with their name and avatar.

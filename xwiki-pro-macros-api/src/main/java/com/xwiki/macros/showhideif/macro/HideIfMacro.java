@@ -34,6 +34,7 @@ import com.xwiki.macros.showhideif.internal.macro.AbstractShowHideIfMacro;
 
 /**
  * Hide if macro: Hide the content if the constraint match.
+ *
  * @version $Id: $
  */
 @Component
@@ -54,7 +55,7 @@ public class HideIfMacro extends AbstractShowHideIfMacro
     }
 
     @Override
-    public List<Block> execute(MacroParameter parameters, String content, MacroTransformationContext context)
+    protected List<Block> internalExecute(MacroParameter parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
         if (!doesMatch(parameters)) {

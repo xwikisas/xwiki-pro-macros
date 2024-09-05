@@ -20,7 +20,6 @@
 package com.xwiki.macros.showhideif.internal.macro;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -28,24 +27,24 @@ import javax.inject.Provider;
 import org.apache.commons.collections.CollectionUtils;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
-import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
-import org.xwiki.user.UserReference;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
-import org.xwiki.user.internal.document.DocumentUserReference;
 
 import com.xpn.xwiki.XWikiContext;
+import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.showhideif.macro.MacroParameter;
+import com.xwiki.macros.internal.grouplist.GroupReferenceList;
+import com.xwiki.macros.internal.userlist.UserReferenceList;
 
 /**
  * Base class for macros hide-if and show-if. This is mainly used to define if the constraint match or not.
  *
  * @version $Id: $
  */
-public abstract class AbstractShowHideIfMacro extends AbstractMacro<MacroParameter>
+public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroParameter>
 {
     private static final String CONTENT_DESCRIPTION = "the content to show conditionally";
 
@@ -85,14 +84,14 @@ public abstract class AbstractShowHideIfMacro extends AbstractMacro<MacroParamet
         DocumentReference userReference = xwikiContextProvider.get().getUserReference();
         MacroParameter.MacroParamAuthenticationType authTypeParam = parameters.getAuthenticationType();
         if (userReference != null) {
-            List<UserReference> usersParam = parameters.getUsers();
+            UserReferenceList usersParam = parameters.getUsers();
             if (!CollectionUtils.isEmpty(usersParam)) {
                 boolean res = usersParam.stream()
-                    .anyMatch(u -> ((DocumentUserReference) u).getReference().equals(userReference));
+                    .anyMatch(u -> u.equals(userReference));
                 matchAnyRes |= res;
                 matchAllRes &= res;
             }
-            List<DocumentReference> groupsParam = parameters.getGroups();
+            GroupReferenceList groupsParam = parameters.getGroups();
             if (!CollectionUtils.isEmpty(groupsParam)) {
                 Collection<DocumentReference> userGroupsMember = null;
                 try {

@@ -27,6 +27,9 @@ import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyName;
 import org.xwiki.stability.Unstable;
 
+import com.xwiki.macros.internal.grouplist.GroupReferenceList;
+import com.xwiki.macros.internal.userlist.UserReferenceList;
+
 /**
  * Parameters for the {@link com.xwiki.macros.userlist.internal.macro.UserListMacro}.
  *

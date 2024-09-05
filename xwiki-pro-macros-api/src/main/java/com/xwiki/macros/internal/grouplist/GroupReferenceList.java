@@ -17,12 +17,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.userlist.macro;
+package com.xwiki.macros.internal.grouplist;
 
 import java.util.ArrayList;
 
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.stability.Unstable;
+
+import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 
 /**
  * Class representing a list of group references. This class is needed to declare a valid

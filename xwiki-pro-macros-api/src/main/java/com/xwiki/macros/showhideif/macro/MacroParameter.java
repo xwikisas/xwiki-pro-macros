@@ -19,16 +19,15 @@
  */
 package com.xwiki.macros.showhideif.macro;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.properties.annotation.PropertyDescription;
-import org.xwiki.user.UserReference;
+
+import com.xwiki.macros.internal.grouplist.GroupReferenceList;
+import com.xwiki.macros.internal.userlist.UserReferenceList;
 
 /**
- * Parameters for {@link com.xwiki.macros.showhideif.macro.HideIfMacro}
- * and {@link com.xwiki.macros.showhideif.macro.ShowIfMacro} Macros.
+ * Parameters for {@link com.xwiki.macros.showhideif.macro.HideIfMacro} and
+ * {@link com.xwiki.macros.showhideif.macro.ShowIfMacro} Macros.
+ *
  * @version $Id: $
  */
 public class MacroParameter
@@ -37,9 +36,9 @@ public class MacroParameter
 
     private MacroParamAuthenticationType authenticationType = MacroParamAuthenticationType.NONE;
 
-    private java.util.List<org.xwiki.user.UserReference> users = Collections.emptyList();
+    private UserReferenceList users;
 
-    private java.util.List<org.xwiki.model.reference.DocumentReference> groups = Collections.emptyList();
+    private GroupReferenceList groups;
 
     /**
      * @version $Id: $
@@ -117,7 +116,7 @@ public class MacroParameter
     /**
      * @return the list of users which should match.
      */
-    public List<UserReference> getUsers()
+    public UserReferenceList getUsers()
     {
         return users;
     }
@@ -126,7 +125,7 @@ public class MacroParameter
      * @param users the list of users which should match.
      */
     @PropertyDescription("The list of user(s) to match.")
-    public void setUsers(List<UserReference> users)
+    public void setUsers(UserReferenceList users)
     {
         this.users = users;
     }
@@ -134,7 +133,7 @@ public class MacroParameter
     /**
      * @return the list of groups which should match.
      */
-    public List<DocumentReference> getGroups()
+    public GroupReferenceList getGroups()
     {
         return groups;
     }
@@ -143,7 +142,7 @@ public class MacroParameter
      * @param groups the list of groups which should match.
      */
     @PropertyDescription("The list of user group(s) to match.")
-    public void setGroups(List<DocumentReference> groups)
+    public void setGroups(GroupReferenceList groups)
     {
         this.groups = groups;
     }
