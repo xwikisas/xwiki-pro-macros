@@ -222,7 +222,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
 
 /*default border style*/
 .macro-panel.macro-border, .macro-panel &gt; .macro-border {
-  display:grid;
+  display: grid;
   border-color: transparent;
   border-width: 1px;
   border-style: solid;
