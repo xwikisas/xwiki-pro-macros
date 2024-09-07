@@ -49,6 +49,7 @@ $services.localization.render('rendering.macro.panel.description')
 | bgColor | $services.localization.render('rendering.macro.panel.parameter.bgColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.bgColor.description')
 | contentTextColor | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.name') | - | $services.localization.render('rendering.macro.panel.parameter.contentTextColor.description')
 | width | $services.localization.render('rendering.macro.panel.parameter.width.name') | - | $services.localization.render('rendering.macro.panel.parameter.width.description')
+| height | $services.localization.render('rendering.macro.panel.parameter.height.name') | - | $services.localization.render('rendering.macro.panel.parameter.height.description')
 | classes | $services.localization.render('rendering.macro.panel.parameter.classes.name')  | - | $services.localization.render('rendering.macro.panel.parameter.classes.description')
 | borderColor | $services.localization.render('rendering.macro.panel.parameter.borderColor.name') |white| $services.localization.render('rendering.macro.panel.parameter.borderColor.description')
 | borderStyle | $services.localization.render('rendering.macro.panel.parameter.borderStyle.name') |solid | $services.localization.render('rendering.macro.panel.parameter.borderStyle.description')
@@ -221,6 +222,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
 
 /*default border style*/
 .macro-panel.macro-border, .macro-panel &gt; .macro-border {
+  display: grid;
   border-color: transparent;
   border-width: 1px;
   border-style: solid;
@@ -487,6 +489,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #set ($titleBGColor = "$!xcontext.macro.params.titleBGColor")
   #set ($titleColor = "$!xcontext.macro.params.titleColor")
   #set ($width = "$!xcontext.macro.params.width")
+  #set ($height = "$!xcontext.macro.params.height")
   #set ($classes = "$!xcontext.macro.params.classes")
   #set ($panelFooter = "$!xcontext.macro.params.footer")
   #set ($footerBGColor = "$!xcontext.macro.params.footerBGColor")
@@ -495,6 +498,9 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   #set ($panelBorderStyle = '')
   #if ($width != '')
     #set ($panelBorderStyle = "${panelBorderStyle}width: $width; ")
+  #end
+  #if ($height != '')
+    #set ($panelBorderStyle = "${panelBorderStyle}height: $height; ")
   #end
   #if ($borderStyle != '')
     #set ($panelBorderStyle = "${panelBorderStyle}border: $borderStyle; ")
@@ -1852,6 +1858,96 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
     </property>
     <property>
       <name>footerColor</name>
+    </property>
+    <property>
+      <type/>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Panel</name>
+    <number>15</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>4ce4fcb9-dc22-40e7-9e25-69301a20e145</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>height</name>
     </property>
     <property>
       <type/>
