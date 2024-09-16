@@ -42,12 +42,13 @@
 
 |=Parameter|=Description|=Required|=Default
 |**title**|Text displayed on the collaspse toggle|No|(empty)
+|**visible**|If selected the expand will be opened automatically when loading the page.|No|False
 
 Note: if no title is provided, the title of the first panel or the first header appearing in the content will be used. if there is no such header or panel title, "Click here to expand…" will be used.
 
 = Example Usage =
 
-{{expand}}
+{{expand visible="false"}}
 Hello 👀
 {{/expand}}</content>
   <object>
@@ -420,7 +421,7 @@ Hello 👀
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
-  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export')
+  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export' || $wikimacro.parameters.visible)
   {{html clean="false" wiki="true"}}
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
@@ -579,6 +580,96 @@ The macro is collapsed by default, people need to click each one to expand it. T
     </property>
     <property>
       <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Expand</name>
+    <number>1</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>7a90b540-11c1-4b2c-b5c3-4aa24ff706e9</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>0</defaultValue>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>visible</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
     </property>
   </object>
 </xwikidoc>
