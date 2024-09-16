@@ -468,7 +468,7 @@ Hello 👀
       <contentType>Optional</contentType>
     </property>
     <property>
-      <defaultCategory/>
+      <defaultCategories/>
     </property>
     <property>
       <description>Add the Expand macro to your page to provide content in an expandable / collapsible section.
