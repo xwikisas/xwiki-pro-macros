@@ -89,6 +89,8 @@ rendering.macro.panel.parameter.classes.description= If specified adds css class
 
 ## Expand macro
 rendering.macro.expand.defaultexpandtitle=Click here to expand...
+rendering.macro.expand.parameter.expanded.name=Expanded
+rendering.macro.expand.parameter.expanded.description=If selected the expand will be opened automatically when loading the page.
 
 ## Status macro
 rendering.macro.status.name=Status
