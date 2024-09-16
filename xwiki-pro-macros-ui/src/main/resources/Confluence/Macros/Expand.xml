@@ -42,13 +42,13 @@
 
 |=Parameter|=Description|=Required|=Default
 |**title**|Text displayed on the collaspse toggle|No|(empty)
-|**visible**|If selected the expand will be opened automatically when loading the page.|No|False
+|**expanded**|If selected the expand will be opened automatically when loading the page.|No|False
 
 Note: if no title is provided, the title of the first panel or the first header appearing in the content will be used. if there is no such header or panel title, "Click here to expand…" will be used.
 
 = Example Usage =
 
-{{expand visible="false"}}
+{{expand expanded="false"}}
 Hello 👀
 {{/expand}}</content>
   <object>
@@ -421,7 +421,7 @@ Hello 👀
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
-  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export' || $wikimacro.parameters.visible)
+  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export' || $wikimacro.parameters.expanded)
   {{html clean="false" wiki="true"}}
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
     &lt;summary&gt;
@@ -666,7 +666,7 @@ The macro is collapsed by default, people need to click each one to expand it. T
       <mandatory>0</mandatory>
     </property>
     <property>
-      <name>visible</name>
+      <name>expanded</name>
     </property>
     <property>
       <type>java.lang.Boolean</type>
