@@ -653,8 +653,10 @@ span.viewFileThumbnailCard {
   #end
   #if ($wikimacro.context.isInline() || $thumbnailStyle == "Button")
     #set ($elem = "span")
+    #set ($clean = false)
   #else
     #set ($elem = "div")
+    #set ($clean = true)
   #end
   #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
   #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
@@ -666,7 +668,7 @@ span.viewFileThumbnailCard {
     #set ($thumbnail = $thumbnail.replace('&lt;/div&gt;', '&lt;/span&gt;').replace('&lt;div ', '&lt;span '))
   #end
 
-  {{html}}
+  {{html clean="$clean"}}
   &lt;$elem class="viewFileThumbnail viewFileThumbnail$thumbnailStyle" $style data-preview="$previewSupported" data-ref="$escapetool.xml($services.model.serialize($attachmentRef, 'default'))"&gt;
     &lt;a href="$escapetool.xml($xwiki.getURL($attachmentRef))"
        download="download"
