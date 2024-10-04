@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.parent</groupId>
     <artifactId>xwikisas-parent-platform</artifactId>
-    <version>13.10-3</version>
+    <version>14.10-2</version>
   </parent>
   <groupId>com.xwiki.pro</groupId>
   <artifactId>xwiki-pro-macros-parent</artifactId>
@@ -34,7 +34,7 @@
   <name>Pro Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
   <properties>
-    <licensing.version>1.25</licensing.version>
+    <licensing.version>1.26</licensing.version>
     <pdfviewer.version>2.5.5</pdfviewer.version>
     <jwplayer.version>2.1.10</jwplayer.version>
     <!-- Mathjax version 1.1+ depends on XWiki 14.9 -->

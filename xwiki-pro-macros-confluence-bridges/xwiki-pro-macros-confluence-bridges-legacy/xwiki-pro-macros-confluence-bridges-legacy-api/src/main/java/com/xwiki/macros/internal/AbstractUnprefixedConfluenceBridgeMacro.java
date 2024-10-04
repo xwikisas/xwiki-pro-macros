@@ -191,15 +191,6 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
         }
 
         @Override
-        public String getDefaultCategory()
-        {
-            return DEPRECATED;
-        }
-
-        /**
-         * @return the default categories.
-         * NOTE: please use @Override when moving to 14.10+ parent.
-         */
         public Set<String> getDefaultCategories()
         {
             return DEFAULT_CATEGORIES;
