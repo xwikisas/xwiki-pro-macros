@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.confluence.internal;
+package com.xwiki.pro.internal.resolvers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,36 +25,37 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.slf4j.Logger;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceResolverException;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceSpaceKeyResolver;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceSpaceResolver;
 import org.xwiki.model.EntityType;
-import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.query.QueryException;
 import org.xwiki.query.QueryManager;
-import org.xwiki.stability.Unstable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.doc.XWikiDocument;
 
 import static org.xwiki.query.Query.HQL;
 
 /**
- * Tools to manipulate migrated Confluence spaces.
+ * Find a space with the given Confluence space key using the Confluence Migrator Pro's Link Mapping State.
  * @version $Id$
  * @since 1.19.0
  */
-@Component (roles = ConfluenceSpaceUtils.class)
+
+@Component
+@Named("prolinkmapping")
 @Singleton
-@Unstable
-public class ConfluenceSpaceUtils
+public class ProConfluenceSpaceResolver implements ConfluenceSpaceResolver, ConfluenceSpaceKeyResolver
 {
     private static final TypeReference<Map<String, String>> TYPE_REF = new TypeReference<Map<String, String>>() { };
 
@@ -91,6 +92,7 @@ public class ConfluenceSpaceUtils
     private static final String LINK_MAPPINGS_FOR_SPACES_HQL =  String.format(LINK_MAPPING_HQL_TPL,
         "spaceKeyProp.value, ", "spaceKeyProp.value in (:spaceKeys)");
 
+
     @Inject
     private EntityReferenceResolver<String> resolver;
 
@@ -100,53 +102,59 @@ public class ConfluenceSpaceUtils
     @Inject
     private Provider<XWikiContext> contextProvider;
 
-    @Inject
-    private Logger logger;
+    private static final class ConfluenceSpace
+    {
+        private final String key;
+        private final EntityReference ref;
 
-    /**
-     * @return the root of the Confluence space described by the parameter, or null if not found.
-     * @param spaceKeyOrRef the space key, or "@self", or a XWiki reference to the space.
-     */
-    public EntityReference getSloppySpace(String spaceKeyOrRef)
+        ConfluenceSpace(String key, EntityReference ref)
+        {
+            this.key = key;
+            this.ref = ref;
+        }
+    }
+
+    @Override
+    public String getSpaceKey(EntityReference documentReference)
+        throws ConfluenceResolverException
     {
         try {
-            if (spaceKeyOrRef.contains("@self")) {
-                return getConfluenceSpace(contextProvider.get().getDoc().getDocumentReference());
-            }
-
-            if (spaceKeyOrRef.indexOf(':') != -1 || spaceKeyOrRef.indexOf('.') != -1) {
-                // This is a XWiki reference
-                EntityReference spaceRef = resolver.resolve(spaceKeyOrRef, EntityType.SPACE);
-                EntityReference webHome = new EntityReference("WebHome", EntityType.DOCUMENT, spaceRef);
-                if (!new XWikiDocument(new DocumentReference(webHome)).isNew()) {
-                    // the home page of this space exists
-                    return spaceRef;
-                }
-            }
-
-            return getSpaceByKey(spaceKeyOrRef);
+            return getConfluenceSpaceKeyAndRef(documentReference).key;
         } catch (QueryException | JsonProcessingException e) {
-            logger.warn("Could not convert space [{}] to an entity reference", spaceKeyOrRef, e);
+            throw new ConfluenceResolverException(e);
         }
-
-        return null;
     }
 
-    EntityReference getSpaceByKey(String spaceKey) throws QueryException, JsonProcessingException
+    @Override
+    public EntityReference getSpaceByKey(String spaceKey) throws ConfluenceResolverException
     {
-        List<String> results = this.queryManager.createQuery(LINK_MAPPING_FOR_SPACE_KEY_HQL, HQL)
-            .bindValue("spaceKey", spaceKey)
-            .setLimit(1)
-            .execute();
+        try {
+            List<String> results = this.queryManager.createQuery(LINK_MAPPING_FOR_SPACE_KEY_HQL, HQL)
+                .bindValue("spaceKey", spaceKey)
+                .setLimit(1)
+                .execute();
 
-        if (results.isEmpty()) {
-            return null;
+            if (results.isEmpty()) {
+                return null;
+            }
+
+            return getSpaceByKey(spaceKey, results.get(0));
+        } catch (JsonProcessingException | QueryException e) {
+            throw new ConfluenceResolverException("Could not read the link mapping", e);
         }
-
-        return getSpaceByKey(spaceKey, results.get(0));
     }
 
-    EntityReference getSpaceByKey(String spaceKey, String mapping)
+    @Override
+    public EntityReference getSpace(EntityReference reference) throws ConfluenceResolverException
+    {
+        try {
+            return getConfluenceSpaceKeyAndRef(reference).ref;
+        } catch (QueryException | JsonProcessingException e) {
+            throw new ConfluenceResolverException(e);
+        }
+    }
+
+    private EntityReference getSpaceByKey(String spaceKey, String mapping)
         throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -196,15 +204,8 @@ public class ConfluenceSpaceUtils
         return a.substring(0, i);
     }
 
-    /**
-     *
-     * @return the space of the given document
-     * @param documentReference the document for which to get the spacespace
-     * @throws QueryException if something wrong happens
-     * @throws JsonProcessingException if something wrong happens
-     */
-    public EntityReference getConfluenceSpace(EntityReference documentReference)
-        throws QueryException, JsonProcessingException
+    private ConfluenceSpace getConfluenceSpaceKeyAndRef(EntityReference documentReference)
+        throws JsonProcessingException, QueryException
     {
         List<String> spaces = getSpaceSuffixedWithIDS(documentReference);
 
@@ -213,10 +214,11 @@ public class ConfluenceSpaceUtils
             .bindValue("spaceKeys", spaces)
             .execute();
 
+        String spaceKey = null;
         EntityReference candidateSpace = null;
         for (Object[] result : results) {
             if (result.length == 2) {
-                String spaceKey = (String) result[0];
+                spaceKey = (String) result[0];
                 spaceKey = spaceKey.substring(0, spaceKey.indexOf(':'));
                 String mapping = (String) result[1];
                 EntityReference space = getSpaceByKey(spaceKey, mapping);
@@ -227,7 +229,7 @@ public class ConfluenceSpaceUtils
             }
         }
 
-        return candidateSpace;
+        return new ConfluenceSpace(spaceKey, candidateSpace);
     }
 
     private static List<String> getSpaceSuffixedWithIDS(EntityReference document)
@@ -241,5 +243,3 @@ public class ConfluenceSpaceUtils
         return spaces;
     }
 }
-
-

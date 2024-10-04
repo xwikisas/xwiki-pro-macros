@@ -105,5 +105,11 @@
       <artifactId>xwiki-pro-macros-confluence-bridges-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-confluence-resolvers</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+     </dependency>
   </dependencies>
 </project>

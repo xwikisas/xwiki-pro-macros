@@ -1,3 +1,6 @@
 com.xwiki.macros.confluence.ConfluenceDetailsScriptService
 com.xwiki.macros.confluence.ConfluenceOutgoingLinksMacro
+com.xwiki.macros.confluence.ConfluenceSpacesScriptService
+com.xwiki.macros.confluence.ConfluenceScriptService
 com.xwiki.macros.confluence.ConfluenceTocZoneMacro
+com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils

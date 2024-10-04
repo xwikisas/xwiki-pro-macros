@@ -24,6 +24,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceResolverException;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceSpaceResolver;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
@@ -48,24 +50,27 @@ public class ConfluenceSpacesScriptService implements ScriptService
     private ConfluenceSpaceUtils confluenceSpaceUtils;
 
     @Inject
+    private ConfluenceSpaceResolver confluenceSpaceResolver;
+
+    @Inject
     private EntityReferenceResolver<String> resolver;
 
     /**
      * @return the root of the Confluence space in which the given document is.
      * @param documentReference the document of which the root of the Confluence space should be returned
-     * @throws Exception if something wrong happens
+     * @throws ConfluenceResolverException if something wrong happens
      */
-    public EntityReference getConfluenceSpace(EntityReference documentReference) throws Exception
+    public EntityReference getConfluenceSpace(EntityReference documentReference) throws ConfluenceResolverException
     {
-        return confluenceSpaceUtils.getConfluenceSpace(documentReference);
+        return confluenceSpaceResolver.getSpace(documentReference);
     }
 
     /**
      * @return the root of the Confluence space in which the given document is.
      * @param documentReference the document of which the root of the Confluence space should be returned
-     * @throws Exception if something wrong happens
+     * @throws ConfluenceResolverException if something wrong happens
      */
-    public EntityReference getConfluenceSpace(String documentReference) throws Exception
+    public EntityReference getConfluenceSpace(String documentReference) throws ConfluenceResolverException
     {
         return getConfluenceSpace(resolver.resolve(documentReference, EntityType.DOCUMENT));
     }
@@ -73,9 +78,9 @@ public class ConfluenceSpacesScriptService implements ScriptService
     /**
      * @return the root of the Confluence space in which the given document is.
      * @param document the document of which the root of the Confluence space should be returned
-     * @throws Exception if something wrong happens
+     * @throws ConfluenceResolverException if something wrong happens
      */
-    public EntityReference getConfluenceSpace(Document document) throws Exception
+    public EntityReference getConfluenceSpace(Document document) throws ConfluenceResolverException
     {
         return getConfluenceSpace(document.getDocumentReference());
     }

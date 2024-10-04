@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.confluence.internal;
+package com.xwiki.pro.internal.resolvers;
 
 import java.util.List;
 import java.util.Map;
@@ -27,20 +27,19 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.contrib.cql.aqlparser.ast.AbstractAQLRightHandValue;
-import org.xwiki.contrib.cql.query.converters.ConfluenceIdResolver;
-import org.xwiki.contrib.cql.query.converters.ConversionException;
+import org.xwiki.contrib.confluence.resolvers.ConfluencePageIdResolver;
+import org.xwiki.contrib.confluence.resolvers.ConfluencePageTitleResolver;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceResolverException;
 import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
+import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
 import org.xwiki.query.QueryManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.xwiki.query.Query.HQL;
 
 /**
  * Find a document with the given Confluence ID using the Confluence Migrator Pro's Link Mapping State.
@@ -50,7 +49,7 @@ import static org.xwiki.query.Query.HQL;
 @Component
 @Named("prolinkmapping")
 @Singleton
-public class ProConfluenceIdResolver implements ConfluenceIdResolver
+public class ProConfluencePageResolver implements ConfluencePageIdResolver, ConfluencePageTitleResolver
 {
     private static final TypeReference<Map<String, String>> TYPE_REF = new TypeReference<Map<String, String>>() { };
 
@@ -66,7 +65,7 @@ public class ProConfluenceIdResolver implements ConfluenceIdResolver
         + "XWikiDocument doc, "
         + "BaseObject o, "
         + "LargeStringProperty mappingProp where"
-        + "(doc.name like '%:ids' and mappingProp.value like :idlike) and"
+        + "(doc.name like '%:ids' and mappingProp.value like :idlike) and "
         + "doc.fullName = o.name and "
         + "o.className = 'ConfluenceMigratorPro.Code.LinkMappingStateSpaceClass' and "
         + "mappingProp.id.id = o.id and mappingProp.id.name = 'mapping'";
@@ -77,31 +76,36 @@ public class ProConfluenceIdResolver implements ConfluenceIdResolver
     @Inject
     private EntityReferenceResolver<String> resolver;
 
-    @Override
-    public EntityReference getDocumentById(AbstractAQLRightHandValue node, long id) throws ConversionException
+    private EntityReference get(long id) throws QueryException, JsonProcessingException
     {
-        List<String> results;
-        try {
-            results = this.queryManager.createQuery(SPACE_LINK_MAPPING, HQL)
-                .bindValue("idlike", "%\"" + id + "\"%")
-                .execute();
-        } catch (QueryException e) {
-            throw new ConversionException(e, node == null ? null : node.getParserState());
-        }
+        List<String> results = this.queryManager.createQuery(SPACE_LINK_MAPPING, Query.HQL)
+            .bindValue("idlike", "%\"" + id + "\"%")
+            .execute();
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         for (String result : results) {
-            try {
-                String docRef = objectMapper.readValue(result, TYPE_REF).get("" + id);
-                if (docRef != null) {
-                    return resolver.resolve(docRef, EntityType.DOCUMENT);
-                }
-            } catch (JsonProcessingException e) {
-                throw new ConversionException("Could not read the link mapping", e,
-                    node == null ? null : node.getParserState());
+            String docRef = objectMapper.readValue(result, TYPE_REF).get("" + id);
+            if (docRef != null) {
+                return resolver.resolve(docRef, EntityType.DOCUMENT);
             }
         }
+        return null;
+    }
+
+    @Override
+    public EntityReference getDocumentById(long id) throws ConfluenceResolverException
+    {
+        try {
+            return get(id);
+        } catch (QueryException | JsonProcessingException e) {
+            throw new ConfluenceResolverException(e);
+        }
+    }
+
+    @Override
+    public EntityReference getDocumentByTitle(String spaceKey, String title) throws ConfluenceResolverException
+    {
         return null;
     }
 }

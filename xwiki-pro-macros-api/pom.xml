@@ -31,6 +31,10 @@
   <packaging>jar</packaging>
   <name>Pro Macros - API</name>
   <description>The API needed for the XWiki Pro Macros.</description>
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.xwiki.licensing</groupId>
@@ -76,14 +80,12 @@
     <dependency>
       <groupId>org.xwiki.contrib.cql</groupId>
       <artifactId>aqlparser</artifactId>
-      <version>0.0.3</version>
-      <scope>compile</scope>
+      <version>${cql.version}</version>
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib.cql</groupId>
       <artifactId>query</artifactId>
-      <version>0.0.3</version>
-      <scope>compile</scope>
+      <version>${cql.version}</version>
     </dependency>
   </dependencies>
   <build>
