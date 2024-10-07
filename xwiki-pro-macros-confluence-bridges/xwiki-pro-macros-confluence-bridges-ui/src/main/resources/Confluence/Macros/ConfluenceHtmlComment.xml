@@ -58,7 +58,7 @@ Result HTML:
 &lt;!-- it s a comment --&gt;
 {{/code}}</content>
   <object>
-    <name>Confluence.Macros.ConfluenceHtmlCommentt</name>
+    <name>Confluence.Macros.ConfluenceHtmlComment</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>47d78cea-966c-476a-9652-c5ab3de22fd0</guid>
