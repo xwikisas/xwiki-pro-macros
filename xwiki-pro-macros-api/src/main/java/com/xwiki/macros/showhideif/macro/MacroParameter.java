@@ -85,7 +85,7 @@ public class MacroParameter
     /**
      * @param matchUsing the match using value.
      */
-    @PropertyDescription("Set if we must match all contraint or only one. If set to \"all\", then all items set must "
+    @PropertyDescription("Set if we must match all contraints or only one. If set to \"all\", then all items set must "
         + "match.")
     public void setMatchUsing(MacroParamMatchUsing matchUsing)
     {
