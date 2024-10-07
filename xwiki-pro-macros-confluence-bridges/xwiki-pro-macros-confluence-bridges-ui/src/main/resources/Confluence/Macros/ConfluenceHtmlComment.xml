@@ -313,7 +313,7 @@ Result HTML:
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.ConfluenceHtmlCommentt</name>
+    <name>Confluence.Macros.ConfluenceHtmlComment</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>ba9955f8-32a6-4a7f-8cda-20fff19dd653</guid>
