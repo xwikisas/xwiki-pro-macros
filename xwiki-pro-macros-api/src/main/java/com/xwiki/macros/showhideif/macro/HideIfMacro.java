@@ -44,7 +44,7 @@ public class HideIfMacro extends AbstractShowHideIfMacro
 {
     private static final String NAME = "Hide if";
 
-    private static final String DESCRIPTION = "Hide if condition match parameters";
+    private static final String DESCRIPTION = "Hide the content of this macro if the condition set through the parameters is met.";
 
     /**
      * Create and initialize the descriptor of the macro.
