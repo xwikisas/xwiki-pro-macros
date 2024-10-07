@@ -294,7 +294,7 @@ Result HTML:
       <defaultCategories/>
     </property>
     <property>
-      <description>Macro bridge for confluence HTML Comment macro</description>
+      <description>Confluence Bridge for HTML Comment macro.</description>
     </property>
     <property>
       <id>htmlcomment</id>
