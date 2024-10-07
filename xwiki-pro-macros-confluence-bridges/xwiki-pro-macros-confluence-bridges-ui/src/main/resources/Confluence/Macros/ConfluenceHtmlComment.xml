@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="Confluence.Macros.HtmlComment" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceHtmlComment" locale="">
   <web>Confluence.Macros</web>
-  <name>HtmlComment</name>
+  <name>ConfluenceHtmlComment</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -32,7 +32,7 @@
   <originalMetadataAuthor>XWiki.Admin</originalMetadataAuthor>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>HtmlComment</title>
+  <title>Confluence bridge for HtmlComment</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -58,7 +58,7 @@ Result HTML:
 &lt;!-- it s a comment --&gt;
 {{/code}}</content>
   <object>
-    <name>Confluence.Macros.HtmlComment</name>
+    <name>Confluence.Macros.ConfluenceHtmlCommentt</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>47d78cea-966c-476a-9652-c5ab3de22fd0</guid>
@@ -313,7 +313,7 @@ Result HTML:
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.HtmlComment</name>
+    <name>Confluence.Macros.ConfluenceHtmlCommentt</name>
     <number>0</number>
     <className>XWiki.WikiMacroParameterClass</className>
     <guid>ba9955f8-32a6-4a7f-8cda-20fff19dd653</guid>
