@@ -272,14 +272,26 @@ Result HTML:
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{velocity}}
-{{html clean="false"}}
-#if ("$!wikimacro.parameters.get('hide-in-source-code')" == 'false')
-&lt;!-- $escapetool.xml($wikimacro.content) --&gt;
+      <code>{{velocity output="false"}}
+#macro (executeMacro)
+  {{html clean="false"}}
+  #if ("$!wikimacro.parameters.get('hide-in-source-code')" == 'false')
+  &lt;!-- $escapetool.xml($wikimacro.content) --&gt;
+  #end
+  {{/html}}
 #end
-{{/html}}
 {{/velocity}}
-</code>
+
+{{velocity}}
+## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
+## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
+## don't have view right on those pages.
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+  #executeMacro##
+#else
+  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
+#end
+{{/velocity}}</code>
     </property>
     <property>
       <contentDescription>HTML content</contentDescription>
@@ -366,24 +378,13 @@ Result HTML:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
-        <cache>0</cache>
-        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
-        <displayType>input</displayType>
-        <freeText>allowed</freeText>
-        <largeStorage>1</largeStorage>
-        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
-        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>|</separator>
-        <separators>|</separators>
-        <size>1</size>
+        <size>60</size>
         <unmodifiable>0</unmodifiable>
-        <values>Unknown|Wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </type>
     </class>
     <property>
@@ -396,7 +397,7 @@ Result HTML:
       <mandatory>0</mandatory>
     </property>
     <property>
-      <name>hide-in-source-code </name>
+      <name>hide-in-source-code</name>
     </property>
     <property>
       <type>java.lang.Boolean</type>
