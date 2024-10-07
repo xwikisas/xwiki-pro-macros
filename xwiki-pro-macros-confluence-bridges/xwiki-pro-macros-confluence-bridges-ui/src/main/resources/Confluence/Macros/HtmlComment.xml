@@ -300,7 +300,7 @@ Result HTML:
       <id>htmlcomment</id>
     </property>
     <property>
-      <name>HTML Comment</name>
+      <name>Confluence Bridge for HTML Comment</name>
     </property>
     <property>
       <priority/>
