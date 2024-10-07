@@ -274,7 +274,7 @@ Result HTML:
     <property>
       <code>{{velocity}}
 {{html clean="false"}}
-#if ("$!wikimacro.parameters.get('hide-in-source-code')" == '' || ! "$!wikimacro.parameters.get('hide-in-source-code')")
+#if ("$!wikimacro.parameters.get('hide-in-source-code')" == 'false')
 &lt;!-- $escapetool.xml($wikimacro.content) --&gt;
 #end
 {{/html}}
