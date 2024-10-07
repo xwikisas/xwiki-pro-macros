@@ -29,12 +29,13 @@ import com.xwiki.macros.internal.userlist.UserReferenceList;
  * {@link com.xwiki.macros.showhideif.macro.ShowIfMacro} Macros.
  *
  * @version $Id: $
+ * @since 1.21.1
  */
 public class MacroParameter
 {
-    private MacroParamMatchUsing matchUsing = MacroParamMatchUsing.ANY;
+    private Matcher matchUsing = Matcher.ANY;
 
-    private MacroParamAuthenticationType authenticationType = MacroParamAuthenticationType.NONE;
+    private AuthType authenticationType = AuthType.NONE;
 
     private UserReferenceList users;
 
@@ -43,7 +44,7 @@ public class MacroParameter
     /**
      * @version $Id: $
      */
-    public enum MacroParamMatchUsing
+    public enum Matcher
     {
         /**
          * Match any of macro parameters.
@@ -58,7 +59,7 @@ public class MacroParameter
     /**
      * @version $Id: $
      */
-    public enum MacroParamAuthenticationType
+    public enum AuthType
     {
         /**
          * Match in any case if the user is authenticated or not.
@@ -77,7 +78,7 @@ public class MacroParameter
     /**
      * @return the match using value.
      */
-    public MacroParamMatchUsing getMatchUsing()
+    public Matcher getMatchUsing()
     {
         return matchUsing;
     }
@@ -87,7 +88,7 @@ public class MacroParameter
      */
     @PropertyDescription("Set if we must match all contraints or only one. If set to \"all\", then all items set must "
         + "match.")
-    public void setMatchUsing(MacroParamMatchUsing matchUsing)
+    public void setMatchUsing(Matcher matchUsing)
     {
         this.matchUsing = matchUsing;
     }
@@ -95,7 +96,7 @@ public class MacroParameter
     /**
      * @return the authentication type.
      */
-    public MacroParamAuthenticationType getAuthenticationType()
+    public AuthType getAuthenticationType()
     {
         return authenticationType;
     }
@@ -108,7 +109,7 @@ public class MacroParameter
         + "* Authenticated - The user is logged in.\n"
         + "* Anonymous - The user is not logged in.")
     public void setAuthenticationType(
-        MacroParamAuthenticationType authenticationType)
+        AuthType authenticationType)
     {
         this.authenticationType = authenticationType;
     }

@@ -36,6 +36,7 @@ import com.xwiki.macros.showhideif.internal.macro.AbstractShowHideIfMacro;
  * Hide if macro: Hide the content if the constraint match.
  *
  * @version $Id: $
+ * @since 1.21.1
  */
 @Component
 @Named("hide-if")
@@ -44,7 +45,8 @@ public class HideIfMacro extends AbstractShowHideIfMacro
 {
     private static final String NAME = "Hide if";
 
-    private static final String DESCRIPTION = "Hide the content of this macro if the condition set through the parameters is met.";
+    private static final String DESCRIPTION =
+        "Hide the content of this macro if the condition set through the parameters is met.";
 
     /**
      * Create and initialize the descriptor of the macro.

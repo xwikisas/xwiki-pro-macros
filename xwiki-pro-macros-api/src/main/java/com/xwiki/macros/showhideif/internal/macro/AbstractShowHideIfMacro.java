@@ -44,10 +44,11 @@ import com.xwiki.macros.showhideif.macro.MacroParameter;
  * Base class for macros hide-if and show-if. This is mainly used to define if the constraint match or not.
  *
  * @version $Id: $
+ * @since 1.21.1
  */
 public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroParameter>
 {
-    private static final String CONTENT_DESCRIPTION = "the content to show conditionally";
+    private static final String CONTENT_DESCRIPTION = "The content to be displayed conditionally.";
 
     @Inject
     protected MacroContentParser contentParser;
@@ -83,7 +84,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
         boolean matchAnyRes = false;
         boolean matchAllRes = true;
         DocumentReference userReference = xwikiContextProvider.get().getUserReference();
-        MacroParameter.MacroParamAuthenticationType authTypeParam = parameters.getAuthenticationType();
+        MacroParameter.AuthType authTypeParam = parameters.getAuthenticationType();
         if (userReference != null) {
             UserReferenceList usersParam = parameters.getUsers();
             if (!CollectionUtils.isEmpty(usersParam)) {
@@ -124,7 +125,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
             default:
                 break;
         }
-        return (parameters.getMatchUsing() == MacroParameter.MacroParamMatchUsing.ANY && matchAnyRes)
-            || (parameters.getMatchUsing() == MacroParameter.MacroParamMatchUsing.ALL && matchAllRes);
+        return (parameters.getMatchUsing() == MacroParameter.Matcher.ANY && matchAnyRes)
+            || (parameters.getMatchUsing() == MacroParameter.Matcher.ALL && matchAllRes);
     }
 }
