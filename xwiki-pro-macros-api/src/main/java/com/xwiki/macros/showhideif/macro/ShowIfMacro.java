@@ -36,7 +36,7 @@ import com.xwiki.macros.showhideif.internal.macro.AbstractShowHideIfMacro;
  * Show if macro: Show the content if the constraint match.
  *
  * @version $Id: $
- * @since 1.21.1
+ * @since 1.23.0
  */
 @Component
 @Named("show-if")
@@ -57,7 +57,8 @@ public class ShowIfMacro extends AbstractShowHideIfMacro
     }
 
     @Override
-    protected List<Block> internalExecute(MacroParameter parameters, String content, MacroTransformationContext context)
+    protected List<Block> internalExecute(ShowHideIfMacroParameters parameters, String content,
+        MacroTransformationContext context)
         throws MacroExecutionException
     {
         if (doesMatch(parameters)) {

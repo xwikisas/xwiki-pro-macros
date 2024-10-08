@@ -38,15 +38,15 @@ import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.internal.grouplist.GroupReferenceList;
 import com.xwiki.macros.internal.userlist.UserReferenceList;
-import com.xwiki.macros.showhideif.macro.MacroParameter;
+import com.xwiki.macros.showhideif.macro.ShowHideIfMacroParameters;
 
 /**
  * Base class for macros hide-if and show-if. This is mainly used to define if the constraint match or not.
  *
  * @version $Id: $
- * @since 1.21.1
+ * @since 1.23.0
  */
-public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroParameter>
+public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideIfMacroParameters>
 {
     private static final String CONTENT_DESCRIPTION = "The content to be displayed conditionally.";
 
@@ -69,7 +69,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
     {
         super(name, description,
             new DefaultContentDescriptor(CONTENT_DESCRIPTION, false, Block.LIST_BLOCK_TYPE),
-            MacroParameter.class);
+            ShowHideIfMacroParameters.class);
     }
 
     @Override
@@ -78,13 +78,13 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
         return true;
     }
 
-    protected boolean doesMatch(MacroParameter parameters)
+    protected boolean doesMatch(ShowHideIfMacroParameters parameters)
         throws MacroExecutionException
     {
         boolean matchAnyRes = false;
         boolean matchAllRes = true;
         DocumentReference userReference = xwikiContextProvider.get().getUserReference();
-        MacroParameter.AuthType authTypeParam = parameters.getAuthenticationType();
+        ShowHideIfMacroParameters.AuthType authTypeParam = parameters.getAuthenticationType();
         if (userReference != null) {
             UserReferenceList usersParam = parameters.getUsers();
             if (!CollectionUtils.isEmpty(usersParam)) {
@@ -125,7 +125,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<MacroPara
             default:
                 break;
         }
-        return (parameters.getMatchUsing() == MacroParameter.Matcher.ANY && matchAnyRes)
-            || (parameters.getMatchUsing() == MacroParameter.Matcher.ALL && matchAllRes);
+        return (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ANY && matchAnyRes)
+            || (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ALL && matchAllRes);
     }
 }

@@ -29,9 +29,9 @@ import com.xwiki.macros.internal.userlist.UserReferenceList;
  * {@link com.xwiki.macros.showhideif.macro.ShowIfMacro} Macros.
  *
  * @version $Id: $
- * @since 1.21.1
+ * @since 1.23.0
  */
-public class MacroParameter
+public class ShowHideIfMacroParameters
 {
     private Matcher matchUsing = Matcher.ANY;
 
