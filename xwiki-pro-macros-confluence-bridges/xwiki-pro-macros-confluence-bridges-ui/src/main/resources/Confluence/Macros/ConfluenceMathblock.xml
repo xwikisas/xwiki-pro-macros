@@ -417,7 +417,7 @@ See also:
       <defaultValue/>
     </property>
     <property>
-      <description>The anchor that can be used to reference the math expression with a mathbox-ref macro in the text.</description>
+      <description>The anchor that can be used to reference the math expression with a mathblock-ref macro in the text.</description>
     </property>
     <property>
       <mandatory>0</mandatory>

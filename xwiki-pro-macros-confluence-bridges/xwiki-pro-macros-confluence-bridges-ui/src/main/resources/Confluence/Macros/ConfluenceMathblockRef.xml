@@ -45,7 +45,7 @@ This is a bridge for the Confluence Mathblock-Ref macro, which references mathbl
 
 = Usage example =
 
-{{excerpt-include 0="Confluence.Macros.ConfluenceMathblock" nopanel="true"/}}
+{{confluence_mathblock-ref anchor="myref"/}}
 
 See also:
 
