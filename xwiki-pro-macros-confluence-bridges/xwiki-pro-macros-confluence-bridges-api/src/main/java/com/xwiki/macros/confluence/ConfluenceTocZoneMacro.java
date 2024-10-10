@@ -59,7 +59,7 @@ import com.xwiki.macros.AbstractProMacro;
 /**
  * The Confluence outgoing-links bridge macro.
  * 
- * @since 1.22.4
+ * @since 1.23.0
  * @version $Id$
  */
 @Component

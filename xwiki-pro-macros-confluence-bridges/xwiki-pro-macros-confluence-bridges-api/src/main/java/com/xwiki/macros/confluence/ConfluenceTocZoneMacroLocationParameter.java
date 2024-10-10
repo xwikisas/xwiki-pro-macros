@@ -24,7 +24,7 @@ package com.xwiki.macros.confluence;
  * Defines where the Table of Contents should appear.
  * 
  * @version $Id$
- * @since 1.22.4
+ * @since 1.23.0
  */
 public enum ConfluenceTocZoneMacroLocationParameter
 {

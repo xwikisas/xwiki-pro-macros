@@ -24,7 +24,7 @@ package com.xwiki.macros.confluence;
  * Defines the style for the Table of Contents.
  * 
  * @version $Id$
- * @since 1.22.4
+ * @since 1.23.0
  */
 public enum ConfluenceTocZoneMacroTypeParameter
 {
