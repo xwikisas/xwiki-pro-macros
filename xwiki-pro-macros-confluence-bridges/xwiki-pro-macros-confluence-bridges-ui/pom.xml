@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
-    <version>1.23.0</version>
+    <version>1.23.1-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
   <packaging>xar</packaging>
