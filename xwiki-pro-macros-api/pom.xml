@@ -76,13 +76,13 @@
     <dependency>
       <groupId>org.xwiki.contrib.cql</groupId>
       <artifactId>aqlparser</artifactId>
-      <version>0.0.2</version>
+      <version>0.0.3</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib.cql</groupId>
       <artifactId>query</artifactId>
-      <version>0.0.2</version>
+      <version>0.0.3</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
