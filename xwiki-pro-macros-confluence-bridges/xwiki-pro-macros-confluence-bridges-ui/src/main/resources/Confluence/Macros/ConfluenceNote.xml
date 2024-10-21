@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.ConfluenceNote" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceNote" locale="">
   <web>Confluence.Macros</web>
   <name>ConfluenceNote</name>
   <language/>
@@ -114,7 +114,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -134,6 +134,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -146,6 +147,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -214,6 +216,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -319,7 +322,9 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
       <contentType>Mandatory</contentType>
     </property>
     <property>
-      <defaultCategories>Confluence</defaultCategories>
+      <defaultCategories>
+        <value>Confluence</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Confluence bridge for the Note macro to the XWiki Success macro</description>
@@ -368,6 +373,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

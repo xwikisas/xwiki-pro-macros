@@ -29,7 +29,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.slf4j.Logger;
-import org.xwiki.rendering.macro.wikibridge.WikiMacroParameters;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
@@ -40,10 +39,12 @@ import org.xwiki.rendering.macro.MacroId;
 import org.xwiki.rendering.macro.descriptor.ContentDescriptor;
 import org.xwiki.rendering.macro.descriptor.MacroDescriptor;
 import org.xwiki.rendering.macro.descriptor.ParameterDescriptor;
+import org.xwiki.rendering.macro.wikibridge.WikiMacroParameters;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 /**
  * Base class for old, legacy unprefixed confluence bridge macros.
+ *
  * @param <P> macro parameters
  */
 abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
@@ -63,6 +64,7 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
     {
         return "confluence_" + getId();
     }
+
     /**
      * @return the priority
      */
@@ -115,7 +117,7 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
             return Collections.singletonList(new MacroBlock(
                 "error",
                 Collections.emptyMap(),
-         "Could not find the Confluence bridge [" + getConfluenceBridgeId() + "].",
+                "Could not find the Confluence bridge [" + getConfluenceBridgeId() + "].",
                 context.isInline()
             ));
         }
@@ -191,15 +193,6 @@ abstract class AbstractUnprefixedConfluenceBridgeMacro<P> implements Macro<P>
         }
 
         @Override
-        public String getDefaultCategory()
-        {
-            return DEPRECATED;
-        }
-
-        /**
-         * @return the default categories.
-         * NOTE: please use @Override when moving to 14.10+ parent.
-         */
         public Set<String> getDefaultCategories()
         {
             return DEFAULT_CATEGORIES;
