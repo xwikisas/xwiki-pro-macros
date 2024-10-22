@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.ConfluenceAttachments" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceAttachments" locale="">
   <web>Confluence.Macros</web>
   <name>ConfluenceAttachments</name>
   <language/>
@@ -106,6 +106,7 @@ Additionally, the {{{ "created date" }}} value of the {{{ sortBy }}} property be
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -187,14 +188,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     if ($(e.target).prop('id').startsWith('confluenceAttachments')) {
       // Select the livedata above the upload form.
       const uploadForm = $(e.target).closest('form');
-      // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
-      let associatedLivedata = uploadForm.prevAll('.liveData, .xwiki-livedata').first();
-      // We do not have access to a liveData object before XWiki 14.4.
-      if (associatedLivedata.data('liveData') === undefined) {
-        location.reload();
-      } else {
-        associatedLivedata.data('liveData').updateEntries();
-      }
+      let associatedLivedata = uploadForm.prevAll('.liveData').first();
+      associatedLivedata.data('liveData').updateEntries();
     }
   });
 
@@ -209,8 +204,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
    */
   $(document).on('click', '.confluenceAttachmentsMacro .attachmentActions .actiondelete', function(e) {
     e.preventDefault();
-    // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
-    let liveData = $(e.currentTarget).closest('.liveData, .xwiki-livedata');
+    let liveData = $(e.currentTarget).closest('.liveData');
     var modal = liveData.nextAll('.deleteConfluenceAttachment');
     modal.data('relatedTarget', e.currentTarget);
     modal.modal('show');
@@ -223,8 +217,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     e.preventDefault();
     var modal = $(e.currentTarget).closest('.deleteConfluenceAttachment');
     var button = $(modal.data('relatedTarget'));
-    // The 'xwiki-livedata' CSS class is present only before XWiki version 14.4.
-    let liveData = button.closest('.liveData, .xwiki-livedata');
+    let liveData = button.closest('.liveData');
     var notification;
 
     $.ajax({
@@ -233,13 +226,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         notification = new XWiki.widgets.Notification(l10n['inProgress'], 'inprogress');
       },
       success : function() {
-        // We do not have access to a liveData object before XWiki 14.4.
-        if (liveData.data('liveData') !== undefined) {
-          liveData.data('liveData').updateEntries();
-          notification.replace(new XWiki.widgets.Notification(l10n['done'], 'done'));
-        } else {
-          location.reload();
-        }
+        liveData.data('liveData').updateEntries();
+        notification.replace(new XWiki.widgets.Notification(l10n['done'], 'done'));
       },
       error: function() {
         notification.replace(new XWiki.widgets.Notification(l10n['failed'], 'error'));
@@ -299,6 +287,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>code</name>
         <number>2</number>
         <prettyName>Code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>50</size>
         <unmodifiable>0</unmodifiable>
@@ -366,18 +355,6 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     <property>
       <code>.confluenceAttachmentsMacro legend {
   font-size: 1em;
-}
- /* These should be deleted after upgrading to a XWiki parent &gt;= 14.6. */
-.attachmentMimeType {
-  color: $theme.textSecondaryColor;
-  font-size: 32px;
-  height: 32px;
-  line-height: 32px;
-  text-align: center;
-}
-.attachmentMimeType img {
-  max-height: 32px;
-  max-width: 48px;
 }</code>
     </property>
     <property>
@@ -394,7 +371,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     </property>
   </object>
   <object>
-    <name>Confluence.Macros.Attachments</name>
+    <name>Confluence.Macros.ConfluenceAttachments</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
     <guid>e02a27df-6c8d-42bb-85cf-8a9eb6f3d6fe</guid>
@@ -433,7 +410,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -453,6 +430,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -465,6 +443,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -533,6 +512,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -707,14 +687,6 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
   #end
 #end
 
-#macro (supportsAttachJSON $supportsAttachJSON)
-  ## The attachments.json code uses macros from attachment_macro.vm, so the existence of the attachments livedata macro
-  ## is an indicator that the template exists and is adapted for livedata.
-  #template('attachment_macros.vm')
-  #set ($macroResult = "#showAttachmentsLiveData($doc 'id')")
-  #set ($supportsAttachJSON = $macroResult.startsWith('{{liveData'))
-#end
-
 ## Display a liveData with attachments from the specified document.
 #macro (showConfluenceAttachmentsLiveData $attachmentsDoc $liveDataId)
   #set ($liveDataConfig = {
@@ -754,14 +726,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     'className': 'XWiki.AllAttachments',
     "\$doc": "$attachmentsDoc"
   })
-  ## Since the correct attachmentsjson.vm was added in XWiki 14.8, we use a copy of its code for backwards compatibility.
-  #supportsAttachJSON($supportsAttachJSON)
-  #if ($supportsAttachJSON)
-    #set ($discard = $sourceParams.put('template', 'xpart.vm'))
-    #set ($discard = $sourceParams.put('vm', 'attachmentsjson.vm'))
-  #else
-    #set ($discard = $sourceParams.put('resultPage', 'Confluence.Macros.AttachmentsJSON'))
-  #end
+  #set ($discard = $sourceParams.put('template', 'xpart.vm'))
+  #set ($discard = $sourceParams.put('vm', 'attachmentsjson.vm'))
   #getLiveDataSort($liveDataSort)
   #if ($invalidSortBy)
     {{warning}}
@@ -835,7 +801,9 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories>Confluence</defaultCategories>
+      <defaultCategories>
+        <value>Confluence</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Confluence bridge for the Attachment macro</description>
@@ -884,6 +852,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -964,6 +933,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1042,6 +1012,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1120,6 +1091,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1198,6 +1170,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -1276,6 +1249,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

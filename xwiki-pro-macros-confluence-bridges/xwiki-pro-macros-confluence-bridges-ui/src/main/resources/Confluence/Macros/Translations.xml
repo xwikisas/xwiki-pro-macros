@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.Translations" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.Translations" locale="">
   <web>Confluence.Macros</web>
   <name>Translations</name>
   <language/>
@@ -65,8 +65,6 @@ rendering.macro.section.parameter.border.description=Select this option to draw 
 
 ## Attachments macro
 promacros.attachments.upload.title=Upload files to the associated page
-## This should be removed after upgrading the XWiki parent to a version &gt;= 14.6.
-core.viewers.attachments.move=Move
 
 ## Column macro
 rendering.macro.column.name=Confluence bridge for Column

@@ -43,7 +43,6 @@
     <xwiki.extension.licensing.publicDocuments>
       Confluence.Code.ConfluenceStyleSheet,
       Confluence.Macros.CommonCode,
-      Confluence.Macros.AttachmentsJSON,
       Confluence.Macros.Translations,
       Confluence.Macros.ConfluenceAttachments,
       Confluence.Macros.ConfluenceColumn,
@@ -81,16 +80,6 @@
       <artifactId>macro-mathjax-ui</artifactId>
       <version>${mathjax.version}</version>
       <type>xar</type>
-      <exclusions>
-        <!-- this is not needed for current versions of the mathjax macro and
-        can be removed as soon as we can update the version, when we drop
-        support for XWiki 13.X.
-        See https://github.com/xwikisas/xwiki-pro-macros/issues/185 -->
-        <exclusion>
-          <groupId>org.xwiki.contrib.mathjax</groupId>
-          <artifactId>macro-mathjax-latex</artifactId>
-        </exclusion>
-      </exclusions>
       <optional>true</optional>
     </dependency>
     <dependency>

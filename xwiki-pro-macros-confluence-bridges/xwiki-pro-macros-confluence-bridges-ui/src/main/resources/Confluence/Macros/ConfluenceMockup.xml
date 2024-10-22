@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.4" reference="Confluence.Macros.ConfluenceMockup" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceMockup" locale="">
   <web>Confluence.Macros</web>
   <name>ConfluenceMockup</name>
   <language/>
@@ -116,7 +116,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -136,6 +136,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>code</name>
         <number>10</number>
         <prettyName>Macro code</prettyName>
+        <restricted>0</restricted>
         <rows>20</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -148,6 +149,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>contentDescription</name>
         <number>9</number>
         <prettyName>Content description (Not applicable for "No content" type)</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -216,6 +218,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>description</name>
         <number>3</number>
         <prettyName>Macro description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -336,7 +339,9 @@ Filename number 1. has priority, so in case both files are attached to the curre
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories>Confluence</defaultCategories>
+      <defaultCategories>
+        <value>Confluence</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Confluence Bridge for the Balsamiq Mockup macro. It only displays the image preview of the mockup. </description>
@@ -385,6 +390,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -463,6 +469,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>
@@ -541,6 +548,7 @@ Filename number 1. has priority, so in case both files are attached to the curre
         <name>description</name>
         <number>2</number>
         <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

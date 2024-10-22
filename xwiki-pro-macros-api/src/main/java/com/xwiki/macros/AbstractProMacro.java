@@ -22,6 +22,7 @@ package com.xwiki.macros;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -56,7 +57,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
         "Macros"), "WebHome");
 
-    private static final String DEFAULT_CATEGORY = DEFAULT_CATEGORY_CONTENT;
+    private static final Set<String> DEFAULT_CATEGORIES = Collections.singleton(DEFAULT_CATEGORY_CONTENT);
 
     @Inject
     private Licensor licensor;
@@ -79,7 +80,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
         ContentDescriptor contentDescriptor, Class<?> parametersBeanClass)
     {
         super(name, description, contentDescriptor, parametersBeanClass);
-        setDefaultCategory(DEFAULT_CATEGORY);
+        setDefaultCategories(DEFAULT_CATEGORIES);
     }
 
     /**
@@ -92,7 +93,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     protected AbstractProMacro(String name, String description, Class<?> parametersBeanClass)
     {
         super(name, description, parametersBeanClass);
-        setDefaultCategory(DEFAULT_CATEGORY);
+        setDefaultCategories(DEFAULT_CATEGORIES);
     }
 
     /**
