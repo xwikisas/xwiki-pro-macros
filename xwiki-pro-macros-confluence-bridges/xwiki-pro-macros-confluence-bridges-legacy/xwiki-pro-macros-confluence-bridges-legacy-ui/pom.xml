@@ -33,8 +33,8 @@
        https://github.com/xwikisas/xwiki-pro-macros/issues/277  -->
   <artifactId>xwiki-pro-macros</artifactId>
   <packaging>xar</packaging>
-  <name>Pro Macros</name>
-  <description>Supercharge XWiki’s functionality with Pro Macros. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
+  <name>Pro Macros Legacy</name>
+  <description>This is the old version of the Pro Macros package, which contained both generic macros and confluence bridges, maintained for compatibility reasons. Please use the new Pro Macros package for generic macros or the Confluence Migration Toolkit for Confluence migration related tools and support.</description>
   <properties>
     <xwiki.extension.category>macro</xwiki.extension.category>
     <xwiki.extension.features>com.xwiki.pro:xwiki-pro-macros</xwiki.extension.features>
