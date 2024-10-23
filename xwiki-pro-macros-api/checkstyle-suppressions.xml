@@ -10,4 +10,5 @@
   <suppress checks="NPathComplexity|CyclomaticComplexity|ReturnCount"
             files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
   <suppress checks="CyclomaticComplexity" files="AbstractShowHideIfMacro.java"/>
+  <suppress checks="NPathComplexity|CyclomaticComplexity|TodoComment|" files="TabGroupMacro.java"/>
 </suppressions>

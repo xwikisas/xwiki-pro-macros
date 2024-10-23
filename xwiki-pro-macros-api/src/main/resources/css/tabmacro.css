@@ -1,0 +1,3 @@
+body.content.preference-underlining-only-inline-links #xwikicontent div.xwikitabmacro ul.nav.nav-tabs li a {
+  text-decoration-line: none;
+}
