@@ -188,6 +188,11 @@ Hello 👀
   border: none;
 }
 
+.confluence-expand-macro.panel.panel-default .panel-body ul {
+  list-style-type: revert;
+  padding-left: revert;
+}
+
 .confluence-expand-macro.panel {
   background: unset;
 }</code>
