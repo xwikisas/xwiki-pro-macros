@@ -41,14 +41,14 @@
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**hide-in-source-code**|Define if the comment should be rendered in the output HTML or not.|No|false
+|**hidden**|Define if the comment should be rendered in the output HTML or not.|No|false
 
 = Example Usage =
 
 {{code}}
-{{htmlcomment}}
+{{confluence_htmlcomment}}
 it s a comment
-{{/htmlcomment}}
+{{/confluence_htmlcomment}}
 {{/code}}
 
 Result HTML:
@@ -273,11 +273,13 @@ Result HTML:
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
-  {{html clean="false"}}
-  #if ("$!wikimacro.parameters.get('hide-in-source-code')" == 'false')
-  &lt;!-- $escapetool.xml($wikimacro.content) --&gt;
+  #if("$xcontext.action" == "edit")
+    {{wikimacrocontent/}}
+  #else
+    #if ("$!wikimacro.parameters.get('hidden')" == 'false')
+      {{html clean="false"}}&lt;!-- {{/html}}$escapetool.xml($wikimacro.content){{html clean="false"}} --&gt;{{/html}}
+    #end
   #end
-  {{/html}}
 #end
 {{/velocity}}
 
@@ -308,7 +310,7 @@ Result HTML:
       <description>Confluence Bridge for HTML Comment macro.</description>
     </property>
     <property>
-      <id>htmlcomment</id>
+      <id>confluence_htmlcomment</id>
     </property>
     <property>
       <name>Confluence Bridge for HTML Comment</name>
@@ -396,7 +398,7 @@ Result HTML:
       <mandatory>0</mandatory>
     </property>
     <property>
-      <name>hide-in-source-code</name>
+      <name>hidden</name>
     </property>
     <property>
       <type>java.lang.Boolean</type>
