@@ -123,8 +123,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         String macroId = parameters.getId();
 
         if (StringUtils.isEmpty(macroId)) {
-            // FIXME we should have a better way to generate an ID
-            macroId = "tab-group-" + RANDOM.nextInt();
+            macroId = context.getXDOM().getIdGenerator().generateUniqueId("tab-group");
         }
 
         Block contentBlocks = this.contentParser.parse(content, context, false, context.isInline());
@@ -150,11 +149,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
             if (isActive) {
                 lbParam.put(BLOCK_PARAM_CLASS, "active");
             }
-            /*
-            For now, I use the raw block for these reason:
-            - the LinkBlock generate a span element which break bootstrap tabs
-            - the word block can't contain a special char - but well this way it probably not better.
-             */
+            // We use the raw block because the LinkBlock generate a span element which break bootstrap tabs CSS
             RawBlock linkBlock = new RawBlock(
                 String.format("<a href=\"#%s\" aria-controls=\"%s\" role=\"tab\" data-toggle=\"tab\">%s</a>",
                     id, id, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),
