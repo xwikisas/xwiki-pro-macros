@@ -48,6 +48,12 @@ public class TabMacroParameters
 
     private String cssStyle;
 
+    private int nextAfter;
+
+    private TransitionEffect effect = TransitionEffect.NONE;
+
+    private int effectDuration;
+
     /**
      * @return the label of this tab.
      */
@@ -133,5 +139,57 @@ public class TabMacroParameters
     public void setCssStyle(String cssStyle)
     {
         this.cssStyle = cssStyle;
+    }
+
+    /**
+     * @return The number of seconds this tab will stay visible before moving to the next one.
+     */
+    public int getNextAfter()
+    {
+        return nextAfter;
+    }
+
+    /**
+     * @param nextAfter The number of seconds this tab will stay visible before moving to the next one.
+     */
+    @PropertyDescription("The number of seconds this tab will stay visible before moving to the next one. "
+        + "If not set, no transition will be done automatically.")
+    public void setNextAfter(int nextAfter)
+    {
+        this.nextAfter = nextAfter;
+    }
+
+    /**
+     * @return The transition animation for this tab.
+     */
+    public TransitionEffect getEffect()
+    {
+        return effect;
+    }
+
+    /**
+     * @param effect The transition animation for this tab.
+     */
+    @PropertyDescription("The transition animation for this tab.")
+    public void setEffect(TransitionEffect effect)
+    {
+        this.effect = effect;
+    }
+
+    /**
+     * @return The transition animation duration.
+     */
+    public int getEffectDuration()
+    {
+        return effectDuration;
+    }
+
+    /**
+     * @param effectDuration The transition animation duration.
+     */
+    @PropertyDescription("The transition animation duration to apply on change of tab.")
+    public void setEffectDuration(int effectDuration)
+    {
+        this.effectDuration = effectDuration;
     }
 }

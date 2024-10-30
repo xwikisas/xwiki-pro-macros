@@ -33,6 +33,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
@@ -44,11 +45,13 @@ import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
 import org.xwiki.xml.XMLUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabGroupMacroParameters;
@@ -65,6 +68,7 @@ import com.xwiki.macros.tab.macro.TabMacroParameters;
 @Singleton
 public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 {
+
     private static final String NAME = "Tab group";
 
     private static final String DESCRIPTION = "The main macro which group tab macro elements.";
@@ -91,6 +95,12 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 
     private static final Random RANDOM = new Random();
 
+    public static final String PARAM_NAME_NEXT_AFTER = "nextAfter";
+
+    public static final String PARAM_NAME_EFFECT = "effect";
+
+    public static final String PARAM_NAME_EFFECT_DURATION = "effectDuration";
+
     @Inject
     private Provider<XWikiContext> xwikiContextProvider;
 
@@ -99,7 +109,14 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 
     @Inject
     @Named("ssrx")
-    private SkinExtension ssfx;
+    private SkinExtension ssrx;
+
+    @Inject
+    @Named("jsrx")
+    private SkinExtension jsrx;
+
+    @Inject
+    private Logger logger;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -119,7 +136,8 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     private List<Block> renderView(TabGroupMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-        ssfx.use("css/tabmacro.css");
+        ssrx.use("css/tabmacro.css");
+        jsrx.use("js/tabmacro.js");
         String macroId = parameters.getId();
 
         if (StringUtils.isEmpty(macroId)) {
@@ -144,6 +162,17 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
                 id = macroId + "_" + inc;
                 mb.setParameter(ID, id);
             }
+            // Set animation parameter for sub macro block
+            if (parameters.getNextAfter() != 0 && mb.getParameter(PARAM_NAME_NEXT_AFTER) == null) {
+                mb.setParameter(PARAM_NAME_NEXT_AFTER, Integer.toString(parameters.getNextAfter()));
+            }
+            if (parameters.getEffect() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
+                mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffect().name());
+            }
+            if (parameters.getEffectDuration() != 0 && mb.getParameter(PARAM_NAME_EFFECT_DURATION) == null) {
+                mb.setParameter(PARAM_NAME_EFFECT_DURATION, Integer.toString(parameters.getEffectDuration()));
+            }
+
             Map<String, String> lbParam = new HashMap<>();
             lbParam.put(BLOCK_PARAM_ROLE, "presentation");
             if (isActive) {
@@ -173,15 +202,44 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         if (!StringUtils.isEmpty(parameters.getCssClass())) {
             mainDivClass.append(" ").append(parameters.getCssClass());
         }
+        if (parameters.getLocation() != null && parameters.getLocation() != TabGroupMacroParameters.Location.TOP) {
+            switch (parameters.getLocation()) {
+                case RIGHT:
+                    mainDivClass.append(" tabs-right");
+                    break;
+                case LEFT:
+                    mainDivClass.append(" tabs-left");
+                    break;
+                case BOTTOM:
+                    mainDivClass.append(" tabs-below");
+                    break;
+                case NONE:
+                    mainDivClass.append(" tabs-none");
+                    break;
+                default:
+                    break;
+            }
+        }
         mainBlockParam.put("style", style.toString());
         mainBlockParam.put(BLOCK_PARAM_CLASS, mainDivClass.toString());
-        Block result = new GroupBlock(Arrays.asList(new Block[] {
-            new BulletedListBlock(ulBlocks, Map.of(
-                BLOCK_PARAM_CLASS, "nav nav-tabs",
-                BLOCK_PARAM_ROLE, "tablist")
-            ),
-            new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"))
-        }), mainBlockParam);
+        Block tabElementBlock = new BulletedListBlock(ulBlocks, Map.of(
+            BLOCK_PARAM_CLASS, "nav nav-tabs",
+            BLOCK_PARAM_ROLE, "tablist")
+        );
+        try {
+            ObjectMapper jsonObjectMapper = new ObjectMapper();
+            mainBlockParam.put("data-config", jsonObjectMapper.writeValueAsString(parameters));
+        } catch (Exception ex) {
+            logger.error("Failed to serialize parameter object", ex);
+        }
+        Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
+        List<Block> blockList;
+        if (parameters.getLocation() == TabGroupMacroParameters.Location.BOTTOM) {
+            blockList = Arrays.asList(tabContentBlock, tabElementBlock);
+        } else {
+            blockList = Arrays.asList(tabElementBlock, tabContentBlock);
+        }
+        Block result = new GroupBlock(blockList, mainBlockParam);
         return Collections.singletonList(result);
     }
 

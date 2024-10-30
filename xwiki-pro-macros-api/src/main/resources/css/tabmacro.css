@@ -1,3 +1,131 @@
-div.xwikitabmacro ul.nav.nav-tabs li a {
+/*
+ * Note for this selector we we need to override this one
+ * body.content.preference-underlining-only-inline-links #xwikicontent a
+ * So it's why we need it with all of theses parameters
+ */
+#xwikicontent div.xwikitabmacro ul.nav.nav-tabs li a {
   text-decoration-line: none;
+}
+
+div.xwikitabmacro > .nav-tabs > li
+{
+  margin-bottom: -2px;
+}
+
+/* custom inclusion of right, left and below tabs */
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+  border-bottom: 0;
+}
+
+/*
+ * Tab below
+ */
+.tabs-below > .nav-tabs {
+  border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+  margin-bottom: 0px;
+  margin-top: -2px;
+}
+
+.tabs-below > .nav-tabs > li > a {
+  border-radius: 0px 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+  border-top-color: #ddd;
+  border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+  border-color: transparent #ddd #ddd #ddd;
+}
+
+/*
+ * Tab left + right
+ */
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+  float: none;
+  width: 150px;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+  min-width: 74px;
+  margin-right: 0;
+}
+
+/*
+ * Tab left
+ */
+.tabs-left > .nav-tabs {
+  float: left;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left .tab-content {
+  margin-left: 149px;
+  padding: 20px;
+}
+
+.tabs-left > .nav-tabs > li > a {
+  margin-right: -1px;
+  border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+  border-color: #ddd transparent #ddd #ddd;
+  *border-right-color: #ffffff;
+}
+
+/*
+ * Tab right
+ */
+.tabs-right > .nav-tabs {
+  float: right;
+  margin-left: 19px;
+  border-left: 1px solid #ddd;
+}
+
+.tabs-right .tab-content {
+  margin-right: 149px;
+  padding: 20px;
+}
+
+.tabs-right > .nav-tabs > li > a {
+  margin-left: -1px;
+  border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+  border-color: #ddd #ddd #ddd transparent;
+  *border-left-color: #ffffff;
+}
+
+/*
+ * Tab none
+ */
+.tabs-none > .nav-tabs {
+  display: none;
 }

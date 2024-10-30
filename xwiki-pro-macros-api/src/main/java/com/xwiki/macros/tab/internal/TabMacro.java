@@ -28,6 +28,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;
@@ -37,9 +38,11 @@ import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabMacroParameters;
+import com.xwiki.macros.tab.macro.TransitionEffect;
 
 /**
  * Tab macro: a tab element for the tab-group macro.
@@ -64,6 +67,9 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
 
     @Inject
     private Provider<XWikiContext> xwikiContextProvider;
+
+    @Inject
+    private Logger logger;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -91,16 +97,35 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
             List<Block> macroContent = contentParser.parse(content, context, false, context.isInline()).getChildren();
             String divClass = "tab-pane"
                 + (StringUtils.isEmpty(parameters.getCssClass()) ? "" : " " + parameters.getCssClass())
-                + (parameters.isShowByDefault() ? " active" : "");
+                + (parameters.isShowByDefault() ? " active" : "")
+                + (parameters.getEffect() == TransitionEffect.FADE
+                ? (parameters.isShowByDefault() ? " fade in" : " fade") : "");
+            String configSerialized = "";
+            try {
+                ObjectMapper jsonObjectMapper = new ObjectMapper();
+                configSerialized = jsonObjectMapper.writeValueAsString(parameters);
+            } catch (Exception ex) {
+                logger.error("Failed to serialize parameter object", ex);
+            }
             Block groupBlock = new GroupBlock(macroContent, Map.of(
                 "role", "tabpanel",
-                "class", divClass)
+                "class", divClass,
+                "data-config", configSerialized)
             );
             if (!StringUtils.isEmpty(parameters.getId())) {
                 groupBlock.setParameter("id", parameters.getId());
             }
+            StringBuilder cssStyle = new StringBuilder();
             if (!StringUtils.isEmpty(parameters.getCssStyle())) {
-                groupBlock.setParameter("style", parameters.getCssStyle());
+                cssStyle.append(parameters.getCssStyle());
+            }
+            if (parameters.getEffectDuration() != 0) {
+                cssStyle.append("transition-duration: ");
+                cssStyle.append(parameters.getEffectDuration());
+                cssStyle.append("s;");
+            }
+            if (!StringUtils.isEmpty(cssStyle.toString())) {
+                groupBlock.setParameter("style", cssStyle.toString());
             }
             return Collections.singletonList(groupBlock);
         }
