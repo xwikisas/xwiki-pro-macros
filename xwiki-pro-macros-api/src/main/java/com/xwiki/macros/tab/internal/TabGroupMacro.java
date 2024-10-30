@@ -189,10 +189,13 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     protected List<Block> internalExecute(TabGroupMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-        if ("view".equals(xwikiContextProvider.get().getAction())) {
-            return renderView(parameters, content, context);
-        } else {
+        // Don't show tab in edit mode.
+        Syntax syntax = context.getTransformationContext().getTargetSyntax();
+        SyntaxType targetSyntaxType = syntax == null ? null : syntax.getType();
+        if (SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(targetSyntaxType)) {
             return this.contentParser.parse(content, context, false, false).getChildren();
+        } else {
+            return renderView(parameters, content, context);
         }
     }
 }
