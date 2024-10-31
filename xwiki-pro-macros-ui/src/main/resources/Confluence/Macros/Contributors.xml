@@ -366,8 +366,8 @@ Result:
     &lt;span class="contributor-last-contribution-date"&gt;($xwiki.formatDate($contribution['update']))&lt;/span&gt;
   #end
 #end
-#macro (addContributions $query $page)
-  #foreach($r in $query.bindValue('d', $page).execute())
+#macro (addContributions $query $pages)
+  #foreach($r in $query.bindValue('d', $pages).execute())
     #set($c = $contributors[$r[0]])
     #if (!$c)
       #set($contributors[$r[0]] = {"name": $r[0], "update": $r[1], "count": $r[2]})
@@ -441,21 +441,17 @@ Result:
       #end
     #end
   #else
+    FALLBACK
     #set($pages = [$page])
   #end
   #set($contributors = {})
-  #foreach ($page in $pages)
-    #set($d = $xwiki.getDocument($page))
-    #if (!$d.isNew())
-      #if ($include.contains('authors'))
-        #set($query = $services.query.hql("select rcs.author, max(rcs.date), 1 from XWikiDocument doc, XWikiRCSNodeInfo rcs where doc.fullName = :d and doc.id = rcs.id.docId group by rcs.author"))
-        #addContributions($query, $page)
-      #end
-      #if ($include.contains('comments'))
-        #set($query = $services.query.xwql("select comment.author, max(comment.date), count(distinct comment) from Document doc, doc.object('XWiki.XWikiComments') comment where doc.fullName = :d group by comment.author"))
-        #addContributions($query, $page)
-      #end
-    #end
+  #if ($include.contains('authors'))
+    #set($query = $services.query.hql("select rcs.author, max(rcs.date), 1 from XWikiDocument doc, XWikiRCSNodeInfo rcs where doc.fullName in (:d) and doc.id = rcs.id.docId group by rcs.author"))
+    #addContributions($query, $pages)
+  #end
+  #if ($include.contains('comments'))
+    #set($query = $services.query.xwql("select comment.author, max(comment.date), count(distinct comment) from Document doc, doc.object('XWiki.XWikiComments') comment where doc.fullName in (:d) group by comment.author"))
+    #addContributions($query, $pages)
   #end
   #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse))
 
