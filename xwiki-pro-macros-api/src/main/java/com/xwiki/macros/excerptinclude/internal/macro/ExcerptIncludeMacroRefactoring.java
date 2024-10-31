@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
@@ -38,7 +39,7 @@ import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.macro.MacroRefactoring;
 import org.xwiki.rendering.macro.MacroRefactoringException;
-import org.xwiki.text.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Implementation of reference refactoring operation for the excerpt-include macro.
@@ -68,7 +69,14 @@ public class ExcerptIncludeMacroRefactoring implements MacroRefactoring
         DocumentReference sourceReference, DocumentReference targetReference, boolean relative)
         throws MacroRefactoringException
     {
-        return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference, relative);
+        return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
+    }
+
+    @Override
+    public Optional<MacroBlock> replaceReference(MacroBlock macroBlock, DocumentReference currentDocumentReference,
+        AttachmentReference sourceReference, AttachmentReference targetReference, boolean relative)
+    {
+        return Optional.empty();
     }
 
     @Override
@@ -79,8 +87,7 @@ public class ExcerptIncludeMacroRefactoring implements MacroRefactoring
     }
 
     private <T extends EntityReference> Optional<MacroBlock> getMacroBlock(MacroBlock macroBlock,
-        DocumentReference currentDocumentReference, T sourceReference, T targetReference, boolean relative)
-        throws MacroRefactoringException
+        DocumentReference currentDocumentReference, T sourceReference, T targetReference)
     {
         // Note: an empty string means a reference to the current page and thus a recursive include. Renaming the page
         // doesn't require changing the value (since it's still an empty string), thus, we skip it!
