@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.EntityType;
-import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
@@ -73,14 +72,7 @@ public class ExcerptIncludeMacroRefactoring implements MacroRefactoring
     }
 
     @Override
-    public Optional<MacroBlock> replaceReference(MacroBlock macroBlock, DocumentReference currentDocumentReference,
-        AttachmentReference sourceReference, AttachmentReference targetReference, boolean relative)
-    {
-        return Optional.empty();
-    }
-
-    @Override
-    public Set<ResourceReference> extractReferences(MacroBlock macroBlock) throws MacroRefactoringException
+    public Set<ResourceReference> extractReferences(MacroBlock macroBlock)
     {
         ResourceReference resourceReference = new DocumentResourceReference(macroBlock.getParameter("0"));
         return Collections.singleton(resourceReference);
