@@ -431,7 +431,7 @@ Result:
     #else
       #set($pages = $services.query.hql("select distinct doc.fullName from XWikiDocument doc where doc.space in :spaces and doc.fullName not like '%.WebPreferences' $hqlHiddenFilter $hqlOrder").bindValue('spaces', $spaces).execute())
     #end
-  #elseif ($scope == "descendents")
+  #elseif ($scope == "descendents" || $scope == "descendants")
     #set($pages = [])
     #if ($global)
       #set($pages = $services.query.xwql("select distinct doc.fullName from Document doc where doc.fullName not like '%.WebPreferences' $hqlHiddenFilter $hqlOrder").execute())
