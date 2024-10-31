@@ -151,6 +151,15 @@ p.auto-cursor-target&gt;br:first-child:last-child, p.auto-cursor-target:has(br:f
   display:none;
 }
 
+/** Confluence fixed tables */
+
+table.fixed-table {
+  table-layout: fixed;
+}
+
+/* Note about &lt;table class="wrapped"&gt;: it's a bug in Confluence that can be ignored, apparently.
+   See https://community.atlassian.com/t5/Confluence-questions/Why-and-when-does-Confluence-apply-class-quot-wrapped-quot-to/qaq-p/902303
+
 /*** Confluence "highlight" (background) colors */
 
 [data-highlight-colour] {
