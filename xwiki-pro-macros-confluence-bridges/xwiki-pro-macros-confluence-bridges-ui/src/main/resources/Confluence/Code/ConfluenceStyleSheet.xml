@@ -164,7 +164,10 @@ table.fixed-table {
 
 [data-highlight-colour] {
   /* not supported in current browsers, but will probably in the future
-     See https://developer.mozilla.org/en-US/docs/Web/CSS/attr#color_value */
+     See https://developer.mozilla.org/en-US/docs/Web/CSS/attr#color_value
+     Note that the migrator (Confluence XML) now translates this into style
+     parameters directly.
+   */
   background-color: attr(data-highlight-colour color, white);
 }
 
