@@ -159,9 +159,6 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
                 mb.setParameter(ID, id);
             }
             // Set animation parameter for sub macro block
-            if (parameters.getNextAfter() != 0 && mb.getParameter(PARAM_NAME_NEXT_AFTER) == null) {
-                mb.setParameter(PARAM_NAME_NEXT_AFTER, Integer.toString(parameters.getNextAfter()));
-            }
             if (parameters.getEffectType() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
                 mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffectType().name());
             }

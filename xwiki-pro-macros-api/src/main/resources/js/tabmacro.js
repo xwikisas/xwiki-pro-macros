@@ -30,8 +30,7 @@ require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
           let divElement = element.querySelector("#" + el.getAttribute("aria-controls"))
           let tabNextAfter = parseInt(divElement.getAttribute('data-nextafter'))
           if (tabNextAfter <= 0) {
-            // should not happen but in case avoid to have an infinite loop
-            return
+            tabNextAfter = globalNextAfter;
           }
           $(el).tab('show')
           await new Promise(resolve => setTimeout(resolve, tabNextAfter * 1000));
