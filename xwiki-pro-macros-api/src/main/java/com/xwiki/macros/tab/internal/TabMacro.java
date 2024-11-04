@@ -38,7 +38,6 @@ import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.text.StringUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabMacroParameters;
@@ -100,23 +99,16 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
                 + (parameters.isShowByDefault() ? " active" : "")
                 + (parameters.getEffectType() == TransitionEffect.FADE
                 ? (parameters.isShowByDefault() ? " fade in" : " fade") : "");
-            String configSerialized = "";
-            try {
-                ObjectMapper jsonObjectMapper = new ObjectMapper();
-                configSerialized = jsonObjectMapper.writeValueAsString(parameters);
-            } catch (Exception ex) {
-                logger.error("Failed to serialize parameter object", ex);
-            }
             Block groupBlock = new GroupBlock(macroContent, Map.of(
                 "role", "tabpanel",
                 "class", divClass,
-                "data-config", configSerialized)
+                "data-nextafter", Integer.toString(parameters.getNextAfter()))
             );
-            if (!StringUtils.isEmpty(parameters.getId())) {
+            if (StringUtils.isNotEmpty(parameters.getId())) {
                 groupBlock.setParameter("id", parameters.getId());
             }
             StringBuilder cssStyle = new StringBuilder();
-            if (!StringUtils.isEmpty(parameters.getCssStyle())) {
+            if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
                 cssStyle.append(parameters.getCssStyle());
             }
             if (parameters.getEffectDuration() != 0) {
@@ -124,7 +116,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
                 cssStyle.append(parameters.getEffectDuration());
                 cssStyle.append("s;");
             }
-            if (!StringUtils.isEmpty(cssStyle.toString())) {
+            if (StringUtils.isNotEmpty(cssStyle.toString())) {
                 groupBlock.setParameter("style", cssStyle.toString());
             }
             return Collections.singletonList(groupBlock);

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +51,6 @@ import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
 import org.xwiki.xml.XMLUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabGroupMacroParameters;
@@ -89,11 +89,13 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 
     private static final String BLOCK_PARAM_ROLE = "role";
 
-    public static final String PARAM_NAME_NEXT_AFTER = "nextAfter";
+    private static final String PARAM_NAME_NEXT_AFTER = "nextAfter";
 
-    public static final String PARAM_NAME_EFFECT = "effectType";
+    private static final String PARAM_NAME_EFFECT = "effectType";
 
-    public static final String PARAM_NAME_EFFECT_DURATION = "effectDuration";
+    private static final String PARAM_NAME_EFFECT_DURATION = "effectDuration";
+
+    private static final String CSS_DELIMITER = ";";
 
     @Inject
     private Provider<XWikiContext> xwikiContextProvider;
@@ -173,61 +175,59 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
                 lbParam.put(BLOCK_PARAM_CLASS, "active");
             }
             // We use the raw block because the LinkBlock generate a span element which break bootstrap tabs CSS
+            String escapedId = XMLUtils.escape(id);
             RawBlock linkBlock = new RawBlock(
                 String.format("<a href=\"#%s\" aria-controls=\"%s\" role=\"tab\" data-toggle=\"tab\">%s</a>",
-                    id, id, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),
+                    escapedId, escapedId, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),
                 Syntax.HTML_5_0);
             ulBlocks.add(new ListItemBlock(Collections.singletonList(linkBlock), lbParam));
             inc++;
         }
         Map<String, String> mainBlockParam = new HashMap<>();
         StringBuilder style = new StringBuilder();
-        StringBuilder mainDivClass = new StringBuilder("xwikitabmacro");
-        if (!StringUtils.isEmpty(parameters.getId())) {
+        List<String> mainDivClasses = new LinkedList<>();
+        mainDivClasses.add("xwikitabmacro");
+        if (StringUtils.isNotEmpty(parameters.getId())) {
             mainBlockParam.put(ID, parameters.getId());
         }
-        if (!StringUtils.isEmpty(parameters.getWidth())) {
-            style.append("width: ").append(parameters.getWidth());
+        if (StringUtils.isNotEmpty(parameters.getWidth())) {
+            style.append("width: ").append(parameters.getWidth()).append(CSS_DELIMITER);
         }
-        if (!StringUtils.isEmpty(parameters.getHeight())) {
-            style.append("height: ").append(parameters.getWidth());
+        if (StringUtils.isNotEmpty(parameters.getHeight())) {
+            style.append("height: ").append(parameters.getHeight()).append(CSS_DELIMITER);
         }
         // FIXME I don't know if we need to apply the css class on the tab div or on the main div
-        if (!StringUtils.isEmpty(parameters.getCssClass())) {
-            mainDivClass.append(" ").append(parameters.getCssClass());
+        if (StringUtils.isNotEmpty(parameters.getCssClass())) {
+            mainDivClasses.add(parameters.getCssClass());
         }
         if (parameters.getTabLocation() != null
             && parameters.getTabLocation() != TabGroupMacroParameters.Location.TOP)
         {
             switch (parameters.getTabLocation()) {
                 case RIGHT:
-                    mainDivClass.append(" tabs-right");
+                    mainDivClasses.add("tabs-right");
                     break;
                 case LEFT:
-                    mainDivClass.append(" tabs-left");
+                    mainDivClasses.add("tabs-left");
                     break;
                 case BOTTOM:
-                    mainDivClass.append(" tabs-below");
+                    mainDivClasses.add("tabs-below");
                     break;
                 case NONE:
-                    mainDivClass.append(" tabs-none");
+                    mainDivClasses.add("tabs-none");
                     break;
                 default:
                     break;
             }
         }
         mainBlockParam.put("style", style.toString());
-        mainBlockParam.put(BLOCK_PARAM_CLASS, mainDivClass.toString());
+        mainBlockParam.put(BLOCK_PARAM_CLASS, String.join(" ", mainDivClasses));
         Block tabElementBlock = new BulletedListBlock(ulBlocks, Map.of(
             BLOCK_PARAM_CLASS, "nav nav-tabs",
             BLOCK_PARAM_ROLE, "tablist")
         );
-        try {
-            ObjectMapper jsonObjectMapper = new ObjectMapper();
-            mainBlockParam.put("data-config", jsonObjectMapper.writeValueAsString(parameters));
-        } catch (Exception ex) {
-            logger.error("Failed to serialize parameter object", ex);
-        }
+        mainBlockParam.put("data-nextafter", Integer.toString(parameters.getNextAfter()));
+        mainBlockParam.put("data-loopcards", Boolean.toString(parameters.isLoopCards()));
         Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
         List<Block> blockList;
         if (parameters.getTabLocation() == TabGroupMacroParameters.Location.BOTTOM) {

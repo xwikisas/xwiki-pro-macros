@@ -17,27 +17,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-const delay = (delayInms) => {
-  return new Promise(resolve => setTimeout(resolve, delayInms));
-};
-
 require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
   async function processTabGroupElement(element) {
 
-    let globalConfig = JSON.parse(element.getAttribute('data-config'));
+    let globalNextAfter = parseInt(element.getAttribute('data-nextafter'));
+    let loopCards = element.getAttribute('data-loopcards');
     let elementToIterate = element.querySelectorAll("ul.nav-tabs li a");
 
-    if (globalConfig["nextAfter"] > 0 && elementToIterate.length > 0) {
-      for (let i = 0; i < 1 || globalConfig["loopCards"]; i++) {
+    if (globalNextAfter > 0 && elementToIterate.length > 0) {
+      for (let i = 0; i < 1 || loopCards === "true"; i++) {
         for (const el of elementToIterate) {
           let divElement = element.querySelector("#" + el.getAttribute("aria-controls"))
-          let tabConfig = JSON.parse(divElement.getAttribute('data-config'))
-          if (tabConfig["nextAfter"] <= 0) {
+          let tabNextAfter = parseInt(divElement.getAttribute('data-nextafter'))
+          if (tabNextAfter <= 0) {
             // should not happen but in case avoid to have an infinite loop
             return
           }
           $(el).tab('show')
-          await delay(tabConfig["nextAfter"] * 1000)
+          await new Promise(resolve => setTimeout(resolve, tabNextAfter * 1000));
         }
       }
     }
