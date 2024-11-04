@@ -33,7 +33,7 @@ public class TabGroupMacroParameters
 {
     private String id;
 
-    private Location location;
+    private Location tabLocation;
 
     private String width;
 
@@ -45,7 +45,7 @@ public class TabGroupMacroParameters
 
     private boolean loopCards;
 
-    private TransitionEffect effect = TransitionEffect.NONE;
+    private TransitionEffect effectType = TransitionEffect.NONE;
 
     private int effectDuration;
 
@@ -97,17 +97,17 @@ public class TabGroupMacroParameters
      * @return the tabs location related to the macro content.
      */
     @PropertyDescription("The location of the element.")
-    public Location getLocation()
+    public Location getTabLocation()
     {
-        return location;
+        return tabLocation;
     }
 
     /**
-     * @param location the tabs location related to the macro content.
+     * @param tabLocation the tabs location related to the macro content.
      */
-    public void setLocation(Location location)
+    public void setTabLocation(Location tabLocation)
     {
-        this.location = location;
+        this.tabLocation = tabLocation;
     }
 
     /**
@@ -199,18 +199,18 @@ public class TabGroupMacroParameters
     /**
      * @return The transition animation between each tab.
      */
-    public TransitionEffect getEffect()
+    public TransitionEffect getEffectType()
     {
-        return effect;
+        return effectType;
     }
 
     /**
-     * @param effect The transition animation between each tab.
+     * @param effectType The transition animation between each tab.
      */
     @PropertyDescription("The transition animation between each tab.")
-    public void setEffect(TransitionEffect effect)
+    public void setEffectType(TransitionEffect effectType)
     {
-        this.effect = effect;
+        this.effectType = effectType;
     }
 
     /**

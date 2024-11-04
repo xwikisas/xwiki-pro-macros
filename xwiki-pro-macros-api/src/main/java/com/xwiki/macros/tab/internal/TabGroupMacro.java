@@ -91,7 +91,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 
     public static final String PARAM_NAME_NEXT_AFTER = "nextAfter";
 
-    public static final String PARAM_NAME_EFFECT = "effect";
+    public static final String PARAM_NAME_EFFECT = "effectType";
 
     public static final String PARAM_NAME_EFFECT_DURATION = "effectDuration";
 
@@ -160,8 +160,8 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
             if (parameters.getNextAfter() != 0 && mb.getParameter(PARAM_NAME_NEXT_AFTER) == null) {
                 mb.setParameter(PARAM_NAME_NEXT_AFTER, Integer.toString(parameters.getNextAfter()));
             }
-            if (parameters.getEffect() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
-                mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffect().name());
+            if (parameters.getEffectType() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
+                mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffectType().name());
             }
             if (parameters.getEffectDuration() != 0 && mb.getParameter(PARAM_NAME_EFFECT_DURATION) == null) {
                 mb.setParameter(PARAM_NAME_EFFECT_DURATION, Integer.toString(parameters.getEffectDuration()));
@@ -196,8 +196,10 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         if (!StringUtils.isEmpty(parameters.getCssClass())) {
             mainDivClass.append(" ").append(parameters.getCssClass());
         }
-        if (parameters.getLocation() != null && parameters.getLocation() != TabGroupMacroParameters.Location.TOP) {
-            switch (parameters.getLocation()) {
+        if (parameters.getTabLocation() != null
+            && parameters.getTabLocation() != TabGroupMacroParameters.Location.TOP)
+        {
+            switch (parameters.getTabLocation()) {
                 case RIGHT:
                     mainDivClass.append(" tabs-right");
                     break;
@@ -228,7 +230,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         }
         Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
         List<Block> blockList;
-        if (parameters.getLocation() == TabGroupMacroParameters.Location.BOTTOM) {
+        if (parameters.getTabLocation() == TabGroupMacroParameters.Location.BOTTOM) {
             blockList = Arrays.asList(tabContentBlock, tabElementBlock);
         } else {
             blockList = Arrays.asList(tabElementBlock, tabContentBlock);

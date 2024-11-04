@@ -50,7 +50,7 @@ public class TabMacroParameters
 
     private int nextAfter;
 
-    private TransitionEffect effect = TransitionEffect.NONE;
+    private TransitionEffect effectType = TransitionEffect.NONE;
 
     private int effectDuration;
 
@@ -162,18 +162,18 @@ public class TabMacroParameters
     /**
      * @return The transition animation for this tab.
      */
-    public TransitionEffect getEffect()
+    public TransitionEffect getEffectType()
     {
-        return effect;
+        return effectType;
     }
 
     /**
-     * @param effect The transition animation for this tab.
+     * @param effectType The transition animation for this tab.
      */
     @PropertyDescription("The transition animation for this tab.")
-    public void setEffect(TransitionEffect effect)
+    public void setEffectType(TransitionEffect effectType)
     {
-        this.effect = effect;
+        this.effectType = effectType;
     }
 
     /**

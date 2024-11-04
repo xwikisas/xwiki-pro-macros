@@ -98,7 +98,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
             String divClass = "tab-pane"
                 + (StringUtils.isEmpty(parameters.getCssClass()) ? "" : " " + parameters.getCssClass())
                 + (parameters.isShowByDefault() ? " active" : "")
-                + (parameters.getEffect() == TransitionEffect.FADE
+                + (parameters.getEffectType() == TransitionEffect.FADE
                 ? (parameters.isShowByDefault() ? " fade in" : " fade") : "");
             String configSerialized = "";
             try {
