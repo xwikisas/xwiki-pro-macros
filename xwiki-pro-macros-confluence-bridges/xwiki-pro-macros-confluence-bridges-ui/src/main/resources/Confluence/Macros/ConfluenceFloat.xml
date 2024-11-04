@@ -42,10 +42,10 @@
 This is a Confluence bridge for the float macro. It use the XWiki box macro.
 
 Only a subset of the parameters supported by the Confluence macro are supported by this bridge macro: title, exclude, include and page. The remaining parameters are ignored:
-* background: As the box macro this parameter, it can't be supported for now.
-* border: As the box macro this parameter, it can't be supported for now.
-* margin: As the box macro this parameter, it can't be supported for now.
-* padding: As the box macro this parameter, it can't be supported for now.
+* background: As the box macro don't support this parameter, it can't be supported for now.
+* border: As the box macro don't support this parameter, it can't be supported for now.
+* margin: As the box macro don't support this parameter, it can't be supported for now.
+* padding: As the box macro don't support this parameter, it can't be supported for now.
 
 = Parameters =
 
