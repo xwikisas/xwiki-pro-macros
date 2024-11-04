@@ -35,9 +35,9 @@ public class TabGroupMacroParameters
 
     private Location location;
 
-    private int width;
+    private String width;
 
-    private int height;
+    private String height;
 
     private String cssClass;
 
@@ -113,8 +113,8 @@ public class TabGroupMacroParameters
     /**
      * @return with of the macro.
      */
-    @PropertyDescription("The width of the main element.")
-    public int getWidth()
+    @PropertyDescription("The width of the main element with the CSS unit.")
+    public String getWidth()
     {
         return width;
     }
@@ -122,7 +122,7 @@ public class TabGroupMacroParameters
     /**
      * @param width of the macro.
      */
-    public void setWidth(int width)
+    public void setWidth(String width)
     {
         this.width = width;
     }
@@ -130,7 +130,7 @@ public class TabGroupMacroParameters
     /**
      * @return height of the macro.
      */
-    public int getHeight()
+    public String getHeight()
     {
         return height;
     }
@@ -138,8 +138,8 @@ public class TabGroupMacroParameters
     /**
      * @param height height of the macro.
      */
-    @PropertyDescription("The height of the main element.")
-    public void setHeight(int height)
+    @PropertyDescription("The height of the main element with the CSS unit.")
+    public void setHeight(String height)
     {
         this.height = height;
     }

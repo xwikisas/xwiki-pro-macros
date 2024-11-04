@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -68,7 +67,6 @@ import com.xwiki.macros.tab.macro.TabMacroParameters;
 @Singleton
 public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 {
-
     private static final String NAME = "Tab group";
 
     private static final String DESCRIPTION = "The main macro which group tab macro elements.";
@@ -87,13 +85,9 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
 
     private static final String TAB_MACRO_PARAM_LABEL = "label";
 
-    private static final String CSS_PX_UNIT = "px;";
-
     private static final String BLOCK_PARAM_CLASS = "class";
 
     private static final String BLOCK_PARAM_ROLE = "role";
-
-    private static final Random RANDOM = new Random();
 
     public static final String PARAM_NAME_NEXT_AFTER = "nextAfter";
 
@@ -192,11 +186,11 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         if (!StringUtils.isEmpty(parameters.getId())) {
             mainBlockParam.put(ID, parameters.getId());
         }
-        if (parameters.getWidth() > 0) {
-            style.append("width: ").append(parameters.getWidth()).append(CSS_PX_UNIT);
+        if (!StringUtils.isEmpty(parameters.getWidth())) {
+            style.append("width: ").append(parameters.getWidth());
         }
-        if (parameters.getHeight() > 0) {
-            style.append("height: ").append(parameters.getWidth()).append(CSS_PX_UNIT);
+        if (!StringUtils.isEmpty(parameters.getHeight())) {
+            style.append("height: ").append(parameters.getWidth());
         }
         // FIXME I don't know if we need to apply the css class on the tab div or on the main div
         if (!StringUtils.isEmpty(parameters.getCssClass())) {
