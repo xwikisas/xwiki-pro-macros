@@ -39,6 +39,7 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.ListItemBlock;
+import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.match.MacroBlockMatcher;
 import org.xwiki.rendering.macro.MacroContentParser;
@@ -119,7 +120,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
      */
     public TabGroupMacro()
     {
-        super(NAME, DESCRIPTION, new DefaultContentDescriptor(CONTENT_DESCRIPTION, true, Block.LIST_BLOCK_TYPE),
+        super(NAME, DESCRIPTION, new DefaultContentDescriptor(CONTENT_DESCRIPTION, false, Block.LIST_BLOCK_TYPE),
             TabGroupMacroParameters.class);
     }
 
@@ -244,7 +245,10 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         Syntax syntax = context.getTransformationContext().getTargetSyntax();
         SyntaxType targetSyntaxType = syntax == null ? null : syntax.getType();
         if (SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(targetSyntaxType)) {
-            return this.contentParser.parse(content, context, false, false).getChildren();
+            // Handle edit mode
+            List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
+            Block editableContent = new MetaDataBlock(children, getNonGeneratedContentMetaData());
+            return Collections.singletonList(editableContent);
         } else {
             return renderView(parameters, content, context);
         }

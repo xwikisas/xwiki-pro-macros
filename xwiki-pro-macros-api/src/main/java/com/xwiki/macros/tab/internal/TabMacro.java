@@ -19,7 +19,9 @@
  */
 package com.xwiki.macros.tab.internal;
 
+import java.io.StringReader;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +32,18 @@ import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;
+import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
+import org.xwiki.rendering.parser.Parser;
+import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
 
 import com.xpn.xwiki.XWikiContext;
@@ -61,6 +69,8 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
 
     private static final String CONTENT_DESCRIPTION = "The content to be displayed in the tab.";
 
+    private static final String BLOCK_PARAM_CLASS = "class";
+
     @Inject
     protected MacroContentParser contentParser;
 
@@ -69,6 +79,14 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
 
     @Inject
     private Logger logger;
+
+    @Inject
+    @Named("context")
+    private Provider<ComponentManager> componentManagerProvider;
+
+    @Inject
+    @Named("ssrx")
+    private SkinExtension ssrx;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -90,8 +108,29 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
     protected List<Block> internalExecute(TabMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-        if (!"view".equals(xwikiContextProvider.get().getAction())) {
-            return this.contentParser.parse(content, context, false, false).getChildren();
+        // Don't show tab in edit mode.
+        Syntax syntax = context.getTransformationContext().getTargetSyntax();
+        SyntaxType targetSyntaxType = syntax == null ? null : syntax.getType();
+        if (SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(targetSyntaxType)) {
+            // Handle edit mode
+            ssrx.use("css/tabmacro.css");
+            List<Block> tabLabelBlock;
+            try {
+                Parser parser = componentManagerProvider.get().getInstance(Parser.class, "xwiki/2.1");
+                tabLabelBlock = parser.parse(new StringReader(parameters.getLabel())).getChildren();
+            } catch (Exception e) {
+                throw new MacroExecutionException("Can't get tab label", e);
+            }
+            if (!tabLabelBlock.isEmpty()) {
+                tabLabelBlock.get(0).setParameter(BLOCK_PARAM_CLASS, "tabs-edit-title");
+            }
+            List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
+            Block editableContent = new MetaDataBlock(children, getNonGeneratedContentMetaData());
+            List<Block> result = new LinkedList<>();
+            result.add(new GroupBlock(
+                tabLabelBlock, Map.of(BLOCK_PARAM_CLASS, "tabs-edit-title-block")));
+            result.add(editableContent);
+            return result;
         } else {
             List<Block> macroContent = contentParser.parse(content, context, false, context.isInline()).getChildren();
             String divClass = "tab-pane"
@@ -101,7 +140,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
                 ? (parameters.isShowByDefault() ? " fade in" : " fade") : "");
             Block groupBlock = new GroupBlock(macroContent, Map.of(
                 "role", "tabpanel",
-                "class", divClass,
+                BLOCK_PARAM_CLASS, divClass,
                 "data-nextafter", Integer.toString(parameters.getNextAfter()))
             );
             if (StringUtils.isNotEmpty(parameters.getId())) {

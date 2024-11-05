@@ -129,3 +129,22 @@ div.xwikitabmacro > .nav-tabs > li
 .tabs-none > .nav-tabs {
   display: none;
 }
+
+/*
+ * Edit mode
+ */
+.tabs-edit-title-block {
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs-edit-title {
+  border-radius: 7px 7px 0 0;
+  background-color: #FFFFFF;
+  border: 1px solid #ddd;
+  border-bottom-color: rgb(221, 221, 221);
+  border-bottom-color: transparent;
+  font-size: 14px;
+  width: fit-content;
+  padding: 10px 15px;
+  margin-bottom: -2px;
+}
