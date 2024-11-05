@@ -24,12 +24,12 @@ require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
     let loopCards = element.getAttribute('data-loopcards');
     let elementToIterate = element.querySelectorAll("ul.nav-tabs li a");
 
-    if (globalNextAfter > 0 && elementToIterate.length > 0) {
+    if (!isNaN(tabNextAfter) && globalNextAfter > 0 && elementToIterate.length > 0) {
       for (let i = 0; i < 1 || loopCards === "true"; i++) {
         for (const el of elementToIterate) {
           let divElement = element.querySelector("#" + el.getAttribute("aria-controls"))
           let tabNextAfter = parseInt(divElement.getAttribute('data-nextafter'))
-          if (tabNextAfter <= 0) {
+          if (isNaN(tabNextAfter) || tabNextAfter <= 0) {
             tabNextAfter = globalNextAfter;
           }
           $(el).tab('show')
