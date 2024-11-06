@@ -25,7 +25,7 @@ require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
     let elementToIterate = element.querySelectorAll("ul.nav-tabs li a");
 
     if (!isNaN(globalNextAfter) && globalNextAfter > 0 && elementToIterate.length > 0) {
-      for (let i = 0; i < 1 || loopCards === "true"; i++) {
+      do {
         for (const el of elementToIterate) {
           let divElement = document.getElementById(el.getAttribute("aria-controls"))
           let tabNextAfter = parseInt(divElement.dataset.nextAfter)
@@ -33,9 +33,10 @@ require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
             tabNextAfter = globalNextAfter;
           }
           $(el).tab('show')
+          // the setTimeout with await will do something like a sleep in JS
           await new Promise(resolve => setTimeout(resolve, tabNextAfter * 1000));
         }
-      }
+      } while (loopCards === "true")
     }
   }
 
