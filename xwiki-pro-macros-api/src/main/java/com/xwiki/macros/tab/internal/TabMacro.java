@@ -27,12 +27,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.manager.ComponentManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
@@ -46,7 +43,6 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
 
-import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabMacroParameters;
 import com.xwiki.macros.tab.macro.TransitionEffect;
@@ -75,18 +71,12 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
     protected MacroContentParser contentParser;
 
     @Inject
-    private Provider<XWikiContext> xwikiContextProvider;
-
-    @Inject
-    private Logger logger;
-
-    @Inject
-    @Named("context")
-    private Provider<ComponentManager> componentManagerProvider;
-
-    @Inject
     @Named("ssrx")
     private SkinExtension ssrx;
+
+    @Inject
+    @Named("plain/1.0")
+    private Parser plainTextParser;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -116,8 +106,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
             ssrx.use("css/tabmacro.css");
             List<Block> tabLabelBlock;
             try {
-                Parser parser = componentManagerProvider.get().getInstance(Parser.class, "xwiki/2.1");
-                tabLabelBlock = parser.parse(new StringReader(parameters.getLabel())).getChildren();
+                tabLabelBlock = plainTextParser.parse(new StringReader(parameters.getLabel())).getChildren();
             } catch (Exception e) {
                 throw new MacroExecutionException("Can't get tab label", e);
             }
@@ -141,7 +130,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
             Block groupBlock = new GroupBlock(macroContent, Map.of(
                 "role", "tabpanel",
                 BLOCK_PARAM_CLASS, divClass,
-                "data-nextafter", Integer.toString(parameters.getNextAfter()))
+                "data-next-after", Integer.toString(parameters.getNextAfter()))
             );
             if (StringUtils.isNotEmpty(parameters.getId())) {
                 groupBlock.setParameter("id", parameters.getId());

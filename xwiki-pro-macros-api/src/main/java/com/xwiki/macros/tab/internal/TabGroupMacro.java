@@ -30,10 +30,8 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
@@ -52,7 +50,6 @@ import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
 import org.xwiki.xml.XMLUtils;
 
-import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabGroupMacroParameters;
 import com.xwiki.macros.tab.macro.TabMacroParameters;
@@ -99,9 +96,6 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     private static final String CSS_DELIMITER = ";";
 
     @Inject
-    private Provider<XWikiContext> xwikiContextProvider;
-
-    @Inject
     private MacroContentParser contentParser;
 
     @Inject
@@ -111,9 +105,6 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     @Inject
     @Named("jsrx")
     private SkinExtension jsrx;
-
-    @Inject
-    private Logger logger;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -224,8 +215,8 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
             BLOCK_PARAM_CLASS, "nav nav-tabs",
             BLOCK_PARAM_ROLE, "tablist")
         );
-        mainBlockParam.put("data-nextafter", Integer.toString(parameters.getNextAfter()));
-        mainBlockParam.put("data-loopcards", Boolean.toString(parameters.isLoopCards()));
+        mainBlockParam.put("data-next-after", Integer.toString(parameters.getNextAfter()));
+        mainBlockParam.put("data-loop-cards", Boolean.toString(parameters.isLoopCards()));
         Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
         List<Block> blockList;
         if (parameters.getTabLocation() == TabGroupMacroParameters.Location.BOTTOM) {

@@ -20,15 +20,15 @@
 require(['xwiki-page-ready', 'jquery'], function (pageReady, $) {
   async function processTabGroupElement(element) {
 
-    let globalNextAfter = parseInt(element.getAttribute('data-nextafter'));
-    let loopCards = element.getAttribute('data-loopcards');
+    let globalNextAfter = parseInt(element.dataset.nextAfter);
+    let loopCards = element.dataset.loopCards;
     let elementToIterate = element.querySelectorAll("ul.nav-tabs li a");
 
-    if (!isNaN(tabNextAfter) && globalNextAfter > 0 && elementToIterate.length > 0) {
+    if (!isNaN(globalNextAfter) && globalNextAfter > 0 && elementToIterate.length > 0) {
       for (let i = 0; i < 1 || loopCards === "true"; i++) {
         for (const el of elementToIterate) {
-          let divElement = element.querySelector("#" + el.getAttribute("aria-controls"))
-          let tabNextAfter = parseInt(divElement.getAttribute('data-nextafter'))
+          let divElement = document.getElementById(el.getAttribute("aria-controls"))
+          let tabNextAfter = parseInt(divElement.dataset.nextAfter)
           if (isNaN(tabNextAfter) || tabNextAfter <= 0) {
             tabNextAfter = globalNextAfter;
           }
