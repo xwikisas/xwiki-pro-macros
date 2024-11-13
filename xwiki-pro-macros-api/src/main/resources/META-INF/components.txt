@@ -15,3 +15,5 @@ com.xwiki.macros.script.ProMacroLicensingScriptService
 com.xwiki.macros.script.TagListScriptService
 com.xwiki.macros.showhideif.macro.HideIfMacro
 com.xwiki.macros.showhideif.macro.ShowIfMacro
+com.xwiki.macros.tab.internal.TabGroupMacro
+com.xwiki.macros.tab.internal.TabMacro
