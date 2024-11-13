@@ -185,7 +185,6 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         if (StringUtils.isNotEmpty(parameters.getHeight())) {
             style.append("height: ").append(parameters.getHeight()).append(CSS_DELIMITER);
         }
-        // FIXME I don't know if we need to apply the css class on the tab div or on the main div
         if (StringUtils.isNotEmpty(parameters.getCssClass())) {
             mainDivClasses.add(parameters.getCssClass());
         }
