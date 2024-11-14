@@ -92,7 +92,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     @Override
     public boolean supportsInlineMode()
     {
-        return false;
+        return true;
     }
 
     @Override

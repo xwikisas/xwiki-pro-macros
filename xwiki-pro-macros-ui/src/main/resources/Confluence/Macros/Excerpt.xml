@@ -370,7 +370,7 @@ Result:
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>0</supportsInlineMode>
+      <supportsInlineMode>1</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
