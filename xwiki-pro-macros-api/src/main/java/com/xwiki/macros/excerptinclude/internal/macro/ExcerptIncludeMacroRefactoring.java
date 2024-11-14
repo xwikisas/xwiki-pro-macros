@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
@@ -66,6 +67,14 @@ public class ExcerptIncludeMacroRefactoring implements MacroRefactoring
     @Override
     public Optional<MacroBlock> replaceReference(MacroBlock macroBlock, DocumentReference currentDocumentReference,
         DocumentReference sourceReference, DocumentReference targetReference, boolean relative)
+        throws MacroRefactoringException
+    {
+        return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
+    }
+
+    @Override
+    public Optional<MacroBlock> replaceReference(MacroBlock macroBlock, DocumentReference currentDocumentReference,
+        AttachmentReference sourceReference, AttachmentReference targetReference, boolean relative)
         throws MacroRefactoringException
     {
         return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
