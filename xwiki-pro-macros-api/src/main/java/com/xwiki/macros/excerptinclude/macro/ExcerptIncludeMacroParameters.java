@@ -51,6 +51,11 @@ public class ExcerptIncludeMacroParameters
     private boolean nopanel;
 
     /**
+     * @see #isInline()
+     */
+    private boolean inline;
+
+    /**
      * Retrieves the reference to the document from which the excerpt is to be included.
      * @since 1.14.5
      *
@@ -118,5 +123,28 @@ public class ExcerptIncludeMacroParameters
     public void setNopanel(boolean nopanel)
     {
         this.nopanel = nopanel;
+    }
+
+
+    /**
+     * @return whether the macro is explicitly in inline mode.
+     * @since 1.25.1
+     */
+    public boolean isInline()
+    {
+        return this.inline;
+    }
+
+    /**
+     * Explicitly sets inline mode. Note that if the macro is used inline, it will be inline.
+     *
+     * @param inline the name to set.
+     * @since 1.25.1
+     */
+    @PropertyDescription("Inline mode")
+    @PropertyName("inline")
+    public void setInline(boolean inline)
+    {
+        this.inline = inline;
     }
 }

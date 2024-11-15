@@ -37,6 +37,7 @@ import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -110,15 +111,17 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
 
         XDOM displayContent = null;
 
+        boolean inline = context.isInline() || parameters.isInline();
+
         if (document.isNew()) {
             displayContent = getErrorXDOM(
                 localizationManager.getTranslationPlain("rendering.macro.excerptinclude.referenceexcerptnotfound",
                     reference), context);
         } else {
-            displayContent = getExcerpt(parameters.getName(), document, reference, context);
+            displayContent = getExcerpt(parameters.getName(), document, reference, context, inline);
         }
 
-        if (parameters.isNopanel()) {
+        if (inline || parameters.isNopanel()) {
             return Collections.singletonList(displayContent);
         }
 
@@ -143,7 +146,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     }
 
     private XDOM getExcerpt(String name, XWikiDocument document, DocumentReference reference,
-        MacroTransformationContext context) throws MacroExecutionException
+        MacroTransformationContext context, boolean inline) throws MacroExecutionException
     {
         XWikiContext xcontext = contextProvider.get();
         List<Block> blocks =
@@ -170,6 +173,10 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 XWikiDocument documentClone = document.clone();
                 try {
                     macroBlock.setParameter("hidden", "false");
+                    if (inline && !macroBlock.isInline()) {
+                        macroBlock = new MacroBlock(macroBlock.getId(), macroBlock.getParameters(),
+                            macroBlock.getContent(), true);
+                    }
                     documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
                 } catch (XWikiException e) {
                     throw new MacroExecutionException("Could not include the excerpt", e);
@@ -193,6 +200,13 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
             }
         }
 
+        if (inline) {
+            // I didn't figure out how to use org.xwiki.rendering.util.ParserUtils#convertToInline
+            ClassBlockMatcher matcher = new ClassBlockMatcher(ParagraphBlock.class);
+            for (Block p : displayContent.getBlocks(matcher, Block.Axes.DESCENDANT_OR_SELF)) {
+                p.getParent().replaceChild(p.getChildren(), p);
+            }
+        }
         return displayContent;
     }
 
