@@ -78,6 +78,14 @@
     <module>xwiki-pro-macros-api</module>
     <module>xwiki-pro-macros-xip</module>
   </modules>
+  <profiles>
+    <profile>
+      <id>integration-tests</id>
+      <modules>
+        <module>xwiki-pro-macros-test</module>
+      </modules>
+    </profile>
+  </profiles>
   <build>
     <plugins>
       <!--
