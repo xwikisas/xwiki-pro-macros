@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
+import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.ViewPage;
@@ -39,12 +40,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @version $Id$
  * @since 1.25.2
  */
-@UITest(properties = {
+@UITest(
+    properties = {
     "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
-})
+    },
+    extensionOverrides = {
+        @ExtensionOverride(
+            extensionId = "com.google.code.findbugs:jsr305",
+            overrides = {
+                "features=com.google.code.findbugs:annotations"
+            }
+        )
+    })
 public class GenericMacrosIT
 {
-
     private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
 
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
@@ -54,7 +63,8 @@ public class GenericMacrosIT
         + "{{team tag=\"nonExistentTag\" /}}";
 
     @BeforeAll
-    void setup(TestUtils setup) {
+    void setup(TestUtils setup)
+    {
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "");
         setup.createUser("UserTest2", "UserTest", "");
