@@ -43,7 +43,7 @@ The Excerpt macro is a bridge between Confluence and XWiki. It allows the user t
 = Parameters =
 
 |=Parameter|=Description|=Default
-|**atlassian-macro-output-type**|The ouput type. It can be either BLOCK or INLINE.|INLINE
+|**atlassian-macro-output-type**|The ouput type. It can be either BLOCK or INLINE. Here for historical reasons and won't be shown in the macro editor.|INLINE
 |**hidden**|If true, the content of the macro will be hidden.|false
 |**name**|The name of the excerpt, for named includes.|false
 |**allowUnprivilegedInclude**|Allow this excerpt to be seen even for people who don't have view rights on this page when included|false
@@ -355,7 +355,7 @@ Result:
       <defaultCategory/>
     </property>
     <property>
-      <description>Bridge for the Confluence Excerpt macro. It marks part of the page's content for use by other macros.</description>
+      <description>Excerpt macro. It marks part of the page's content for use by other macros. It is compatible with the Confluence Excerpt macro.</description>
     </property>
     <property>
       <id>excerpt</id>
@@ -371,85 +371,6 @@ Result:
     </property>
     <property>
       <visibility>Current Wiki</visibility>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.Excerpt</name>
-    <number>0</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>5c9fec91-2360-43f9-ad16-c081aa7684d5</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description/>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>atlassian-macro-output-type</name>
-    </property>
-    <property>
-      <type/>
     </property>
   </object>
   <object>
