@@ -38,7 +38,7 @@
   <hidden>true</hidden>
   <content>= Description =
 
-The Excerpt macro is a bridge between Confluence and XWiki. It allows the user to mark part of the page's content for use by other macros, for exemple {excerpt-include}}.
+The Excerpt macro is a bridge between Confluence and XWiki. It allows the user to mark part of the page's content for use by other macros, for instance {{code language="none"}}{{excerpt-include}}{{/code}}.
 
 = Parameters =
 
