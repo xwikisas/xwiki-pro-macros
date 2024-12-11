@@ -111,5 +111,11 @@
       <version>${project.version}</version>
       <optional>true</optional>
      </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.confluence</groupId>
+      <artifactId>confluence-resource-reference-type-parsers</artifactId>
+      <version>${confluence.version}</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

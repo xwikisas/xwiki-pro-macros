@@ -31,6 +31,15 @@
   <name>Pro Macros - XIP</name>
   <packaging>xip</packaging>
   <description>XIP for offline installation of the Pro Macros</description>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.xwiki.contrib.confluence</groupId>
+        <artifactId>confluence-resolvers</artifactId>
+        <version>${confluence.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>com.xwiki.pro</groupId>
