@@ -362,10 +362,31 @@ The result is the following :
   #foreach ($page in $pages)
     ## Resolve page and put attachments in temporary list
     #set ($tempAttachments = [])
-    #set ($query = $services.query.xwql('where doc.title = :name').bindValue('name', $page))
-    #set ($pageStrings = $query.execute())
-    #if ($pageStrings.size() &gt; 0)
-      #set ($pageDocument = $xwiki.getDocument($pageStrings[0]))
+    #set ($pageDocument = $objecttool.null)
+    #if ($page.matches("^[a-zA-Z0-9]+:[\s\S]+"))
+      #set ($spaceAndTitle = $page.split(":", 2))
+      #set ($pageTitleResolver = $services.component.getInstance("org.xwiki.contrib.confluence.resolvers.ConfluencePageTitleResolver"))
+      #set ($space = $spaceAndTitle[0])
+      #set ($title = $spaceAndTitle[1])
+      #set ($pageRef = $pageTitleResolver.getDocumentByTitle($space, $title))
+      #if ($objecttool.isNull($pageRef))
+        #set ($query = $services.query.xwql('where doc.name = :name or doc.title = :name and (doc.fullName like :fullnamelike or doc.fullName like :fullnamelike2)').bindValue('name', $title).bindValue('fullnamelike', "$space.%").bindValue('fullnamelike2', "%.$space.%"))
+        #set ($pageStrings = $query.execute())
+        #if ($pageStrings.size() &gt; 0)
+          #set ($pageDocument = $xwiki.getDocument($pageStrings[0]))
+        #end
+      #else ($objecttool.isNotNull($pageRef))
+        #set ($pageDocument = $xwiki.getDocument($pageRef))
+      #end
+    #end
+    #if ($objecttool.isNull($pageDocument))
+      #set ($query = $services.query.xwql('where doc.name = :name or doc.title = :name').bindValue('name', $page))
+      #set ($pageStrings = $query.execute())
+      #if ($pageStrings.size() &gt; 0)
+        #set ($pageDocument = $xwiki.getDocument($pageStrings[0]))
+      #end
+    #end
+    #if ($objecttool.isNotNull($pageDocument))
       #set ($discard = $tempAttachments.addAll($pageDocument.getAttachmentList()))
       ## iterate over remaining attachments and add full reference to attachment list
       #foreach ($attachment in $tempAttachments)
