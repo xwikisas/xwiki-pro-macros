@@ -1,2 +1,0 @@
-com.xwiki.pro.internal.resolvers.ProConfluencePageResolver
-com.xwiki.pro.internal.resolvers.ProConfluenceSpaceResolver
