@@ -78,6 +78,11 @@
       <version>${rendering.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-model-validation-default</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.xwiki.contrib.cql</groupId>
       <artifactId>aqlparser</artifactId>
       <version>${cql.version}</version>
