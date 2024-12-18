@@ -33,6 +33,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.validation.EntityNameValidation;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.BulletedListBlock;
 import org.xwiki.rendering.block.GroupBlock;
@@ -106,6 +107,10 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     @Named("jsrx")
     private SkinExtension jsrx;
 
+    @Inject
+    @Named("SlugEntityNameValidation")
+    private EntityNameValidation slugEntityNameValidation;
+
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -126,11 +131,12 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     {
         ssrx.use("css/tabmacro.css");
         jsrx.use("js/tabmacro.js");
-        String macroId = parameters.getId();
+        String macroId =parameters.getId();
 
         if (StringUtils.isEmpty(macroId)) {
             macroId = context.getXDOM().getIdGenerator().generateUniqueId("tab-group");
         }
+        macroId =  slugEntityNameValidation.transform(macroId);
 
         Block contentBlocks = this.contentParser.parse(content, context, false, context.isInline());
 
@@ -164,7 +170,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
                 lbParam.put(BLOCK_PARAM_CLASS, "active");
             }
             // We use the raw block because the LinkBlock generate a span element which break bootstrap tabs CSS
-            String escapedId = XMLUtils.escape(id);
+            String escapedId = XMLUtils.escape(slugEntityNameValidation.transform(id));
             RawBlock linkBlock = new RawBlock(
                 String.format("<a href=\"#%s\" aria-controls=\"%s\" role=\"tab\" data-toggle=\"tab\">%s</a>",
                     escapedId, escapedId, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),

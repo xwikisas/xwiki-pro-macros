@@ -30,6 +30,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.validation.EntityNameValidation;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
@@ -69,6 +70,10 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
 
     @Inject
     protected MacroContentParser contentParser;
+
+    @Inject
+    @Named("SlugEntityNameValidation")
+    private EntityNameValidation slugEntityNameValidation;
 
     @Inject
     @Named("ssrx")
@@ -133,7 +138,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
                 "data-next-after", Integer.toString(parameters.getNextAfter()))
             );
             if (StringUtils.isNotEmpty(parameters.getId())) {
-                groupBlock.setParameter("id", parameters.getId());
+                groupBlock.setParameter("id", slugEntityNameValidation.transform(parameters.getId()));
             }
             StringBuilder cssStyle = new StringBuilder();
             if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
