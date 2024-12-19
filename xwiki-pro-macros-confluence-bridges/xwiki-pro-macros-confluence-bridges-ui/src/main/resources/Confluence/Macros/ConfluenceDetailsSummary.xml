@@ -309,7 +309,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
         #if ($foreach.first)
           |=$title##
           #foreach ($cell in $row)
-            |=$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)##
+            |=$cell##
           #end##
           #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
           #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
@@ -320,7 +320,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
             #set ($d = $xwiki.getDocument($row.get(0)))
           #end##
           #foreach ($cell in $row)
-            |#if ($foreach.first)[[$cell]]#{else}$services.rendering.escape($cell, $xwiki.currentContentSyntaxId)#end##
+            |#if ($foreach.first)[[$cell]]#{else}$cell#end##
           #end##
           #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
           #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
