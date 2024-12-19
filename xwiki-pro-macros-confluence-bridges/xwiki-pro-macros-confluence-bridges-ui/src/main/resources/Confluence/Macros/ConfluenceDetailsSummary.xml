@@ -320,7 +320,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
             #set ($d = $xwiki.getDocument($row.get(0)))
           #end##
           #foreach ($cell in $row)
-            |#if ($foreach.first)[[$cell]]#{else}$cell#end##
+            | ((( #if ($foreach.first)[[$cell]]#{else}$cell#end ))) ##
           #end##
           #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
           #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##

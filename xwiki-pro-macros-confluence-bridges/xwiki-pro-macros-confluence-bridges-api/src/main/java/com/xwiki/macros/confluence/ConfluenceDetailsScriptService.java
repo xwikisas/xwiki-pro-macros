@@ -177,7 +177,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
             String key = printer.toString().trim();
 
             printer.clear();
-            xwikiSyntaxRenderer.render(cells.get(1).getChildren().get(0), printer);
+            xwikiSyntaxRenderer.render(cells.get(1).getChildren(), printer);
 
             String value = printer.toString().trim();
 
