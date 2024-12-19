@@ -86,7 +86,6 @@ public class ConfluenceDetailsScriptService implements ScriptService
     @Named("xwiki/2.1")
     private BlockRenderer xwikiSyntaxRenderer;
 
-
     @Inject
     private Provider<ComponentManager> componentManagerProvider;
 
