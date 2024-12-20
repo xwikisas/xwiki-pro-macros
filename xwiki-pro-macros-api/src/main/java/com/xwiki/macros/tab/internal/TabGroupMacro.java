@@ -131,12 +131,12 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     {
         ssrx.use("css/tabmacro.css");
         jsrx.use("js/tabmacro.js");
-        String macroId =parameters.getId();
+        String macroId = parameters.getId();
 
         if (StringUtils.isEmpty(macroId)) {
             macroId = context.getXDOM().getIdGenerator().generateUniqueId("tab-group");
         }
-        macroId =  slugEntityNameValidation.transform(macroId);
+        macroId = slugEntityNameValidation.transform(macroId);
 
         Block contentBlocks = this.contentParser.parse(content, context, false, context.isInline());
 
