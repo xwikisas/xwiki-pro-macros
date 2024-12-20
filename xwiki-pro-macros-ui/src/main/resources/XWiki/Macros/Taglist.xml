@@ -452,7 +452,7 @@ This macro will show a list with all the tags that are present on your instance.
 #end
 
 #macro(executeMacro)
-  #set ($discard = $xwiki.ssx.use('Confluence.Macros.Taglist'))
+  #set ($discard = $xwiki.ssx.use('XWiki.Macros.Taglist'))
   #set ($spaces = "$!xcontext.macro.params.spaces")
   #set ($spacesList = $spaces.split(','))
   #set ($excludedTags = "$!xcontext.macro.params.excludedTags")
