@@ -83,6 +83,10 @@ public class ConfluenceDetailsScriptService implements ScriptService
     private BlockRenderer plainTextRenderer;
 
     @Inject
+    @Named("xwiki/2.1")
+    private BlockRenderer xwikiSyntaxRenderer;
+
+    @Inject
     private Provider<ComponentManager> componentManagerProvider;
 
     @Inject
@@ -173,7 +177,8 @@ public class ConfluenceDetailsScriptService implements ScriptService
             String key = printer.toString().trim();
 
             printer.clear();
-            plainTextRenderer.render(cells.get(1), printer);
+            xwikiSyntaxRenderer.render(cells.get(1).getChildren(), printer);
+
             String value = printer.toString().trim();
 
             String keyLower = key.toLowerCase();
