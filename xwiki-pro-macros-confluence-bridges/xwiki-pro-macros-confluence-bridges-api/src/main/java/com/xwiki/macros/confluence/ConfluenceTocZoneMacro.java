@@ -48,9 +48,11 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.renderer.printer.WikiPrinter;
+import org.xwiki.rendering.renderer.reference.link.LinkLabelGenerator;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.stability.Unstable;
 
@@ -76,6 +78,13 @@ public class ConfluenceTocZoneMacro extends AbstractProMacro<ConfluenceTocZoneMa
     @Inject
     @Named("plain/1.0")
     private BlockRenderer plainTextRenderer;
+
+    @Inject
+    @Named("plain/1.0")
+    private Parser plainTextParser;
+
+    @Inject
+    private LinkLabelGenerator linkLabelGenerator;
 
     /**
      * Constructor.
@@ -277,11 +286,18 @@ public class ConfluenceTocZoneMacro extends AbstractProMacro<ConfluenceTocZoneMa
 
     }
 
-    private LinkBlock getHeaderLink(HeaderBlock b)
+    private LinkBlock getHeaderLink(HeaderBlock headerBlock)
     {
-        // The anchor we need to link to is simply the id of the heading.
-        // To keep the same displayed text, we keep the same children blocks as the heading's.
-        return new LinkBlock(b.getChildren(), new ResourceReference("#" + b.getId(), ResourceType.URL), false);
+        String idParameter = headerBlock.getParameter("id");
+        if (idParameter == null) {
+            idParameter = headerBlock.getId();
+        }
+
+        ConfluenceTocZoneBlockFilter confluenceTocZoneBlockFilter =
+            new ConfluenceTocZoneBlockFilter(this.plainTextParser, this.linkLabelGenerator);
+
+        return new LinkBlock((confluenceTocZoneBlockFilter.generateLabel(headerBlock)),
+            new ResourceReference("#" + idParameter, ResourceType.URL), false);
     }
 
     private int getLevelOffset(List<Block> body, ConfluenceTocZoneMacroParameters parameters)
@@ -416,6 +432,6 @@ public class ConfluenceTocZoneMacro extends AbstractProMacro<ConfluenceTocZoneMa
     private List<Block> parseReadOnlyContent(String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        return contentParser.parse(content, context, false, true).getChildren();
+        return contentParser.parse(content, context, true, true).getChildren();
     }
 }
