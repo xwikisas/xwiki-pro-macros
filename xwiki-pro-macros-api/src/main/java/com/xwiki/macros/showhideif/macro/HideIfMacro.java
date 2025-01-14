@@ -20,6 +20,7 @@
 package com.xwiki.macros.showhideif.macro;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -70,11 +71,12 @@ public class HideIfMacro extends AbstractShowHideIfMacro
             List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
             return Collections.singletonList(new MetaDataBlock(children, this.getNonGeneratedContentMetaData()));
         } else {
+            List<Block> result = new LinkedList<>();
+            maybeGetUnsupportedParameterErrorBlock(context).ifPresent(result::add);
             if (!doesMatch(parameters)) {
-                return this.contentParser.parse(content, context, false, context.isInline()).getChildren();
-            } else {
-                return Collections.emptyList();
+                result.addAll(this.contentParser.parse(content, context, false, context.isInline()).getChildren());
             }
+            return result;
         }
     }
 }

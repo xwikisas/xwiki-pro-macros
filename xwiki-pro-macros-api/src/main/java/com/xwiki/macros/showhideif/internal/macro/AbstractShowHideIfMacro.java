@@ -20,16 +20,26 @@
 package com.xwiki.macros.showhideif.internal.macro;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.properties.BeanDescriptor;
+import org.xwiki.properties.PropertyDescriptor;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
+import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
 import org.xwiki.user.group.WikiTarget;
@@ -127,5 +137,37 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
         }
         return (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ANY && matchAnyRes)
             || (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ALL && matchAllRes);
+    }
+
+    /**
+     * We need to check if all passed parameter are supported by XWiki because this macro could be imported from
+     * confluence and on confluence a lot more parameter are supported. In case of the parameter is not supported it
+     * could confuse the user thy this macro don't work as expected.
+     *
+     * @param context
+     * @return
+     */
+    protected Optional<Block> maybeGetUnsupportedParameterErrorBlock(MacroTransformationContext context)
+    {
+        List<String> parametersWhiteList = List.of("atlassian-macro-output-type");
+        java.util.Map<String, String> allParameters = context.getCurrentMacroBlock().getParameters();
+        Set<String> parameterNames = allParameters.keySet();
+        BeanDescriptor beanDescriptor = beanManager.getBeanDescriptor(ShowHideIfMacroParameters.class);
+        List<String> beanPropertiesIds =
+            beanDescriptor.getProperties().stream().map(PropertyDescriptor::getId).collect(Collectors.toList());
+        List<String> unsupportedParameters = new LinkedList<>();
+        for (String parameterName : parameterNames) {
+            if (!beanPropertiesIds.contains(parameterName) && !parametersWhiteList.contains(parameterName)) {
+                unsupportedParameters.add(parameterName);
+            }
+        }
+        if (!unsupportedParameters.isEmpty()) {
+            return Optional.of(
+                new MacroBlock("error", Collections.emptyMap(),
+                    // TODO escape content but seem that XWikiSyntaxEscaper
+                    //  is only available since XWiki-platform 14.10.6
+                    "Unsupported parameter for macro: " + String.join(", ", unsupportedParameters), false));
+        }
+        return Optional.empty();
     }
 }
