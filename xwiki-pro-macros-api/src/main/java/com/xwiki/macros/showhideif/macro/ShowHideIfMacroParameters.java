@@ -79,6 +79,7 @@ public class ShowHideIfMacroParameters
 
     /**
      * @version $Id: $
+     * @since 1.26.0
      */
     public enum DisplayType
     {
@@ -180,6 +181,10 @@ public class ShowHideIfMacroParameters
     /**
      * @param displayType the display type which should match.
      */
+    @PropertyDescription("The type of display to show this content. I could be:\n"
+        + "* None: don't take into account for this parameter.\n"
+        + "* Default: Show on screen (when the content is not printed).\n"
+        + "* Printable: Show when it's printed. Will be enabled for PDF or ODT export.")
     public void setDisplayType(DisplayType displayType)
     {
         this.displayType = displayType;
