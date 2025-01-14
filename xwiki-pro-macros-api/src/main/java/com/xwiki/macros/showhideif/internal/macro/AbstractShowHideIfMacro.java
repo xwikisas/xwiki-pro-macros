@@ -140,9 +140,9 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
     }
 
     /**
-     * We need to check if all passed parameter are supported by XWiki because this macro could be imported from
-     * confluence and on confluence a lot more parameter are supported. In case of the parameter is not supported it
-     * could confuse the user thy this macro don't work as expected.
+     * We need to check if all passed parameters are supported by XWiki because this macro could be imported from
+     * confluence and on confluence a lot more parameters are supported. In case of the parameter is not supported it
+     * could confuse the user why this macro don't work as expected.
      *
      * @param context
      * @return
