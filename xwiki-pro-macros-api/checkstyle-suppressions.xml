@@ -9,7 +9,7 @@
             files="src/main/java/com/xwiki/macros/excerptinclude/internal/macro/ExcerptIncludeMacro\.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity|ReturnCount"
             files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
-  <suppress checks="CyclomaticComplexity" files="AbstractShowHideIfMacro.java"/>
+  <suppress checks="CyclomaticComplexity|NPathComplexity|NCSS|ExecutableStatementCount" files="AbstractShowHideIfMacro.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity|TodoComment|" files="TabGroupMacro.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity|" files="TabMacro.java"/>
 </suppressions>
