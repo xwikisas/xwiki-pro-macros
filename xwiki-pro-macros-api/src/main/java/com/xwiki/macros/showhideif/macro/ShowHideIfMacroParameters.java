@@ -41,6 +41,8 @@ public class ShowHideIfMacroParameters
 
     private GroupReferenceList groups;
 
+    private DisplayType displayType;
+
     /**
      * @version $Id: $
      */
@@ -73,6 +75,25 @@ public class ShowHideIfMacroParameters
          * Match only if user is not authenticated.
          */
         ANONYMOUS
+    }
+
+    /**
+     * @version $Id: $
+     */
+    public enum DisplayType
+    {
+        /**
+         * Display in any cases.
+         */
+        NONE,
+        /**
+         * Dislay in general case except in PRINTABLE cases.
+         */
+        DEFAULT,
+        /**
+         * Display in printable case. This include ODT and PDF export and printing.
+         */
+        PRINTABLE,
     }
 
     /**
@@ -146,5 +167,21 @@ public class ShowHideIfMacroParameters
     public void setGroups(GroupReferenceList groups)
     {
         this.groups = groups;
+    }
+
+    /**
+     * @return the display type which should match.
+     */
+    public DisplayType getDisplayType()
+    {
+        return displayType;
+    }
+
+    /**
+     * @param displayType the display type which should match.
+     */
+    public void setDisplayType(DisplayType displayType)
+    {
+        this.displayType = displayType;
     }
 }

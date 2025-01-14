@@ -83,7 +83,8 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
     {
         boolean matchAnyRes = false;
         boolean matchAllRes = true;
-        DocumentReference userReference = xwikiContextProvider.get().getUserReference();
+        XWikiContext xcontext = xwikiContextProvider.get();
+        DocumentReference userReference = xcontext.getUserReference();
         ShowHideIfMacroParameters.AuthType authTypeParam = parameters.getAuthenticationType();
         if (userReference != null) {
             UserReferenceList usersParam = parameters.getUsers();
@@ -124,6 +125,30 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
                 break;
             default:
                 break;
+        }
+
+        if (parameters.getDisplayType() != null
+            && parameters.getDisplayType() != ShowHideIfMacroParameters.DisplayType.NONE)
+        {
+            boolean isExportPrintable = "export".equalsIgnoreCase(xcontext.getAction());
+            switch (parameters.getDisplayType()) {
+                case DEFAULT:
+                    if (isExportPrintable) {
+                        matchAllRes = false;
+                    } else {
+                        matchAnyRes = true;
+                    }
+                    break;
+                case PRINTABLE:
+                    if (isExportPrintable) {
+                        matchAnyRes = true;
+                    } else {
+                        matchAllRes = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         return (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ANY && matchAnyRes)
             || (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ALL && matchAllRes);
