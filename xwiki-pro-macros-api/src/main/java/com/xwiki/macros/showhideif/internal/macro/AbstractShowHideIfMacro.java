@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
+import org.xwiki.rendering.script.RenderingScriptService;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
@@ -68,6 +70,9 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
 
     @Inject
     private GroupManager groupManager;
+
+    @Inject
+    private RenderingScriptService renderingScriptService;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -169,13 +174,13 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
      * confluence and on confluence a lot more parameters are supported. In case of the parameter is not supported it
      * could confuse the user why this macro don't work as expected.
      *
-     * @param context
-     * @return
+     * @param context the macro Transformation Context. Should come from the internalExecute method.
+     * @return The error box block if an error should be shown.
      */
     protected Optional<Block> maybeGetUnsupportedParameterErrorBlock(MacroTransformationContext context)
     {
         List<String> parametersWhiteList = List.of("atlassian-macro-output-type");
-        java.util.Map<String, String> allParameters = context.getCurrentMacroBlock().getParameters();
+        Map<String, String> allParameters = context.getCurrentMacroBlock().getParameters();
         Set<String> parameterNames = allParameters.keySet();
         BeanDescriptor beanDescriptor = beanManager.getBeanDescriptor(ShowHideIfMacroParameters.class);
         List<String> beanPropertiesIds =
@@ -189,9 +194,9 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
         if (!unsupportedParameters.isEmpty()) {
             return Optional.of(
                 new MacroBlock("error", Collections.emptyMap(),
-                    // TODO escape content but seem that XWikiSyntaxEscaper
-                    //  is only available since XWiki-platform 14.10.6
-                    "Unsupported parameter for macro: " + String.join(", ", unsupportedParameters), false));
+                    renderingScriptService.escape(
+                        "Unsupported parameter for macro: " + String.join(", ", unsupportedParameters),
+                        context.getSyntax()) + " Due of this, the macro might have some unexpected results.", false));
         }
         return Optional.empty();
     }
