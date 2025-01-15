@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -42,6 +43,7 @@ import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.script.RenderingScriptService;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.script.service.ScriptService;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
 import org.xwiki.user.group.WikiTarget;
@@ -72,7 +74,8 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
     private GroupManager groupManager;
 
     @Inject
-    private RenderingScriptService renderingScriptService;
+    @Named("rendering")
+    private ScriptService renderingScriptService;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -194,7 +197,9 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
         if (!unsupportedParameters.isEmpty()) {
             return Optional.of(
                 new MacroBlock("error", Collections.emptyMap(),
-                    renderingScriptService.escape(
+                    // TODO XWikiSyntaxEscaper instead of RenderingScriptService
+                    // after upgrading the parent of the app to >= 14.10.6
+                    ((RenderingScriptService) renderingScriptService).escape(
                         "Unsupported parameter for macro: " + String.join(", ", unsupportedParameters),
                         context.getSyntax()) + " Due of this, the macro might have some unexpected results.", false));
         }
