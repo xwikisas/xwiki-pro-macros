@@ -441,7 +441,6 @@ Result:
       #end
     #end
   #else
-    FALLBACK
     #set($pages = [$page])
   #end
   #set($contributors = {})
