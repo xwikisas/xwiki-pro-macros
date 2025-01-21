@@ -141,7 +141,8 @@ public class ExcerptIncludeMacroParameters
      * @param inline the name to set.
      * @since 1.25.1
      */
-    @PropertyDescription("Inline mode")
+    @PropertyDescription("Use the macro in inline mode. When in inline mode, the panel parameter is ignored.' What "
+        + "do you think")
     @PropertyName("inline")
     public void setInline(boolean inline)
     {
