@@ -289,7 +289,7 @@
       <defaultCategories/>
     </property>
     <property>
-      <description>Confluence Profile Picture macro</description>
+      <description>Display the profile picture of selected user.</description>
     </property>
     <property>
       <id>profile-picture</id>
