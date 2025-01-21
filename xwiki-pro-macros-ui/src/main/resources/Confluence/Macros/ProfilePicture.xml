@@ -286,7 +286,9 @@
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories/>
+      <defaultCategories>
+        <value>Content</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Display the profile picture of selected user.</description>
@@ -383,7 +385,7 @@
       <name>User</name>
     </property>
     <property>
-      <type/>
+      <type>org.xwiki.user.UserReference</type>
     </property>
   </object>
   <object>
