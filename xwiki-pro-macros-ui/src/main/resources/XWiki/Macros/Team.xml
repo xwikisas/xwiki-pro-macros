@@ -827,8 +827,14 @@
     #set($userList = [])
     #set($userswhere = '')
   #else
-    #set($userswhere = 'and doc.fullName in :users')
-    #set($userList = $users.split(","))
+    #set ($userswhere = 'and doc.fullName in :users')
+    #set ($userReferencesList = $users.split(","))
+    #set ($userList = [])
+    #foreach ($user in $userReferencesList)
+      #set ($resolvedRef = $services.model.resolveDocument($user))
+      #set ($username = $xwiki.getUser($resolvedRef).getUser().getFullName())
+      #set ($discard = $userList.add($username))
+    #end
   #end
   #if(!$tag || $tag == "")
     #set($tagselect = "")
