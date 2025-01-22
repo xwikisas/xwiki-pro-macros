@@ -357,7 +357,10 @@ $(document).on('xwiki:dom:updated', function(event, data) {
       <code>.hasBorder .macro-column {
   border: 1px dashed grey;
 }
-.macro-section
+
+/* Some sections don't have any column. In this case, the content would be
+   broken if we didn't apply flex only if columns are there. */
+.macro-section:has(&gt;.macro-column)
 {
   display:flex;
 }
