@@ -525,7 +525,9 @@ Result:
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories/>
+      <defaultCategories>
+        <value>Content</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Contributors Confluence Bridge macro to show the contributors of a given document.</description>
