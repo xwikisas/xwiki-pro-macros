@@ -913,7 +913,7 @@
         #foreach($user in $list)
           #avatar($user $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
         #end
-        #if(!$disableTools &amp;&amp; !$wikimacro.context.isInline())
+        #if (!$disableTools &amp;&amp; !$wikimacro.context.isInline())
           &lt;span class="xwikiteam-tools-link" hidden="hidden"&gt;
             &lt;a href="#" role="button" title="$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))"&gt;
               &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
@@ -922,7 +922,7 @@
           &lt;/span&gt;
         #end
       &lt;/span&gt;
-      #if(!$disableTools &amp;&amp; !$wikimacro.context.isInline())
+      #if (!$disableTools &amp;&amp; !$wikimacro.context.isInline())
         &lt;span class="xwikiteam-tools" hidden="hidden"&gt;
           &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
           &lt;label&gt;
