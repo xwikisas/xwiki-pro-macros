@@ -74,7 +74,9 @@ public class HideIfMacro extends AbstractShowHideIfMacro
             List<Block> result = new LinkedList<>();
             maybeGetUnsupportedParameterErrorBlock(context).ifPresent(result::add);
             if (!doesMatch(parameters)) {
-                result.addAll(this.contentParser.parse(content, context, false, context.isInline()).getChildren());
+                List<Block> children = this.contentParser.parse(content, context, false,
+                    context.isInline()).getChildren();
+                result.add(new MetaDataBlock(children, this.getNonGeneratedContentMetaData()));
             }
             return result;
         }
