@@ -81,16 +81,16 @@ Content of a simple section, with border.
 
 {{code}}
 {{confluence_section border="true"}}
-{{column}}
+{{confluence_column}}
 Content of a simple section, with border.
-{{/column}}
+{{/confluence_column}}
 {{/confluence_section}}
 {{/code}}
 
 {{confluence_section border="true"}}
-{{column}}
+{{confluence_column}}
 Content of a simple section, with border.
-{{/column}}
+{{/confluence_column}}
 {{/confluence_section}}
 
 == Section with 4 columns ==
@@ -98,42 +98,42 @@ Content of a simple section, with border.
 {{code}}
 {{confluence_section border="true"}}
 
-{{column width="250px"}}
+{{confluence_column width="250px"}}
 Content in the column 1
-{{/column}}
+{{/confluence_column}}
 
-{{column width="300px"}}
+{{confluence_column width="300px"}}
 Content in the column 2
-{{/column}}
+{{/confluence_column}}
 
-{{column width="300px"}}
+{{confluence_column width="300px"}}
 Content in the column 3
-{{/column}}
+{{/confluence_column}}
 
-{{column width="250px"}}
+{{confluence_column width="250px"}}
 Content in the column 4
-{{/column}}
+{{/confluence_column}}
 
 {{/confluence_section}}
 {{/code}}
 
 {{confluence_section border="true"}}
 
-{{column width="250px"}}
+{{confluence_column width="250px"}}
 Content in the column 1
-{{/column}}
+{{/confluence_column}}
 
-{{column width="300px"}}
+{{confluence_column width="300px"}}
 Content in the column 2
-{{/column}}
+{{/confluence_column}}
 
-{{column width="300px"}}
+{{confluence_column width="300px"}}
 Content in the column 3
-{{/column}}
+{{/confluence_column}}
 
-{{column width="250px"}}
+{{confluence_column width="250px"}}
 Content in the column 4
-{{/column}}
+{{/confluence_column}}
 
 {{/confluence_section}}
 {{/excerpt}}</content>
@@ -357,7 +357,10 @@ $(document).on('xwiki:dom:updated', function(event, data) {
       <code>.hasBorder .macro-column {
   border: 1px dashed grey;
 }
-.macro-section
+
+/* Some sections don't have any column. In this case, the content would be
+   broken if we didn't apply flex only if columns are there. */
+.macro-section:has(&gt;.macro-column)
 {
   display:flex;
 }

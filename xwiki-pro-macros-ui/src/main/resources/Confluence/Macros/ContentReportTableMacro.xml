@@ -379,7 +379,9 @@ The result is the following :
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories/>
+      <defaultCategories>
+        <value>Content</value>
+      </defaultCategories>
     </property>
     <property>
       <description>Provides a content report in table format, based on labels.</description>
