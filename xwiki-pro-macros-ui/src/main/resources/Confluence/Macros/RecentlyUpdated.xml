@@ -876,8 +876,7 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Authors
-  #set ($options.authors = "$!stringtool.strip($!wikimacro.parameters.author)")
-
+  #set ($options.authors = "$!stringtool.strip($!stringtool.join($!wikimacro.parameters.author, ','))")
   ## Wiki &amp; Spaces
   #set ($confluenceSpacesString = "$!stringtool.strip($!wikimacro.parameters.spaces)")
   #set ($options.spaces = $NULL)
@@ -1095,7 +1094,7 @@ require(['jquery'], $ =&gt; {
       <name>author</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.macros.internal.userlist.UserReferenceList</type>
     </property>
   </object>
   <object>
@@ -1569,7 +1568,7 @@ require(['jquery'], $ =&gt; {
       <name>theme</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum</type>
     </property>
   </object>
   <object>
