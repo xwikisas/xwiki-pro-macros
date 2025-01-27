@@ -1559,7 +1559,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>concise</defaultValue>
     </property>
     <property>
-      <description>Choose the display format of this macro.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1638,7 +1638,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>Check this box to display the profile pictures of the users who updated the content.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1717,7 +1717,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
