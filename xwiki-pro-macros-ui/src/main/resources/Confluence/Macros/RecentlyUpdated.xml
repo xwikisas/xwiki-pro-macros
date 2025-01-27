@@ -1559,7 +1559,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>concise</defaultValue>
     </property>
     <property>
-      <description>Choose the appearance of this macro: "concise" - the default list, showing the names of pages which were updated or commented on, the users who made the page modifications and time when the modifications occurred. "social" - lists recent modifications in reverse chronological order, but groups them by user into short time segments. A 'sub' list appears within each user's time segment, showing the names of pages which they updated or commented on and time when these modifications occurred. "sidebar" - lists recent updates in reverse chronological order, showing the names of pages which were updated or commented on and time when the page modifications occurred. This theme does not show authorship.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1638,7 +1638,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>Specify "showProfilePic=true" to display the profile pictures of the users who updated the content.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1717,7 +1717,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Determines whether the macro hides or displays the text 'Recently Updated' as a title above the list of content. Only available in wikimarkup and storage format. Accepted values: "true" - Title is hidden, "false" - Title is shown.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
