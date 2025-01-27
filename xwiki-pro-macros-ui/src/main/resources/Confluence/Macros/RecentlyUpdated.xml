@@ -1568,7 +1568,7 @@ require(['jquery'], $ =&gt; {
       <name>theme</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum</type>
     </property>
   </object>
   <object>
