@@ -41,7 +41,7 @@
     <diagram.version>1.21</diagram.version>
     <locationsearch.version>1.4.7</locationsearch.version>
     <datemacro.version>3.6.3</datemacro.version>
-    <confluence.version>9.76.0</confluence.version>
+    <confluence.version>9.76.2</confluence.version>
     <confluencepro.version>1.29.1</confluencepro.version>
     <cql.version>0.1.0</cql.version>
   </properties>
