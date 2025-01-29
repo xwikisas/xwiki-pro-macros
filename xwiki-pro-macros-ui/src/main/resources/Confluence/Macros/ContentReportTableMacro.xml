@@ -313,8 +313,9 @@ The result is the following :
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   ## Used parameters :
-  #set($labels = $wikimacro.parameters.get('labels'))
-  #set($spaces = $wikimacro.parameters.get('spaces'))
+  ## TODO When https://jira.xwiki.org/browse/XWIKI-18965 is fixed move back to the newer $wikimacro API
+  #set($labels = $xcontext.macro.params.labels)
+  #set($spaces = $xcontext.macro.params.spaces)
   #set($maxResults = $wikimacro.parameters.get('maxResults'))
   #if("$!maxResults" == '')
     #set($maxResults = 20)
@@ -334,7 +335,7 @@ The result is the following :
   })
   #if("$!spaces" != '')
     #set ($statement = $statement + ' and (')
-    #foreach($space in $spaces.split('(?&lt;!\\\\), '))
+    #foreach($space in $spaces.split('(?&lt;!\\\\), ?'))
       #if($foreach.index &gt; 0)
         #set($statement = $statement + ' or ')
       #end
@@ -478,7 +479,7 @@ The result is the following :
       <name>labels</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.TagsReference</type>
     </property>
   </object>
   <object>
@@ -557,7 +558,7 @@ The result is the following :
       <name>spaces</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
   <object>
