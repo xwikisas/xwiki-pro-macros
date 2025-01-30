@@ -397,13 +397,17 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>.xwikiteam .xwikiteam-ul {
+      <code>.xwikiteam-ul {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+}
+
+.xwikiteam {
+  display: inline-block;
 }
 
 .xwikiteam .xwikiteam-user, .xwikiteam-tools-link {
@@ -709,10 +713,8 @@
   #set($escapedSize = $escapetool.xml($size))
   #set($escapedLetterAvatarFontColor = $escapetool.xml($letterAvatarFontColor))
   #set($escapedLetterAvatarBgColor = $escapetool.xml($letterAvatarBgColor))
-  &lt;span
-    class="xwikiteam-avatar xwikiteam-avatar-initials"
-    style="height:${escapedSize}px; width:${escapedSize}px; border-radius: ${escapedSize}px; background-color: $escapedLetterAvatarBgColor"
-  &gt;
+  &lt;span class="xwikiteam-avatar xwikiteam-avatar-initials"
+    style="height:${escapedSize}px; width:${escapedSize}px; border-radius: ${escapedSize}px; background-color: $escapedLetterAvatarBgColor"&gt;
     &lt;span class="xwikiteam-avatar-initials-inner"&gt;
       &lt;span class="xwikiteam-avatar-initials-letters" style="color: $escapedLetterAvatarFontColor"&gt;
         #foreach($firstLetter in $name.toUpperCase().split("[\s\[\]-]+"))$escapetool.xml($firstLetter.charAt(0))#end
@@ -725,13 +727,11 @@
   #set($url = $xwiki.getURL($username))
   #set($escapedDisplayUser = $escapetool.xml($displayUser))
   #set($fontSize = $size / 3)
-  &lt;li
-    class="xwikiteam-user"
+  &lt;span class="xwikiteam-user"
     data-name-without-accents="$util.clearAccents($escapedDisplayUser.toLowerCase())"
     title="$escapedDisplayUser"
     data-username="$escapetool.xml($username)"
-    style="font-size: ${fontSize}px"
-  &gt;
+    style="font-size: ${fontSize}px"&gt;
     &lt;a href="$url"&gt;
       #getUserAvatarURL($username $return $size)
       #if(!$return.specified &amp;&amp; !$disableLetterAvatars)
@@ -749,7 +749,7 @@
       #end
       &lt;span class='xwikiteam-username'&gt;$escapedDisplayUser&lt;/span&gt;
     &lt;/a&gt;
-  &lt;/li&gt;
+  &lt;/span&gt;
 #end
 #macro (addUsersFromWiki $list $wiki $limit $tag $userList)
   #set($q = $services.query.hql($hql).setLimit($limit).setWiki($wiki))
@@ -887,47 +887,58 @@
       #addUsersFromWiki($list $xcontext.mainWikiName $limit $tag $userList)
     #end
   #end
-  {{html clean=false}}
+  #set ($elem = 'div')
+  #set ($clean = true)
+  #if ($wikimacro.context.isInline())
+    #set ($elem = 'span')
+    #set ($clean = false)
+  #end
+  #if ($xcontext.getAction()=='edit')
+    #set ($clean = true)
+  #end
+  {{html clean="$clean"}}
   ## Starting with XWiki 13.10.4 and 14.1, img tags have a 'height: auto' style set, see XWIKI-19432: Image not to scale
   ## on mobile. Since this breaks the macro fixed size feature, a specific size is added.
   #set ($escapedSize = $escapetool.xml($size))
-  &lt;div&gt;
+  &lt;$elem&gt;
     &lt;style&gt;
       .fixedSize-$escapedSize {
         height: ${escapedSize}px;
       }
     &lt;/style&gt;
-  &lt;/div&gt;
-  &lt;div class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
+  &lt;/$elem&gt;
+  &lt;$elem class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
     #if ($list.size() &gt; 0)
-      &lt;ul class="xwikiteam-ul"&gt;
+      &lt;span class="xwikiteam-ul"&gt;
         #foreach($user in $list)
           #avatar($user $size $disableLetterAvatars $letterAvatarBgColor $letterAvatarFontColor)
         #end
-        #if(!$disableTools)
-          &lt;li class="xwikiteam-tools-link" hidden="hidden"&gt;
+        #if (!$disableTools &amp;&amp; !$wikimacro.context.isInline())
+          &lt;span class="xwikiteam-tools-link" hidden="hidden"&gt;
             &lt;a href="#" role="button" title="$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))"&gt;
               &lt;span class="fa fa-wrench"&gt;&lt;/span&gt;
               &lt;span class="sr-only"&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.options'))&lt;/span&gt;
             &lt;/a&gt;
-          &lt;/li&gt;
+          &lt;/span&gt;
         #end
-      &lt;/ul&gt;
-      &lt;div class="xwikiteam-tools" hidden="hidden"&gt;
-        &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
-        &lt;label&gt;
-          &lt;input
-            class="xwikiteam-show-username-checkbox"
-            type="checkbox"
-            #if($showUsernames)checked="checked"#end
-          /&gt;
-          $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
-        &lt;/label&gt;
-      &lt;/div&gt;
+      &lt;/span&gt;
+      #if (!$disableTools &amp;&amp; !$wikimacro.context.isInline())
+        &lt;span class="xwikiteam-tools" hidden="hidden"&gt;
+          &lt;input class="xwikiteam-filter" type="text" placeholder="$escapetool.xml($services.localization.render('rendering.macro.team.content.filter'))" /&gt;
+          &lt;label&gt;
+            &lt;input
+              class="xwikiteam-show-username-checkbox"
+              type="checkbox"
+              #if($showUsernames)checked="checked"#end
+            /&gt;
+            $escapetool.xml($services.localization.render('rendering.macro.team.content.showUsernames'))
+          &lt;/label&gt;
+        &lt;/span&gt;
+      #end
     #else
-      &lt;p&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.noUsers'))&lt;/p&gt;
+      &lt;$elem&gt;$escapetool.xml($services.localization.render('rendering.macro.team.content.noUsers'))&lt;/$elem&gt;
     #end
-  &lt;/div&gt;
+  &lt;/$elem&gt;
   {{/html}}
 #end
 {{/velocity}}
@@ -968,7 +979,7 @@
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>0</supportsInlineMode>
+      <supportsInlineMode>1</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>

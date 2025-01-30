@@ -238,6 +238,12 @@ rendering.macro.recentlyUpdated.parameter.showProfilePic.name=showProfilePic
 rendering.macro.recentlyUpdated.parameter.showProfilePic.description=Specify "showProfilePic=true" to display the profile pictures of the users who updated the content.
 rendering.macro.recentlyUpdated.parameter.hideHeading.name=hideHeading
 rendering.macro.recentlyUpdated.parameter.hideHeading.description=Determines whether the macro hides or displays the text 'Recently Updated' as a title above the list of content. Only available in wikimarkup and storage format. Accepted values: "true" - Title is hidden, "false" - Title is shown.
+rendering.macro.recently-updated.parameter.theme.description=Choose the display format of this macro.
+rendering.macro.recently-updated.parameter.showProfilePic.description=Check this box to display the profile pictures of the users who updated the content.
+rendering.macro.recently-updated.parameter.hideHeading.description=Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.
+com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.concise=Title, username, time
+com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.social=User, title, time
+com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.sidebar=Title, time
 
 ## View Files macro
 com.xwiki.macros.viewfile.DisplayType.full=Full
