@@ -380,12 +380,12 @@ Result:
   #end
 #end
 #macro (executeMacro)
-  #set($include = "$!wikimacro.parameters.get('include')")
+  #set($include = "$!xcontext.macro.params.include")
   #set($include = $include.split("\s*,\s*"))
   #if ($include.isEmpty())
     #set($include = ["authors"]) ## Other supported values: "comments", "labels", "watches"
   #end
-  #set($order = "$!wikimacro.parameters.get('order')")
+  #set($order = "$!xcontext.macro.params.order")
   #if ($order.isEmpty())
     #set ($order = "count")
   #end
@@ -396,7 +396,7 @@ Result:
   #else
     #set($limit = $numbertool.toNumber($limit))
   #end
-  #set($isList = "$!wikimacro.parameters.get('mode')" == "list")
+  #set($isList = "$!xcontext.macro.params.mode" == "list")
   #set($showCount = "$!wikimacro.parameters.get('showCount')" == "true" || "$!wikimacro.parameters.get('showCount')" == "1")
   #set($showLastTime = "$!wikimacro.parameters.get('showLastTime')" == "true" || "$!wikimacro.parameters.get('showLastTime')" == "1")
   #set($showPages = "$!wikimacro.parameters.get('showPages')" == "true" || "$!wikimacro.parameters.get('showPages')" == "1")
@@ -404,8 +404,15 @@ Result:
   #if ($noneFoundMessage.isEmpty())
     #set($noneFoundMessage = "$services.localization.render('confluence.nonefound')")
   #end
-  #set($scope = "$!wikimacro.parameters.get('scope')")
-  #set($spaces = "$!wikimacro.parameters.get('spaces')")
+  #set($scope = "$!xcontext.macro.params.scope")
+  #if ($scope == 'specified')
+    #set ($scope="")
+  #end
+  ## TODO When https://jira.xwiki.org/browse/XWIKI-18965 is fixed move back to the newer $wikimacro API
+  #set($spaces = "$!xcontext.macro.params.spaces")
+  #if ($xcontext.macro.params.global != 'false')
+    #set ($spaces = "@ALL")
+  #end
   #set($global = $spaces.contains("@ALL") || $spaces.contains("@global"))
   #set($page = "$!wikimacro.parameters.get('page')")
   #if ($page.isEmpty())
@@ -624,7 +631,7 @@ Result:
       <name>include</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.contributors.Include</type>
     </property>
   </object>
   <object>
@@ -703,7 +710,7 @@ Result:
       <name>order</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.contributors.Order</type>
     </property>
   </object>
   <object>
@@ -940,7 +947,7 @@ Result:
       <name>mode</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.contributors.Mode</type>
     </property>
   </object>
   <object>
@@ -1256,7 +1263,7 @@ Result:
       <name>spaces</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
   <object>
@@ -1323,10 +1330,10 @@ Result:
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>specified</defaultValue>
     </property>
     <property>
-      <description>show the selected pages only (leave empty), their direct children ("children"), or all children ("descendents")</description>
+      <description>show the selected pages only (specified), their direct children ("children"), or all children ("descendents")</description>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1335,7 +1342,7 @@ Result:
       <name>scope</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.contributors.Scope</type>
     </property>
   </object>
   <object>
@@ -1494,6 +1501,85 @@ Result:
     </property>
     <property>
       <type/>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Contributors</name>
+    <number>12</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>dc999398-205b-4115-8ef6-e051ac93664b</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description>Searches the Wiki globally, similar to how @ALL and @global work in Confluence. When this parameter is marked, the space parameter is ignored.</description>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>global</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
     </property>
   </object>
 </xwikidoc>

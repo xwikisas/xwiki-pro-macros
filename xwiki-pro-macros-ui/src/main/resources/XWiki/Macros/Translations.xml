@@ -183,6 +183,18 @@ confluencecontributors.labelsnotsupported=Note: listing label authors is not sup
 confluencecontributors.watchesnotsupported=Note: listing people watching pages is not supported
 confluencecontributors.pages=Pages:
 confluencecontributors.nopages=(none)
+confluencecontributors.param.include.authors=Authors
+confluencecontributors.param.include.comments=Comments
+confluencecontributors.param.include.labels=Labels(Not supported)
+confluencecontributors.param.include.watches=Watches(Not supported)
+com.xwiki.pickers.contributors.Mode.inline=Inline
+com.xwiki.pickers.contributors.Mode.list=List
+com.xwiki.pickers.contributors.Order.count=Count
+com.xwiki.pickers.contributors.Order.name=Name
+com.xwiki.pickers.contributors.Order.update=Update
+com.xwiki.pickers.contributors.Scope.children=Children
+com.xwiki.pickers.contributors.Scope.descendants=Descendants
+com.xwiki.pickers.contributors.Scope.specified=Specified
 
 # Excerpt Include macro
 rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
