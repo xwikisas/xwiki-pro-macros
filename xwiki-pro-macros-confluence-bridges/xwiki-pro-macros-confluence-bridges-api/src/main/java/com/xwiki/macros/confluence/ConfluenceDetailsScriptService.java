@@ -134,7 +134,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
         List<List<String>> rows = new ArrayList<>(results.size());
         rows.add(columns);
         for (Map<String, Object> response : results) {
-            String fullName = response.get("fullname").toString();
+            String fullName = response.get("wiki").toString() + ':' + response.get("fullname").toString();
             EntityReference docRef = resolver.resolve(fullName, EntityType.DOCUMENT);
             XWikiContext context = contextProvider.get();
             XWikiDocument doc;
