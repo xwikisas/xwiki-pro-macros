@@ -217,7 +217,7 @@ rendering.macro.recentlyUpdated.parameter.labels.description=Filter the results 
 rendering.macro.recentlyUpdated.parameter.width.name=width
 rendering.macro.recentlyUpdated.parameter.width.description=Specify the width of the macro display, as a percentage of the window width.
 rendering.macro.recentlyUpdated.parameter.types.name=types
-rendering.macro.recentlyUpdated.parameter.types.description=This parameter allows you to filter content by content type. The macro will display only the content of the type you specify here. You can specify one or more types, separated by a comma or a space. To exclude content of a given content type, put a minus sign (-) immediately in front of that content type. For example: If you specify a content type of -blogpost you will get pages and all other content except for blog posts. Available values: "page" - documents, "blogpost" or "news" - blogpost documents, "comment" - comments on documents, "attachment" - attachments
+rendering.macro.recentlyUpdated.parameter.types.description=Select one or multiple content types. The macro will display only the content of the type you specify here.
 rendering.macro.recentlyUpdated.parameter.max.name=max
 rendering.macro.recentlyUpdated.parameter.max.description=Specify the maximum number of results to be displayed. If this parameter is omitted, then a maximum of 15 results are displayed.
 rendering.macro.recentlyUpdated.parameter.theme.name=theme
@@ -232,6 +232,10 @@ rendering.macro.recently-updated.parameter.hideHeading.description=Check this bo
 com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.concise=Title, username, time
 com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.social=User, title, time
 com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.sidebar=Title, time
+recentlyUpdated.param.types.attachment=Attachment
+recentlyUpdated.param.types.blogpost=Blogpost
+recentlyUpdated.param.types.comment=Comment
+recentlyUpdated.param.types.page=Page
 
 ## View Files macro
 com.xwiki.macros.viewfile.DisplayType.full=Full
