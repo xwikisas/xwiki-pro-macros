@@ -54,6 +54,10 @@ There are only a few things that are not supported compared to the Confluence ma
 |**hideHeading**|Whether to hide the text "Recently Updated" as title|No| {{{ false }}}
 |**showProfilePic**|Whether to show the profile picture of users|No| {{{ false }}}
 
+|**spaces**|Select one or multiple spaces. The macro will display only the documents present in the selected spaces.|No|{{{@self}}}
+|**currentWiki**|If this parameter is selected then the spaces &amp; excluded spaces parameters are ignored and the macro will display the documents from the current wiki.|No| {{{ false}}}
+|**excludedSpaces**|Select one or multiple spaces. The macro will not display the documents present in the selected spaces.|No|
+|**global**|If this parameter is selected then spaces, excluded spaces and the current wiki parameters are ignored and the macro will display the documents from the current wiki and subwikis. |No| {{{ false}}}
 
 = Example Usage =
 
