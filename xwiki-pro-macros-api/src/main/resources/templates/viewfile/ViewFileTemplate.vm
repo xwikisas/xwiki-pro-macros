@@ -140,8 +140,8 @@
       #set($height = $height + 'px')
     #end
   #end
-  #if (($display == 'FULL' || $display == 'full') && ($isInline || ($xcontext.action == 'edit' ||
-    $request.outputSyntax == 'annotatedhtml')))
+  #if (($display == 'FULL' || $display == 'full') && ($isInline || $xcontext.action == 'edit' || $targetSyntaxId ==
+    'annotatedhtml' || $targetSyntaxId == 'annotatedxhtml' || $request.outputSyntax == 'annotatedhtml'))
     #set ($display = 'thumbnail')
   #end
   #if ($display == 'FULL' || $display == 'full')

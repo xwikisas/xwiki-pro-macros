@@ -76,6 +76,10 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
 
         scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
         scriptContext.setAttribute("isInline", context.isInline(), ScriptContext.ENGINE_SCOPE);
+        if (context.getTransformationContext().getTargetSyntax() != null) {
+            String targetSyntaxId = context.getTransformationContext().getTargetSyntax().getType().getId();
+            scriptContext.setAttribute("targetSyntaxId", targetSyntaxId, ScriptContext.ENGINE_SCOPE);
+        }
         try {
             return this.templateManager.execute(customTemplate).getChildren();
         } catch (Exception e) {
