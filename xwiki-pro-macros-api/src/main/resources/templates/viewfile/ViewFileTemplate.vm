@@ -111,10 +111,21 @@
   #end
   #set ($discard = $xwiki.jsx.use('Confluence.Macros.ViewFile'))
   #if (!$unescapedFilename)
-
-    {{error}}
-       $escapetool.xml($services.localization.render('rendering.macro.viewFile.attachmentrequired'))
-    {{/error}}
+    ## When using the error macro inline in another macro, the CKEditor will render it outside of the original macro,
+    ## generating additional HTML. To avoid this, we manually identify when the macro is being used inline and generate
+    ## the appropriate HTML structure.
+    #if ($isInline)
+      {{html clean='false'}}
+        <span class="errormessage">
+          $escapetool.xml($services.localization.render('rendering.macro.viewFile.attachmentrequired'))
+        </span>
+    #else
+      {{html}}
+        <div class="box errormessage">
+          $escapetool.xml($services.localization.render('rendering.macro.viewFile.attachmentrequired'))
+        </div>
+    #end
+    {{/html}}
   #else
     #continueExecutingMacro##
   #end
