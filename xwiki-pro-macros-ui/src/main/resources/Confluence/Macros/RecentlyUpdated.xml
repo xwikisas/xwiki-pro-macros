@@ -44,15 +44,15 @@ There are only a few things that are not supported compared to the Confluence ma
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**types**|Comma-separated list of types ({{{ page }}}, {{{blogpost }}}, {{{comment }}}or {{{attachment }}}), possibly prefixed with "-".|No|//all types//
+|**types**|Comma-separated list of types ({{{ page }}}, {{{ blogpost }}}, {{{ comment }}} or {{{ attachment }}}), possibly prefixed with "-".|No|//all types//
 |**spaces**|Select one or multiple spaces. The macro will display only the documents present in the selected spaces.|No|{{{@self}}}
-|**author**|Comma-separated list of authors.|No|
-|**labels**|Comma-separated list of tags, possibly prefixed with "+" or "-".|No|
-|**max**|Maximum number of results.|No| {{{ 15}}}
-|**theme**|Appearance of the macro ({{{ concise }}}, {{{social }}}, {{{sidebar }}}).|No| {{{ concise}}}
-|**width**|Width of the macro in percentage.|No| {{{ 100%}}}
-|**hideHeading**|Whether to hide the text "Recently Updated" as title|No| {{{ false}}}
-|**showProfilePic**|Whether to show the profile picture of users|No| {{{ false}}}
+|**author**|Comma-separated list of authors.|No| 
+|**labels**|Comma-separated list of tags, possibly prefixed with "+" or "-".|No| 
+|**max**|Maximum number of results.|No| {{{ 15 }}}
+|**theme**|Appearance of the macro ({{{ concise }}}, {{{ social }}}, {{{ sidebar }}}).|No| {{{ concise }}}
+|**width**|Width of the macro in percentage.|No| {{{ 100% }}}
+|**hideHeading**|Whether to hide the text "Recently Updated" as title|No| {{{ false }}}
+|**showProfilePic**|Whether to show the profile picture of users|No| {{{ false }}}
 |**currentWiki**|If this parameter is selected then the spaces &amp; excluded spaces parameters are ignored and the macro will display the documents from the current wiki.|No| {{{ false}}}
 |**excludedSpaces**|Select one or multiple spaces. The macro will not display the documents present in the selected spaces.|No|
 |**global**|If this parameter is selected then spaces, excluded spaces and the current wiki parameters are ignored and the macro will display the documents from the current wiki and subwikis. |No| {{{ false}}}
