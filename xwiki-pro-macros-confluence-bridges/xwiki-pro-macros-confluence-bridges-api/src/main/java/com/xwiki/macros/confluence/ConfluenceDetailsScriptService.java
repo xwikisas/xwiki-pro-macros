@@ -21,8 +21,10 @@ package com.xwiki.macros.confluence;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -125,16 +127,30 @@ public class ConfluenceDetailsScriptService implements ScriptService
      */
     public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results)
     {
+        return getDetails(id, headingsParam, results, "", false);
+    }
+
+    /**
+     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter
+     *          and the results
+     * @param id the id of the details macros to consider
+     * @param headingsParam the headings confluence parameter
+     * @param results the results of the CQL query of the detailsummary macro
+     * @param sortBy the column to sort against
+     * @param reverseSort whether to reverse the sort
+     */
+    public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results,
+        String sortBy, boolean reverseSort)
+    {
         List<String> headings = parseHeadings(headingsParam);
         List<String> columns = headings.isEmpty() ? new ArrayList<>() : headings;
         List<String> columnsLower = headings.isEmpty()
             ? new ArrayList<>()
             : headings.stream().map(String::toLowerCase).collect(Collectors.toList());
 
-        List<List<String>> rows = new ArrayList<>(results.size());
-        rows.add(columns);
+        List<List<String>> rows = new ArrayList<>(results.size() + 1);
         for (Map<String, Object> response : results) {
-            String fullName = response.get("fullname").toString();
+            String fullName = response.get("wiki").toString() + ':' + response.get("fullname").toString();
             EntityReference docRef = resolver.resolve(fullName, EntityType.DOCUMENT);
             XWikiContext context = contextProvider.get();
             XWikiDocument doc;
@@ -153,7 +169,33 @@ public class ConfluenceDetailsScriptService implements ScriptService
             }
         }
 
+        maybeSort(sortBy, reverseSort, columnsLower, rows);
+        rows.add(0, columns);
         return rows;
+    }
+
+    private static void maybeSort(String sortBy, boolean reverseSort, List<String> columnsLower,
+        List<List<String>> rows)
+    {
+        boolean alreadyReversedIfNeeded = false;
+        if (StringUtils.isNotEmpty(sortBy)) {
+            int i = columnsLower.indexOf(sortBy.toLowerCase());
+            if (i != -1) {
+                alreadyReversedIfNeeded = true;
+                rows.sort((l1, l2) -> {
+                    // FIXME: technically requires parsing the XWiki syntax
+                    int r = Objects.compare(l1.get(i + 1), l2.get(i + 1), Comparator.comparing(String::toString));
+                    if (reverseSort) {
+                        return -r;
+                    }
+
+                    return r;
+                });
+            }
+        }
+        if (reverseSort && !alreadyReversedIfNeeded) {
+            Collections.reverse(rows);
+        }
     }
 
     private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,

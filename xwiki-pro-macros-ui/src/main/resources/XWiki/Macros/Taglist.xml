@@ -592,7 +592,7 @@ This macro will show a list with all the tags that are present on your instance.
       <name>spaces</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
   <object>
@@ -671,7 +671,7 @@ This macro will show a list with all the tags that are present on your instance.
       <name>excludedTags</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.TagsReference</type>
     </property>
   </object>
 </xwikidoc>
