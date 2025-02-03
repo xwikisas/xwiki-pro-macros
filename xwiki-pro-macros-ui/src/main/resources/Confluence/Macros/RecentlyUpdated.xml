@@ -868,23 +868,23 @@ require(['jquery'], $ =&gt; {
 
 ## Handles the construction of the tags parameter.
 #macro (constructTagsParameter $confluenceTags, $excludedTags)
-	#set ($exclude = "")
-	#foreach ($excludedSpace in $excludedTags.split(","))
-		#if (!$excludedSpace.trim().isBlank())
-			#if ($foreach.first)
-					#set ($exclude = "-$excludedSpace")
-			#else
-					#set ($exclude = "$exclude,-$excludedSpace")
-			#end
-		#end
-	#end
-	#if (!$confluenceTags.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
-		#set ($finalTags = "${confluenceTags},${exclude}")
-	#elseif (!$confluenceTags.trim().isEmpty())
-		#set ($finalTags = $confluenceTags)
-	#else
-		#set ($finalTags = $exclude)
-	#end
+  #set ($exclude = "")
+  #foreach ($excludedSpace in $excludedTags.split(","))
+    #if (!$excludedSpace.trim().isBlank())
+      #if ($foreach.first)
+        #set ($exclude = "-$excludedSpace")
+      #else
+	#set ($exclude = "$exclude,-$excludedSpace")
+      #end
+    #end
+  #end
+  #if (!$confluenceTags.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
+    #set ($finalTags = "${confluenceTags},${exclude}")
+  #elseif (!$confluenceTags.trim().isEmpty())
+    #set ($finalTags = $confluenceTags)
+  #else
+    #set ($finalTags = $exclude)
+  #end
 #end
 
 ## Init options from macro parameters
