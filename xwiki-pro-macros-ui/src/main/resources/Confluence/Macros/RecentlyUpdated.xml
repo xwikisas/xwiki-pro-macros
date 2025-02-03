@@ -932,7 +932,7 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Tags
-  #constructTagsParameter( "$!stringtool.strip($!xcontext.macro.params.labels)", "$!stringtool.strip($!xcontext.macro.params.excludedLabels)")
+  #constructTagsParameter("$!stringtool.strip($!xcontext.macro.params.labels)", "$!stringtool.strip($!xcontext.macro.params.excludedLabels)")
   #set ($options.tags = $finalTags)
 
   ## Types
