@@ -870,34 +870,34 @@ require(['jquery'], $ =&gt; {
 ## Creates the final space parameter. ConfluenceSpaces comes from migreations and is a mix of prefixed(+/-) spaces and excludedSpaces comes
 ## from XWiki and are the spaces that should be excluded when doing the solr query.
 #macro (constructSpaceParameter $confluenceSpaces, $excludedSpaces)
-	#set ($exclude = "")
-	#foreach ( $excludedSpace in $excludedSpaces.split(","))
-		#if (!$excludedSpace.trim().isBlank())
-			#if ($foreach.first)
+  #set ($exclude = "")
+  #foreach ( $excludedSpace in $excludedSpaces.split(","))
+    #if (!$excludedSpace.trim().isBlank())
+      #if ($foreach.first)
         #set ($exclude = "-$excludedSpace")
-			#else
+      #else
         #set ($exclude = "$exclude,-$excludedSpace")
-			#end
-		#end
-	#end
-	#if (!$confluenceSpaces.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
-		#set ($finalSpace = "${confluenceSpaces},${exclude}")
-	#elseif(!$confluenceSpaces.trim().isEmpty())
-		#set ($finalSpace = $confluenceSpaces)
-	#else
-		#set ($finalSpace = $exclude)
-	#end
+      #end
+    #end
+  #end
+  #if (!$confluenceSpaces.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
+    #set ($finalSpace = "${confluenceSpaces},${exclude}")
+  #elseif(!$confluenceSpaces.trim().isEmpty())
+    #set ($finalSpace = $confluenceSpaces)
+  #else
+    #set ($finalSpace = $exclude)
+  #end
 #end
 
 ## Determinate if the search should be done in the currentWiki, globally or only on specific spaces.
 #macro (determinateSpaceScope $confluenceSpacesString)
-	## If the global parameter is marked then we set the search to everywhere, if the currentWiki is marked then we select the current wiki
-	## otherwise we just the actual space selected.
-	#if ($xcontext.macro.params.global == "true")
-		#set ($confluenceSpacesString = '@all')
-	#elseif ($xcontext.macro.params.currentWiki == "true")
-		#set ($confluenceSpacesString = '@global')
-	#end
+  ## If the global parameter is marked then we set the search to everywhere, if the currentWiki is marked then we select the current wiki
+  ## otherwise we just the actual space selected.
+  #if ($xcontext.macro.params.global == "true")
+    #set ($confluenceSpacesString = '@all')
+  #elseif ($xcontext.macro.params.currentWiki == "true")
+    #set ($confluenceSpacesString = '@global')
+  #end
 #end
 
 ## Init options from macro parameters
@@ -913,11 +913,11 @@ require(['jquery'], $ =&gt; {
   ## Authors
   #set ($options.authors = "$!stringtool.strip($!stringtool.join($!wikimacro.parameters.author, ','))")
   ## Wiki &amp; Spaces
-	#set ($excludedSpaces = "$!xcontext.macro.params.excludedSpaces")
+  #set ($excludedSpaces = "$!xcontext.macro.params.excludedSpaces")
   #set ($confluenceSpacesString = "$!stringtool.strip($!xcontext.macro.params.spaces)")
   #set ($options.spaces = $NULL)
   #set ($options.wiki = $doc.wiki)
-	#determinateSpaceScope($confluenceSpacesString)
+  #determinateSpaceScope($confluenceSpacesString)
   #if (
     $confluenceSpacesString.equals('')
     || $confluenceSpacesString.equals('@self')
@@ -943,7 +943,7 @@ require(['jquery'], $ =&gt; {
     #set ($options.wiki = $NULL)
   #else
     ## Search in specified spaces
-		#constructSpaceParameter($confluenceSpacesString, $excludedSpaces)
+    #constructSpaceParameter($confluenceSpacesString, $excludedSpaces)
     #set ($options.spaces = $finalSpace)
   #end
 
