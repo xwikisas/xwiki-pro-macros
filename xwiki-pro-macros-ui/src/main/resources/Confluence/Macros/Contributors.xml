@@ -406,7 +406,7 @@ Result:
   #end
   #set($scope = "$!xcontext.macro.params.scope")
   #if ($scope == 'specified')
-    #set ($scope="")
+    #set ($scope = "")
   #end
   ## TODO When https://jira.xwiki.org/browse/XWIKI-18965 is fixed move back to the newer $wikimacro API
   #set($spaces = "$!xcontext.macro.params.spaces")
