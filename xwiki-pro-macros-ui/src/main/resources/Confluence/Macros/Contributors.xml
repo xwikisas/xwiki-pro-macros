@@ -380,12 +380,12 @@ Result:
   #end
 #end
 #macro (executeMacro)
-  #set($include = "$!xcontext.macro.params.include")
-  #set($include = $include.split("\s*,\s*"))
+  #set ($include = "$!xcontext.macro.params.include")
+  #set ($include = $include.split("\s*,\s*"))
   #if ($include.isEmpty())
     #set($include = ["authors"]) ## Other supported values: "comments", "labels", "watches"
   #end
-  #set($order = "$!xcontext.macro.params.order")
+  #set ($order = "$!xcontext.macro.params.order")
   #if ($order.isEmpty())
     #set ($order = "count")
   #end
@@ -396,7 +396,7 @@ Result:
   #else
     #set($limit = $numbertool.toNumber($limit))
   #end
-  #set($isList = "$!xcontext.macro.params.mode" == "list")
+  #set ($isList = "$!xcontext.macro.params.mode" == "list")
   #set($showCount = "$!wikimacro.parameters.get('showCount')" == "true" || "$!wikimacro.parameters.get('showCount')" == "1")
   #set($showLastTime = "$!wikimacro.parameters.get('showLastTime')" == "true" || "$!wikimacro.parameters.get('showLastTime')" == "1")
   #set($showPages = "$!wikimacro.parameters.get('showPages')" == "true" || "$!wikimacro.parameters.get('showPages')" == "1")
@@ -404,12 +404,12 @@ Result:
   #if ($noneFoundMessage.isEmpty())
     #set($noneFoundMessage = "$services.localization.render('confluence.nonefound')")
   #end
-  #set($scope = "$!xcontext.macro.params.scope")
+  #set ($scope = "$!xcontext.macro.params.scope")
   #if ($scope == 'specified')
     #set ($scope = "")
   #end
   ## TODO When https://jira.xwiki.org/browse/XWIKI-18965 is fixed move back to the newer $wikimacro API
-  #set($spaces = "$!xcontext.macro.params.spaces")
+  #set ($spaces = "$!xcontext.macro.params.spaces")
   #if ($xcontext.macro.params.global != 'false')
     #set ($spaces = "@ALL")
   #end
