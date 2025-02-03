@@ -58,7 +58,7 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
      */
     public ViewFileMacro()
     {
-        super("View file", "Show a file using PDF Viewer Macro or Office Viewer", ViewFileMacroParameters.class);
+        super("View file", "Show a file using PDF Viewer Macro or Office Viewer.", ViewFileMacroParameters.class);
     }
 
     @Override

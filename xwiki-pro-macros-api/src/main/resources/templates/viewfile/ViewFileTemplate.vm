@@ -18,49 +18,51 @@
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
 ##!source.syntax=xwiki/2.1
-{{velocity output="false"}}
+{{velocity output='false'}}
 #template('attachment_macros.vm')
 
 #set ($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
 #set ($presentationExtensions = [ 'ppt', 'pptx', 'odp' ])
-#set ($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
+#set ($hasPDFViewer = $xwiki.exists('XWiki.PDFViewerMacro'))
 
 #macro (renderThumbnailButton $attachmentRef $previewSupported $width $height $forceCard)
-  #set ($style = "")
-  #if ("$!width" != "")
+  #set ($style = '')
+  #if ("$!width" != '')
     #set ($style = $style + " width: $width;")
   #end
-  #if ("$!height" != "")
+  #if ("$!height" != '')
     #set ($style = $style + " height: $height;")
   #end
-  #if ("$!style" != "")
+  #if ("$!style" != '')
     #set ($style = "style='$style.trim()'")
-    #set ($thumbnailStyle = "Card")
+    #set ($thumbnailStyle = 'Card')
   #elseif ($forceCard)
     #set ($style = "style='width: 100px; height: 100px;'")
-    #set ($height = "100px")
-    #set ($thumbnailStyle = "Card")
+    #set ($height = '100px')
+    #set ($thumbnailStyle = 'Card')
   #else
-    #set ($thumbnailStyle = "Button")
+    #set ($thumbnailStyle = 'Button')
   #end
-  #if ($isInline || $thumbnailStyle == "Button")
-    #set ($elem = "span")
+  #if ($isInline || $thumbnailStyle == 'Button')
+    #set ($elem = 'span')
     #set ($clean = false)
   #else
-    #set ($elem = "div")
+    #set ($elem = 'div')
     #set ($clean = true)
   #end
   #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
   #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
   #if ($thumbnail.charAt(0) == '#')
     ## #displayAttachmentMimeType is not supported (before July 2022)
-    #set ($thumbnail = '<div class="attachmentMimeType"><span><span class="fa fa-paperclip" aria-hidden="true"></span></span></div>')
+    #set ($thumbnail =
+      '<div class="attachmentMimeType"><span><span class="fa fa-paperclip" aria-hidden="true"></span></span></div>')
   #end
   #if ($elem == "span")
     #set ($thumbnail = $thumbnail.replace('</div>', '</span>').replace('<div ', '<span '))
   #end
   {{html clean="$clean"}}
-  <$elem class="viewFileThumbnail viewFileThumbnail$thumbnailStyle" $style data-preview="$previewSupported" data-ref="$escapetool.xml($services.model.serialize($attachmentRef, 'default'))">
+  <$elem class="viewFileThumbnail viewFileThumbnail$thumbnailStyle" $style data-preview="$previewSupported"
+    data-ref="$escapetool.xml($services.model.serialize($attachmentRef, 'default'))">
     <a href="$escapetool.xml($xwiki.getURL($attachmentRef))"
        download="download"
        #if ($thumbnailStyle == "Button") class="button button-primary" #end
@@ -89,11 +91,11 @@
     {{/html}}
 
   #elseif ($extension == 'pdf' && $hasPDFViewer)
-    #if ($height.endsWith("px"))
-      #set ($height = $stringtool.removeEnd($height, "px"))
+    #if ($height.endsWith('px'))
+      #set ($height = $stringtool.removeEnd($height, 'px'))
     #end
-    #if ($width.endsWith("px"))
-      #set ($width = $stringtool.removeEnd($width, "px"))
+    #if ($width.endsWith('px'))
+      #set ($width = $stringtool.removeEnd($width, 'px'))
     #end
 
     {{pdfviewer file="$escapedAttachmentReference" height="$height" width="$width"/}}
@@ -108,6 +110,7 @@
   #if(!$unescapedFilename)
     #set($unescapedFilename = $params.getAttFilename())
   #end
+  #set ($discard = $xwiki.jsx.use('Confluence.Macros.ViewFile'))
   #if(!$unescapedFilename)
 
     {{error}}
@@ -121,42 +124,41 @@
 #macro (continueExecutingMacro)
   #set ($attachmentRef = $services.model.resolveAttachment($unescapedFilename))
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.ViewFile'))
-  #set ($discard = $xwiki.jsx.use('Confluence.Macros.ViewFile'))
   #set ($extension = $attachmentRef.getName().substring($attachmentRef.getName().lastIndexOf('.') + 1).toLowerCase())
   #set ($width = $params.getWidth())
   #set ($height = $params.getHeight())
   #set ($display = $params.getDisplay().name())
-  #if ("$!width" != "")
+  #if ("$!width" != '')
     #set ($width = $escapetool.xml($width))
-    #if (!$width.endsWith("%") && !$width.endsWith("px"))
-      #set($width = $width + "px")
+    #if (!$width.endsWith('%') && !$width.endsWith('px'))
+      #set($width = $width + 'px')
     #end
   #end
-  #if ("$!height" != "")
+  #if ("$!height" != '')
     #set ($height = $escapetool.xml($height))
-    #if (!$height.endsWith("%") && !$height.endsWith("px"))
-      #set($height = $height + "px")
+    #if (!$height.endsWith('%') && !$height.endsWith('px'))
+      #set($height = $height + 'px')
     #end
   #end
-  #if (($display == 'FULL' || $display == 'full') && ($isInline || ($xcontext.action == "edit" || $request.outputSyntax ==
-  "annotatedhtml")))
-    #set ($display = "thumbnail")
+  #if (($display == 'FULL' || $display == 'full') && ($isInline || ($xcontext.action == 'edit' ||
+    $request.outputSyntax == 'annotatedhtml')))
+    #set ($display = 'thumbnail')
   #end
   #if ($display == 'FULL' || $display == 'full')
-    #if ("$!width" == "")
-      #set ($width = "100%")
+    #if ("$!width" == '')
+      #set ($width = '100%')
     #end
-    #if ("$!height" == "")
-      #set ($height = "1000px")
+    #if ("$!height" == '')
+      #set ($height = '1000px')
     #end
     #renderFull($extension $attachmentRef $width $height)
   #else
     ## thumbnail or fallback
     #set ($hasPreview = ($extension == 'pdf' && $hasPDFViewer) || $officeExtensions.contains($extension))
-    #set ($forceCard = ($display == 'THUMBNAIL' || $display == 'thumbnail' || ("$!display" == "" && !$isInline)))
+    #set ($forceCard = ($display == 'THUMBNAIL' || $display == 'thumbnail' || ("$!display" == '' && !$isInline)))
     #if ($presentationExtensions.contains($extension))
-      #set ($discard = $xwiki.jsfx.use("uicomponents/widgets/gallery/gallery.js", {"forceSkinAction": true}))
-      #set ($discard = $xwiki.ssfx.use("uicomponents/widgets/gallery/gallery.css"))
+      #set ($discard = $xwiki.jsfx.use('uicomponents/widgets/gallery/gallery.js', {'forceSkinAction': true}))
+      #set ($discard = $xwiki.ssfx.use('uicomponents/widgets/gallery/gallery.css'))
     #end
     #renderThumbnailButton($attachmentRef $hasPreview $width $height $forceCard)
   #end
@@ -170,6 +172,6 @@
 #if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))##
   #executeMacro##
 #else
-  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
+  {{missingLicenseMessage extensionName='proMacros.extension.name'/}}
 #end
 {{/velocity}}
