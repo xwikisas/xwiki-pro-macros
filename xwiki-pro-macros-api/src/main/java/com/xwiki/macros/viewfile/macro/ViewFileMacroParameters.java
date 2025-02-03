@@ -40,7 +40,7 @@ public class ViewFileMacroParameters
 
     private String page;
 
-    private ViewFileDisplay display = ViewFileDisplay.full;
+    private ViewFileDisplay display = ViewFileDisplay.thumbnail;
 
     private String width;
 
