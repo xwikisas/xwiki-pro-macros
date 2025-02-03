@@ -871,7 +871,7 @@ require(['jquery'], $ =&gt; {
 ## from XWiki and are the spaces that should be excluded when doing the solr query.
 #macro (constructSpaceParameter $confluenceSpaces, $excludedSpaces)
   #set ($exclude = "")
-  #foreach ( $excludedSpace in $excludedSpaces.split(","))
+  #foreach ($excludedSpace in $excludedSpaces.split(","))
     #if (!$excludedSpace.trim().isBlank())
       #if ($foreach.first)
         #set ($exclude = "-$excludedSpace")
