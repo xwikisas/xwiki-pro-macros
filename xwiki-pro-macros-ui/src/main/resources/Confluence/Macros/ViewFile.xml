@@ -185,7 +185,7 @@ Full Presentation:
   }
 });
 
-require(['jquery', 'xwiki-suggestAttachments'], function($) {
+require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
   const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
   const styleObserver = new MutationObserver(function(mutations) {
     for (const mutation of mutations) {
@@ -212,10 +212,12 @@ require(['jquery', 'xwiki-suggestAttachments'], function($) {
         inputElement.remove();
         inputElement = clone;
       }
+      const allowUpload = selectElement.val() == xm.document || !selectElement.val();
       inputElement.suggestAttachments({
         maxItems: 1,
         accept: acceptedExtensions,
-        searchScope: scope
+        searchScope: scope,
+        uploadAllowed: allowUpload
       });
     }
   }
