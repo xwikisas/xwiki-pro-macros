@@ -169,7 +169,7 @@ Hello 👀
 
 .confluence-expand-macro .panel-title{
   padding: @panel-heading-padding;
-  display: block;
+  display: flex;
 }
 
 .confluence-expand-macro .panel-body {
@@ -181,6 +181,10 @@ Hello 👀
 }
 
 .confluence-expand-macro summary:hover {
+  cursor: pointer;
+}
+
+.panel-title:hover .title-text {
   cursor: pointer;
   text-decoration: underline;
 }
@@ -429,7 +433,29 @@ Hello 👀
     <property>
       <code>{{velocity output="false"}}
 #macro (executeMacro)
+  ## To avoid an issue regarding {{wikimacroparameter}} and {{wikimacrocontent}} that fail to render when in
+  ## edit mode while inside a HTML macro, we need to manually write the HTML by using XWiki syntax. This way,
+  ## while the macro will always be expanded when in edit mode, the user will be able to modify the text inline.
+  #set ($targetSyntaxId = $wikimacro.context.transformationContext.targetSyntax.type.id)
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
+  #if ($targetSyntaxId == 'annotatedhtml' || $targetSyntaxId == 'annotatedxhtml' ||
+    $request.outputSyntax == 'annotatedhtml')
+    (% class="confluence-expand-macro panel panel-default" %)
+    (((
+      (((
+        (% class="panel-title" %)
+        (((
+          (% class="glyphicon glyphicon-menu-down" aria-hidden="true" %)
+          ((()))
+          {{wikimacroparameter name='title' /}}
+        )))
+      )))
+      (% class="panel-body" %)
+      (((
+        {{wikimacrocontent /}}
+      )))
+    )))
+  #else
   #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export' || $wikimacro.parameters.expanded)
   {{html clean="false" wiki="true"}}
   &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
@@ -443,8 +469,10 @@ Hello 👀
             #set ($title = $services.localization.render("rendering.macro.expand.defaultexpandtitle"))
           #end
         #end
-        $services.rendering.escape($escapetool.xml($title), $xwiki.currentContentSyntaxId)
-     &lt;/span&gt;
+        &lt;span class="title-text"&gt;
+          $services.rendering.escape($escapetool.xml($title), $xwiki.currentContentSyntaxId)
+        &lt;/span&gt;
+      &lt;/span&gt;
     &lt;/summary&gt;
     &lt;div class="panel-body"&gt;
 
@@ -453,6 +481,7 @@ Hello 👀
     &lt;/div&gt;
   &lt;/details&gt;
   {{/html}}
+  #end
 #end
 {{/velocity}}
 
@@ -474,7 +503,7 @@ Hello 👀
       <contentJavaType>Wiki</contentJavaType>
     </property>
     <property>
-      <contentType>Optional</contentType>
+      <contentType>Mandatory</contentType>
     </property>
     <property>
       <defaultCategories/>
@@ -566,7 +595,7 @@ The macro is collapsed by default, people need to click each one to expand it. T
       </type>
     </class>
     <property>
-      <defaultValue/>
+      <defaultValue>Click here to expand...</defaultValue>
     </property>
     <property>
       <description>Defines the text that appears next to the expand/collapse icon.</description>
