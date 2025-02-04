@@ -434,7 +434,7 @@ Hello 👀
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   ## To avoid an issue regarding {{wikimacroparameter}} and {{wikimacrocontent}} that fail to render when in
-  ## edit mode while inside a HTML macro, we need to manually write the HTML by using velocity syntax. This way,
+  ## edit mode while inside a HTML macro, we need to manually write the HTML by using XWiki syntax. This way,
   ## while the macro will always be expanded when in edit mode, the user will be able to modify the text inline.
   #set ($targetSyntaxId = $wikimacro.context.transformationContext.targetSyntax.type.id)
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
