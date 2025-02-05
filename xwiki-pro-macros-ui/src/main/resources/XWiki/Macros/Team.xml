@@ -769,7 +769,8 @@
   #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
   #set($pictureList = {})
   #set($tag = $wikimacro.parameters.tag)
-  #set($users = $wikimacro.parameters.users)
+  ## I need the raw value, not the object
+  #set($users = $xcontext.macro.params.users)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
   #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
@@ -1772,7 +1773,7 @@
       <name>users</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.UsersReference</type>
     </property>
   </object>
 </xwikidoc>
