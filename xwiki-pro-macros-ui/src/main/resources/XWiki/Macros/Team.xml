@@ -769,11 +769,10 @@
   #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
   #set($pictureList = {})
   #set($tag = $wikimacro.parameters.tag)
-  ## I need the raw value, not the object
-  #set($users = $xcontext.macro.params.users)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
   ## I need the raw value to avoid XWIKI-18965
+  #set($users = $xcontext.macro.params.users)
   #set($letterAvatarBgColor = $xcontext.macro.params.letterAvatarBgColor)
   #set($letterAvatarFontColor = $xcontext.macro.params.letterAvatarFontColor)
   #set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
