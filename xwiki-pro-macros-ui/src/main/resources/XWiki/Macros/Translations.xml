@@ -184,6 +184,9 @@ confluencecontributors.watchesnotsupported=Note: listing people watching pages i
 confluencecontributors.pages=Pages:
 confluencecontributors.nopages=(none)
 
+## Excerpt macro
+rendering.macro.excerpt.parameter.allowUnprivilegedInclude.name=Allow unprivileged include
+
 # Excerpt Include macro
 rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
 rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
