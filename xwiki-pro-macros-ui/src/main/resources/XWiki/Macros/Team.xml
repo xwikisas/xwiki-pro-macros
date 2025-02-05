@@ -773,8 +773,9 @@
   #set($users = $xcontext.macro.params.users)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
-  #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
-  #set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
+  ## I need the raw value to avoid XWIKI-18965
+  #set($letterAvatarBgColor = $xcontext.macro.params.letterAvatarBgColor)
+  #set($letterAvatarFontColor = $xcontext.macro.params.letterAvatarFontColor)
   #set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
   #set($showUsernames = $wikimacro.parameters.showUsernames)
   #set($disableTools = $wikimacro.parameters.disableTools)
@@ -1378,7 +1379,7 @@
       <name>letterAvatarBgColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1457,7 +1458,7 @@
       <name>letterAvatarFontColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
