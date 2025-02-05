@@ -183,8 +183,11 @@ public class ConfluenceDetailsScriptService implements ScriptService
             if (i != -1) {
                 alreadyReversedIfNeeded = true;
                 rows.sort((l1, l2) -> {
+                    String v1 = l1.size() < i + 1 ? "" : l1.get(i + 1);
+                    String v2 = l2.size() < i + 1 ? "" : l2.get(i + 1);
+
                     // FIXME: technically requires parsing the XWiki syntax
-                    int r = Objects.compare(l1.get(i + 1), l2.get(i + 1), Comparator.comparing(String::toString));
+                    int r = Objects.compare(v1, v2, Comparator.comparing(String::toString));
                     if (reverseSort) {
                         return -r;
                     }
@@ -193,6 +196,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 });
             }
         }
+
         if (reverseSort && !alreadyReversedIfNeeded) {
             Collections.reverse(rows);
         }
@@ -204,11 +208,9 @@ public class ConfluenceDetailsScriptService implements ScriptService
         BlockMatcher rowMatcher = new ClassBlockMatcher(TableRowBlock.class);
         BlockMatcher cellMatcher = new ClassBlockMatcher(TableCellBlock.class);
         List<TableRowBlock> xdomRows = xdomDetails.getBlocks(rowMatcher, Block.Axes.DESCENDANT_OR_SELF);
-        List<String> row = new ArrayList<>(
-            1 + (headings.isEmpty()
-                ? Math.max(columns.size(), xdomRows.size())
-                : headings.size())
-        );
+        List<String> row = new ArrayList<>(1 + (headings.isEmpty()
+            ? Math.max(columns.size(), xdomRows.size())
+            : headings.size()));
         for (TableRowBlock xdomRow : xdomRows) {
             List<TableCellBlock> cells = xdomRow.getBlocks(cellMatcher, Block.Axes.DESCENDANT_OR_SELF);
             if (cells.size() < 2) {
