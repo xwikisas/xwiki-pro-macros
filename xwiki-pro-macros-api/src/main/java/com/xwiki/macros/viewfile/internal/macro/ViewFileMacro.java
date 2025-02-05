@@ -71,7 +71,7 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     protected List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
         MacroTransformationContext context)
     {
-        Template customTemplate = this.templateManager.getTemplate("viewfile/ViewFileTemplate.vm");
+        Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
 
         scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);

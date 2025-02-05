@@ -185,6 +185,9 @@ Full Presentation:
   }
 });
 
+// As there is no platform implementation to allow the user to dynamically select the page from where the attachments
+// are shown, a custom implementation was made to dynamically update the displyed attachments in corelation to the
+// selected page parameter. This can be removed after the implementation of https://jira.xwiki.org/browse/XWIKI-22850.
 require(['jquery', 'xwiki-suggestAttachments'], function($) {
   const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
   const styleObserver = new MutationObserver(function(mutations) {
