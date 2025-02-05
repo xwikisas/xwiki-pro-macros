@@ -49,6 +49,7 @@ import org.xwiki.rendering.block.match.BlockMatcher;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.script.service.ScriptService;
 import org.xwiki.stability.Unstable;
 
@@ -70,8 +71,9 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 @Unstable
 public class ConfluenceDetailsScriptService implements ScriptService
 {
+    private static final BlockMatcher CELL_MATCHER = new ClassBlockMatcher(TableCellBlock.class);
+    private static final BlockMatcher ROW_MATCHER = new ClassBlockMatcher(TableRowBlock.class);
     private static final ClassBlockMatcher MACRO_MATCHER = new ClassBlockMatcher(MacroBlock.class);
-
     private static final String ID = "id";
 
     @Inject
@@ -163,7 +165,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
 
             XDOM details = findDetailsMacro(doc.getXDOM(), doc.getSyntax().toIdString(), id);
             if (details != null) {
-                List<String> row = getRow(details, headings, columns, columnsLower);
+                List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
                 row.add(0, fullName);
                 rows.add(row);
             }
@@ -202,17 +204,42 @@ public class ConfluenceDetailsScriptService implements ScriptService
         }
     }
 
-    private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
-        List<String> columnsLower)
+    private List<TableRowBlock> findRows(XDOM xdom, Syntax syntax)
     {
-        BlockMatcher rowMatcher = new ClassBlockMatcher(TableRowBlock.class);
-        BlockMatcher cellMatcher = new ClassBlockMatcher(TableCellBlock.class);
-        List<TableRowBlock> xdomRows = xdomDetails.getBlocks(rowMatcher, Block.Axes.DESCENDANT_OR_SELF);
+        List<TableRowBlock> xdomRows = xdom.getBlocks(ROW_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
+        if (!xdomRows.isEmpty()) {
+            return xdomRows;
+        }
+
+        List<MacroBlock> macroBlocks = xdom.getBlocks(MACRO_MATCHER, Block.Axes.DESCENDANT);
+        for (MacroBlock macroBlock : macroBlocks) {
+            XDOM macroContent;
+            try {
+                macroContent = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntax);
+            } catch (ComponentLookupException e) {
+                logger.error("Failed to parse macro content for [{}]", macroBlock.getId(), e);
+                continue;
+            }
+            if (macroContent != null) {
+                xdomRows = findRows(macroContent, syntax);
+                if (!xdomRows.isEmpty()) {
+                    return xdomRows;
+                }
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
+        List<String> columnsLower, Syntax syntax)
+    {
+        List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
         List<String> row = new ArrayList<>(1 + (headings.isEmpty()
             ? Math.max(columns.size(), xdomRows.size())
             : headings.size()));
         for (TableRowBlock xdomRow : xdomRows) {
-            List<TableCellBlock> cells = xdomRow.getBlocks(cellMatcher, Block.Axes.DESCENDANT_OR_SELF);
+            List<TableCellBlock> cells = xdomRow.getBlocks(CELL_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
             if (cells.size() < 2) {
                 continue;
             }
