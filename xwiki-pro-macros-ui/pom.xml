@@ -96,7 +96,7 @@
       <groupId>com.xwiki.commons</groupId>
       <artifactId>xwiki-pro-commons-pickers-ui</artifactId>
       <type>xar</type>
-      <version>1.0.1</version>
+      <version>1.0.3</version>
     </dependency>
   </dependencies>
 </project>
