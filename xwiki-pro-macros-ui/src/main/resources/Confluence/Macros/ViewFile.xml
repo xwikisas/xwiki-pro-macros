@@ -45,6 +45,7 @@ Limitation: the thumbnail is actually only an icon for now.
 |=Parameter|=Description|=Required|=Default
 |display|Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place|no|thumbnail (button in inline mode)
 |name|The attachment reference to display|if att-filename is not given|
+|page|The page from where you want the attachments to be displayed. Modifying this parameter will reset the selected file value|no|
 |width|The width of the view in % or px (e.g. 100%, 100px)|no|100% for the full view or 100px for the thumbnail
 |height|The height of the view in % or px (e.g. 100%, 100px)|no|1000px for the full view or 100px for the thumbnail
 |att-filename|Alias of name|If name is not given|
