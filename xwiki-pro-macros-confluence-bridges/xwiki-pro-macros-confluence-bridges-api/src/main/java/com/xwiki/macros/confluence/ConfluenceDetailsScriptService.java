@@ -97,30 +97,28 @@ public class ConfluenceDetailsScriptService implements ScriptService
     private Logger logger;
 
 
-    private XDOM findDetailsMacro(XDOM xdom, String syntaxId, String id)
+    private List<XDOM> findDetailsMacros(XDOM xdom, String syntaxId, String id)
     {
+        List<XDOM> results = new ArrayList<>(1);
         List<MacroBlock> macros = xdom.getBlocks(MACRO_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
         for (MacroBlock macroBlock : macros) {
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
                     String dId = defaultString(id);
                     if (dId.isEmpty() || StringUtils.equals(dId, defaultString(macroBlock.getParameter(ID)))) {
-                        return getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
+                        results.add(getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId));
                     }
                 } else {
                     XDOM macroXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     if (macroXDOM != null) {
-                        XDOM detailsMacro = findDetailsMacro(macroXDOM, syntaxId, id);
-                        if (detailsMacro != null) {
-                            return detailsMacro;
-                        }
+                        results.addAll(findDetailsMacros(macroXDOM, syntaxId, id));
                     }
                 }
             } catch (ComponentLookupException e) {
                 logger.error("Component lookup error trying to find the confluence_details macro", e);
             }
         }
-        return null;
+        return results;
     }
 
     /**
@@ -166,12 +164,10 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 continue;
             }
 
-            XDOM details = findDetailsMacro(doc.getXDOM(), doc.getSyntax().toIdString(), id);
-            if (details != null) {
-                List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
-                row.add(0, fullName);
-                rows.add(row);
-            }
+            List<XDOM> details = findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(), id);
+            List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
+            row.add(0, fullName);
+            rows.add(row);
         }
 
         maybeSort(sortBy, reverseSort, columnsLower, rows);
@@ -234,7 +230,24 @@ public class ConfluenceDetailsScriptService implements ScriptService
         return Collections.emptyList();
     }
 
-    private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
+    private List<TableRowBlock> findRows(List<XDOM> xdoms, Syntax syntax)
+    {
+        if (xdoms.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (xdoms.size() == 1) {
+            return findRows(xdoms.get(0), syntax);
+        }
+
+        List<TableRowBlock> xdomRows = new ArrayList<>();
+        for (XDOM xdom : xdoms) {
+            xdomRows.addAll(findRows(xdom, syntax));
+        }
+        return xdomRows;
+    }
+
+    private List<String> getRow(List<XDOM> xdomDetails, List<String> headings, List<String> columns,
         List<String> columnsLower, Syntax syntax)
     {
         List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
