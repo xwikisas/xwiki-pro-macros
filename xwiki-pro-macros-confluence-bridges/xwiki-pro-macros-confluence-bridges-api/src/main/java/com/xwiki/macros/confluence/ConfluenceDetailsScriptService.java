@@ -110,7 +110,10 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 } else {
                     XDOM macroXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     if (macroXDOM != null) {
-                        return findDetailsMacro(macroXDOM, syntaxId, id);
+                        XDOM detailsMacro = findDetailsMacro(macroXDOM, syntaxId, id);
+                        if (detailsMacro != null) {
+                            return detailsMacro;
+                        }
                     }
                 }
             } catch (ComponentLookupException e) {
