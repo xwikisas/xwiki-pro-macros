@@ -26,8 +26,10 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.script.ScriptContext;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
@@ -69,9 +71,9 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
 
     @Override
     protected List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
-        MacroTransformationContext context)
+        MacroTransformationContext context) throws MacroExecutionException
     {
-        Template customTemplate = this.templateManager.getTemplate("viewfile/ViewFileTemplate.vm");
+        Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
 
         scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
@@ -79,7 +81,7 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
         try {
             return this.templateManager.execute(customTemplate).getChildren();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new MacroExecutionException(ExceptionUtils.getRootCauseMessage(e));
         }
     }
 }
