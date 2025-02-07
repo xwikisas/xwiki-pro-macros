@@ -44,7 +44,7 @@ There are only a few things that are not supported compared to the Confluence ma
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**types**|Comma-separated list of types ({{{ page }}}, {{{ blogpost }}}, {{{ comment }}} or {{{ attachment }}}), possibly prefixed with "-".|No|//all types//
+|**types**|Select one or multiple content types. The macro will display only the content of the type you specify here.|No|//all types//
 |**spaces**|Select one or multiple spaces. The macro will display only the documents present in the selected spaces.|No|{{{@self}}}
 |**author**|Comma-separated list of authors.|No| 
 |**labels**|Comma-separated list of tags, possibly prefixed with "+" or "-".|No| 
@@ -951,7 +951,7 @@ require(['jquery'], $ =&gt; {
   #set ($options.tags = "$!stringtool.strip($!wikimacro.parameters.labels)")
 
   ## Types
-  #set ($confluenceTypesString = "$!stringtool.strip($!wikimacro.parameters.types)")
+  #set ($confluenceTypesString = "$!stringtool.strip($!xcontext.macro.params.types)")
   #parseTypes($confluenceTypesString, $types)
   #set ($options.types = $types)
 
@@ -1439,7 +1439,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>This parameter allows you to filter content by content type. The macro will display only the content of the type you specify here. You can specify one or more types, separated by a comma or a space. To exclude content of a given content type, put a minus sign (-) immediately in front of that content type. For example: If you specify a content type of -blogpost you will get pages and all other content except for blog posts. Available values: "page" - documents, "blogpost" or "news" - blogpost documents, "comment" - comments on documents, "attachment" - attachments</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1448,7 +1448,7 @@ require(['jquery'], $ =&gt; {
       <name>types</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.pickers.recentlyupdated.RecentlyUpdateType</type>
     </property>
   </object>
   <object>

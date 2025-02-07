@@ -21,8 +21,10 @@ package com.xwiki.macros.confluence;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -47,6 +49,7 @@ import org.xwiki.rendering.block.match.BlockMatcher;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.script.service.ScriptService;
 import org.xwiki.stability.Unstable;
 
@@ -68,8 +71,9 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 @Unstable
 public class ConfluenceDetailsScriptService implements ScriptService
 {
+    private static final BlockMatcher CELL_MATCHER = new ClassBlockMatcher(TableCellBlock.class);
+    private static final BlockMatcher ROW_MATCHER = new ClassBlockMatcher(TableRowBlock.class);
     private static final ClassBlockMatcher MACRO_MATCHER = new ClassBlockMatcher(MacroBlock.class);
-
     private static final String ID = "id";
 
     @Inject
@@ -93,27 +97,28 @@ public class ConfluenceDetailsScriptService implements ScriptService
     private Logger logger;
 
 
-    private XDOM findDetailsMacro(XDOM xdom, String syntaxId, String id)
+    private List<XDOM> findDetailsMacros(XDOM xdom, String syntaxId, String id)
     {
+        List<XDOM> results = new ArrayList<>(1);
         List<MacroBlock> macros = xdom.getBlocks(MACRO_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
         for (MacroBlock macroBlock : macros) {
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
                     String dId = defaultString(id);
                     if (dId.isEmpty() || StringUtils.equals(dId, defaultString(macroBlock.getParameter(ID)))) {
-                        return getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
+                        results.add(getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId));
                     }
                 } else {
                     XDOM macroXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                     if (macroXDOM != null) {
-                        return findDetailsMacro(macroXDOM, syntaxId, id);
+                        results.addAll(findDetailsMacros(macroXDOM, syntaxId, id));
                     }
                 }
             } catch (ComponentLookupException e) {
                 logger.error("Component lookup error trying to find the confluence_details macro", e);
             }
         }
-        return null;
+        return results;
     }
 
     /**
@@ -125,16 +130,30 @@ public class ConfluenceDetailsScriptService implements ScriptService
      */
     public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results)
     {
+        return getDetails(id, headingsParam, results, "", false);
+    }
+
+    /**
+     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter
+     *          and the results
+     * @param id the id of the details macros to consider
+     * @param headingsParam the headings confluence parameter
+     * @param results the results of the CQL query of the detailsummary macro
+     * @param sortBy the column to sort against
+     * @param reverseSort whether to reverse the sort
+     */
+    public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results,
+        String sortBy, boolean reverseSort)
+    {
         List<String> headings = parseHeadings(headingsParam);
         List<String> columns = headings.isEmpty() ? new ArrayList<>() : headings;
         List<String> columnsLower = headings.isEmpty()
             ? new ArrayList<>()
             : headings.stream().map(String::toLowerCase).collect(Collectors.toList());
 
-        List<List<String>> rows = new ArrayList<>(results.size());
-        rows.add(columns);
+        List<List<String>> rows = new ArrayList<>(results.size() + 1);
         for (Map<String, Object> response : results) {
-            String fullName = response.get("fullname").toString();
+            String fullName = response.get("wiki").toString() + ':' + response.get("fullname").toString();
             EntityReference docRef = resolver.resolve(fullName, EntityType.DOCUMENT);
             XWikiContext context = contextProvider.get();
             XWikiDocument doc;
@@ -145,30 +164,98 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 continue;
             }
 
-            XDOM details = findDetailsMacro(doc.getXDOM(), doc.getSyntax().toIdString(), id);
-            if (details != null) {
-                List<String> row = getRow(details, headings, columns, columnsLower);
-                row.add(0, fullName);
-                rows.add(row);
-            }
+            List<XDOM> details = findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(), id);
+            List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
+            row.add(0, fullName);
+            rows.add(row);
         }
 
+        maybeSort(sortBy, reverseSort, columnsLower, rows);
+        rows.add(0, columns);
         return rows;
     }
 
-    private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
-        List<String> columnsLower)
+    private static void maybeSort(String sortBy, boolean reverseSort, List<String> columnsLower,
+        List<List<String>> rows)
     {
-        BlockMatcher rowMatcher = new ClassBlockMatcher(TableRowBlock.class);
-        BlockMatcher cellMatcher = new ClassBlockMatcher(TableCellBlock.class);
-        List<TableRowBlock> xdomRows = xdomDetails.getBlocks(rowMatcher, Block.Axes.DESCENDANT_OR_SELF);
-        List<String> row = new ArrayList<>(
-            1 + (headings.isEmpty()
-                ? Math.max(columns.size(), xdomRows.size())
-                : headings.size())
-        );
+        boolean alreadyReversedIfNeeded = false;
+        if (StringUtils.isNotEmpty(sortBy)) {
+            int i = columnsLower.indexOf(sortBy.toLowerCase());
+            if (i != -1) {
+                alreadyReversedIfNeeded = true;
+                rows.sort((l1, l2) -> {
+                    String v1 = l1.size() < i + 1 ? "" : l1.get(i + 1);
+                    String v2 = l2.size() < i + 1 ? "" : l2.get(i + 1);
+
+                    // FIXME: technically requires parsing the XWiki syntax
+                    int r = Objects.compare(v1, v2, Comparator.comparing(String::toString));
+                    if (reverseSort) {
+                        return -r;
+                    }
+
+                    return r;
+                });
+            }
+        }
+
+        if (reverseSort && !alreadyReversedIfNeeded) {
+            Collections.reverse(rows);
+        }
+    }
+
+    private List<TableRowBlock> findRows(XDOM xdom, Syntax syntax)
+    {
+        List<TableRowBlock> xdomRows = xdom.getBlocks(ROW_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
+        if (!xdomRows.isEmpty()) {
+            return xdomRows;
+        }
+
+        List<MacroBlock> macroBlocks = xdom.getBlocks(MACRO_MATCHER, Block.Axes.DESCENDANT);
+        for (MacroBlock macroBlock : macroBlocks) {
+            XDOM macroContent;
+            try {
+                macroContent = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntax);
+            } catch (ComponentLookupException e) {
+                logger.error("Failed to parse macro content for [{}]", macroBlock.getId(), e);
+                continue;
+            }
+            if (macroContent != null) {
+                xdomRows = findRows(macroContent, syntax);
+                if (!xdomRows.isEmpty()) {
+                    return xdomRows;
+                }
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<TableRowBlock> findRows(List<XDOM> xdoms, Syntax syntax)
+    {
+        if (xdoms.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (xdoms.size() == 1) {
+            return findRows(xdoms.get(0), syntax);
+        }
+
+        List<TableRowBlock> xdomRows = new ArrayList<>();
+        for (XDOM xdom : xdoms) {
+            xdomRows.addAll(findRows(xdom, syntax));
+        }
+        return xdomRows;
+    }
+
+    private List<String> getRow(List<XDOM> xdomDetails, List<String> headings, List<String> columns,
+        List<String> columnsLower, Syntax syntax)
+    {
+        List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
+        List<String> row = new ArrayList<>(1 + (headings.isEmpty()
+            ? Math.max(columns.size(), xdomRows.size())
+            : headings.size()));
         for (TableRowBlock xdomRow : xdomRows) {
-            List<TableCellBlock> cells = xdomRow.getBlocks(cellMatcher, Block.Axes.DESCENDANT_OR_SELF);
+            List<TableCellBlock> cells = xdomRow.getBlocks(CELL_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
             if (cells.size() < 2) {
                 continue;
             }

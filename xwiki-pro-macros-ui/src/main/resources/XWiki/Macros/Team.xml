@@ -769,11 +769,12 @@
   #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
   #set($pictureList = {})
   #set($tag = $wikimacro.parameters.tag)
-  #set($users = $wikimacro.parameters.users)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
-  #set($letterAvatarBgColor = $wikimacro.parameters.letterAvatarBgColor)
-  #set($letterAvatarFontColor = $wikimacro.parameters.letterAvatarFontColor)
+  ## I need the raw value to avoid XWIKI-18965
+  #set($users = $xcontext.macro.params.users)
+  #set($letterAvatarBgColor = $xcontext.macro.params.letterAvatarBgColor)
+  #set($letterAvatarFontColor = $xcontext.macro.params.letterAvatarFontColor)
   #set($requireExternalAuth = $wikimacro.parameters.requireExternalAuth)
   #set($showUsernames = $wikimacro.parameters.showUsernames)
   #set($disableTools = $wikimacro.parameters.disableTools)
@@ -1377,7 +1378,7 @@
       <name>letterAvatarBgColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1456,7 +1457,7 @@
       <name>letterAvatarFontColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1772,7 +1773,7 @@
       <name>users</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.UsersReference</type>
     </property>
   </object>
 </xwikidoc>

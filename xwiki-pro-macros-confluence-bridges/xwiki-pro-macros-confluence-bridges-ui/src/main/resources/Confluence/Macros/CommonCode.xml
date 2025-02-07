@@ -103,6 +103,9 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   #if (!$fq.trim().isEmpty())
     #set ($discard = $query.bindValue("fq", $fq.trim()))
   #end
+  ## Max value. By default, Solr limits to 10 results,
+  ## which doesn't correspond to the behavior of Confluence.
+  #set ($discard = $query.setLimit(2147483647))
   #if ("$!xcontext.macro.params.max" != "")
     #set ($limit = $numbertool.toNumber($wikimacro.params.max))
     #if ($objecttool.isNotNull($limit))
