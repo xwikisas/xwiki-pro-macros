@@ -889,7 +889,7 @@ require(['jquery'], $ =&gt; {
   #end
 #end
 
-## Determinate if the search should be done in the currentWiki, globally or only on specific spaces.
+## Determine if the search should be done in the currentWiki, globally or only on specific spaces.
 #macro (determinateSpaceScope $confluenceSpacesString)
   ## If the global parameter is marked then we set the search to everywhere, if the currentWiki is marked then we select the current wiki
   ## otherwise we just the actual space selected.
