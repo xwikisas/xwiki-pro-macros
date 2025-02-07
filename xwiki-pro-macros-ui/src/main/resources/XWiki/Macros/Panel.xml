@@ -773,7 +773,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>borderColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1010,7 +1010,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>bgColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1089,7 +1089,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>contentTextColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1168,7 +1168,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>titleBGColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1247,7 +1247,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>titleColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1563,7 +1563,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>footerBGColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
@@ -1721,7 +1721,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <name>footerColor</name>
     </property>
     <property>
-      <type/>
+      <type>java.awt.Color</type>
     </property>
   </object>
   <object>
