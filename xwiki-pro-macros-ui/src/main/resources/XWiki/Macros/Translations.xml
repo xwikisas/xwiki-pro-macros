@@ -261,10 +261,16 @@ recentlyUpdated.param.types.comment=Comment
 recentlyUpdated.param.types.page=Page
 
 ## View Files macro
-com.xwiki.macros.viewfile.DisplayType.full=Full
-com.xwiki.macros.viewfile.DisplayType.thumbnail=Thumbnail
+rendering.macro.view-file.name=View file
+rendering.macro.view-file.description=Show a file using PDF Viewer Macro or Office Viewer.
+rendering.macro.view-file.parameter.attFilename.name=Att--filename
+rendering.macro.view-file.parameter.attFilename.description=Alias of File name (here for compatibility reasons).
+rendering.macro.view-file.parameter.name.name=File name
+rendering.macro.view-file.parameter.name.description=The attachment reference to display.
+rendering.macro.view-file.parameter.page.name=Page
+rendering.macro.view-file.parameter.page.description=Select the page from where you want the attachments to be displayed. Modifying this parameter will reset the selected file value.
 rendering.macro.view-file.parameter.display.name=Display
-rendering.macro.view-file.parameter.display.description=Display type. Default value set to Full.
+rendering.macro.view-file.parameter.display.description=Display type. Default value set to thumbnail.
 rendering.macro.view-file.parameter.height.name=Height
 rendering.macro.view-file.parameter.height.description=The viewer height, accepts values in pixels. The default value is 1000.
 rendering.macro.view-file.parameter.width.name=Width
