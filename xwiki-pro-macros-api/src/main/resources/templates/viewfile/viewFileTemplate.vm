@@ -106,12 +106,12 @@
 #end
 
 #macro (executeMacro)
-  #set($unescapedFilename = $params.getName())
-  #if(!$unescapedFilename)
-    #set($unescapedFilename = $params.getAttFilename())
+  #set ($unescapedFilename = $params.getName())
+  #if (!$unescapedFilename)
+    #set ($unescapedFilename = $params.getAttFilename())
   #end
   #set ($discard = $xwiki.jsx.use('Confluence.Macros.ViewFile'))
-  #if(!$unescapedFilename)
+  #if (!$unescapedFilename)
 
     {{error}}
        $escapetool.xml($services.localization.render('rendering.macro.viewFile.attachmentrequired'))
@@ -131,13 +131,13 @@
   #if ("$!width" != '')
     #set ($width = $escapetool.xml($width))
     #if (!$width.endsWith('%') && !$width.endsWith('px'))
-      #set($width = $width + 'px')
+      #set ($width = $width + 'px')
     #end
   #end
   #if ("$!height" != '')
     #set ($height = $escapetool.xml($height))
     #if (!$height.endsWith('%') && !$height.endsWith('px'))
-      #set($height = $height + 'px')
+      #set ($height = $height + 'px')
     #end
   #end
   #set ($inEditMode = $xcontext.action == 'edit' || $targetSyntaxId == 'annotatedhtml' ||

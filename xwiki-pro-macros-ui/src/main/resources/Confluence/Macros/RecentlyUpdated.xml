@@ -44,8 +44,8 @@ There are only a few things that are not supported compared to the Confluence ma
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**types**|Comma-separated list of types ({{{ page }}}, {{{ blogpost }}}, {{{ comment }}} or {{{ attachment }}}), possibly prefixed with "-".|No|//all types//
-|**spaces**|Comma-separated list of spaces, possibly prefixed with "+" or "-", or special value like {{{ @self }}}, {{{ @global }}} or {{{ @all }}}.|No|{{{ @self }}}
+|**types**|Select one or multiple content types. The macro will display only the content of the type you specify here.|No|//all types//
+|**spaces**|Select one or multiple spaces. The macro will display only the documents present in the selected spaces.|No|{{{@self}}}
 |**author**|Comma-separated list of authors.|No| 
 |**labels**|Comma-separated list of tags, possibly prefixed with "+" or "-".|No| 
 |**max**|Maximum number of results.|No| {{{ 15 }}}
@@ -53,7 +53,9 @@ There are only a few things that are not supported compared to the Confluence ma
 |**width**|Width of the macro in percentage.|No| {{{ 100% }}}
 |**hideHeading**|Whether to hide the text "Recently Updated" as title|No| {{{ false }}}
 |**showProfilePic**|Whether to show the profile picture of users|No| {{{ false }}}
-
+|**currentWiki**|If this parameter is selected then the spaces &amp; excluded spaces parameters are ignored and the macro will display the documents from the current wiki.|No| {{{ false}}}
+|**excludedSpaces**|Select one or multiple spaces. The macro will not display the documents present in the selected spaces.|No|
+|**global**|If this parameter is selected then spaces, excluded spaces and the current wiki parameters are ignored and the macro will display the documents from the current wiki and subwikis. |No| {{{ false}}}
 
 = Example Usage =
 
@@ -865,6 +867,39 @@ require(['jquery'], $ =&gt; {
   #setVariable("$return" $types)
 #end
 
+## Creates the final space parameter. ConfluenceSpaces comes from migreations and is a mix of prefixed(+/-) spaces and excludedSpaces comes
+## from XWiki and are the spaces that should be excluded when doing the solr query.
+#macro (constructSpaceParameter $confluenceSpaces, $excludedSpaces)
+  #set ($exclude = "")
+  #foreach ($excludedSpace in $excludedSpaces.split(","))
+    #if (!$excludedSpace.trim().isBlank())
+      #if ($foreach.first)
+        #set ($exclude = "-$excludedSpace")
+      #else
+        #set ($exclude = "$exclude,-$excludedSpace")
+      #end
+    #end
+  #end
+  #if (!$confluenceSpaces.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
+    #set ($finalSpace = "${confluenceSpaces},${exclude}")
+  #elseif(!$confluenceSpaces.trim().isEmpty())
+    #set ($finalSpace = $confluenceSpaces)
+  #else
+    #set ($finalSpace = $exclude)
+  #end
+#end
+
+## Determine if the search should be done in the currentWiki, globally or only on specific spaces.
+#macro (determinateSpaceScope $confluenceSpacesString)
+  ## If the global parameter is marked then we set the search to everywhere, if the currentWiki is marked then we select the current wiki
+  ## otherwise we just the actual space selected.
+  #if ($xcontext.macro.params.global == "true")
+    #set ($confluenceSpacesString = '@all')
+  #elseif ($xcontext.macro.params.currentWiki == "true")
+    #set ($confluenceSpacesString = '@global')
+  #end
+#end
+
 ## Init options from macro parameters
 #macro (initOptionsFromParameters $return)
   ## Gather every parameter in an option object that will be returned
@@ -878,9 +913,11 @@ require(['jquery'], $ =&gt; {
   ## Authors
   #set ($options.authors = "$!stringtool.strip($!stringtool.join($!wikimacro.parameters.author, ','))")
   ## Wiki &amp; Spaces
-  #set ($confluenceSpacesString = "$!stringtool.strip($!wikimacro.parameters.spaces)")
+  #set ($excludedSpaces = "$!xcontext.macro.params.excludedSpaces")
+  #set ($confluenceSpacesString = "$!stringtool.strip($!xcontext.macro.params.spaces)")
   #set ($options.spaces = $NULL)
   #set ($options.wiki = $doc.wiki)
+  #determinateSpaceScope($confluenceSpacesString)
   #if (
     $confluenceSpacesString.equals('')
     || $confluenceSpacesString.equals('@self')
@@ -906,14 +943,15 @@ require(['jquery'], $ =&gt; {
     #set ($options.wiki = $NULL)
   #else
     ## Search in specified spaces
-    #set ($options.spaces = $confluenceSpacesString)
+    #constructSpaceParameter($confluenceSpacesString, $excludedSpaces)
+    #set ($options.spaces = $finalSpace)
   #end
 
   ## Tags
   #set ($options.tags = "$!stringtool.strip($!wikimacro.parameters.labels)")
 
   ## Types
-  #set ($confluenceTypesString = "$!stringtool.strip($!wikimacro.parameters.types)")
+  #set ($confluenceTypesString = "$!stringtool.strip($!xcontext.macro.params.types)")
   #parseTypes($confluenceTypesString, $types)
   #set ($options.types = $types)
 
@@ -1173,7 +1211,7 @@ require(['jquery'], $ =&gt; {
       <name>spaces</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
   <object>
@@ -1401,7 +1439,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>This parameter allows you to filter content by content type. The macro will display only the content of the type you specify here. You can specify one or more types, separated by a comma or a space. To exclude content of a given content type, put a minus sign (-) immediately in front of that content type. For example: If you specify a content type of -blogpost you will get pages and all other content except for blog posts. Available values: "page" - documents, "blogpost" or "news" - blogpost documents, "comment" - comments on documents, "attachment" - attachments</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1410,7 +1448,7 @@ require(['jquery'], $ =&gt; {
       <name>types</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.pickers.recentlyupdated.RecentlyUpdateType</type>
     </property>
   </object>
   <object>
@@ -1724,6 +1762,243 @@ require(['jquery'], $ =&gt; {
     </property>
     <property>
       <name>hideHeading</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.RecentlyUpdated</name>
+    <number>9</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>2771ef63-fc22-49f7-913f-6614fc465acd</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>excludedSpaces</name>
+    </property>
+    <property>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.RecentlyUpdated</name>
+    <number>10</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>032cc5f2-8bfd-4e70-9e70-b423df6c9dfa</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>global</name>
+    </property>
+    <property>
+      <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.RecentlyUpdated</name>
+    <number>11</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>50e8fd2a-039f-45de-8575-f2b1c3c1b160</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue>false</defaultValue>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>currentWiki</name>
     </property>
     <property>
       <type>java.lang.Boolean</type>

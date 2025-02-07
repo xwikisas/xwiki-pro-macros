@@ -45,6 +45,7 @@ Limitation: the thumbnail is actually only an icon for now.
 |=Parameter|=Description|=Required|=Default
 |display|Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place|no|thumbnail (button in inline mode)
 |name|The attachment reference to display|if att-filename is not given|
+|page|The page from where you want the attachments to be displayed. Modifying this parameter will reset the selected file value|no|
 |width|The width of the view in % or px (e.g. 100%, 100px)|no|100% for the full view or 100px for the thumbnail
 |height|The height of the view in % or px (e.g. 100%, 100px)|no|1000px for the full view or 100px for the thumbnail
 |att-filename|Alias of name|If name is not given|
@@ -185,6 +186,9 @@ Full Presentation:
   }
 });
 
+// As there is no platform implementation to allow the user to dynamically select the page from where the attachments
+// are shown, a custom implementation was made to dynamically update the displyed attachments in corelation to the
+// selected page parameter. This can be removed after the implementation of https://jira.xwiki.org/browse/XWIKI-22850.
 require(['jquery', 'xwiki-suggestAttachments'], function($) {
   const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
   const styleObserver = new MutationObserver(function(mutations) {
@@ -197,50 +201,40 @@ require(['jquery', 'xwiki-suggestAttachments'], function($) {
     }
   });
 
+  const initializeAttachments = function(selectElement) {
+    let scope = "document:";
+    if (selectElement.val() != null) {
+      scope += selectElement.val();
+    }
+    var inputElement = $('input[name="name"]');
+    if (inputElement.length) {
+      let selectize = inputElement.siblings('.selectize-control');
+      if (selectize.length) {
+        selectize.remove();
+        inputElement.removeAttr("class tabindex style").val('');
+        const clone = inputElement.clone().appendTo(inputElement.parent());
+        inputElement.remove();
+        inputElement = clone;
+      }
+      inputElement.suggestAttachments({
+        maxItems: 1,
+        accept: acceptedExtensions,
+        searchScope: scope
+      });
+    }
+  }
+
   const pageObserver = new MutationObserver(function(mutationsList, observer) {
     const selectElement = $('select[name="page"]');
-
     if (selectElement.length) {
       const modal = selectElement.closest(".macro-editor-modal")[0];
-
       if (modal.style.display !== 'none') {
         observer.disconnect();
         styleObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
-
         $(selectElement).change(function() {
-          let scope = "document:";
-          if ($(this).val() != null) {
-            scope += $(this).val();
-          }
-          const inputElement = $('input[name="name"]');
-
-          if (inputElement.length) {
-            inputElement.removeAttr("class tabindex style").val('');
-            let selectize = inputElement.siblings('.selectize-control');
-            if (selectize.length) {
-              selectize.remove();
-            }
-            const clone = inputElement.clone().appendTo(inputElement.parent());
-            inputElement.remove();
-            clone.suggestAttachments({
-              maxItems: 1,
-              accept: acceptedExtensions,
-              searchScope: scope
-            });
-          }
+          initializeAttachments($(this))
         });
-        const inputElement = $('input[name="name"]');
-        if (inputElement.length) {
-          let scope = "document:";
-          if (selectElement.val() != null) {
-             scope += selectElement.val();
-          }
-          inputElement.suggestAttachments({
-            maxItems: 1,
-            accept: acceptedExtensions,
-            searchScope: scope
-          });
-        }
+        initializeAttachments(selectElement)
       }
     }
   });
