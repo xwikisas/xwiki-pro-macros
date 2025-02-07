@@ -19,11 +19,15 @@
  */
 package com.xwiki.pickers.contributors;
 
+import org.xwiki.stability.Unstable;
+
 /**
  * Picker for the mode parameter of the contributors macro.
  *
+ * @since 1.26.3
  * @version $Id$
  */
+@Unstable
 public enum Mode
 {
     /**
