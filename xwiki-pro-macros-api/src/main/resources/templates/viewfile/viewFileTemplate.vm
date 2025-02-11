@@ -25,7 +25,7 @@
 #set ($presentationExtensions = [ 'ppt', 'pptx', 'odp' ])
 #set ($hasPDFViewer = $xwiki.exists('XWiki.PDFViewerMacro'))
 
-#macro (renderThumbnailButton $attachmentRef $previewSupported $width $height $forceCard)
+#macro (renderThumbnailButton $attachmentRef $previewSupported $width $height $forceCard $inEditMode)
   #set ($style = '')
   #if ("$!width" != '')
     #set ($style = $style + " width: $width;")
@@ -37,8 +37,9 @@
     #set ($style = "style='$style.trim()'")
     #set ($thumbnailStyle = 'Card')
   #elseif ($forceCard)
-    #set ($style = "style='width: 100px; height: 100px;'")
-    #set ($height = '100px')
+    #if ($inEditMode)
+      #set ($style = "style='width: min-content; min-height: min-content;'")
+    #end
     #set ($thumbnailStyle = 'Card')
   #else
     #set ($thumbnailStyle = 'Button')
@@ -139,8 +140,9 @@
       #set ($height = $height + 'px')
     #end
   #end
-  #if (($display == 'FULL' || $display == 'full') && ($isInline || $xcontext.action == 'edit' || $targetSyntaxId ==
-    'annotatedhtml' || $targetSyntaxId == 'annotatedxhtml' || $request.outputSyntax == 'annotatedhtml'))
+  #set ($inEditMode = $xcontext.action == 'edit' || $targetSyntaxId == 'annotatedhtml' ||
+    $targetSyntaxId == 'annotatedxhtml' || $request.outputSyntax == 'annotatedhtml')
+  #if (($display == 'FULL' || $display == 'full') && ($isInline || $inEditMode))
     #set ($display = 'thumbnail')
   #end
   #if ($display == 'FULL' || $display == 'full')
@@ -159,7 +161,7 @@
       #set ($discard = $xwiki.jsfx.use('uicomponents/widgets/gallery/gallery.js', {'forceSkinAction': true}))
       #set ($discard = $xwiki.ssfx.use('uicomponents/widgets/gallery/gallery.css'))
     #end
-    #renderThumbnailButton($attachmentRef $hasPreview $width $height $forceCard)
+    #renderThumbnailButton($attachmentRef $hasPreview $width $height $forceCard $inEditMode)
   #end
 #end
 {{/velocity}}
