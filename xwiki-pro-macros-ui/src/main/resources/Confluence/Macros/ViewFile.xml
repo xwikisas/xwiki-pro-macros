@@ -189,7 +189,7 @@ Full Presentation:
 // As there is no platform implementation to allow the user to dynamically select the page from where the attachments
 // are shown, a custom implementation was made to dynamically update the displyed attachments in corelation to the
 // selected page parameter. This can be removed after the implementation of https://jira.xwiki.org/browse/XWIKI-22850.
-require(['jquery', 'xwiki-suggestAttachments'], function($) {
+require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
   const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
   const styleObserver = new MutationObserver(function(mutations) {
     for (const mutation of mutations) {
@@ -216,10 +216,12 @@ require(['jquery', 'xwiki-suggestAttachments'], function($) {
         inputElement.remove();
         inputElement = clone;
       }
+      const allowUpload = selectElement.val() == xm.document || !selectElement.val();
       inputElement.suggestAttachments({
         maxItems: 1,
         accept: acceptedExtensions,
-        searchScope: scope
+        searchScope: scope,
+        uploadAllowed: allowUpload
       });
     }
   }
@@ -436,6 +438,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
 .viewFileThumbnailCard, .viewFileFull {
   position: relative;
+  width: 10rem;
+  height: fit-content;
+  min-height: 10rem;
+  margin-bottom: 1rem;
 }
 
 span.viewFileThumbnailCard {
@@ -448,7 +454,7 @@ span.viewFileThumbnailCard {
   flex-direction: column;
   text-align: center;
   width: 100%;
-  height: 100%;
+  min-height: inherit;
 }
 
 .viewFileThumbnailCard a .attachmentMimeType {
