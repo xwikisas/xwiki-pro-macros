@@ -648,7 +648,7 @@ require(['jquery'], $ =&gt; {
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -1794,7 +1794,7 @@ require(['jquery'], $ =&gt; {
     <name>Confluence.Macros.RecentlyUpdated</name>
     <number>9</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>2771ef63-fc22-49f7-913f-6614fc465acd</guid>
+    <guid>ab4a94a3-cc62-42ac-a54a-f43e7a12eaa1</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1863,10 +1863,10 @@ require(['jquery'], $ =&gt; {
       <mandatory/>
     </property>
     <property>
-      <name>excludedSpaces</name>
+      <name>excludedLabels</name>
     </property>
     <property>
-      <type>com.xwiki.pickers.SuggestSpacesReference</type>
+      <type>com.xwiki.pickers.TagsReference</type>
     </property>
   </object>
   <object>
@@ -2029,9 +2029,9 @@ require(['jquery'], $ =&gt; {
   </object>
   <object>
     <name>Confluence.Macros.RecentlyUpdated</name>
-    <number>9</number>
+    <number>12</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>ab4a94a3-cc62-42ac-a54a-f43e7a12eaa1</guid>
+    <guid>d872c248-2250-4774-8f98-4c5b1933a301</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -2100,10 +2100,10 @@ require(['jquery'], $ =&gt; {
       <mandatory/>
     </property>
     <property>
-      <name>excludedLabels</name>
+      <name>excludedSpaces</name>
     </property>
     <property>
-      <type>com.xwiki.pickers.TagsReference</type>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
 </xwikidoc>
