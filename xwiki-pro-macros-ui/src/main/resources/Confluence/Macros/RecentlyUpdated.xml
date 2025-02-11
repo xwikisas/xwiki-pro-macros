@@ -46,8 +46,9 @@ There are only a few things that are not supported compared to the Confluence ma
 |=Parameter|=Description|=Required|=Default
 |**types**|Select one or multiple content types. The macro will display only the content of the type you specify here.|No|//all types//
 |**spaces**|Select one or multiple spaces. The macro will display only the documents present in the selected spaces.|No|{{{@self}}}
-|**author**|Comma-separated list of authors.|No| 
-|**labels**|Comma-separated list of tags, possibly prefixed with "+" or "-".|No| 
+|**author**|Comma-separated list of authors.|No|
+|**labels**|Comma-separated list of tags.|No|
+|**excludedLabels**|Comma-separated list of tags.|No|
 |**max**|Maximum number of results.|No| {{{ 15 }}}
 |**theme**|Appearance of the macro ({{{ concise }}}, {{{ social }}}, {{{ sidebar }}}).|No| {{{ concise }}}
 |**width**|Width of the macro in percentage.|No| {{{ 100% }}}
@@ -647,7 +648,7 @@ require(['jquery'], $ =&gt; {
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -900,6 +901,27 @@ require(['jquery'], $ =&gt; {
   #end
 #end
 
+## Handles the construction of the tags parameter.
+#macro (constructTagsParameter $confluenceTags, $excludedTags)
+  #set ($exclude = "")
+  #foreach ($excludedSpace in $excludedTags.split(","))
+    #if (!$excludedSpace.trim().isBlank())
+      #if ($foreach.first)
+        #set ($exclude = "-$excludedSpace")
+      #else
+	#set ($exclude = "$exclude,-$excludedSpace")
+      #end
+    #end
+  #end
+  #if (!$confluenceTags.trim().isEmpty() &amp;&amp; !$exclude.trim().isEmpty())
+    #set ($finalTags = "${confluenceTags},${exclude}")
+  #elseif (!$confluenceTags.trim().isEmpty())
+    #set ($finalTags = $confluenceTags)
+  #else
+    #set ($finalTags = $exclude)
+  #end
+#end
+
 ## Init options from macro parameters
 #macro (initOptionsFromParameters $return)
   ## Gather every parameter in an option object that will be returned
@@ -948,7 +970,8 @@ require(['jquery'], $ =&gt; {
   #end
 
   ## Tags
-  #set ($options.tags = "$!stringtool.strip($!wikimacro.parameters.labels)")
+  #constructTagsParameter("$!stringtool.strip($!xcontext.macro.params.labels)", "$!stringtool.strip($!xcontext.macro.params.excludedLabels)")
+  #set ($options.tags = $finalTags)
 
   ## Types
   #set ($confluenceTypesString = "$!stringtool.strip($!xcontext.macro.params.types)")
@@ -1281,7 +1304,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>Filter the results by label. The macro will display only the pages etc which are tagged with the label(s) you specify here. You can specify one or more label values, separated by a comma or a space. To exclude content which matches a given label, put a minus sign (-) immediately in front of that label value. For example: If you specify a label value of -badpage you will get only content which is not labeled with 'badpage'. To indicate that the results** **must match a given label value, put a plus sign (+) immediately in front of that label value. For example: If you specify a label value of +superpage,+goodpage you will get only content which has at least two labels, being 'superpage' and 'goodpage'. The labels parameter only applies to the page and blog content types.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1290,7 +1313,7 @@ require(['jquery'], $ =&gt; {
       <name>labels</name>
     </property>
     <property>
-      <type>java.lang.String</type>
+      <type>com.xwiki.pickers.TagsReference</type>
     </property>
   </object>
   <object>
@@ -1771,7 +1794,7 @@ require(['jquery'], $ =&gt; {
     <name>Confluence.Macros.RecentlyUpdated</name>
     <number>9</number>
     <className>XWiki.WikiMacroParameterClass</className>
-    <guid>2771ef63-fc22-49f7-913f-6614fc465acd</guid>
+    <guid>ab4a94a3-cc62-42ac-a54a-f43e7a12eaa1</guid>
     <class>
       <name>XWiki.WikiMacroParameterClass</name>
       <customClass/>
@@ -1840,10 +1863,10 @@ require(['jquery'], $ =&gt; {
       <mandatory/>
     </property>
     <property>
-      <name>excludedSpaces</name>
+      <name>excludedLabels</name>
     </property>
     <property>
-      <type>com.xwiki.pickers.SuggestSpacesReference</type>
+      <type>com.xwiki.pickers.TagsReference</type>
     </property>
   </object>
   <object>
@@ -2002,6 +2025,85 @@ require(['jquery'], $ =&gt; {
     </property>
     <property>
       <type>java.lang.Boolean</type>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.RecentlyUpdated</name>
+    <number>12</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>d872c248-2250-4774-8f98-4c5b1933a301</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <disabled>0</disabled>
+        <name>type</name>
+        <number>5</number>
+        <prettyName>Parameter type</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory/>
+    </property>
+    <property>
+      <name>excludedSpaces</name>
+    </property>
+    <property>
+      <type>com.xwiki.pickers.SuggestSpacesReference</type>
     </property>
   </object>
 </xwikidoc>
