@@ -17,43 +17,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.internal;
+package com.xwiki.pickers.contributors;
+
+import org.xwiki.stability.Unstable;
 
 /**
- * Enumeration of supported view file display values.
+ * Picker for the order parameter of the contributors macro.
  *
+ * @since 1.26.3
  * @version $Id$
- * @since 1.3
  */
-public enum ViewFileDisplay
+@Unstable
+public enum Order
 {
     /**
-     * Thumbnail.
+     * Order by number of contributions.
      */
-    thumbnail,
-
+    count,
     /**
-     * Button.
+     * Order by contributors name.
      */
-    button,
-
+    name,
     /**
-     * Full.
+     * Order by last Contribution date.
      */
-    full;
-
-    /**
-     * @param name the name of a display type.
-     * @return the display type corresponding to the name, or {@code null}.
-     */
-    public static ViewFileDisplay forName(String name)
-    {
-        for (ViewFileDisplay type : values()) {
-            if (name.equalsIgnoreCase(type.toString())) {
-                return type;
-            }
-        }
-
-        return null;
-    }
+    update
 }

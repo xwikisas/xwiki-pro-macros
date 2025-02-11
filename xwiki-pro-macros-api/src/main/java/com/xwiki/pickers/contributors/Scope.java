@@ -17,22 +17,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile;
+package com.xwiki.pickers.contributors;
+
+import org.xwiki.stability.Unstable;
 
 /**
- * Supported display types by the view file macro.
+ * Picker for the scope parameter of the contributors macro.
  *
+ * @since 1.26.3
  * @version $Id$
- * @since 1.17.2
  */
-public enum DisplayType
+@Unstable
+public enum Scope
 {
     /**
-     * The selected document will be rendered in page.
+     * Include direct children of the specified pages.
      */
-    FULL,
+    children,
     /**
-     * The selected document will be visible as a hyperlink to a modal where the content can be viewed.
+     * Include all children of the specified pages.
      */
-    THUMBNAIL
+    descendants,
+    /**
+     * Include only the specified pages. Should be treated as blank when handling the macro to keep the backwards
+     * compatibility.
+     */
+    specified
+
 }

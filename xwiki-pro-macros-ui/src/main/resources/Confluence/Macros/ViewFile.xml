@@ -45,6 +45,7 @@ Limitation: the thumbnail is actually only an icon for now.
 |=Parameter|=Description|=Required|=Default
 |display|Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place|no|thumbnail (button in inline mode)
 |name|The attachment reference to display|if att-filename is not given|
+|page|The page from where you want the attachments to be displayed. Modifying this parameter will reset the selected file value|no|
 |width|The width of the view in % or px (e.g. 100%, 100px)|no|100% for the full view or 100px for the thumbnail
 |height|The height of the view in % or px (e.g. 100%, 100px)|no|1000px for the full view or 100px for the thumbnail
 |att-filename|Alias of name|If name is not given|
@@ -178,7 +179,72 @@ Full Presentation:
       <cache>long</cache>
     </property>
     <property>
-      <code>window.addEventListener("DOMContentLoaded", function () {
+      <code>require.config({
+  paths: {
+    'xwiki-suggestAttachments': "$xwiki.getSkinFile('uicomponents/suggest/suggestAttachments.js', true)" +
+    "?v=$escapetool.url($xwiki.version)"
+  }
+});
+
+// As there is no platform implementation to allow the user to dynamically select the page from where the attachments
+// are shown, a custom implementation was made to dynamically update the displyed attachments in corelation to the
+// selected page parameter. This can be removed after the implementation of https://jira.xwiki.org/browse/XWIKI-22850.
+require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
+  const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
+  const styleObserver = new MutationObserver(function(mutations) {
+    for (const mutation of mutations) {
+      if (mutation.target.style.display === 'none') {
+        styleObserver.disconnect();
+        pageObserver.observe(document.body, { childList: true, subtree: true });
+        return;
+      }
+    }
+  });
+
+  const initializeAttachments = function(selectElement) {
+    let scope = "document:";
+    if (selectElement.val() != null) {
+      scope += selectElement.val();
+    }
+    var inputElement = $('input[name="name"]');
+    if (inputElement.length) {
+      let selectize = inputElement.siblings('.selectize-control');
+      if (selectize.length) {
+        selectize.remove();
+        inputElement.removeAttr("class tabindex style").val('');
+        const clone = inputElement.clone().appendTo(inputElement.parent());
+        inputElement.remove();
+        inputElement = clone;
+      }
+      const allowUpload = selectElement.val() == xm.document || !selectElement.val();
+      inputElement.suggestAttachments({
+        maxItems: 1,
+        accept: acceptedExtensions,
+        searchScope: scope,
+        uploadAllowed: allowUpload
+      });
+    }
+  }
+
+  const pageObserver = new MutationObserver(function(mutationsList, observer) {
+    const selectElement = $('select[name="page"]');
+    if (selectElement.length) {
+      const modal = selectElement.closest(".macro-editor-modal")[0];
+      if (modal.style.display !== 'none') {
+        observer.disconnect();
+        styleObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
+        $(selectElement).change(function() {
+          initializeAttachments($(this))
+        });
+        initializeAttachments(selectElement)
+      }
+    }
+  });
+
+  pageObserver.observe(document.body, { childList: true, subtree: true });
+});
+
+window.addEventListener("DOMContentLoaded", function () {
   "use strict";
   document.addEventListener("click", async function (e) {
     if (("" + document.getElementById("xwikicontent")?.contentEditable) == "true") {
@@ -216,7 +282,7 @@ Full Presentation:
       <name/>
     </property>
     <property>
-      <parse>0</parse>
+      <parse>1</parse>
     </property>
     <property>
       <use>onDemand</use>
@@ -372,6 +438,10 @@ Full Presentation:
 
 .viewFileThumbnailCard, .viewFileFull {
   position: relative;
+  width: 10rem;
+  height: fit-content;
+  min-height: 10rem;
+  margin-bottom: 1rem;
 }
 
 span.viewFileThumbnailCard {
@@ -384,7 +454,7 @@ span.viewFileThumbnailCard {
   flex-direction: column;
   text-align: center;
   width: 100%;
-  height: 100%;
+  min-height: inherit;
 }
 
 .viewFileThumbnailCard a .attachmentMimeType {
@@ -414,805 +484,6 @@ span.viewFileThumbnailCard {
     </property>
     <property>
       <use>onDemand</use>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>0</number>
-    <className>XWiki.WikiMacroClass</className>
-    <guid>eb3146d5-be1c-418e-bf6a-f325a1c630e5</guid>
-    <class>
-      <name>XWiki.WikiMacroClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <async_cached>
-        <defaultValue>0</defaultValue>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType/>
-        <name>async_cached</name>
-        <number>13</number>
-        <prettyName>Cached</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </async_cached>
-      <async_context>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>1</multiSelect>
-        <name>async_context</name>
-        <number>14</number>
-        <prettyName>Context elements</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>, </separator>
-        <separators>|, </separators>
-        <size>5</size>
-        <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </async_context>
-      <async_enabled>
-        <defaultValue>0</defaultValue>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType/>
-        <name>async_enabled</name>
-        <number>12</number>
-        <prettyName>Asynchronous rendering</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </async_enabled>
-      <code>
-        <disabled>0</disabled>
-        <editor>Text</editor>
-        <name>code</name>
-        <number>10</number>
-        <prettyName>Macro code</prettyName>
-        <restricted>0</restricted>
-        <rows>20</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
-      <contentDescription>
-        <contenttype>PureText</contenttype>
-        <disabled>0</disabled>
-        <editor>PureText</editor>
-        <name>contentDescription</name>
-        <number>9</number>
-        <prettyName>Content description (Not applicable for "No content" type)</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </contentDescription>
-      <contentJavaType>
-        <cache>0</cache>
-        <defaultValue>Unknown</defaultValue>
-        <disabled>0</disabled>
-        <displayType>input</displayType>
-        <freeText>allowed</freeText>
-        <largeStorage>1</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>contentJavaType</name>
-        <number>8</number>
-        <picker>1</picker>
-        <prettyName>Macro content type</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>|</separator>
-        <separators>|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>Unknown|Wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </contentJavaType>
-      <contentType>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>contentType</name>
-        <number>7</number>
-        <prettyName>Macro content availability</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>|</separator>
-        <separators>|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>Optional|Mandatory|No content</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </contentType>
-      <defaultCategories>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>input</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>1</multiSelect>
-        <name>defaultCategories</name>
-        <number>4</number>
-        <prettyName>Default categories</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values/>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </defaultCategories>
-      <description>
-        <contenttype>PureText</contenttype>
-        <disabled>0</disabled>
-        <editor>PureText</editor>
-        <name>description</name>
-        <number>3</number>
-        <prettyName>Macro description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <id>
-        <disabled>0</disabled>
-        <name>id</name>
-        <number>1</number>
-        <prettyName>Macro id</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </id>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>2</number>
-        <prettyName>Macro name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <priority>
-        <disabled>0</disabled>
-        <name>priority</name>
-        <number>11</number>
-        <numberType>integer</numberType>
-        <prettyName>Priority</prettyName>
-        <size>10</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
-      </priority>
-      <supportsInlineMode>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>supportsInlineMode</name>
-        <number>5</number>
-        <prettyName>Supports inline mode</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </supportsInlineMode>
-      <visibility>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <freeText>forbidden</freeText>
-        <largeStorage>0</largeStorage>
-        <multiSelect>0</multiSelect>
-        <name>visibility</name>
-        <number>6</number>
-        <prettyName>Macro visibility</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator>|</separator>
-        <separators>|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>Current User|Current Wiki|Global</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </visibility>
-    </class>
-    <property>
-      <async_cached>0</async_cached>
-    </property>
-    <property>
-      <async_context/>
-    </property>
-    <property>
-      <async_enabled>0</async_enabled>
-    </property>
-    <property>
-      <code>{{velocity output="false"}}
-#template('attachment_macros.vm')
-
-#set ($officeExtensions = [ 'ppt', 'pptx', 'odp', 'doc', 'docx', 'odt', 'xls', 'xlsx', 'ods' ])
-#set ($presentationExtensions = [ 'ppt', 'pptx', 'odp' ])
-#set ($hasPDFViewer = $xwiki.exists("XWiki.PDFViewerMacro"))
-
-#macro (renderThumbnailButton $attachmentRef $previewSupported $width $height $forceCard)
-  #set ($style = "")
-  #if ("$!width" != "")
-    #set ($style = $style + " width: $width")
-  #end
-  #if ("$!height" != "")
-    #set ($style = $style + " height: $height")
-  #end
-  #if ("$!style" != "")
-    #set ($style = "style='$style.trim()'")
-    #set ($thumbnailStyle = "Card")
-  #elseif ($forceCard)
-    #set ($style = "style='width: 100px; height: 100px;'")
-    #set ($height = "100px")
-    #set ($thumbnailStyle = "Card")
-  #else
-    #set ($thumbnailStyle = "Button")
-  #end
-  #if ($wikimacro.context.isInline() || $thumbnailStyle == "Button")
-    #set ($elem = "span")
-    #set ($clean = false)
-  #else
-    #set ($elem = "div")
-    #set ($clean = true)
-  #end
-  #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
-  #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
-  #if ($thumbnail.charAt(0) == '#')
-    ## #displayAttachmentMimeType is not supported (before July 2022)
-    #set ($thumbnail = '&lt;div class="attachmentMimeType"&gt;&lt;span&gt;&lt;span class="fa fa-paperclip" aria-hidden="true"&gt;&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;')
-  #end
-  #if ($elem == "span")
-    #set ($thumbnail = $thumbnail.replace('&lt;/div&gt;', '&lt;/span&gt;').replace('&lt;div ', '&lt;span '))
-  #end
-
-  {{html clean="$clean"}}
-  &lt;$elem class="viewFileThumbnail viewFileThumbnail$thumbnailStyle" $style data-preview="$previewSupported" data-ref="$escapetool.xml($services.model.serialize($attachmentRef, 'default'))"&gt;
-    &lt;a href="$escapetool.xml($xwiki.getURL($attachmentRef))"
-       download="download"
-       #if ($thumbnailStyle == "Button") class="button button-primary" #end
-       title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))"
-    &gt;
-      $thumbnail
-      &lt;span class="viewFileName"&gt;$escapetool.xml($attachmentRef.getName())&lt;/span&gt;
-    &lt;/a&gt;
-  &lt;/$elem&gt;
-  {{/html}}
-
-#end
-
-#macro (renderFull $extension $attachmentRef $width $height)
-  #set ($escapedAttachmentReference = $services.rendering.escape($attachmentRef, $xwiki.currentContentSyntaxId))
-  #if ($officeExtensions.contains($extension))
-
-    {{html clean=false}}
-    &lt;div class="viewFileFull#if (!$presentationExtensions.contains($extension)) box#end"
-      style="width: $width; height: $height; overflow: auto"&gt;
-    {{/html}}
-
-    {{office reference="$escapedAttachmentReference" /}}
-
-    {{html clean=false}}
-    &lt;/div&gt;
-    {{/html}}
-
-  #elseif ($extension == 'pdf' &amp;&amp; $hasPDFViewer)
-    #if ($height.endsWith("px"))
-      #set ($height = $stringtool.removeEnd($height, "px"))
-    #end
-    #if ($width.endsWith("px"))
-      #set ($width = $stringtool.removeEnd($width, "px"))
-    #end
-
-    {{pdfviewer file="$escapedAttachmentReference" height="$height" width="$width"/}}
-
-  #else
-    #renderThumbnailButton($attachmentRef false $width $height)
-  #end
-#end
-
-#macro (executeMacro)
-  #set($unescapedFilename = $xcontext.macro.params.get('att--filename'))
-  #if(!$unescapedFilename)
-    #set($unescapedFilename = $xcontext.macro.params.get('name'))
-  #end
-  #if(!$unescapedFilename)
-
-    {{error}}
-       $escapetool.xml($services.localization.render('rendering.macro.viewFile.namerequired'))"
-    {{/error}}
-  #end
-  #continueExecutingMacro##
-#end
-
-#macro (continueExecutingMacro)
-  #set ($attachmentRef = $services.model.resolveAttachment($unescapedFilename))
-  #set ($discard = $xwiki.ssx.use('Confluence.Macros.ViewFile'))
-  #set ($extension = $unescapedFilename.substring($unescapedFilename.lastIndexOf('.') + 1).toLowerCase())
-  #set ($width = $xcontext.macro.params.get('width'))
-  #set ($height = $xcontext.macro.params.get('height'))
-  #set ($display = $xcontext.macro.params.get('display'))
-  #if ("$!width" != "")
-    #set ($width = $escapetool.xml($width))
-    #if (!$width.endsWith("%") &amp;&amp; !$width.endsWith("px"))
-      #set($width = $width + "px")
-    #end
-  #end
-  #if ("$!height" != "")
-    #set ($height = $escapetool.xml($height))
-    #if (!$height.endsWith("%") &amp;&amp; !$height.endsWith("px"))
-      #set($height = $height + "px")
-    #end
-  #end
-  #if (($display == 'FULL' || $display == 'full') &amp;&amp; ($wikimacro.context.isInline() || ($xcontext.action == "edit" || $request.outputSyntax == "annotatedhtml")))
-    #set ($display = "thumbnail")
-  #end
-  #if ($display == 'FULL' || $display == 'full')
-    #if ("$!width" == "")
-      #set ($width = "100%")
-    #end
-    #if ("$!height" == "")
-      #set ($height = "1000px")
-    #end
-    #renderFull($extension $attachmentRef $width $height)
-  #else
-    ## thumbnail or fallback
-    #set ($hasPreview = ($extension == 'pdf' &amp;&amp; $hasPDFViewer) || $officeExtensions.contains($extension))
-    #if ($hasPreview)
-      #set ($discard = $xwiki.jsx.use('Confluence.Macros.ViewFile'))
-    #end
-    #set ($forceCard = ($display == 'THUMBNAIL' || $display == 'thumbnail' || ("$!display" == "" &amp;&amp; !$wikimacro.context.isInline())))
-    #if ($presentationExtensions.contains($extension))
-      #set ($discard = $xwiki.jsfx.use("uicomponents/widgets/gallery/gallery.js", {"forceSkinAction": true}))
-      #set ($discard = $xwiki.ssfx.use("uicomponents/widgets/gallery/gallery.css"))
-    #end
-    #renderThumbnailButton($attachmentRef $hasPreview $width $height $forceCard)
-  #end
-#end
-{{/velocity}}
-
-{{velocity}}
-## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
-## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
-## don't have view right on those pages.
-#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))##
-  #executeMacro##
-#else
-  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
-#end
-{{/velocity}}</code>
-    </property>
-    <property>
-      <contentDescription/>
-    </property>
-    <property>
-      <contentJavaType/>
-    </property>
-    <property>
-      <contentType>No content</contentType>
-    </property>
-    <property>
-      <defaultCategories/>
-    </property>
-    <property>
-      <description>Show files using PDF Viewer Macro or Office Viewer</description>
-    </property>
-    <property>
-      <id>view-file</id>
-    </property>
-    <property>
-      <name>View Files</name>
-    </property>
-    <property>
-      <priority/>
-    </property>
-    <property>
-      <supportsInlineMode>1</supportsInlineMode>
-    </property>
-    <property>
-      <visibility>Current Wiki</visibility>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>0</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>e8d53aee-5836-44cb-bc97-b2d53d2e484a</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>Alias of name (here for compatibility reasons)</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>att--filename</name>
-    </property>
-    <property>
-      <type>org.xwiki.model.reference.AttachmentReference</type>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>1</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>40e023d7-bb84-4f86-9360-232599d7165d</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>The width of the view in % or px (e.g. 100%, 100px)</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>width</name>
-    </property>
-    <property>
-      <type/>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>2</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>04a88864-2cd5-493e-bea3-71598f18146f</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>The height of the view in % or px (e.g. 100%, 100px)</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>height</name>
-    </property>
-    <property>
-      <type/>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>3</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>aa20b8bc-13bc-4c2f-9274-06800a98d60b</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>Kind of display. "button" for a button, "thumbnail" for a thumbnail, "full" to render the document in place</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>display</name>
-    </property>
-    <property>
-      <type>com.xwiki.macros.internal.ViewFileDisplay</type>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ViewFile</name>
-    <number>4</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>488a92e9-7446-45d4-863a-eb4ad2b5c1f3</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>The attachment reference to display</description>
-    </property>
-    <property>
-      <mandatory>0</mandatory>
-    </property>
-    <property>
-      <name>name</name>
-    </property>
-    <property>
-      <type>org.xwiki.model.reference.AttachmentReference</type>
     </property>
   </object>
 </xwikidoc>
