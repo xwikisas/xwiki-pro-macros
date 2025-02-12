@@ -69,18 +69,34 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.contrib</groupId>
-      <artifactId>macro-jwplayer-ui</artifactId>
-      <version>${jwplayer.version}</version>
-      <type>xar</type>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.xwiki.contrib.mathjax</groupId>
       <artifactId>macro-mathjax-ui</artifactId>
       <version>${mathjax.version}</version>
       <type>xar</type>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib.embed</groupId>
+      <artifactId>embed-macro-ui</artifactId>
+      <version>${embed.version}</version>
+      <scope>runtime</scope>
+      <optional>true</optional>
+      <type>xar</type>
+      <!--  TODO: Remove exclusions when the parent of Pro Macros is >= than 15.10.10 (embed parent version). -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-rendering-macro-velocity</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-rendering-macro-code</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.xwiki.rendering</groupId>
+          <artifactId>xwiki-rendering-macro-html</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -110,7 +126,7 @@
       <artifactId>application-confluence-migrator-pro-resolvers</artifactId>
       <version>${confluencepro.version}</version>
       <optional>true</optional>
-     </dependency>
+    </dependency>
     <dependency>
       <groupId>org.xwiki.contrib.confluence</groupId>
       <artifactId>confluence-resource-reference-type-parsers</artifactId>

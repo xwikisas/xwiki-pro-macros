@@ -36,7 +36,6 @@
   <properties>
     <licensing.version>1.27</licensing.version>
     <pdfviewer.version>2.6.1</pdfviewer.version>
-    <jwplayer.version>2.2.1</jwplayer.version>
     <mathjax.version>1.1.7</mathjax.version>
     <diagram.version>1.21</diagram.version>
     <locationsearch.version>1.4.7</locationsearch.version>
@@ -44,6 +43,7 @@
     <confluence.version>9.77.3</confluence.version>
     <confluencepro.version>1.29.4</confluencepro.version>
     <cql.version>0.1.0</cql.version>
+    <embed.version>1.1.0</embed.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>

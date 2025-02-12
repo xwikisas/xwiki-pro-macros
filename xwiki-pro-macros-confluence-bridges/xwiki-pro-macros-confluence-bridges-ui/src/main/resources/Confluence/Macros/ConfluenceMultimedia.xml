@@ -38,7 +38,7 @@
   <hidden>true</hidden>
   <content>= Description =
 
-This is a bridge for the Confluence Multimedia macro. It uses the [[JW Player&gt;&gt;https://www.jwplayer.com/]] open-source embeddable media player for web sites, supporting many commonly-used audio and video formats.
+This is a bridge for the Confluence Multimedia macro. It uses the Video.js open-source embeddable media player for web sites, supporting many commonly-used audio and video formats.
 
 = Parameters =
 
@@ -312,16 +312,13 @@ The result is the following:
     #set ($attachment = $wikimacro.parameters.get('name'))
   #end
   #if ($attachment)
-    #set ($page = $services.model.resolveDocument($wikimacro.parameters.get('page')))
+    #set ($page = $services.rendering.escape($wikimacro.parameters.get('page'), $xwiki.currentContentSyntaxId))
     #set ($width = $services.rendering.escape($wikimacro.parameters.get('width'), $xwiki.currentContentSyntaxId))
     #set ($height = $services.rendering.escape($wikimacro.parameters.get('height'), $xwiki.currentContentSyntaxId))
+    #set ($attachment = $services.rendering.escape($attachment, $xwiki.currentContentSyntaxId))
+    ## Embed does not yet support autoplay.
     #set ($autostart = "$!wikimacro.parameters.get('autostart').toLowerCase()" == 'true')
-    #if ("$!page" != '')
-      #set ($attachRef = $services.model.createAttachmentReference($page, $attachment))
-      #set ($attachment = $services.model.serialize($attachRef, 'local'))
-    #end
-    {{jwplayer attachment="${services.rendering.escape($attachment, $xwiki.currentContentSyntaxId)}" width="$!{width}"
-      height="$!{height}" autostart="$!{autostart}" /}}
+    {{embed attachment="$!attachment" width="$!width" height="$!height" reference="$!page" /}}
   #else
     Please provide the filename of the media to play in the name parameter.
   #end
