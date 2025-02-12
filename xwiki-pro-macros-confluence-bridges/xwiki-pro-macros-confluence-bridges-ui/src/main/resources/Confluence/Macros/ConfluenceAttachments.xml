@@ -763,8 +763,8 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     'forceSkinAction': true,
     'language': $xcontext.locale
   }))
-  #set ($discard = $xwiki.jsx.use("Confluence.Macros.Attachments"))
-  #set ($discard = $xwiki.ssx.use("Confluence.Macros.Attachments"))
+  #set ($discard = $xwiki.jsx.use("Confluence.Macros.ConfluenceAttachments"))
+  #set ($discard = $xwiki.ssx.use("Confluence.Macros.ConfluenceAttachments"))
   #set ($document = $doc)
   #if ("$!wikimacro.parameters.page" != '')
     #set ($document = $xwiki.getDocument("$!wikimacro.parameters.page"))
