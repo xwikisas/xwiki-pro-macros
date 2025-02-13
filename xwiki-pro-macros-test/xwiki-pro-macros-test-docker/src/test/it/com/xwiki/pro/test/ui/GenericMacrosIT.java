@@ -28,7 +28,6 @@ import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
-import org.xwiki.test.ui.po.ViewPage;
 
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
 

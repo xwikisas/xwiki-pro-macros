@@ -56,23 +56,27 @@
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-licensor-api</artifactId>
       <version>${licensing.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.xwiki.pdfviewer</groupId>
       <artifactId>macro-pdfviewer-ui</artifactId>
       <version>${pdfviewer.version}</version>
       <type>xar</type>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-wikimacro-store</artifactId>
       <version>${platform.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.xwiki.contrib</groupId>
       <artifactId>location-search-macro</artifactId>
       <version>${locationsearch.version}</version>
       <type>xar</type>
+      <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -80,12 +84,14 @@
       <artifactId>xwiki-platform-tag-ui</artifactId>
       <version>${platform.version}</version>
       <type>xar</type>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.xwiki.date</groupId>
       <artifactId>macro-date-ui</artifactId>
       <type>xar</type>
       <version>${datemacro.version}</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.xwiki.pro</groupId>
@@ -96,7 +102,55 @@
       <groupId>com.xwiki.commons</groupId>
       <artifactId>xwiki-pro-commons-pickers-ui</artifactId>
       <type>xar</type>
-      <version>1.0.4</version>
+      <version>${pro.commons.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-macro-html</artifactId>
+      <version>${rendering.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-rendering-macro-velocity</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-query-manager</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wiki-script</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-localization-script</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wiki-user-script</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-office-macro</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 </project>
