@@ -184,8 +184,8 @@ public class ConfluenceDetailsScriptService implements ScriptService
             if (i != -1) {
                 alreadyReversedIfNeeded = true;
                 rows.sort((l1, l2) -> {
-                    String v1 = l1.size() < i + 1 ? "" : l1.get(i + 1);
-                    String v2 = l2.size() < i + 1 ? "" : l2.get(i + 1);
+                    String v1 = (i + 1 < l1.size()) ? l1.get(i + 1) : "";
+                    String v2 = (i + 1 < l2.size()) ? l2.get(i + 1) : "";
 
                     // FIXME: technically requires parsing the XWiki syntax
                     int r = Objects.compare(v1, v2, Comparator.comparing(String::toString));
