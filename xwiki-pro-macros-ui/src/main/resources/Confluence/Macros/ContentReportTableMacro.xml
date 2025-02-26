@@ -339,8 +339,9 @@ The result is the following :
       #if($foreach.index &gt; 0)
         #set($statement = $statement + ' or ')
       #end
-      #set($statement = $statement + "doc.space like :space$foreach.index")
-      #set($discard = $params.put("space$foreach.index", $space.replaceAll('([%_!])', '!$1').concat('%')))
+      #set($spaceVar = "space$foreach.index")
+      #set($statement = $statement + "doc.space = :$spaceVar or doc.space like concat(:$spaceVar, '.%') or doc.space like concat('%.', :$spaceVar) or doc.space like concat('%.', :$spaceVar, '.%')")
+      #set($discard = $params.put($spaceVar, $space))
     #end
     #set($statement = $statement + ')')
   #end
