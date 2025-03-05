@@ -2,7 +2,7 @@
 name: Bug report
 about: Report a bug - a feature is not working as expected
 title: ''
-labels: 'Type: Bug'
+labels: 'ToSchedule, Type: Bug'
 assignees: snazare
 
 ---

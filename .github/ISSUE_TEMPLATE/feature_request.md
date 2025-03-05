@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an improvement or a new feature
 title: ''
-labels: 'Type: Improvement, Type: New Feature'
+labels: 'ToSchedule, Type: Improvement, Type: New Feature'
 assignees: snazare
 
 ---
