@@ -156,6 +156,9 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
 .macro-section, .macro-layout-section {
   display: flex;
   flex-direction: row;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .macro-layout-section.single .macro-layout-cell {
@@ -189,6 +192,86 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
   }
   .macro-layout-cell:nth-child(2) {
     flex-basis: 50%;
+  }
+}
+.macro-layout-section {
+  margin-bottom: 20px;
+}
+
+.macro-section, .macro-layout-section {
+  display: flex;
+  flex-direction: row;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.macro-layout-section.single .macro-layout-cell {
+  flex-basis: 100%;
+}
+.macro-layout-section.two_equal .macro-layout-cell {
+  flex-basis: 50%;
+}
+.macro-layout-section.three_equal .macro-layout-cell {
+  flex-basis: 33.33%;
+}
+
+.macro-layout-section.four_equal .macro-layout-cell {
+  flex-basis: 25%;
+}
+
+.macro-layout-section.five_equal .macro-layout-cell {
+  flex-basis: 20%;
+}
+
+.macro-layout-section.two_right_sidebar {
+  .macro-layout-cell {
+    flex-basis: 33.33%;
+  }
+  .macro-layout-cell:first-child {
+    flex-basis: 66.66%;
+  }
+}
+.macro-layout-section.two_left_sidebar {
+  .macro-layout-cell {
+    flex-basis: 66.66%;
+  }
+  .macro-layout-cell:first-child {
+    flex-basis: 33.33%;
+  }
+}
+
+.macro-layout-section.three_with_sidebars {
+  .macro-layout-cell {
+    flex-basis: 25%;
+  }
+  .macro-layout-cell:nth-child(2) {
+    flex-basis: 50%;
+  }
+}
+
+.macro-layout-section.three_right_sidebars {
+  .macro-layout-cell {
+    flex-basis: 25%;
+  }
+  .macro-layout-cell:nth-child(3) {
+    flex-basis: 50%;
+  }
+}
+
+.macro-layout-section.three_left_sidebars {
+  .macro-layout-cell {
+    flex-basis: 25%;
+  }
+  .macro-layout-cell:nth-child(1) {
+    flex-basis: 50%;
+  }
+}
+
+.macro-layout-section {
+  gap: 32px;
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
   }
 }
 
