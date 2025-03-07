@@ -390,9 +390,10 @@ This macro is a bridge for the Confluence Column macro. This macro is used in co
   #set ($style = '')
   #set ($extraCssClass = 'withWidth')
   #if ("$!xcontext.macro.params.width" != '')
-    #set ($style = "style='width: $xcontext.macro.params.width'")
+    #set ($escapedWidth = $services.rendering.escape($xcontext.macro.params.width, 'xwiki/2.1'))
+    #set ($style = "style='width: $escapedWidth'")
   #end
-  (% class="macro-column" data-width="$xcontext.macro.params.width" $style %)(((
+  (% class="macro-column" data-width="$escapedWidth" $style %)(((
     {{wikimacrocontent /}}
   )))
 #end
