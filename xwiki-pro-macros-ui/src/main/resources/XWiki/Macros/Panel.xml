@@ -551,7 +551,8 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
   *#
   #set ($macroBorderClass = 'macro-border')
   #if ("$!classes" != '')
-    (% class="macro-panel $classes" %)(((
+    #set ($escapedClasses = $services.rendering.escape($classes, 'xwiki/2.1'))
+    (% class="macro-panel $escapedClasses" %)(((
   #else
     #set ($macroBorderClass = "$macroBorderClass macro-panel")
   #end
