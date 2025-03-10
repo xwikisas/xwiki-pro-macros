@@ -514,7 +514,7 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
       <code>{{velocity output="false"}}
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.ConfluenceLayoutSection'))
-  #set ($cssLayoutClass = $xcontext.macro.params.get('ac:type'))
+  #set ($cssLayoutClass = $services.rendering.escape("$!xcontext.macro.params.get('ac:type')", 'xwiki/2.1'))
   (% class="macro-layout-section $cssLayoutClass" %)(((
     ## Since 11.5 the content of the macro can be edited in WYSIWYG editor.
     #if ($services.rendering.getMacroDescriptor($services.rendering.resolveMacroId('wikimacrocontent')))
