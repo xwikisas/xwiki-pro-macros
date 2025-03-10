@@ -432,7 +432,7 @@ class Simple{
   (% class="paste-code#if($withTitle) paste-code-with-title#end" %)(((
     #if("$!title" != '')
       (% class="paste-code-title" %)(((
-        $title
+        $services.rendering.escape($title, 'xwiki/2.1')
       )))
     #end
     {{code language="$services.rendering.escape("$!language", $xwiki.currentContentSyntaxId)"}}
