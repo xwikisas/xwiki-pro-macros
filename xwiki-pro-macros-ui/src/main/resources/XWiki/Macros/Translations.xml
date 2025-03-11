@@ -84,10 +84,16 @@ rendering.macro.panel.parameter.borderRadius.name=Border radius
 rendering.macro.panel.parameter.borderRadius.description=If specified, replaces the default border radius
 rendering.macro.panel.parameter.width.name=Width
 rendering.macro.panel.parameter.width.description=If specified, sets the width of the panel (300px or 50%).
+rendering.macro.panel.parameter.height.name=Height
+rendering.macro.panel.parameter.height.description=If specified, sets the height of the panel (300px or 50%).
 rendering.macro.panel.parameter.classes.name=CSS classes
 rendering.macro.panel.parameter.classes.description= If specified adds css classes to the panel.
 
 ## Expand macro
+rendering.macro.expand.name=Expand
+rendering.macro.expand.description=Add the Expand macro to your page to provide content in an expandable / collapsible section. This is one of Confluence's most popular macros. It's great for: visually reducing the amount of information on a page, breaking process information down into clickable steps, hiding background or obsolete information, while still keeping it on the page for future reference.
+rendering.macro.expand.parameter.title.name=Title
+rendering.macro.expand.parameter.title.description=Defines the text that appears next to the expand/collapse icon.
 rendering.macro.expand.defaultexpandtitle=Click here to expand...
 rendering.macro.expand.parameter.expanded.name=Expanded
 rendering.macro.expand.parameter.expanded.description=If selected the expand will be opened automatically when loading the page.
@@ -103,24 +109,24 @@ rendering.macro.status.parameter.subtle.name=Subtle
 rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).
 
 ## Microsoft Stream macro
-rendering.macro.microsoftStream.name=Microsoft Stream Macro
-rendering.macro.microsoftStream.description=Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.
-rendering.macro.microsoftStream.parameter.url.name=URL
-rendering.macro.microsoftStream.parameter.url.description=The URL to the Microsoft Stream video.
-rendering.macro.microsoftStream.parameter.width.name=Width
-rendering.macro.microsoftStream.parameter.width.description=The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
-rendering.macro.microsoftStream.parameter.height.name=Height
-rendering.macro.microsoftStream.parameter.height.description=The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).
-rendering.macro.microsoftStream.parameter.alignment.name=Alignment
-rendering.macro.microsoftStream.parameter.alignment.description=Position of the video relatively to its container. Accepted values are left, center and right.
-rendering.macro.microsoftStream.parameter.start.name=Start At
-rendering.macro.microsoftStream.parameter.start.description=Start video at a specific time (use HH:MM:SS as time format).
-rendering.macro.microsoftStream.parameter.showinfo.name=Show Info
-rendering.macro.microsoftStream.parameter.showinfo.description=Show the video info on thumbnail.
-rendering.macro.microsoftStream.parameter.autoplay.name=Auto Play
-rendering.macro.microsoftStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
-rendering.macro.microsoftStream.parameter.textWrap.name=Text Wrap
-rendering.macro.microsoftStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
+rendering.macro.msStream.name=Microsoft Stream Macro
+rendering.macro.msStream.description=Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.
+rendering.macro.msStream.parameter.url.name=URL
+rendering.macro.msStream.parameter.url.description=The URL to the Microsoft Stream video.
+rendering.macro.msStream.parameter.width.name=Width
+rendering.macro.msStream.parameter.width.description=The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+rendering.macro.msStream.parameter.height.name=Height
+rendering.macro.msStream.parameter.height.description=The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).
+rendering.macro.msStream.parameter.alignment.name=Alignment
+rendering.macro.msStream.parameter.alignment.description=Position of the video relatively to its container. Accepted values are left, center and right.
+rendering.macro.msStream.parameter.start.name=Start At
+rendering.macro.msStream.parameter.start.description=Start video at a specific time (use HH:MM:SS as time format).
+rendering.macro.msStream.parameter.showinfo.name=Show Info
+rendering.macro.msStream.parameter.showinfo.description=Show the video info on thumbnail.
+rendering.macro.msStream.parameter.autoplay.name=Auto Play
+rendering.macro.msStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+rendering.macro.msStream.parameter.textWrap.name=Text Wrap
+rendering.macro.msStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
 
 ## Team macro
 rendering.macro.team.name=Team
@@ -176,9 +182,46 @@ rendering.macro.taglist.notags=As you and your team add tags to the content, thi
 #### Confluence Bridges in the generic pro macro package
 
 ## Content Report Table macro
+rendering.macro.content-report-table.name=Content Report Table
+rendering.macro.content-report-table.description=Provides a content report in table format, based on labels.
+rendering.macro.content-report-table.parameter.labels.name=Label
+rendering.macro.content-report-table.parameter.labels.description=Label(s) to report on
+rendering.macro.content-report-table.parameter.spaces.description=Space(s) to report on
+rendering.macro.content-report-table.parameter.maxResults.name=Max results
+rendering.macro.content-report-table.parameter.maxResults.description=Maximum Number of Pages
 contentReportTable.header.modified=Modified
 
 ## Contributors macro
+rendering.macro.contributors.name=Contributors
+rendering.macro.contributors.description=COntributors Confluence Bridge macro to show the contributors of a given document.
+rendering.macro.contributors.parameter.include.name=Include
+rendering.macro.contributors.parameter.include.description=Kind of contributions to include ("authors", "comment")
+rendering.macro.contributors.parameter.order.name=Order
+rendering.macro.contributors.parameter.order.description=Which order to use
+rendering.macro.contributors.parameter.reverse.name=Reverse
+rendering.macro.contributors.parameter.reverse.description=Should the order be reversed?
+rendering.macro.contributors.parameter.limit.name=Limit
+rendering.macro.contributors.parameter.limit.description=Maximum number of contributions to show
+rendering.macro.contributors.parameter.mode.name=Mode
+rendering.macro.contributors.parameter.mode.description=Display as bullet list ("list") or as comma-separated sentence ("inline")
+rendering.macro.contributors.parameter.showCount.name=Show count
+rendering.macro.contributors.parameter.showCount.description=Should the number of contributions per authors be shown?
+rendering.macro.contributors.parameter.showLastTime.name=Show last time
+rendering.macro.contributors.parameter.showLastTime.description=Should the time of the last contribution be shown?
+rendering.macro.contributors.parameter.page.name=Page
+rendering.macro.contributors.parameter.page.description=Which page to show? (by default, the current one)
+rendering.macro.contributors.parameter.space.name=Space
+rendering.macro.contributors.parameter.space.description=Which spaces to show?
+rendering.macro.contributors.parameter.scope.name=Scope
+rendering.macro.contributors.parameter.scope.description=Show the selected pages only (specified), their direct children ("children"), or all children ("descendents")
+rendering.macro.contributors.parameter.showPages.name=Show pages
+rendering.macro.contributors.parameter.showPages.description=Should the list of used pages be shown?
+rendering.macro.contributors.parameter.noneFoundMessage.name=None found message
+rendering.macro.contributors.parameter.noneFoundMessage.description=Message to show when pages are not shown
+rendering.macro.contributors.parameter.global.name=Global
+rendering.macro.contributors.parameter.global.description=Searches the Wiki globally, similar to how @ALL and @global work in Confluence. When this parameter is marked, the space parameter is ignored.
+
+
 confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
 confluencecontributors.watchesnotsupported=Note: listing people watching pages is not supported
 confluencecontributors.pages=Pages:
@@ -187,8 +230,6 @@ confluencecontributors.param.include.authors=Authors
 confluencecontributors.param.include.comments=Comments
 confluencecontributors.param.include.labels=Labels(Not supported)
 confluencecontributors.param.include.watches=Watches(Not supported)
-rendering.macro.contributors.global.name=Global
-rendering.macro.contributors.global.description=Searches the Wiki globally, similar to how @ALL and @global work in Confluence. When this parameter is marked, the space parameter is ignored.
 com.xwiki.pickers.contributors.Mode.inline=Inline
 com.xwiki.pickers.contributors.Mode.list=List
 com.xwiki.pickers.contributors.Order.count=Count
@@ -199,11 +240,97 @@ com.xwiki.pickers.contributors.Scope.descendants=Descendants
 com.xwiki.pickers.contributors.Scope.specified=Specified
 
 ## Excerpt macro
+rendering.macro.excerpt.name=Excerpt
+rendering.macro.excerpt.description=Excerpt macro. It marks part of the page's content for use by other macros. It is compatible with the Confluence Excerpt macro.
+rendering.macro.excerpt.parameter.hidden.name=Hidden
+rendering.macro.excerpt.parameter.hidden.description=Whether the excerpt should be hidden from the page
+rendering.macro.excerpt.parameter.name.name=Name
+rendering.macro.excerpt.parameter.name.description=The name of the excerpt, for named includes.
 rendering.macro.excerpt.parameter.allowUnprivilegedInclude.name=Allow unprivileged include
+rendering.macro.excerpt.parameter.allowUnprivilegedInclude.description=Allow this excerpt to be seen even for people who don't have view rights on this page when included
 
-# Excerpt Include macro
+
+## Excerpt Include macro
+rendering.macro.excerpt-include.name=Excerpt include
+rendering.macro.excerpt-include.parameter.reference.name=Reference
+rendering.macro.excerpt-include.parameter.reference.description=The reference of the document containing the excerpt to display
+rendering.macro.excerpt-include.parameter.name.name=Name
+rendering.macro.excerpt-include.parameter.name.description=The name of the excerpt to be displayed
+rendering.macro.excerpt-include.parameter.nopanel.name=No panel
+rendering.macro.excerpt-include.parameter.nopanel.description=Disable the panel
+rendering.macro.excerpt-include.parameter.inline.name=Inline
+rendering.macro.excerpt-include.parameter.inline.description=Use the macro in inline mode. When in inline mode, the panel parameter is ignored.
+rendering.macro.excerpt-include.description=Includes excerpts from other documents into the current page. The included pages need to contain the simple `excerpt` macro.
 rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
 rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
+
+##Hide if macro
+rendering.macro.hide-if.name=Hide if
+rendering.macro.hide-if.parameter.description=Hide the content of this macro if the condition set through the parameters is met.
+rendering.macro.hide-if.parameter.matchUsing.name=Match using
+rendering.macro.hide-if.parameter.matchUsing.description=Set if we must match all contraints or only one. If set to "all", then all items set must match.
+rendering.macro.hide-if.parameter.authenticationType.name=Authentication type
+rendering.macro.hide-if.parameter.authenticationType.description=The type of user to match, using authentication type: * None - No authentication type is chosen. * Authenticated - The user is logged in. * Anonymous - The user is not logged in.
+rendering.macro.hide-if.parameter.displayType.name=Display type
+rendering.macro.hide-if.parameter.displayType.description=The type of display to show this content. I could be: * None: don't take into account for this parameter. * Default: Show on screen (when the content is not printed). * Printable: Show when it's printed. Will be enabled for PDF or ODT export.
+rendering.macro.hide-if.parameter.groups.name=groups
+rendering.macro.hide-if.parameter.groups.description=The list of user group(s) to match.
+rendering.macro.hide-if.parameter.users.name=Users
+rendering.macro.hide-if.parameter.users.description=The list of user(s) to match.
+
+##Show if macro
+rendering.macro.show-if.name=Show if
+rendering.macro.show-if.parameter.description=Show the content of this macro if the condition set through the parameters is met.
+rendering.macro.show-if.parameter.matchUsing.name=Match using
+rendering.macro.show-if.parameter.matchUsing.description=Set if we must match all contraints or only one. If set to "all", then all items set must match.
+rendering.macro.show-if.parameter.authenticationType.name=Authentication type
+rendering.macro.show-if.parameter.authenticationType.description=The type of user to match, using authentication type: * None - No authentication type is chosen. * Authenticated - The user is logged in. * Anonymous - The user is not logged in.
+rendering.macro.show-if.parameter.displayType.name=Display type
+rendering.macro.show-if.parameter.displayType.description=The type of display to show this content. I could be: * None: don't take into account for this parameter. * Default: Show on screen (when the content is not printed). * Printable: Show when it's printed. Will be enabled for PDF or ODT export.
+rendering.macro.show-if.parameter.groups.name=groups
+rendering.macro.show-if.parameter.groups.description=The list of user group(s) to match.
+rendering.macro.show-if.parameter.users.name=Users
+rendering.macro.show-if.parameter.users.description=The list of user(s) to match.
+
+## Tab macro
+rendering.macro.tab.name=Tab
+rendering.macro.tab.description=Tab element for the tab group macro. This is expected to be put as the tab-group macro content.
+rendering.macro.tab.parameter.label.name=Label
+rendering.macro.tab.parameter.label.description=Label for the tab
+rendering.macro.tab.parameter.id.name=Id
+rendering.macro.tab.parameter.id.description=A unique ID for this tab
+rendering.macro.tab.parameter.showByDefault.name=Show by default
+rendering.macro.tab.parameter.showByDefault.description=Define if it's the element to show by default
+rendering.macro.tab.parameter.cssClass.name= CSS class
+rendering.macro.tab.parameter.csssClass.description=The custom CSS class for the tab
+rendering.macro.tab.parameter.nextAfter.name=Next after
+rendering.macro.tab.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
+rendering.macro.tab.parameter.effectType.name=Effect type
+rendering.macro.tab.parameter.effectType.description=The transition animation for this tab
+rendering.macro.tab.parameter.effectDuration.name=Effect duration
+rendering.macro.tab.parameter.effectDuration.description=The transition animation duration to apply on change of tab
+
+## Tab group macro
+rendering.macro.tab-group.name=Tab group
+rendering.macro.tab-group.description=The main macro which group tab macro elements
+rendering.macro.tab-group.parameter.id.name=Id
+rendering.macro.tab-group.parameter.id.description=The id of the element
+rendering.macro.tab-group.parameter.tabLocation.name=Tab location
+rendering.macro.tab-group.parameter.tabLocation.description=The location of the element.
+rendering.macro.tab-group.parameter.cssClass.name=CSS class
+rendering.macro.tab-group.parameter.cssClass.description=A custom css class to decorate the tabs
+rendering.macro.tab-group.parameter.effectDuration.name=Effect duration
+rendering.macro.tab-group.parameter.effectDuration.description=The transition animation duratio to apply on change of tab
+rendering.macro.tab-group.parameter.effectType.name=Effect type
+rendering.macro.tab-group.parameter.effectType.description=The transition animation between each tab
+rendering.macro.tab-group.parameter.height.name=Height
+rendering.macro.tab-group.parameter.height.description=The height of the main element with the CSS unit
+rendering.macro.tab-group.parameter.loopCards.name=Loop cards
+rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
+rendering.macro.tab-group.parameter.nextAfter.name=Next after
+rendering.macro.tab-group.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
+rendering.macro.tab-group.parameter.width.name=Height
+rendering.macro.tab-group.parameter.width.description=The width of the main element with the CSS unit
 
 ## User Profile macro
 rendering.macro.userProfile.name=User Profile
@@ -215,8 +342,12 @@ rendering.macro.userProfile.parameter.properties.description=List of user proper
 rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.
 
 ## Profile Picture macro
-rendering.macro.profilepicture.parameter.User.name=The user to show
-rendering.macro.profilepicture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
+rendering.macro.profile-picture.name=Profile Picture
+rendering.macro.profile-picture.description=Display the profile picture of selected user
+rendering.macro.profile-picture.parameter.User.name=The user to show
+rendering.macro.profile-picture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
+rendering.macro.profile-picture.parameter.size.name=Size
+rendering.macro.profile-picture.parameter.size.description=The size of the user icon
 
 ## Recently Updated macro
 recentlyUpdatedMacro.title=Recently Updated

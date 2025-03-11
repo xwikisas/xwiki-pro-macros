@@ -386,7 +386,7 @@ The result is the following :
       </defaultCategories>
     </property>
     <property>
-      <description>Provides a content report in table format, based on labels.</description>
+      <description/>
     </property>
     <property>
       <id>content-report-table</id>
@@ -471,7 +471,7 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description>Label(s) to report on</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -550,7 +550,7 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description>Space(s) to report on</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -629,7 +629,7 @@ The result is the following :
       <defaultValue/>
     </property>
     <property>
-      <description>Maximum Number of Pages</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
