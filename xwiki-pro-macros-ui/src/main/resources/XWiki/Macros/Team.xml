@@ -768,7 +768,7 @@
   #set($discard = $xwiki.ssx.use('xwiki:XWiki.Macros.Team'))
   #set($discard = $xwiki.jsx.use('xwiki:XWiki.Macros.Team'))
   #set($pictureList = {})
-  #set($tag = $wikimacro.parameters.tag)
+  #set($tag = $xcontext.macro.params.tag)
   #set($size = $wikimacro.parameters.size)
   #set($scope = $wikimacro.parameters.scope)
   ## I need the raw value to avoid XWIKI-18965
@@ -1062,7 +1062,7 @@
       <name>tag</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.TagReference</type>
     </property>
   </object>
   <object>
@@ -1694,7 +1694,7 @@
       <name>scope</name>
     </property>
     <property>
-      <type/>
+      <type>com.xwiki.pickers.teams.Scope</type>
     </property>
   </object>
   <object>
