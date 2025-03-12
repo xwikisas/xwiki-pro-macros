@@ -25,10 +25,10 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-parent</artifactId>
-    <version>1.26.6-SNAPSHOT</version>
+    <version>1.26.6</version>
   </parent>
   <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
-  <version>1.26.6-SNAPSHOT</version>
+  <version>1.26.6</version>
   <packaging>pom</packaging>
   <name>Pro Macros - Confluence bridges - Parent POM</name>
   <description>Bridges for various Confluence macros. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>
