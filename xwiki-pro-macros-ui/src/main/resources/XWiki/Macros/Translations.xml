@@ -193,7 +193,7 @@ contentReportTable.header.modified=Modified
 
 ## Contributors macro
 rendering.macro.contributors.name=Contributors
-rendering.macro.contributors.description=COntributors Confluence Bridge macro to show the contributors of a given document.
+rendering.macro.contributors.description=Contributors Confluence Bridge macro to show the contributors of a given document.
 rendering.macro.contributors.parameter.include.name=Include
 rendering.macro.contributors.parameter.include.description=Kind of contributions to include ("authors", "comment")
 rendering.macro.contributors.parameter.order.name=Order
