@@ -158,7 +158,6 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
   flex-direction: row;
   word-break: break-all;
   overflow-wrap: break-word;
-  white-space: pre-wrap;
 }
 
 .macro-layout-section.single .macro-layout-cell {
@@ -196,14 +195,6 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
 }
 .macro-layout-section {
   margin-bottom: 20px;
-}
-
-.macro-section, .macro-layout-section {
-  display: flex;
-  flex-direction: row;
-  word-break: break-all;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
 }
 
 .macro-layout-section.single .macro-layout-cell {
