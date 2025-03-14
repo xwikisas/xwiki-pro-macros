@@ -968,7 +968,7 @@
       <defaultCategories/>
     </property>
     <property>
-      <description>This macro displays the team members which have a specific tag</description>
+      <description/>
     </property>
     <property>
       <id>team</id>
@@ -1053,7 +1053,7 @@
       <defaultValue/>
     </property>
     <property>
-      <description>Tag that users need to have to be shown</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1132,7 +1132,7 @@
       <defaultValue>60</defaultValue>
     </property>
     <property>
-      <description>The size of a user icon</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1211,7 +1211,7 @@
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>If true, the user should be searched in LDAP or OAuth</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1290,7 +1290,7 @@
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>The name of users should be displayed under their avatars</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1369,7 +1369,7 @@
       <defaultValue>#0A6</defaultValue>
     </property>
     <property>
-      <description>The background color of the letter avatars</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1448,7 +1448,7 @@
       <defaultValue>white</defaultValue>
     </property>
     <property>
-      <description>The font color of the letter avatars</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1527,7 +1527,7 @@
       <defaultValue/>
     </property>
     <property>
-      <description>Don't use letter avatars and display a default avatar instead</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1606,7 +1606,7 @@
       <defaultValue>100</defaultValue>
     </property>
     <property>
-      <description>The maximum number of users to show</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -1685,7 +1685,7 @@
       <defaultValue>auto</defaultValue>
     </property>
     <property>
-      <description>In which wiki to find users (global: in the main wiki. local: in the current wiki. both: in both the main wiki and the local wiki. auto: find out from the wiki settings). Has no effect in the main wiki.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1764,7 +1764,7 @@
       <defaultValue/>
     </property>
     <property>
-      <description>Comma-separated list of users to show.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>

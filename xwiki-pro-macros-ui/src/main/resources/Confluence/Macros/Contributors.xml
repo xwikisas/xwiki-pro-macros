@@ -537,7 +537,7 @@ Result:
       </defaultCategories>
     </property>
     <property>
-      <description>Contributors Confluence Bridge macro to show the contributors of a given document.</description>
+      <description/>
     </property>
     <property>
       <id>contributors</id>
@@ -622,7 +622,7 @@ Result:
       <defaultValue>authors</defaultValue>
     </property>
     <property>
-      <description>kind of contributions to include ("authors", "comment")</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -701,7 +701,7 @@ Result:
       <defaultValue>count</defaultValue>
     </property>
     <property>
-      <description>Which order to use</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -780,7 +780,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Should the order be reversed?</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -859,7 +859,7 @@ Result:
       <defaultValue/>
     </property>
     <property>
-      <description>Maximum number of contributions to show</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -938,7 +938,7 @@ Result:
       <defaultValue>inline</defaultValue>
     </property>
     <property>
-      <description>Display as bullet list ("list") or as comma-separated sentence ("inline")</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -1017,7 +1017,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>should the number of contributions per authors be shown?</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1096,7 +1096,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Should the time of the last contribution be shown?</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1175,7 +1175,7 @@ Result:
       <defaultValue/>
     </property>
     <property>
-      <description>Which page to show? (by default, the current one)</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1254,7 +1254,7 @@ Result:
       <defaultValue/>
     </property>
     <property>
-      <description>Which spaces to show?</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1333,7 +1333,7 @@ Result:
       <defaultValue>specified</defaultValue>
     </property>
     <property>
-      <description>show the selected pages only (specified), their direct children ("children"), or all children ("descendents")</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1412,7 +1412,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Should the list of used pages be shown?</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1491,7 +1491,7 @@ Result:
       <defaultValue>None found</defaultValue>
     </property>
     <property>
-      <description>Message to show when pages are not shown</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1570,7 +1570,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Searches the Wiki globally, similar to how @ALL and @global work in Confluence. When this parameter is marked, the space parameter is ignored.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>

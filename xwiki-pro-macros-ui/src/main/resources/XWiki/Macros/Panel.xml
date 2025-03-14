@@ -601,8 +601,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultCategories/>
     </property>
     <property>
-      <description>Display a panel with styles</description>
-    </property>
+      <description/>    </property>
     <property>
       <id>panel</id>
     </property>
@@ -686,7 +685,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Panel Title</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -765,7 +764,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Color of the panel border</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -923,7 +922,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Width of the panel border (number without px)</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1002,7 +1001,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Background Color of the panel</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1081,7 +1080,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Content text color</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -1160,7 +1159,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Title background color</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1239,7 +1238,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Title text color</description>
+      <description/>
     </property>
     <property>
       <mandatory/>
@@ -1318,7 +1317,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Panel width (300px or 50%)</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1397,7 +1396,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Panel Style classes allowing to add bootstrap classes to the panel</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1476,7 +1475,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultValue/>
     </property>
     <property>
-      <description>Panel border radius</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
