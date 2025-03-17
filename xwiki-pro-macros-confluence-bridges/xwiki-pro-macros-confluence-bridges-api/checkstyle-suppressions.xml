@@ -9,7 +9,4 @@
             files="src/main/java/com/xwiki/macros/confluence/ConfluenceOutgoingLinksMacro\.java"/>
   <suppress checks="ClassFanOutComplexity"
             files="src/main/java/com/xwiki/macros/confluence/ConfluenceTocZoneMacro\.java"/>
-  <suppress
-    checks="NPathComplexity|CyclomaticComplexity|JavaNCSS|ExecutableStatementCount"
-    files="src/main/java/com/xwiki/macros/confluence/ConfluenceJiraChartMacro\.java"/>
 </suppressions>

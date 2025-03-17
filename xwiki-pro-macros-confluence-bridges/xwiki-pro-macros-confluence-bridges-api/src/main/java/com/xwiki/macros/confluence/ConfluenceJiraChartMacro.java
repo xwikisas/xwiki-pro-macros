@@ -170,71 +170,86 @@ public class ConfluenceJiraChartMacro extends AbstractProMacro<ConfluenceJiraCha
         switch (parameters.getChartType()) {
             case PIE:
                 macroName = "jiraPieChart";
-
-                if (StringUtils.isNotEmpty(parameters.getStatType())) {
-                    if (!PIE_CHART_TYPE_PARAM.containsKey(parameters.getStatType())) {
-                        // https://jira.xwiki.org/browse/JIRA-71
-                        throw new MacroExecutionException(
-                            String.format("State type parameter value '%s' is not supported",
-                                parameters.getStatType()));
-                    }
-                    jiraChartMacroParameters.put("type", PIE_CHART_TYPE_PARAM.get(parameters.getStatType()));
-                }
+                handlePieChartParameter(parameters, jiraChartMacroParameters);
                 break;
             case CREATEDVSRESOLVED:
                 macroName = "jiraCreatedVsResolvedChart";
-
-                if (StringUtils.isNotEmpty(parameters.getDaysprevious())) {
-                    jiraChartMacroParameters.put("daysPreviously", parameters.getDaysprevious());
-                }
-                if (StringUtils.isNotEmpty(parameters.getPeriodName())) {
-                    jiraChartMacroParameters.put("period", parameters.getPeriodName().toUpperCase());
-                }
-                if (StringUtils.isNotEmpty(parameters.getIsCumulative())) {
-                    // Need to inverse the boolean
-                    String isCumulative = TRUE.equalsIgnoreCase(parameters.getIsCumulative()) ? FALSE : TRUE;
-                    jiraChartMacroParameters.put("count", isCumulative);
-                }
-                if (StringUtils.isNotEmpty(parameters.getShowUnresolvedTrend())) {
-                    jiraChartMacroParameters.put("displayTrend", parameters.getShowUnresolvedTrend());
-                }
-                if (StringUtils.isNotEmpty(parameters.getVersionLabel())) {
-                    String versionLabel =
-                        VERSION_LABEL_MAP.getOrDefault(parameters.getVersionLabel(), parameters.getVersionLabel());
-                    jiraChartMacroParameters.put("displayVersion", versionLabel);
-                }
+                handleCreatedVsResolvedChartParameter(parameters, jiraChartMacroParameters);
                 break;
             case TWODIMENSIONAL:
                 macroName = "jiraBiDimensionalGridChart";
-
-                if (StringUtils.isNotEmpty(parameters.getXstattype())) {
-                    if (!BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.containsKey(parameters.getXstattype())) {
-                        // https://jira.xwiki.org/projects/JIRA/issues/JIRA-72
-                        throw new MacroExecutionException(
-                            String.format("x stat type parameter value '%s' is not supported",
-                                parameters.getXstattype()));
-                    }
-                    jiraChartMacroParameters.put("xAxisField",
-                        BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.get(parameters.getXstattype()));
-                }
-                if (StringUtils.isNotEmpty(parameters.getYstattype())) {
-                    if (!BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.containsKey(parameters.getYstattype())) {
-                        // https://jira.xwiki.org/projects/JIRA/issues/JIRA-72
-                        throw new MacroExecutionException(
-                            String.format("y stat type parameter value '%s' is not supported",
-                                parameters.getYstattype()));
-                    }
-                    jiraChartMacroParameters.put("yAxisField",
-                        BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.get(parameters.getYstattype()));
-                }
-                if (StringUtils.isNotEmpty(parameters.getNumberToShow())) {
-                    jiraChartMacroParameters.put("numberOfResults", parameters.getNumberToShow());
-                }
+                handleTwoDimensionalChartParameter(parameters, jiraChartMacroParameters);
                 break;
             default:
                 throw new MacroExecutionException("Invalid chart type " + parameters.getChartType());
         }
 
         return List.of(new MacroBlock(macroName, jiraChartMacroParameters, false));
+    }
+
+    private static void handlePieChartParameter(ConfluenceJiraChartMacroParameters parameters,
+        Map<String, String> jiraChartMacroParameters) throws MacroExecutionException
+    {
+        if (StringUtils.isNotEmpty(parameters.getStatType())) {
+            if (!PIE_CHART_TYPE_PARAM.containsKey(parameters.getStatType())) {
+                // https://jira.xwiki.org/browse/JIRA-71
+                throw new MacroExecutionException(
+                    String.format("State type parameter value '%s' is not supported",
+                        parameters.getStatType()));
+            }
+            jiraChartMacroParameters.put("type", PIE_CHART_TYPE_PARAM.get(parameters.getStatType()));
+        }
+    }
+
+    private static void handleCreatedVsResolvedChartParameter(ConfluenceJiraChartMacroParameters parameters,
+        Map<String, String> jiraChartMacroParameters)
+    {
+        if (StringUtils.isNotEmpty(parameters.getDaysprevious())) {
+            jiraChartMacroParameters.put("daysPreviously", parameters.getDaysprevious());
+        }
+        if (StringUtils.isNotEmpty(parameters.getPeriodName())) {
+            jiraChartMacroParameters.put("period", parameters.getPeriodName().toUpperCase());
+        }
+        if (StringUtils.isNotEmpty(parameters.getIsCumulative())) {
+            // Need to inverse the boolean
+            String isCumulative = TRUE.equalsIgnoreCase(parameters.getIsCumulative()) ? FALSE : TRUE;
+            jiraChartMacroParameters.put("count", isCumulative);
+        }
+        if (StringUtils.isNotEmpty(parameters.getShowUnresolvedTrend())) {
+            jiraChartMacroParameters.put("displayTrend", parameters.getShowUnresolvedTrend());
+        }
+        if (StringUtils.isNotEmpty(parameters.getVersionLabel())) {
+            String versionLabel =
+                VERSION_LABEL_MAP.getOrDefault(parameters.getVersionLabel(), parameters.getVersionLabel());
+            jiraChartMacroParameters.put("displayVersion", versionLabel);
+        }
+    }
+
+    private static void handleTwoDimensionalChartParameter(ConfluenceJiraChartMacroParameters parameters,
+        Map<String, String> jiraChartMacroParameters) throws MacroExecutionException
+    {
+        if (StringUtils.isNotEmpty(parameters.getXstattype())) {
+            if (!BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.containsKey(parameters.getXstattype())) {
+                // https://jira.xwiki.org/projects/JIRA/issues/JIRA-72
+                throw new MacroExecutionException(
+                    String.format("x stat type parameter value '%s' is not supported",
+                        parameters.getXstattype()));
+            }
+            jiraChartMacroParameters.put("xAxisField",
+                BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.get(parameters.getXstattype()));
+        }
+        if (StringUtils.isNotEmpty(parameters.getYstattype())) {
+            if (!BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.containsKey(parameters.getYstattype())) {
+                // https://jira.xwiki.org/projects/JIRA/issues/JIRA-72
+                throw new MacroExecutionException(
+                    String.format("y stat type parameter value '%s' is not supported",
+                        parameters.getYstattype()));
+            }
+            jiraChartMacroParameters.put("yAxisField",
+                BI_DIMENSIONAL_GRID_CHART_AXIS_PARAM.get(parameters.getYstattype()));
+        }
+        if (StringUtils.isNotEmpty(parameters.getNumberToShow())) {
+            jiraChartMacroParameters.put("numberOfResults", parameters.getNumberToShow());
+        }
     }
 }
