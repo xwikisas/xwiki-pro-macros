@@ -29,7 +29,7 @@
   </parent>
   <groupId>com.xwiki.pro</groupId>
   <artifactId>xwiki-pro-macros-parent</artifactId>
-  <version>1.26.6-SNAPSHOT</version>
+  <version>1.26.8-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Pro Macros - Parent POM</name>
   <description>Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.</description>

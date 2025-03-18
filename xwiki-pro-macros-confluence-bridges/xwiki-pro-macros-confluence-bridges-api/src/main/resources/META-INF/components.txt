@@ -1,4 +1,5 @@
 com.xwiki.macros.confluence.ConfluenceDetailsScriptService
+com.xwiki.macros.confluence.ConfluenceJiraChartMacro
 com.xwiki.macros.confluence.ConfluenceOutgoingLinksMacro
 com.xwiki.macros.confluence.ConfluenceSpacesScriptService
 com.xwiki.macros.confluence.ConfluenceScriptService
