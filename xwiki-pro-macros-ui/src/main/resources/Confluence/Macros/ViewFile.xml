@@ -467,7 +467,7 @@ span.viewFileThumbnailCard {
   width: 100%;
   border: 1px solid;
   border-radius: 1rem;
-  min-height: 60px;
+  min-height: 5em;
 }
 
 .viewFileModal-downloadLink {
