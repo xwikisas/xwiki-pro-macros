@@ -355,7 +355,7 @@ Result:
       <defaultCategory/>
     </property>
     <property>
-      <description>Excerpt macro. It marks part of the page's content for use by other macros. It is compatible with the Confluence Excerpt macro.</description>
+      <description/>
     </property>
     <property>
       <id>excerpt</id>
@@ -440,7 +440,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Whether the excerpt should be hidden from the page</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -519,7 +519,7 @@ Result:
       <defaultValue/>
     </property>
     <property>
-      <description>The name of the excerpt, for named includes.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -598,7 +598,7 @@ Result:
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Allow this excerpt to be seen even for people who don't have view rights on this page when included</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
