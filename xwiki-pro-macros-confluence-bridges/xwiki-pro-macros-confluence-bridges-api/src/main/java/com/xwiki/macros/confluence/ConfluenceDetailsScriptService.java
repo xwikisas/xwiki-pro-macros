@@ -32,6 +32,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
@@ -104,8 +105,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
         for (MacroBlock macroBlock : macros) {
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
-                    String dId = defaultString(id);
-                    if (dId.isEmpty() || StringUtils.equals(dId, defaultString(macroBlock.getParameter(ID)))) {
+                    if (StringUtils.equals(id, defaultString(macroBlock.getParameter(ID)))) {
                         results.add(getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId));
                     }
                 } else {
@@ -164,7 +164,11 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 continue;
             }
 
-            List<XDOM> details = findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(), id);
+            List<XDOM> details = findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(),
+                StringUtils.defaultString(id));
+            if (CollectionUtils.isEmpty(details)) {
+                continue;
+            }
             List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
             row.add(0, fullName);
             rows.add(row);
