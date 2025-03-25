@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-parent</artifactId>
-    <version>1.26.9</version>
+    <version>1.26.10-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-xip</artifactId>
   <name>Pro Macros - XIP</name>
