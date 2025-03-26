@@ -381,7 +381,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultCategories/>
     </property>
     <property>
-      <description>Insert a button!</description>
+      <description/>
     </property>
     <property>
       <id>button</id>
@@ -466,7 +466,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue/>
     </property>
     <property>
-      <description>The label of the button.</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -545,7 +545,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue/>
     </property>
     <property>
-      <description>A link or a page reference.</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -624,7 +624,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue/>
     </property>
     <property>
-      <description>The color of the button.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -703,7 +703,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue/>
     </property>
     <property>
-      <description>The width of the button specified in pixels, percentage or other valid CSS value (ex. 30px, 30%, 30em). If no value is specified, the width will be determined by the length of the label.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -782,7 +782,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue>0</defaultValue>
     </property>
     <property>
-      <description>Denotes whether the page will be opened in a new page or not.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -861,7 +861,7 @@ $services.localization.render('rendering.macro.button.description')
       <defaultValue/>
     </property>
     <property>
-      <description>Icon associated with the button, placed before the label.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>

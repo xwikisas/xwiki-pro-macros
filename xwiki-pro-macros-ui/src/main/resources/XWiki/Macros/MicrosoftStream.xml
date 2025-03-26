@@ -541,7 +541,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultCategories/>
     </property>
     <property>
-      <description>Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.</description>
+      <description/>
     </property>
     <property>
       <id>msStream</id>
@@ -626,7 +626,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue/>
     </property>
     <property>
-      <description>The URL to the Microsoft Stream video.</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -705,7 +705,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue>500px</defaultValue>
     </property>
     <property>
-      <description>The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -784,7 +784,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue>300px</defaultValue>
     </property>
     <property>
-      <description>The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -863,7 +863,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue>NONE</defaultValue>
     </property>
     <property>
-      <description>Position of the video relatively to its container. Accepted values are left, center and right.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -942,7 +942,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue/>
     </property>
     <property>
-      <description>Start video at a specific time (use HH:MM:SS as time format).</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1021,7 +1021,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue/>
     </property>
     <property>
-      <description>Show the video info on thumbnail</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1100,7 +1100,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue/>
     </property>
     <property>
-      <description>Whether the video should start automatically or if the user must play it.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1179,7 +1179,7 @@ $xwiki.currentContentSyntaxId)|No|true
       <defaultValue>false</defaultValue>
     </property>
     <property>
-      <description>Wrap text around the video. This applies only to left and right alignment.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>

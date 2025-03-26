@@ -291,7 +291,7 @@
       </defaultCategories>
     </property>
     <property>
-      <description>Display the profile picture of selected user.</description>
+      <description/>
     </property>
     <property>
       <id>profile-picture</id>
@@ -376,7 +376,7 @@
       <defaultValue/>
     </property>
     <property>
-      <description>The user to show the picture profile of.</description>
+      <description/>
     </property>
     <property>
       <mandatory>1</mandatory>
@@ -455,7 +455,7 @@
       <defaultValue>60</defaultValue>
     </property>
     <property>
-      <description>The size of the user icon</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
