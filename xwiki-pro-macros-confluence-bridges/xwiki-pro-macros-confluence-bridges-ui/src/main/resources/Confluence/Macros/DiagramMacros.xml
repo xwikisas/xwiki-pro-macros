@@ -101,6 +101,11 @@
     ## "Constants"
     #set($previewImageName = "${diagramName}.png")
     #set($previewImage = $doc.getAttachment($previewImageName))
+    #if (!$previewImage)
+      ## In some cases, the drawio file name is not the same as the PNG one.
+      #set($previewImageName = $xcontext.macro.params.tempPreview)
+      #set($previewImage = $doc.getAttachment($previewImageName))
+    #end
     ## Variables
     #set($displayDiagram = true)
     #set($diagram = $NULL)
@@ -153,6 +158,7 @@
                   &lt;input name="action" value="createDiagram" type="hidden" /&gt;
                   &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($docReferenceSerialized)" type="hidden" /&gt;
                   &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" /&gt;
+                  &lt;input name="diagramPNGName" class="create-diagram-png-name" value="$escapetool.xml($previewImageName)" type="hidden" /&gt;
                   &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$escapetool.xml($services.localization.render('confluencediagram.create.confirm'))&lt;/button&gt;
                 &lt;/form&gt;
               {{/html}}
@@ -272,12 +278,14 @@
 
       var pageReferenceSerialized = $(this).prevAll('.create-diagram-page').val(),
           diagramName = $(this).prevAll('.create-diagram-name').val();
+      const diagramPNGName = $(this).prevAll('.create-diagram-png-name').val();
       $.ajax({
         url: serviceURL,
         data: {
           'action' : 'create',
           'page' : pageReferenceSerialized,
-          'diagramName' : diagramName
+          'diagramName' : diagramName,
+          'diagramPNGName' : diagramPNGName
         },
         success: function(data, status) {
           new XWiki.widgets.Notification(createSuccessMessage, 'done');

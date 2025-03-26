@@ -60,11 +60,14 @@
     #set($pageDoc = $xwiki.getDocument($page))
     #set($diagramAttach = $pageDoc.getAttachment($diagramName))
     #set($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
+    #if (!$diagramPreviewAttach)
+      #set($diagramPreviewAttach = $pageDoc.getAttachment($request.diagramPNGName))
+    #end
     #if($diagramAttach)
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
       #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
-      #if($diagramContent.contains('&lt;mxfile ') &amp;&amp; ($diagramContent.contains('&lt;diagram ') || $diagramContent.contains('&lt;diagram&gt;')))
+      #if(($diagramContent.contains('&lt;mxfile ') || $diagramContent.contains('&lt;mxfile&gt;')) &amp;&amp; ($diagramContent.contains('&lt;diagram ') || $diagramContent.contains('&lt;diagram&gt;')))
         ## Drawio
         #set($xml = $diagramContent)
       #else
