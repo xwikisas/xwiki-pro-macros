@@ -23,8 +23,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.xwiki.component.annotation.Component;
 import org.slf4j.Logger;
+import org.xwiki.component.annotation.Component;
 import org.xwiki.contrib.confluence.resolvers.ConfluenceResolverException;
 import org.xwiki.contrib.confluence.resolvers.ConfluenceSpaceKeyResolver;
 import org.xwiki.contrib.confluence.resolvers.ConfluenceSpaceResolver;
@@ -35,14 +35,15 @@ import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.stability.Unstable;
 
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.doc.XWikiDocument;
+import com.xpn.xwiki.XWikiException;
 
 /**
  * Tools to manipulate migrated Confluence spaces.
+ *
  * @version $Id$
  * @since 1.19.0
  */
-@Component (roles = ConfluenceSpaceUtils.class)
+@Component(roles = ConfluenceSpaceUtils.class)
 @Singleton
 @Unstable
 public class ConfluenceSpaceUtils
@@ -63,6 +64,9 @@ public class ConfluenceSpaceUtils
     private EntityReferenceResolver<String> resolver;
 
     /**
+     * This method is meant to handle macro parameters coming from Confluence that could contain both XWiki spaces
+     * or Confluence (pseudo) space keys.
+     *
      * @param spaceKeyOrRef the space key, or "@self", or a XWiki reference to the space.
      * @return the root of the Confluence space described by the parameter, or null if not found.
      */
@@ -77,7 +81,7 @@ public class ConfluenceSpaceUtils
                 // This is a XWiki reference
                 EntityReference spaceRef = resolver.resolve(spaceKeyOrRef, EntityType.SPACE);
                 EntityReference webHome = new EntityReference("WebHome", EntityType.DOCUMENT, spaceRef);
-                if (!new XWikiDocument(new DocumentReference(webHome)).isNew()) {
+                if (contextProvider.get().getWiki().exists(new DocumentReference(webHome), contextProvider.get())) {
                     // the home page of this space exists
                     return spaceRef;
                 }
@@ -86,6 +90,8 @@ public class ConfluenceSpaceUtils
             return confluenceSpaceKeyResolver.getSpaceByKey(spaceKeyOrRef);
         } catch (ConfluenceResolverException e) {
             logger.warn("Could not convert space [{}] to an entity reference", spaceKeyOrRef, e);
+        } catch (XWikiException e) {
+            logger.warn("Could not check document [{}] existence", spaceKeyOrRef, e);
         }
 
         return null;
