@@ -143,27 +143,9 @@ public class ConfluenceJiraChartMacro extends AbstractProMacro<ConfluenceJiraCha
 
         Matcher jqlFilterMatcher = JQL_FILTER_PATTERN.matcher(jqlValue);
         if (jqlFilterMatcher.find()) {
-            if (CREATEDVSRESOLVED.equals(parameters.getChartType())) {
-                // https://jira.xwiki.org/projects/JIRA/issues/JIRA-73
-                throw new MacroExecutionException(
-                    "Created vs resolved chart don't support filterId in the jql parameter");
-            } else {
-                String filterId;
-                // https://jira.xwiki.org/projects/JIRA/issues/JIRA-68
-                if (PIE.equals(parameters.getChartType())) {
-                    filterId = jqlFilterMatcher.group(1);
-                } else {
-                    filterId = "filter-" + jqlFilterMatcher.group(1);
-                }
-                jiraChartMacroParameters.put("filterId", filterId);
-            }
+            jiraChartMacroParameters.put("filterId", "filter-" + jqlFilterMatcher.group(1));
         } else {
-            if (TWODIMENSIONAL.equals(parameters.getChartType())) {
-                // cf: https://jira.xwiki.org/projects/JIRA/issues/JIRA-74
-                throw new MacroExecutionException("Two dimensional chart don't support jql with query");
-            } else {
-                jiraChartMacroParameters.put("query", jqlValue);
-            }
+            jiraChartMacroParameters.put("query", jqlValue);
         }
 
         String macroName;
