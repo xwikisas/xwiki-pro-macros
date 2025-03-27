@@ -37,7 +37,6 @@ import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
-import org.xwiki.query.QueryFilter;
 import org.xwiki.query.QueryManager;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.RawBlock;
@@ -77,10 +76,6 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
     @Inject
     private WikiUserManager wikiUserManager;
 
-    @Inject
-    @Named("document")
-    private QueryFilter documentFilter;
-
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -112,9 +107,9 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
             );
             query.bindValue("groups", groups);
         }
-        query.addFilter(this.documentFilter);
-        for (Object userReference : query.setWiki(wiki).execute()) {
-            users.add((DocumentReference) userReference);
+        List<String> results = query.setWiki(wiki).execute();
+        for (String userName : results) {
+            users.add(new DocumentReference(wiki, "XWiki", userName));
         }
     }
 
