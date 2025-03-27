@@ -108,7 +108,7 @@ public class ConfluenceSpaceUtils
         } catch (ConfluenceResolverException e) {
             logger.warn("Could not convert space [{}] to an entity reference", spaceKeyOrRef, e);
         } catch (QueryException e) {
-            throw new RuntimeException(e);
+            logger.warn("Query failed", e);
         }
         return null;
     }
