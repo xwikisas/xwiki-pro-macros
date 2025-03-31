@@ -455,9 +455,20 @@ This macro will show a list with all the tags that are present on your instance.
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.Taglist'))
   #set ($spaces = "$!xcontext.macro.params.spaces")
   #set ($spacesList = $spaces.split(','))
-  #set ($excludedTags = "$!xcontext.macro.params.excludedLabels")
-  #set ($excludedTagsList = $stringtool.split(excludedLabels, ','))
-  #if ($spaces != "")
+  #set ($excludedTags = "$!xcontext.macro.params.excludedTags")
+  #set ($excludedTagsList = $stringtool.split($excludedTags, ','))
+  ## This is needed because sometimes the spaces from confluence cannot be resolved by XWiki's normal space resolvers,
+  ## which may lead to issues where the content exists but the macro doesn't display anything.
+  #if ($confluenceMigration &amp;&amp; $spacesList.size() == 1 &amp;&amp; $spaces != "")
+    #set ($spaceReference = $services.confluence.spaces.getSloppySpace($spacesList.get(0)))
+    #if($spaceReference)
+      #set ($spaceName = $services.model.serialize($spaceReference))
+      #set ($spacesString = $services.taglist.parseSpaces($spaceName))
+      #set ($tags = $xwiki.tag.getTagCountForSpaces($spacesString).keySet())
+    #else
+      #set ($tags = [])
+    #end
+  #elseif ($spaces != "")
     #set ($spacesString = $services.taglist.parseSpaces($spaces))
     #set ($tags = $xwiki.tag.getTagCountForSpaces($spacesString).keySet())
   #else
