@@ -66,7 +66,6 @@
     #if($diagramAttach)
       #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
-      #set($diagramPNGContent = $diagramPreviewAttach.getContentAsString())
       #if(($diagramContent.contains('&lt;mxfile ') || $diagramContent.contains('&lt;mxfile&gt;')) &amp;&amp; ($diagramContent.contains('&lt;diagram ') || $diagramContent.contains('&lt;diagram&gt;')))
         ## Drawio
         #set($xml = $diagramContent)
