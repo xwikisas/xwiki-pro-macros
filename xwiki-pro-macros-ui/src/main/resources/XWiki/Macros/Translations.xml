@@ -91,7 +91,7 @@ rendering.macro.panel.parameter.classes.description= If specified adds css class
 
 ## Expand macro
 rendering.macro.expand.name=Expand
-rendering.macro.expand.description=Add the Expand macro to your page to provide content in an expandable / collapsible section. This is one of Confluence's most popular macros. It's great for: visually reducing the amount of information on a page, breaking process information down into clickable steps, hiding background or obsolete information, while still keeping it on the page for future reference.
+rendering.macro.expand.description=Add the Expand macro to your page to provide content in an expandable / collapsible section. This macro can be used to visually reduce the amount of information on a page, break down processes or procedures into clickable steps, or hide background or obsolete information, while still keeping it on the page for future reference.
 rendering.macro.expand.parameter.title.name=Title
 rendering.macro.expand.parameter.title.description=Defines the text that appears next to the expand/collapse icon.
 rendering.macro.expand.defaultexpandtitle=Click here to expand...
@@ -183,9 +183,9 @@ rendering.macro.taglist.notags=As you and your team add tags to the content, thi
 
 ## Content Report Table macro
 rendering.macro.content-report-table.name=Content Report Table
-rendering.macro.content-report-table.description=Provides a content report in table format, based on labels.
-rendering.macro.content-report-table.parameter.labels.name=Label
-rendering.macro.content-report-table.parameter.labels.description=Label(s) to report on
+rendering.macro.content-report-table.description=Provides a content report in table format, based on tags.
+rendering.macro.content-report-table.parameter.labels.name=Tags
+rendering.macro.content-report-table.parameter.labels.description=Tag(s) to report on
 rendering.macro.content-report-table.parameter.spaces.description=Space(s) to report on
 rendering.macro.content-report-table.parameter.maxResults.name=Max results
 rendering.macro.content-report-table.parameter.maxResults.description=Maximum Number of Pages
@@ -219,7 +219,7 @@ rendering.macro.contributors.parameter.showPages.description=Should the list of 
 rendering.macro.contributors.parameter.noneFoundMessage.name=None found message
 rendering.macro.contributors.parameter.noneFoundMessage.description=Message to show when pages are not shown
 rendering.macro.contributors.parameter.global.name=Global
-rendering.macro.contributors.parameter.global.description=Searches the Wiki globally, similar to how @ALL and @global work in Confluence. When this parameter is marked, the space parameter is ignored.
+rendering.macro.contributors.parameter.global.description=rendering.macro.contributors.parameter.global.description=Searches at the global level, across all wikis. When this parameter is marked, the space parameter is ignored.
 
 
 confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
@@ -368,7 +368,7 @@ rendering.macro.recently-updated.parameter.global.name=Global
 rendering.macro.recently-updated.parameter.global.description=If this parameter is selected then spaces, excluded spaces and the current wiki parameters are ignored and the macro will display the documents from the current wiki and subwikis.
 rendering.macro.recently-updated.parameter.spaces.name=spaces
 rendering.macro.recently-updated.parameter.spaces.description=Select one or multiple spaces. The macro will display only the documents present in the selected spaces.
-rendering.macro.recently-updated.parameter.labels.name=labels
+rendering.macro.recently-updated.parameter.labels.name=Tag(s)
 rendering.macro.recently-updated.parameter.labels.description=Select one or multiple tags. The macro will display only the documents which are tagged with the tag(s) you specify here (Only for pages and blogs).
 rendering.macro.recently-updated.parameter.width.name=width
 rendering.macro.recently-updated.parameter.width.description=Specify the width of the macro display, as a percentage of the window width.
