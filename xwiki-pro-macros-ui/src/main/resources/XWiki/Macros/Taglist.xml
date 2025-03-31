@@ -457,7 +457,8 @@ This macro will show a list with all the tags that are present on your instance.
   #set ($spacesList = $spaces.split(','))
   #set ($excludedTags = "$!xcontext.macro.params.excludedTags")
   #set ($excludedTagsList = $stringtool.split($excludedTags, ','))
-  #set ($confluenceMigration = $services.confluence.spaces)
+  ## This is needed because sometimes the spaces from confluence cannot be resolved by XWiki's normal space resolvers,
+  ## which may lead to issues where the content exists but the macro doesn't display anything.
   #if ($confluenceMigration &amp;&amp; $spacesList.size() == 1 &amp;&amp; $spaces != "")
     #set ($spaceReference = $services.confluence.spaces.getSloppySpace($spacesList.get(0)))
     #if($spaceReference)
