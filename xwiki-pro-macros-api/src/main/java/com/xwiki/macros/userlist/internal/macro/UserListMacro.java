@@ -32,7 +32,7 @@ import javax.inject.Singleton;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.displayer.HTMLDisplayerException;
 import org.xwiki.displayer.HTMLDisplayerManager;
-import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.query.Query;
@@ -63,6 +63,8 @@ import com.xwiki.macros.internal.userlist.UserReferenceList;
 @Singleton
 public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 {
+    private static final String XWIKI_DOT = "XWiki.";
+
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
 
@@ -75,6 +77,9 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 
     @Inject
     private WikiUserManager wikiUserManager;
+
+    @Inject
+    private DocumentReferenceResolver<String> resolver;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -109,8 +114,20 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
         }
         List<String> results = query.setWiki(wiki).execute();
         for (String userName : results) {
-            users.add(new DocumentReference(wiki, "XWiki", userName));
+            users.add(resolver.resolve(ensureFullUserRef(wiki, userName)));
         }
+    }
+
+    private static String ensureFullUserRef(String wiki, String userName)
+    {
+        String userRef = userName;
+        if (!userRef.contains(XWIKI_DOT)) {
+            userRef = XWIKI_DOT + userRef;
+        }
+        if (!userRef.contains(":XWiki.")) {
+            userRef = wiki + ':' + userRef;
+        }
+        return userRef;
     }
 
     @Override
