@@ -36,9 +36,381 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>## Team macro
+  <content>proMacros.extension.name=Pro Macros
+
+## Button macro
+rendering.macro.button.name=Macro bouton
+### Missing: rendering.macro.button.description=Insert a noticeable, clickable button on your XWiki page to highlight links and create call to actions!
+### Missing: rendering.macro.button.parameter.label.name=Label
+### Missing: rendering.macro.button.parameter.label.description=The label of the button.
+### Missing: rendering.macro.button.parameter.url.name=URL
+rendering.macro.button.parameter.url.description=Un lien ou une référence de page.
+### Missing: rendering.macro.button.parameter.color.name=Color
+### Missing: rendering.macro.button.parameter.color.description=The color of the button.
+### Missing: rendering.macro.button.parameter.width.name=Width
+### Missing: rendering.macro.button.parameter.width.description=The width of the button specified in pixels, percentage or other valid CSS value (ex. 30px, 30%, 30em). If no value is specified, the width will be determined by the length of the label.
+rendering.macro.button.parameter.newTab.name=Ouvrir dans un nouvel onglet
+### Missing: rendering.macro.button.parameter.newTab.description=Denotes whether the page will be opened in a new page or not.
+### Missing: rendering.macro.button.parameter.icon.name=Icon
+### Missing: rendering.macro.button.parameter.icon.description=Icon associated with the button, placed before the label.
+
+## Panel macro
+### Missing: rendering.macro.panel.name=Panel Macro
+### Missing: rendering.macro.panel.description=Panel macro to display XWiki content inside a panel.
+### Missing: rendering.macro.panel.content.description=Add the Panel content. It supports XWiki 2.1 syntax.
+### Missing: rendering.macro.panel.parameter.footer.name=Footer
+### Missing: rendering.macro.panel.parameter.footer.description=The footer of the panel. If specified, this footer will be displayed in its own footer row.
+### Missing: rendering.macro.panel.parameter.footerColor.name=Footer Text Color
+### Missing: rendering.macro.panel.parameter.footerColor.description=The color of the text in the footer row of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.footerBGColor.name=Footer background color
+### Missing: rendering.macro.panel.parameter.footerBGColor.description=The background color of the footer row of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.title.name=Title
+### Missing: rendering.macro.panel.parameter.title.description=The title of the panel. If specified, this title will be displayed in its own title row.
+### Missing: rendering.macro.panel.parameter.titleColor.name=Title Text Color
+### Missing: rendering.macro.panel.parameter.titleColor.description=The color of the text in the title row of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.titleBGColor.name=Title background color
+### Missing: rendering.macro.panel.parameter.titleBGColor.description=The background color of the title row of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.bgColor.name=Background color
+### Missing: rendering.macro.panel.parameter.bgColor.description=If specified, sets the background color of the content of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.contentTextColor.name=Content text color
+### Missing: rendering.macro.panel.parameter.contentTextColor.description=If specified, sets the text color of the content of the panel. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.borderStyle.name=Border style
+### Missing: rendering.macro.panel.parameter.borderStyle.description=The style of the panel's border. Accepted values are solid, dashed and other valid CSS border styles.
+### Missing: rendering.macro.panel.parameter.borderColor.name=Border color 
+### Missing: rendering.macro.panel.parameter.borderColor.description=The color of the panel's border. Colors can be specified as HTML color names or hexadecimal codes.
+### Missing: rendering.macro.panel.parameter.borderWidth.name=Border width
+### Missing: rendering.macro.panel.parameter.borderWidth.description=The width of the panel's border expressed in pixels. Only values are accepted (e.g: 1)
+### Missing: rendering.macro.panel.parameter.borderRadius.name=Border radius
+### Missing: rendering.macro.panel.parameter.borderRadius.description=If specified, replaces the default border radius
+### Missing: rendering.macro.panel.parameter.width.name=Width
+### Missing: rendering.macro.panel.parameter.width.description=If specified, sets the width of the panel (300px or 50%).
+### Missing: rendering.macro.panel.parameter.height.name=Height
+### Missing: rendering.macro.panel.parameter.height.description=If specified, sets the height of the panel (300px or 50%).
+### Missing: rendering.macro.panel.parameter.classes.name=CSS classes
+### Missing: rendering.macro.panel.parameter.classes.description=If specified adds css classes to the panel.
+
+## Expand macro
+### Missing: rendering.macro.expand.name=Expand
+### Missing: rendering.macro.expand.description=Add the Expand macro to your page to provide content in an expandable / collapsible section. This macro can be used to visually reduce the amount of information on a page, break down processes or procedures into clickable steps, or hide background or obsolete information, while still keeping it on the page for future reference.
+### Missing: rendering.macro.expand.parameter.title.name=Title
+### Missing: rendering.macro.expand.parameter.title.description=Defines the text that appears next to the expand/collapse icon.
+### Missing: rendering.macro.expand.defaultexpandtitle=Click here to expand...
+### Missing: rendering.macro.expand.parameter.expanded.name=Expanded
+### Missing: rendering.macro.expand.parameter.expanded.description=If selected the expand will be opened automatically when loading the page.
+
+## Status macro
+### Missing: rendering.macro.status.name=Status
+### Missing: rendering.macro.status.description=Insert a colored label in the text to highlight the status of an item.
+### Missing: rendering.macro.status.parameter.colour.name=Color
+### Missing: rendering.macro.status.parameter.colour.description=The color of the status(text color and background color). The following colors are available: "Blue", "Green", "Grey", "Purple", "Red" and "Yellow". Default: "Grey".
+### Missing: rendering.macro.status.parameter.title.name=Title
+### Missing: rendering.macro.status.parameter.title.description=The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").
+### Missing: rendering.macro.status.parameter.subtle.name=Subtle
+### Missing: rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).
+
+## Microsoft Stream macro
+### Missing: rendering.macro.msStream.name=Microsoft Stream Macro
+### Missing: rendering.macro.msStream.description=Embed a Microsoft Stream video in a page by simply passing the URL and any customization parameters.
+### Missing: rendering.macro.msStream.parameter.url.name=URL
+### Missing: rendering.macro.msStream.parameter.url.description=The URL to the Microsoft Stream video.
+### Missing: rendering.macro.msStream.parameter.width.name=Width
+### Missing: rendering.macro.msStream.parameter.width.description=The viewer width. Can be specified either in pixels (for example, 400px) or as a percentage of the available page width (for example, 50%).
+### Missing: rendering.macro.msStream.parameter.height.name=Height
+### Missing: rendering.macro.msStream.parameter.height.description=The viewer height. Can be specified either in pixels (for example, 400px) or as a percentage of the available page height (for example, 50%).
+### Missing: rendering.macro.msStream.parameter.alignment.name=Alignment
+### Missing: rendering.macro.msStream.parameter.alignment.description=Position of the video relatively to its container. Accepted values are left, center and right.
+### Missing: rendering.macro.msStream.parameter.start.name=Start At
+### Missing: rendering.macro.msStream.parameter.start.description=Start video at a specific time (use HH:MM:SS as time format).
+### Missing: rendering.macro.msStream.parameter.showinfo.name=Show Info
+### Missing: rendering.macro.msStream.parameter.showinfo.description=Show the video info on thumbnail.
+### Missing: rendering.macro.msStream.parameter.autoplay.name=Auto Play
+### Missing: rendering.macro.msStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
+### Missing: rendering.macro.msStream.parameter.textWrap.name=Text Wrap
+### Missing: rendering.macro.msStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
+
+## Team macro
+### Missing: rendering.macro.team.name=Team
+### Missing: rendering.macro.team.description=Display avatars of the members of a team.
+### Missing: rendering.macro.team.parameter.users.name=Users
+### Missing: rendering.macro.team.parameter.users.description=Restrict to this list of user names (don't prefix with the wiki identifier)
+### Missing: rendering.macro.team.parameter.tag.name=Tag
+### Missing: rendering.macro.team.parameter.tag.description=Tag that users need to have to be shown
+### Missing: rendering.macro.team.parameter.size.name=Size
+### Missing: rendering.macro.team.parameter.size.description=The size (height and width) of an avatar
+### Missing: rendering.macro.team.parameter.scope.name=Scope
+### Missing: rendering.macro.team.parameter.scope.description=The scope of the query used to find users. "global": in the main wiki. "local": in the current wiki. "both": in both the main wiki and the local wiki. "auto": find out from the wiki settings. Has no effect in the main wiki.
+### Missing: rendering.macro.team.parameter.showUsernames.name=Show Usernames
+### Missing: rendering.macro.team.parameter.showUsernames.description=The name of users should be displayed under their avatars
+### Missing: rendering.macro.team.parameter.letterAvatarBgColor.name=Letter Avatars Background Color
+### Missing: rendering.macro.team.parameter.letterAvatarBgColor.description=The background color of the letter avatars
+### Missing: rendering.macro.team.parameter.letterAvatarFontColor.name=Letter Avatars Font Color
+### Missing: rendering.macro.team.parameter.letterAvatarFontColor.description=The font color of the letter avatars
+### Missing: rendering.macro.team.parameter.disableLetterAvatars.name=Disable Letter Avatars
+### Missing: rendering.macro.team.parameter.disableLetterAvatars.description=Don't use letter avatars and display a default avatar instead
+### Missing: rendering.macro.team.parameter.requireExternalAuth.name=Require External Auth
+### Missing: rendering.macro.team.parameter.requireExternalAuth.description=The user should be searched in LDAP or OAuth
+### Missing: rendering.macro.team.parameter.limit.name=Limit
+### Missing: rendering.macro.team.parameter.limit.description=The maximum number of people to show (0 turns off the limit)
+## Team macro
 rendering.macro.team.content.options=Options
 rendering.macro.team.content.filter=Filtrer…
 rendering.macro.team.content.showUsernames=Afficher les noms
-rendering.macro.team.content.noUsers=Il n'y a personne à afficher.</content>
+rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
+### Missing: admin.promacros=Pro Macros
+### Missing: admin.promacros.description=Settings for Pro Macros
+
+## User List macro
+### Missing: rendering.macro.userList.name=User List
+### Missing: rendering.macro.userList.description=Displays a list of users with a customizable set of their properties
+### Missing: rendering.macro.userList.parameter.users.name=Users
+### Missing: rendering.macro.userList.parameter.users.description=List of users to be displayed
+### Missing: rendering.macro.userList.parameter.properties.name=Properties
+### Missing: rendering.macro.userList.parameter.properties.description=List of user properties to be displayed
+### Missing: rendering.macro.userList.parameter.fixedTableLayout.name=Fixed table layout
+### Missing: rendering.macro.userList.parameter.fixedTableLayout.description=If the user table should have fixed column width across tables displaying the same user properties
+### Missing: rendering.macro.userList.isEmpty=The User List macro has an empty user list.
+### Missing: rendering.macro.userList.invalidUser=User {0} does not exist or is not viewable.
+
+## Tag list
+### Missing: rendering.macro.tagList.name=Tag list
+### Missing: rendering.macro.tagList.description=Show a list of all the macros in your instance.
+### Missing: rendering.macro.tagList.parameter.spaces.description=List of spaces for which you want to see the tags. The elements must be separated by commas.
+### Missing: rendering.macro.tagList.parameter.spaces.name=Spaces
+### Missing: rendering.macro.tagList.parameter.excludedTags.description=List of tags that you want to exclude. The elements must be separated by commas.
+### Missing: rendering.macro.tagList.parameter.excludedTags.name=Excluded tags
+### Missing: rendering.macro.taglist.notags=As you and your team add tags to the content, this area will fill up.
+
+#### Confluence Bridges in the generic pro macro package
+
+## Content Report Table macro
+### Missing: rendering.macro.content-report-table.name=Content Report Table
+### Missing: rendering.macro.content-report-table.description=Provides a content report in table format, based on tags.
+### Missing: rendering.macro.content-report-table.parameter.labels.name=Tags
+### Missing: rendering.macro.content-report-table.parameter.labels.description=Tag(s) to report on
+### Missing: rendering.macro.content-report-table.parameter.spaces.description=Space(s) to report on
+### Missing: rendering.macro.content-report-table.parameter.maxResults.name=Max results
+### Missing: rendering.macro.content-report-table.parameter.maxResults.description=Maximum Number of Pages
+### Missing: contentReportTable.header.modified=Modified
+
+## Contributors macro
+### Missing: rendering.macro.contributors.name=Contributors
+### Missing: rendering.macro.contributors.description=Contributors Confluence Bridge macro to show the contributors of a given document.
+### Missing: rendering.macro.contributors.parameter.include.name=Include
+### Missing: rendering.macro.contributors.parameter.include.description=Kind of contributions to include ("authors", "comment")
+### Missing: rendering.macro.contributors.parameter.order.name=Order
+### Missing: rendering.macro.contributors.parameter.order.description=Which order to use
+### Missing: rendering.macro.contributors.parameter.reverse.name=Reverse
+### Missing: rendering.macro.contributors.parameter.reverse.description=Should the order be reversed?
+### Missing: rendering.macro.contributors.parameter.limit.name=Limit
+### Missing: rendering.macro.contributors.parameter.limit.description=Maximum number of contributions to show
+### Missing: rendering.macro.contributors.parameter.mode.name=Mode
+### Missing: rendering.macro.contributors.parameter.mode.description=Display as bullet list ("list") or as comma-separated sentence ("inline")
+### Missing: rendering.macro.contributors.parameter.showCount.name=Show count
+### Missing: rendering.macro.contributors.parameter.showCount.description=Should the number of contributions per authors be shown?
+### Missing: rendering.macro.contributors.parameter.showLastTime.name=Show last time
+### Missing: rendering.macro.contributors.parameter.showLastTime.description=Should the time of the last contribution be shown?
+### Missing: rendering.macro.contributors.parameter.page.name=Page
+### Missing: rendering.macro.contributors.parameter.page.description=Which page to show? (by default, the current one)
+### Missing: rendering.macro.contributors.parameter.spaces.name=Spaces
+### Missing: rendering.macro.contributors.parameter.spaces.description=Which spaces to show?
+### Missing: rendering.macro.contributors.parameter.scope.name=Scope
+### Missing: rendering.macro.contributors.parameter.scope.description=Show the selected pages only ("specified"), their direct children ("children"), or all children ("descendents")
+### Missing: rendering.macro.contributors.parameter.showPages.name=Show pages
+### Missing: rendering.macro.contributors.parameter.showPages.description=Should the list of used pages be shown?
+### Missing: rendering.macro.contributors.parameter.noneFoundMessage.name=None found message
+### Missing: rendering.macro.contributors.parameter.noneFoundMessage.description=Message to show when pages are not shown
+### Missing: rendering.macro.contributors.parameter.global.name=Global
+### Missing: rendering.macro.contributors.parameter.global.description=rendering.macro.contributors.parameter.global.description=Searches at the global level, across all wikis. When this parameter is marked, the space parameter is ignored.
+
+
+### Missing: confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
+### Missing: confluencecontributors.watchesnotsupported=Note: listing people watching pages is not supported
+### Missing: confluencecontributors.pages=Pages:
+### Missing: confluencecontributors.nopages=(none)
+### Missing: confluencecontributors.param.include.authors=Authors
+### Missing: confluencecontributors.param.include.comments=Comments
+### Missing: confluencecontributors.param.include.labels=Labels(Not supported)
+### Missing: confluencecontributors.param.include.watches=Watches(Not supported)
+### Missing: com.xwiki.pickers.contributors.Mode.inline=Inline
+### Missing: com.xwiki.pickers.contributors.Mode.list=List
+### Missing: com.xwiki.pickers.contributors.Order.count=Count
+### Missing: com.xwiki.pickers.contributors.Order.name=Name
+### Missing: com.xwiki.pickers.contributors.Order.update=Update
+### Missing: com.xwiki.pickers.contributors.Scope.children=Children
+### Missing: com.xwiki.pickers.contributors.Scope.descendants=Descendants
+### Missing: com.xwiki.pickers.contributors.Scope.specified=Specified
+
+## Excerpt macro
+### Missing: rendering.macro.excerpt.name=Excerpt
+### Missing: rendering.macro.excerpt.description=Excerpt macro. It marks part of the page's content for use by other macros. It is compatible with the Confluence Excerpt macro.
+### Missing: rendering.macro.excerpt.parameter.hidden.name=Hidden
+### Missing: rendering.macro.excerpt.parameter.hidden.description=Whether the excerpt should be hidden from the page
+### Missing: rendering.macro.excerpt.parameter.name.name=Name
+### Missing: rendering.macro.excerpt.parameter.name.description=The name of the excerpt, for named includes.
+### Missing: rendering.macro.excerpt.parameter.allowUnprivilegedInclude.name=Allow unprivileged include
+### Missing: rendering.macro.excerpt.parameter.allowUnprivilegedInclude.description=Allow this excerpt to be seen even for people who don't have view rights on this page when included
+
+
+## Excerpt Include macro
+### Missing: rendering.macro.excerpt-include.name=Excerpt include
+### Missing: rendering.macro.excerpt-include.parameter.reference.name=Reference
+### Missing: rendering.macro.excerpt-include.parameter.reference.description=The reference of the document containing the excerpt to display
+### Missing: rendering.macro.excerpt-include.parameter.name.name=Name
+### Missing: rendering.macro.excerpt-include.parameter.name.description=The name of the excerpt to be displayed
+### Missing: rendering.macro.excerpt-include.parameter.nopanel.name=No panel
+### Missing: rendering.macro.excerpt-include.parameter.nopanel.description=Disable the panel
+### Missing: rendering.macro.excerpt-include.parameter.inline.name=Inline
+### Missing: rendering.macro.excerpt-include.parameter.inline.description=Use the macro in inline mode. When in inline mode, the panel parameter is ignored.
+### Missing: rendering.macro.excerpt-include.description=Includes excerpts from other documents into the current page. The included pages need to contain the simple `excerpt` macro.
+### Missing: rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
+### Missing: rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
+
+##Hide if macro
+### Missing: rendering.macro.hide-if.name=Hide if
+### Missing: rendering.macro.hide-if.parameter.description=Hide the content of this macro if the condition set through the parameters is met.
+### Missing: rendering.macro.hide-if.parameter.matchUsing.name=Match using
+### Missing: rendering.macro.hide-if.parameter.matchUsing.description=Set if we must match all contraints or only one. If set to "all", then all items set must match.
+### Missing: rendering.macro.hide-if.parameter.authenticationType.name=Authentication type
+### Missing: rendering.macro.hide-if.parameter.authenticationType.description=The type of user to match, using authentication type: * None - No authentication type is chosen. * Authenticated - The user is logged in. * Anonymous - The user is not logged in.
+### Missing: rendering.macro.hide-if.parameter.displayType.name=Display type
+### Missing: rendering.macro.hide-if.parameter.displayType.description=The type of display to show this content. I could be: * None: don't take into account for this parameter. * Default: Show on screen (when the content is not printed). * Printable: Show when it's printed. Will be enabled for PDF or ODT export.
+### Missing: rendering.macro.hide-if.parameter.groups.name=groups
+### Missing: rendering.macro.hide-if.parameter.groups.description=The list of user group(s) to match.
+### Missing: rendering.macro.hide-if.parameter.users.name=Users
+### Missing: rendering.macro.hide-if.parameter.users.description=The list of user(s) to match.
+
+##Show if macro
+### Missing: rendering.macro.show-if.name=Show if
+### Missing: rendering.macro.show-if.parameter.description=Show the content of this macro if the condition set through the parameters is met.
+### Missing: rendering.macro.show-if.parameter.matchUsing.name=Match using
+### Missing: rendering.macro.show-if.parameter.matchUsing.description=Set if we must match all contraints or only one. If set to "all", then all items set must match.
+### Missing: rendering.macro.show-if.parameter.authenticationType.name=Authentication type
+### Missing: rendering.macro.show-if.parameter.authenticationType.description=The type of user to match, using authentication type: * None - No authentication type is chosen. * Authenticated - The user is logged in. * Anonymous - The user is not logged in.
+### Missing: rendering.macro.show-if.parameter.displayType.name=Display type
+### Missing: rendering.macro.show-if.parameter.displayType.description=The type of display to show this content. I could be: * None: don't take into account for this parameter. * Default: Show on screen (when the content is not printed). * Printable: Show when it's printed. Will be enabled for PDF or ODT export.
+### Missing: rendering.macro.show-if.parameter.groups.name=groups
+### Missing: rendering.macro.show-if.parameter.groups.description=The list of user group(s) to match.
+### Missing: rendering.macro.show-if.parameter.users.name=Users
+### Missing: rendering.macro.show-if.parameter.users.description=The list of user(s) to match.
+
+## Tab macro
+### Missing: rendering.macro.tab.name=Tab
+### Missing: rendering.macro.tab.description=Tab element for the tab group macro. This is expected to be put as the tab-group macro content.
+### Missing: rendering.macro.tab.parameter.label.name=Label
+### Missing: rendering.macro.tab.parameter.label.description=Label for the tab
+### Missing: rendering.macro.tab.parameter.id.name=Id
+### Missing: rendering.macro.tab.parameter.id.description=A unique ID for this tab
+### Missing: rendering.macro.tab.parameter.showByDefault.name=Show by default
+### Missing: rendering.macro.tab.parameter.showByDefault.description=Define if it's the element to show by default
+### Missing: rendering.macro.tab.parameter.cssClass.name=CSS class
+### Missing: rendering.macro.tab.parameter.csssClass.description=The custom CSS class for the tab
+### Missing: rendering.macro.tab.parameter.nextAfter.name=Next after
+### Missing: rendering.macro.tab.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
+### Missing: rendering.macro.tab.parameter.effectType.name=Effect type
+### Missing: rendering.macro.tab.parameter.effectType.description=The transition animation for this tab
+### Missing: rendering.macro.tab.parameter.effectDuration.name=Effect duration
+### Missing: rendering.macro.tab.parameter.effectDuration.description=The transition animation duration to apply on change of tab
+
+## Tab group macro
+### Missing: rendering.macro.tab-group.name=Tab group
+### Missing: rendering.macro.tab-group.description=The main macro which group tab macro elements
+### Missing: rendering.macro.tab-group.parameter.id.name=Id
+### Missing: rendering.macro.tab-group.parameter.id.description=The id of the element
+### Missing: rendering.macro.tab-group.parameter.tabLocation.name=Tab location
+### Missing: rendering.macro.tab-group.parameter.tabLocation.description=The location of the element.
+### Missing: rendering.macro.tab-group.parameter.cssClass.name=CSS class
+### Missing: rendering.macro.tab-group.parameter.cssClass.description=A custom css class to decorate the tabs
+### Missing: rendering.macro.tab-group.parameter.effectDuration.name=Effect duration
+### Missing: rendering.macro.tab-group.parameter.effectDuration.description=The transition animation duratio to apply on change of tab
+### Missing: rendering.macro.tab-group.parameter.effectType.name=Effect type
+### Missing: rendering.macro.tab-group.parameter.effectType.description=The transition animation between each tab
+### Missing: rendering.macro.tab-group.parameter.height.name=Height
+### Missing: rendering.macro.tab-group.parameter.height.description=The height of the main element with the CSS unit
+### Missing: rendering.macro.tab-group.parameter.loopCards.name=Loop cards
+### Missing: rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
+### Missing: rendering.macro.tab-group.parameter.nextAfter.name=Next after
+### Missing: rendering.macro.tab-group.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
+### Missing: rendering.macro.tab-group.parameter.width.name=Height
+### Missing: rendering.macro.tab-group.parameter.width.description=The width of the main element with the CSS unit
+
+## User Profile macro
+### Missing: rendering.macro.userProfile.name=User Profile
+### Missing: rendering.macro.userProfile.description=Displays a user profile with custom properties
+### Missing: rendering.macro.userProfile.parameter.reference.name=User
+### Missing: rendering.macro.userProfile.parameter.reference.description=Reference to a user page
+### Missing: rendering.macro.userProfile.parameter.properties.name=User properties
+### Missing: rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
+### Missing: rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.
+
+## Profile Picture macro
+### Missing: rendering.macro.profile-picture.name=Profile Picture
+### Missing: rendering.macro.profile-picture.description=Display the profile picture of selected user
+### Missing: rendering.macro.profile-picture.parameter.User.name=The user to show
+### Missing: rendering.macro.profile-picture.parameter.User.description=The user name to show (without prefixing with the wiki identifier)
+### Missing: rendering.macro.profile-picture.parameter.size.name=Size
+### Missing: rendering.macro.profile-picture.parameter.size.description=The size of the user icon
+
+## Recently Updated macro
+### Missing: recentlyUpdatedMacro.title=Recently Updated
+### Missing: recentlyUpdatedMacro.noMoreResults=No more results
+### Missing: rendering.macro.recently-updated.name=Recently Updated
+### Missing: rendering.macro.recently-updated.description=Add the Recently Updated macro to a page to show a list of pages, blogs, files, and comments that have been created or edited recently. This is great for project landing, information pages, or team space home pages. It's very flexible, you can limit the list to specific people, spaces, types of content, and more.
+### Missing: rendering.macro.recently-updated.parameter.title.name=title
+### Missing: rendering.macro.recently-updated.parameter.description.name=Filter the results by author. The macro will display only the pages etc which were last modified by the author(s) you specify here. You can specify multiple users.
+### Missing: rendering.macro.recently-updated.parameter.author.name=author
+### Missing: rendering.macro.recently-updated.parameter.author.description=Filter the results by author. The macro will display only the pages etc which were last modified by the author(s) you specify here. You can specify multiple users.
+### Missing: rendering.macro.recently-updated.parameter.excludedLabels.name=Excluded Labels
+### Missing: rendering.macro.recently-updated.parameter.excludedLabels.description=Select one or multiple tags. The macro will not display the documents which are tagged with the tag(s) you specify here (Only for pages and blogs).
+### Missing: rendering.macro.recently-updated.parameter.currentWiki.name=Current wiki
+### Missing: rendering.macro.recently-updated.parameter.currentWiki.description=If this parameter is selected then the spaces &amp; excluded spaces parameters are ignored and the macro will display the documents from the current wiki.
+### Missing: rendering.macro.recently-updated.parameter.excludedSpaces.name=Excluded spaces
+### Missing: rendering.macro.recently-updated.parameter.excludedSpaces.description=Select one or multiple spaces. The macro will not display the documents present in the selected spaces.
+### Missing: rendering.macro.recently-updated.parameter.global.name=Global
+### Missing: rendering.macro.recently-updated.parameter.global.description=If this parameter is selected then spaces, excluded spaces and the current wiki parameters are ignored and the macro will display the documents from the current wiki and subwikis.
+### Missing: rendering.macro.recently-updated.parameter.spaces.name=spaces
+### Missing: rendering.macro.recently-updated.parameter.spaces.description=Select one or multiple spaces. The macro will display only the documents present in the selected spaces.
+### Missing: rendering.macro.recently-updated.parameter.labels.name=Tag(s)
+### Missing: rendering.macro.recently-updated.parameter.labels.description=Select one or multiple tags. The macro will display only the documents which are tagged with the tag(s) you specify here (Only for pages and blogs).
+### Missing: rendering.macro.recently-updated.parameter.width.name=width
+### Missing: rendering.macro.recently-updated.parameter.width.description=Specify the width of the macro display, as a percentage of the window width.
+### Missing: rendering.macro.recently-updated.parameter.types.name=types
+### Missing: rendering.macro.recently-updated.parameter.types.description=Select one or multiple content types. The macro will display only the content of the type you specify here.
+### Missing: rendering.macro.recently-updated.parameter.max.name=max
+### Missing: rendering.macro.recently-updated.parameter.max.description=Specify the maximum number of results to be displayed. If this parameter is omitted, then a maximum of 15 results are displayed.
+### Missing: rendering.macro.recently-updated.parameter.theme.name=theme
+### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the appearance of this macro: "concise" - the default list, showing the names of pages which were updated or commented on, the users who made the page modifications and time when the modifications occurred. "social" - lists recent modifications in reverse chronological order, but groups them by user into short time segments. A 'sub' list appears within each user''s time segment, showing the names of pages which they updated or commented on and time when these modifications occurred. "sidebar" - lists recent updates in reverse chronological order, showing the names of pages which were updated or commented on and time when the page modifications occurred. This theme does not show authorship.
+### Missing: rendering.macro.recently-updated.parameter.showProfilePic.name=showProfilePic
+### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Specify "showProfilePic=true" to display the profile pictures of the users who updated the content.
+### Missing: rendering.macro.recently-updated.parameter.hideHeading.name=hideHeading
+### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Determines whether the macro hides or displays the text 'Recently Updated' as a title above the list of content. Only available in wikimarkup and storage format. Accepted values: "true" - Title is hidden, "false" - Title is shown.
+### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the display format of this macro.
+### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Check this box to display the profile pictures of the users who updated the content.
+### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.
+### Missing: com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.concise=Title, username, time
+### Missing: com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.social=User, title, time
+### Missing: com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.sidebar=Title, time
+### Missing: recentlyUpdated.param.types.attachment=Attachment
+### Missing: recentlyUpdated.param.types.blogpost=Blogpost
+### Missing: recentlyUpdated.param.types.comment=Comment
+### Missing: recentlyUpdated.param.types.page=Page
+
+## View Files macro
+### Missing: rendering.macro.view-file.name=View file
+### Missing: rendering.macro.view-file.description=Show a file using PDF Viewer Macro or Office Viewer.
+### Missing: rendering.macro.view-file.parameter.attFilename.name=Att--filename
+### Missing: rendering.macro.view-file.parameter.attFilename.description=Alias of File name (here for compatibility reasons).
+### Missing: rendering.macro.view-file.parameter.name.name=File name
+### Missing: rendering.macro.view-file.parameter.name.description=The attachment reference to display.
+### Missing: rendering.macro.view-file.parameter.page.name=Page
+### Missing: rendering.macro.view-file.parameter.page.description=Select the page from where you want the attachments to be displayed. Modifying this parameter will reset the selected file value.
+### Missing: rendering.macro.view-file.parameter.display.name=Display
+### Missing: rendering.macro.view-file.parameter.display.description=Display type. Default value set to thumbnail.
+### Missing: rendering.macro.view-file.parameter.height.name=Height
+### Missing: rendering.macro.view-file.parameter.height.description=The viewer height, accepts values in pixels. The default value is 1000.
+### Missing: rendering.macro.view-file.parameter.width.name=Width
+### Missing: rendering.macro.view-file.parameter.width.description=The viewer width, accepts values in pixels or in percentage. Default value set at 100%.
+### Missing: rendering.macro.viewFile.modal.title=Content view
+### Missing: rendering.macro.viewFile.thumbnail.button.title=View file content
+### Missing: rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.
+</content>
 </xwikidoc>
