@@ -1061,7 +1061,7 @@ require(['jquery'], $ =&gt; {
       </defaultCategories>
     </property>
     <property>
-      <description>Add the Recently Updated macro to a page to show a list of pages, blogs, files, and comments that have been created or edited recently. This is great for project landing, information pages, or team space home pages. It's very flexible, you can limit the list to specific people, spaces, types of content, and more.</description>
+      <description/>
     </property>
     <property>
       <id>recently-updated</id>
@@ -1146,7 +1146,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue/>
     </property>
     <property>
-      <description>Filter the results by author. The macro will display only the pages etc which were last modified by the author(s) you specify here. You can specify multiple users.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1225,7 +1225,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>@self</defaultValue>
     </property>
     <property>
-      <description>This parameter allows you to filter content by space. The macro will display only the pages etc which belong to the space(s) you specify here. You can specify one or more space keys, separated by a comma or a space. To exclude content in a specific space, put a minus sign (-) immediately in front of that space key. For example: If you specify a space key of -BADSPACE you will get only content which is not in the BADSPACE. To indicate that the results must come from a specific space, put a plus sign (+) immediately in front of that space key. For example: If you specify a space key of +GOODSPACE you will get only content in GOODSPACE. (Note that this is not particularly useful, because each content item belongs to one space only. If you put a plus sign next to one space key and list other space keys too, the other space keys will be ignored.) Special values: "@self" - the current space, "@global" - all spaces in wiki, "@all" or "*" - all spaces in every wiki</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1383,7 +1383,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>100</defaultValue>
     </property>
     <property>
-      <description>Specify the width of the macro display, as a percentage of the window width.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
@@ -1541,7 +1541,7 @@ require(['jquery'], $ =&gt; {
       <defaultValue>15</defaultValue>
     </property>
     <property>
-      <description>Specify the maximum number of results to be displayed. If this parameter is omitted, then a maximum of 15 results are displayed.</description>
+      <description/>
     </property>
     <property>
       <mandatory>0</mandatory>
