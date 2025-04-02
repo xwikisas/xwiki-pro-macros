@@ -490,7 +490,7 @@ $escapetool.xml($d.getDisplayTitle())##
         &lt;li&gt;
           &lt;div class="xitemcontainer"&gt;
           $services.icon.renderHTML('page')
-          #set ($d = $xwiki.getDocument($r.fullname))
+          #set ($d = $xwiki.getDocument("$r.wiki:$r.fullname"))
           #contentbylabellink($d)
           #if ($xcontext.macro.params.showSpace != "false")
             #set ($confluenceSpace = $services.confluence.spaces.getConfluenceSpace($d))

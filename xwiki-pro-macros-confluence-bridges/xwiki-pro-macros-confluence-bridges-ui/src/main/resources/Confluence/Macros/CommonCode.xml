@@ -127,7 +127,16 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #set ($sortAsc = "asc")
   #end
   #set ($discard = $query.bindValue("sort", "$sortField $sortAsc"))
-  #setVariable("$results" $query.execute()[0].results)
+  #set ($resultList = [])
+  #set ($alreadyListed = $collectiontool.getSet())
+  #foreach ($r in $query.execute()[0].results)
+    #set ($ref = "$r.wiki:$r.fullname")
+    #if (!$alreadyListed.contains($ref))
+      #set ($discard = $resultList.add($r))
+      #set ($discard = $alreadyListed.add($ref))
+    #end
+  #end
+  #setVariable("$results" $resultList)
 #end
 {{/velocity}}</content>
 </xwikidoc>
