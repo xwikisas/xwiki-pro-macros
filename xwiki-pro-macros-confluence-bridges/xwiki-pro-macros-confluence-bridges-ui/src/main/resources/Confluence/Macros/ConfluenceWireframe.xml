@@ -304,7 +304,21 @@ The wireframe preview is an attachment added to the parent page. For example, fo
   #end
   #set($attachmentName = "${attachmentNamePrefix}_${resourceID}_${attachmentNameSuffix}.png")
   #set($attachment = $doc.getAttachment($attachmentName))
-  ## Display
+  ## Looking for other known prefixes.
+  #if ("$!attachment" == '')
+    #set ($attachmentName = "balsamiq_wireframe_${resourceID}_${attachmentNameSuffix}.png" )
+    #set($attachment = $doc.getAttachment($attachmentName))
+  #end
+  ## Look through all attachments and use the one that matches the resourceID.
+  #if ("$!attachment" == '')
+    #foreach ($att in $doc.getAttachmentList())
+      #if ($att.getFilename().contains($resourceID))
+        #set ($attachment = $att)
+        #set ($attachmentName = $att.getFilename())
+        #break
+      #end
+    #end
+  #end
   #if($attachment)
     (% style="text-align: ${imageAlignment}"%)(((
       [[image:$services.rendering.escape($attachmentName, $xwiki.currentContentSyntaxId)]]
