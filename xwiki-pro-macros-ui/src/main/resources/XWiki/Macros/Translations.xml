@@ -53,6 +53,14 @@ rendering.macro.button.parameter.newTab.name=Open in new tab
 rendering.macro.button.parameter.newTab.description=Denotes whether the page will be opened in a new page or not.
 rendering.macro.button.parameter.icon.name=Icon
 rendering.macro.button.parameter.icon.description=Icon associated with the button, placed before the label.
+rendering.macro.button.parameter.type.name=Type
+rendering.macro.button.parameter.type.description=Type of the button.
+com.xwiki.macros.button.ButtonType.DEFAULT=Default
+com.xwiki.macros.button.ButtonType.PRIMARY=Primary
+com.xwiki.macros.button.ButtonType.SUCCESS=Success
+com.xwiki.macros.button.ButtonType.INFO=Info
+com.xwiki.macros.button.ButtonType.WARNING=Warning
+com.xwiki.macros.button.ButtonType.DANGER=Danger
 
 ## Panel macro
 rendering.macro.panel.name=Panel Macro
