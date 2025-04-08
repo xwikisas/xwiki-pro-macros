@@ -61,6 +61,10 @@ com.xwiki.macros.button.ButtonType.SUCCESS=Success
 com.xwiki.macros.button.ButtonType.INFO=Info
 com.xwiki.macros.button.ButtonType.WARNING=Warning
 com.xwiki.macros.button.ButtonType.DANGER=Danger
+rendering.macro.button.parameter.id.name=ID
+rendering.macro.button.parameter.id.description=ID of the button element.
+rendering.macro.button.parameter.class.name=Class
+rendering.macro.button.parameter.class.description=A custom CSS class to apply on the button.
 
 ## Panel macro
 rendering.macro.panel.name=Panel Macro

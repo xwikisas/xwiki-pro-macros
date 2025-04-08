@@ -49,6 +49,8 @@ $services.localization.render('rendering.macro.button.description')
 |newTab|$services.localization.render('rendering.macro.button.parameter.newTab.description')|false
 |icon|$services.localization.render('rendering.macro.button.parameter.icon.description')|-
 |type|$services.localization.render('rendering.macro.button.parameter.type.description')|Default
+|id|$services.localization.render('rendering.macro.button.parameter.id.description')|Default
+|class|$services.localization.render('rendering.macro.button.parameter.class.description')|Default
 
 == Examples ==
 
@@ -70,6 +72,10 @@ $services.localization.render('rendering.macro.button.description')
 {{code}}{{button label="Store" url="http://store.xwiki.com" color="#889cb8" newTab="true" icon="page" width="100%"/}}{{/code}}
 
 {{button label="Store" url="http://store.xwiki.com" color="#889cb8" newTab="true" icon="page" width="100%"/}}
+
+{{code}}{{button label="Delete example" url="http://store.xwiki.com" type="DANGER"/}}{{/code}}
+
+{{button label="Delete example" url="http://store.xwiki.com" type="DANGER"/}}
 {{/velocity}}</content>
   <object>
     <name>XWiki.Macros.Button</name>
@@ -320,6 +326,8 @@ $services.localization.render('rendering.macro.button.description')
   #set ($width = $escapetool.xml($wikimacro.parameters.width))
   #set ($newTab = $escapetool.xml($wikimacro.parameters.newTab))
   #set ($icon = $escapetool.xml($xcontext.macro.params.icon))
+  #set ($macro.id = $wikimacro.parameters.id)
+  #set ($macro.classParam = $wikimacro.parameters.get('class'))
   #set ($macro.type = $wikimacro.parameters.type)
   ## Resolve the url as a Wiki Document if it exists, else assume it is an external link
   #if ($xwiki.exists($url))
@@ -333,8 +341,11 @@ $services.localization.render('rendering.macro.button.description')
     #set ($colors = [255, 255, 255])
   #end
   #set ($macro.additionalClass = '')
+  #if ("$!macro.classParam" != '')
+    #set ($macro.additionalClass = "$macro.additionalClass $macro.classParam")
+  #end
   #if ("$!macro.type" != '')
-    #set ($macro.additionalClass = "btn-$macro.type.name().toLowerCase()")
+    #set ($macro.additionalClass = "$macro.additionalClass btn-$macro.type.name().toLowerCase()")
   #end
   #set ($darkenedColors = [])
   #darken($colors, $darkenedColors)
@@ -347,6 +358,9 @@ $services.localization.render('rendering.macro.button.description')
   #if (!$wikimacro.context.isInline())&lt;p&gt;#end
   &lt;a href="$url" #if($newTab == 'true')target="_blank"#end&gt;
     &lt;button
+      #if ("$!macro.id" != '')
+        id="$escapetool.xml($macro.id)"
+      #end
       style="
         #set ($macro.defaultEnumValue = "DEFAULT")
         #if ("$!color" != '')
@@ -970,6 +984,186 @@ $services.localization.render('rendering.macro.button.description')
     </property>
     <property>
       <type>com.xwiki.macros.button.ButtonType</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Button</name>
+    <number>7</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>792173a3-bf91-4b20-8028-db5431ee4508</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>id</name>
+    </property>
+    <property>
+      <type>java.lang.String</type>
+    </property>
+  </object>
+  <object>
+    <name>XWiki.Macros.Button</name>
+    <number>8</number>
+    <className>XWiki.WikiMacroParameterClass</className>
+    <guid>0c390eda-0caf-4022-ba55-36a618aab1b8</guid>
+    <class>
+      <name>XWiki.WikiMacroParameterClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultValue>
+        <disabled>0</disabled>
+        <name>defaultValue</name>
+        <number>4</number>
+        <prettyName>Parameter default value</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultValue>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Parameter description</prettyName>
+        <restricted>0</restricted>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <mandatory>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>mandatory</name>
+        <number>3</number>
+        <prettyName>Parameter mandatory</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </mandatory>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Parameter name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>type</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Parameter type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </type>
+    </class>
+    <property>
+      <defaultValue/>
+    </property>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <mandatory>0</mandatory>
+    </property>
+    <property>
+      <name>class</name>
+    </property>
+    <property>
+      <type>java.lang.String</type>
     </property>
   </object>
 </xwikidoc>
