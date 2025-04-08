@@ -362,7 +362,6 @@ $services.localization.render('rendering.macro.button.description')
         id="$escapetool.xml($macro.id)"
       #end
       style="
-        #set ($macro.defaultEnumValue = "DEFAULT")
         #if ("$!color" != '')
         background-color: #toCssRGB($colors);
         border-color: #toCssRGB($darkenedColors);
