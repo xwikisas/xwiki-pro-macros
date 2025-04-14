@@ -47,7 +47,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
 |**id**|The group of properties to show. If empty, will show page properties without identifiers.|No|(% style="width:27px" %)(empty)|(% style="width:334px" %)book
 |**headings**|Which column of the page properties to show. By default, all columns are shown. Columns with comma in their names require being quoted|No|(% style="width:27px" %)(empty)|(% style="width:334px" %){{{Title,Author,~"Released in years~""}}}
 |**cql**|A query written in the Confluence Query Language (CQL) syntax defining the list of documents to show. [[See the documentation&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/CQL/#HSyntax]].|If labels is not given|(% style="width:27px" %)(empty)|(% style="width:334px" %){{{label = "examplelabel" and space = currentSpace ( )}}}
-|**labels**|A list of tags to use, separated by a comma or a space. This value is ignored if the cql parameter is set. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.|If cql is not given|(% style="width:27px" %)(empty)|(% style="width:334px" %)exampletag
+|**labels** or **label**|A list of tags to use, separated by a comma or a space. This value is ignored if the cql parameter is set. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.|If cql is not given|(% style="width:27px" %)(empty)|(% style="width:334px" %)exampletag
 |**operator**|Whether all the tags should match (AND), or any (OR). This value is ignored if the cql parameter is set. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.|No|(% style="width:27px" %)OR|(% style="width:334px" %)AND
 |**max**|Maximum number of results.  Note: this parameter doesn't exist in Confluence, it's an XWiki addition.|No|(% style="width:27px" %)1000|(% style="width:27px" %)15
 |**sort**|What to sort on. The only supported values are "modified", "creation" and "title" for now. Ignored if an ##order by## clause is present in the cql parameter.  Note: this parameter doesn't exist in Confluence, it's an XWiki addition.|No|(% style="width:27px" %)(unset)|(% style="width:27px" %)title
@@ -688,6 +688,9 @@ Bridges are there for compatibility with content migrated from Confluence and t
     </property>
     <property>
       <name>labels</name>
+    </property>
+    <property>
+      <name>label</name>
     </property>
     <property>
       <type/>

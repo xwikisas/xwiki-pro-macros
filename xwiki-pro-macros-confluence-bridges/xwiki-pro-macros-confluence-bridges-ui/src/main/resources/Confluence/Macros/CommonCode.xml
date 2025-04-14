@@ -65,6 +65,9 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
       #set ($operator = "OR")
     #end
     #set ($labels = $wikimacro.params.labels)
+    #if ("$!labels" == "")
+      #set ($labels = $wikimacro.params.label)
+    #end
     #if ("$!labels" != "")
       #set ($labelList = $labels.split("\s*,\s*|\s+"))
       #set ($stringifiedLabels = [])
