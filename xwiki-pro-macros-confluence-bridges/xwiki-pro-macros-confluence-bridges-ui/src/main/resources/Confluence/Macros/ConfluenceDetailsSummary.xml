@@ -316,9 +316,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
           #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
 
         #else
-          #if ($showAnyMetadata)
-            #set ($d = $xwiki.getDocument($row.get(0)))
-          #end##
+          #set ($d = $xwiki.getDocument($row.get(0)))
           #foreach ($cell in $row)
             #set ($title = $d.getTitle())
             #if (!$title)
