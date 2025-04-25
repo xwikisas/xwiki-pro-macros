@@ -320,7 +320,17 @@ Bridges are there for compatibility with content migrated from Confluence and t
             #set ($d = $xwiki.getDocument($row.get(0)))
           #end##
           #foreach ($cell in $row)
-            | ((( #if ($foreach.first)[[$cell]]#{else}$cell#end ))) ##
+            #set ($title = $d.getTitle())
+            #if (!$title)
+              #set ($title = $d.getDocumentReference().getName())
+              #if ($title == "WebHome")
+                #set ($title = $d.getDocumentReference().getParent().getName())
+              #end
+            #end
+            #if (!$title)
+              #set ($title = $cell)
+            #end
+            | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}$cell#end ))) ##
           #end##
           #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
           #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
