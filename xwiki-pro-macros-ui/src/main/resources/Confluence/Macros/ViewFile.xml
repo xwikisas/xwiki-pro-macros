@@ -438,10 +438,13 @@ window.addEventListener("DOMContentLoaded", function () {
 
 .viewFileThumbnailCard, .viewFileFull {
   position: relative;
-  width: 10rem !important;
-  height: fit-content;
-  min-height: 10rem !important;
   margin-bottom: 1rem !important;
+}
+
+.viewFileThumbnailCard {
+  width: 10rem !important;
+  height: fit-content !important;
+  min-height: 10rem !important;
 }
 
 span.viewFileThumbnailCard {
