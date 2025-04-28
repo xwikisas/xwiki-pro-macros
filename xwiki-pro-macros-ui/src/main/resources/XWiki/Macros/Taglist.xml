@@ -472,7 +472,9 @@ This macro will show a list with all the tags that are present on your instance.
     #set ($spacesString = $services.taglist.parseSpaces($spaces))
     #set ($tags = $xwiki.tag.getTagCountForSpaces($spacesString).keySet())
   #else
-    #set ($tags = $xwiki.tag.getTagCount().keySet())
+    #set ($spaceName = $services.model.serialize($doc.getSpace()))
+    #set ($spacesString = $services.taglist.parseSpaces($spaceName))
+    #set ($tags = $xwiki.tag.getTagCountForSpaces($spacesString).keySet())
   #end
   #excludeTags($tags, $excludedTagsList)
   #set ($limit = $tags.size())
@@ -504,9 +506,6 @@ This macro will show a list with all the tags that are present on your instance.
     </property>
     <property>
       <defaultCategories/>
-    </property>
-    <property>
-      <defaultCategory/>
     </property>
     <property>
       <description/>
