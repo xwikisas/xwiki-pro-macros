@@ -361,7 +361,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #set ($title = $result.name)
   #end
   &lt;span class="result-title"&gt;
-    &lt;a href="$result.href"&gt;$escapetool.xml("$title")&lt;/a&gt;
+    &lt;a href="$escapetool.xml($xwiki.getDocument($result.fullname).getURL())"&gt;$escapetool.xml("$title")&lt;/a&gt;
   &lt;/span&gt;
 #end
 
