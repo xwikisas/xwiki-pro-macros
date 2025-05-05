@@ -705,29 +705,14 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
     }
   })
 
-  #if ("$!wikimacro.parameters.patterns" != '')
-    #set ($liveDataConfig.query = {})
-    #set ($liveDataConfig.query.filters = [
-      {
-        "property": "filename",
-        "matchAll": true,
-        "constraints": []
-      }
-    ])
-    #set ($filters = $stringtool.split($wikimacro.parameters.patterns, ','))
-    #foreach ($filter in $filters)
-      #set ($discard = $liveDataConfig.query.filters[0].constraints.add(
-        { "operator": "contains", "value": "$!filter.trim()" }
-      ))
-    #end
-  #end
   #set ($sourceParams = {
     'translationPrefix': 'core.viewers.attachments.livetable.',
     'className': 'XWiki.AllAttachments',
-    "\$doc": "$attachmentsDoc"
+    "\$doc": "$attachmentsDoc",
+    'patterns': "$!wikimacro.parameters.patterns"
   })
   #set ($discard = $sourceParams.put('template', 'xpart.vm'))
-  #set ($discard = $sourceParams.put('vm', 'attachmentsjson.vm'))
+  #set ($discard = $sourceParams.put('vm', 'filteredAttachments.vm'))
   #getLiveDataSort($liveDataSort)
   #if ($invalidSortBy)
     {{warning}}
