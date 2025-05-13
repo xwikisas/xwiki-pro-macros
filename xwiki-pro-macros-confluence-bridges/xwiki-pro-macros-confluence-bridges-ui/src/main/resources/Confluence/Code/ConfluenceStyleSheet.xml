@@ -155,6 +155,8 @@ p.auto-cursor-target&gt;br:first-child:last-child, p.auto-cursor-target:has(br:f
 
 table.fixed-table {
   table-layout: fixed;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* Note about &lt;table class="wrapped"&gt;: it's a bug in Confluence that can be ignored, apparently.
