@@ -199,6 +199,7 @@ table.fixed-table {
 
 [data-highlight-colour='blue']    { background-color: #deebff }
 [data-highlight-colour='green']   { background-color: #e3fcef }
+[data-highlight-colour='grey']    { background-color: #f4f5f7 }
 
 /** Guessed **/
 
