@@ -488,7 +488,7 @@ This macro will show a list with all the tags that are present on your instance.
   #end
 
 #end
-#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
