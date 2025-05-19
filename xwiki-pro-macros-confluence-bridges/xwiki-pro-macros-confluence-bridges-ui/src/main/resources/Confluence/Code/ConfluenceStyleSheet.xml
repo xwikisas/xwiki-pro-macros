@@ -155,6 +155,8 @@ p.auto-cursor-target&gt;br:first-child:last-child, p.auto-cursor-target:has(br:f
 
 table.fixed-table {
   table-layout: fixed;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* Note about &lt;table class="wrapped"&gt;: it's a bug in Confluence that can be ignored, apparently.
@@ -199,6 +201,7 @@ table.fixed-table {
 
 [data-highlight-colour='blue']    { background-color: #deebff }
 [data-highlight-colour='green']   { background-color: #e3fcef }
+[data-highlight-colour='grey']    { background-color: #f4f5f7 }
 
 /** Guessed **/
 

@@ -27,7 +27,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.xwiki.bridge.DocumentAccessBridge;
-import org.xwiki.extension.ExtensionId;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.model.reference.WikiReference;
@@ -52,8 +51,6 @@ import com.xwiki.licensing.Licensor;
 @Unstable
 public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 {
-    private static final ExtensionId PRO_MACROS_EXT_ID = new ExtensionId("com.xwiki.pro:xwiki-pro-macros");
-
     private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
         "Macros"), "WebHome");
 
@@ -110,7 +107,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     public List<Block> execute(P parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        if (licensor.hasLicensure(PRO_MACROS_EXT_ID) || licensor.hasLicensure(
+        if (licensor.hasLicensure(
             new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()))))
         {
             return internalExecute(parameters, content, context);

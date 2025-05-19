@@ -276,7 +276,7 @@ See also:
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #set ($mathinlineexpression ="$!wikimacro.parameters.body")##
   #if ($mathinlineexpression.startsWith("--uriencoded--"))##
     #set ($mathinlineexpression = $util.decodeURI($mathinlineexpression.substring(14)))##
