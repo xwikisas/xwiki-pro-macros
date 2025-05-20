@@ -430,6 +430,7 @@
   object-fit: cover;
   margin: 0.1ex;
   box-sizing: content-box;
+  height: revert-layer;
 }
 
 .xwikiteam a:hover .xwikiteam-avatar {
@@ -739,7 +740,7 @@
       #else
         #set($escapedSize = $escapetool.xml($size))
         &lt;img
-          class='xwikiteam-avatar fixedSize-$escapedSize'
+          class='xwikiteam-avatar '
           src='$escapetool.xml($return.url)'
           alt='$escapedDisplayUser'
           title='$escapedDisplayUser'
@@ -898,16 +899,6 @@
     #set ($clean = true)
   #end
   {{html clean="$clean"}}
-  ## Starting with XWiki 13.10.4 and 14.1, img tags have a 'height: auto' style set, see XWIKI-19432: Image not to scale
-  ## on mobile. Since this breaks the macro fixed size feature, a specific size is added.
-  #set ($escapedSize = $escapetool.xml($size))
-  &lt;$elem&gt;
-    &lt;style&gt;
-      .fixedSize-$escapedSize {
-        height: ${escapedSize}px;
-      }
-    &lt;/style&gt;
-  &lt;/$elem&gt;
   &lt;$elem class="xwikiteam #if(!$showUsernames)xwikiteam-usernames-hidden#end"&gt;
     #if ($list.size() &gt; 0)
       &lt;span class="xwikiteam-ul"&gt;
