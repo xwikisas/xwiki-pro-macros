@@ -31,6 +31,9 @@
   <packaging>jar</packaging>
   <name>Pro Macros - Confluence bridges API</name>
   <description>The API needed for the XWiki Pro Confluence bridges.</description>
+  <properties>
+    <xwiki.jacoco.instructionRatio>0</xwiki.jacoco.instructionRatio>
+  </properties>
   <dependencies>
     <!-- Dependencies needed by the User List and User Profile macros -->
     <dependency>
