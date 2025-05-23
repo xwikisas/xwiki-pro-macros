@@ -18,6 +18,8 @@
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
 ##!source.syntax=xwiki/2.1
+{{include reference='Collabora.Code.UIMacros' /}}
+
 {{velocity output='false'}}
 #template('attachment_macros.vm')
 
@@ -68,9 +70,22 @@
        download="download"
        #if ($thumbnailStyle == "Button") class="button button-primary" #end
        title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))">
-      $thumbnail
+      #if (!$thumbnailBase64.isEmpty())
+        <$elem class="image-container">
+          <img class="macro-thumbnail" src="data:image/jpeg;base64,$thumbnailBase64" alt="Thumbnail" />
+          <$elem class="overlay">
+            <span class="overlay-text">View file</span>
+          </$elem>
+        </$elem>
+      #else
+        $thumbnail
+      #end
       <span class="viewFileName">$escapetool.xml($attachmentRef.getName())</span>
     </a>
+    <span hidden>
+      #tableButtonTemplate()
+      <span hidden data-ooExists="$xwiki.exists('UI.XWikiOnlyOfficeCode')" class='oo-installed-check'></span>
+    </span>
   </$elem>
   {{/html}}
 #end

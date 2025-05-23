@@ -19,6 +19,7 @@
  */
 package com.xwiki.macros.viewfile.internal.macro;
 
+import java.util.Base64;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import javax.script.ScriptContext;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
@@ -36,6 +38,7 @@ import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
 
 import com.xwiki.macros.AbstractProMacro;
+import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
 /**
@@ -55,6 +58,13 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     @Inject
     private ScriptContextManager scriptContextManager;
 
+    @Inject
+    private ThumbnailGenerator thumbnailGenerator;
+
+    @Inject
+    @Named("current")
+    private AttachmentReferenceResolver<String> attachmentReferenceResolver;
+
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -73,11 +83,15 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     protected List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
+        byte[] thumbnailBytes =
+            thumbnailGenerator.getThumbnailData(attachmentReferenceResolver.resolve(parameters.getName()));
         Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
 
         scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
         scriptContext.setAttribute("isInline", context.isInline(), ScriptContext.ENGINE_SCOPE);
+        String base64 = Base64.getEncoder().encodeToString(thumbnailBytes);
+        scriptContext.setAttribute("thumbnailBase64", base64, ScriptContext.ENGINE_SCOPE);
         if (context.getTransformationContext().getTargetSyntax() != null) {
             String targetSyntaxId = context.getTransformationContext().getTargetSyntax().getType().getId();
             scriptContext.setAttribute("targetSyntaxId", targetSyntaxId, ScriptContext.ENGINE_SCOPE);
