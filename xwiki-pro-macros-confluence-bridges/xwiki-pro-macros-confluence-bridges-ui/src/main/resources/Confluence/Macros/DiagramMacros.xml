@@ -98,6 +98,12 @@
     #if ("$!originalDoc" != '')
       #set ($doc = $xwiki.getDocument($originalDoc))
     #end
+    ## Used for gliffy macros that include a diagram from another page.
+    #set ($pageID = $xcontext.macro.params.pageid)
+    #if ("$!pageID" != '' &amp;&amp; "$!originalDoc" == '')
+      #set ($doc = $xwiki.getDocument($services.gliffyscript.getReferenceFromConfluenceID($pageID)))
+      #set ($originalDoc = $doc)
+    #end
     ## "Constants"
     #set($previewImageName = "${diagramName}.png")
     #set($previewImage = $doc.getAttachment($previewImageName))
