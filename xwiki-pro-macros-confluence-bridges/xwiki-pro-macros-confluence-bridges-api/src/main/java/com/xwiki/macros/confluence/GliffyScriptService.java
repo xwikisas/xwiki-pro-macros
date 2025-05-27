@@ -17,44 +17,48 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.script;
+package com.xwiki.macros.confluence;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.extension.ExtensionId;
+import org.xwiki.contrib.confluence.resolvers.ConfluencePageIdResolver;
+import org.xwiki.contrib.confluence.resolvers.ConfluenceResolverException;
+import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.script.service.ScriptService;
-import org.xwiki.stability.Unstable;
-
-import com.xwiki.licensing.Licensor;
 
 /**
- * Check licensing for macros in the pro-macro package.
- * This is a workaround for https://github.com/xwikisas/xwiki-pro-macros/issues/286, will possibly be removed when the
- * real fix is done.
- * @since 1.19.1
+ * Gliffy bridge script service.
+ *
  * @version $Id$
+ * @since 1.26.20
  */
 @Component
-@Named("promacrolicensing")
+@Named("gliffyscript")
 @Singleton
-@Unstable
-public class ProMacroLicensingScriptService implements ScriptService
+public class GliffyScriptService implements ScriptService
 {
-    private static final ExtensionId PRO_MACROS_EXT_ID = new ExtensionId("com.xwiki.pro:xwiki-pro-macros");
+    @Inject
+    private ConfluencePageIdResolver confluencePageIdResolver;
 
     @Inject
-    private Licensor licensor;
+    private DocumentReferenceResolver<String> resolver;
 
     /**
-     * @return whether a valid license matches the given document.
-     * @param docRef the document to check
+     * @param id confluence if of the page
+     * @return the document reference of the migrate page
      */
-    public boolean hasLicensureForEntity(EntityReference docRef)
+    public DocumentReference getReferenceFromConfluenceID(String id) throws ConfluenceResolverException
     {
-        return licensor.hasLicensure(docRef) || licensor.hasLicensure(PRO_MACROS_EXT_ID);
+        if (StringUtils.isNumeric(id)) {
+            EntityReference entityReference = confluencePageIdResolver.getDocumentById(Integer.valueOf(id));
+            return new DocumentReference(entityReference);
+        }
+        return resolver.resolve(id);
     }
 }

@@ -25,12 +25,15 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-confluence-bridges-parent</artifactId>
-    <version>1.26.20-SNAPSHOT</version>
+    <version>1.26.21-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-confluence-bridges-api</artifactId>
   <packaging>jar</packaging>
   <name>Pro Macros - Confluence bridges API</name>
   <description>The API needed for the XWiki Pro Confluence bridges.</description>
+  <properties>
+    <xwiki.jacoco.instructionRatio>0</xwiki.jacoco.instructionRatio>
+  </properties>
   <dependencies>
     <!-- Dependencies needed by the User List and User Profile macros -->
     <dependency>

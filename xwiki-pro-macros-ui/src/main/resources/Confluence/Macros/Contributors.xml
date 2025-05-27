@@ -337,7 +337,7 @@ Result:
     </property>
     <property>
       <code>{{groovy output="false"}}
-  xcontext.put("sortContributions", (contributions, key, reverse) -&gt; {
+  xcontext.put("sortContributions", (contributions, key, reverse, limit) -&gt; {
     def c = new ArrayList(contributions)
     Collections.sort(c, new Comparator&lt;HashMap&gt;() {
       @Override
@@ -345,6 +345,10 @@ Result:
         return reverse ? v2.get(key).compareTo(v1.get(key)) : v1.get(key).compareTo(v2.get(key))
       }
     })
+    if (limit != null &amp;&amp; limit &gt; 0) {
+      return c.take(limit)
+    }
+
     return c
   })
 {{/groovy}}
@@ -459,7 +463,7 @@ Result:
     #set($query = $services.query.xwql("select comment.author, max(comment.date), count(distinct comment) from Document doc, doc.object('XWiki.XWikiComments') comment where doc.fullName in (:d) group by comment.author"))
     #addContributions($query, $pages)
   #end
-  #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse))
+  #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse, $mathtool.toInteger($limit)))
 
 {{html clean=false}}
     &lt;div class="confluence-contributors"&gt;
@@ -516,7 +520,7 @@ Result:
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
