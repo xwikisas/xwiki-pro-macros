@@ -52,18 +52,18 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.environment.Environment;
 import org.xwiki.model.reference.AttachmentReference;
+import org.xwiki.officeimporter.server.OfficeServerConfiguration;
 
-import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
 
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
- * Utility class used to generate a thumbnail image for office and pdf files.
+ * Generate a thumbnail image for office and PDF files.
  *
  * @version $Id$
- * @since 1.26.20
+ * @since 1.26.22
  */
 @Component(roles = ThumbnailGenerator.class)
 @Singleton
@@ -91,6 +91,12 @@ public class ThumbnailGenerator
 
     @Inject
     private Provider<XWikiContext> wikiContextProvider;
+
+    /**
+     * The office server configuration.
+     */
+    @Inject
+    private OfficeServerConfiguration officeServerConfig;
 
     /**
      * Checks if a thumbnail already exists for the given attachment reference, and if not, attempts to create a
@@ -137,8 +143,8 @@ public class ThumbnailGenerator
     private byte[] getPDFThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
-        XWiki wiki = wikiContext.getWiki();
-        XWikiDocument document = wiki.getDocument(attachmentReference.getDocumentReference(), wikiContext);
+        XWikiDocument document =
+            wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
         return generateThumbnail(new ByteArrayInputStream(is.readAllBytes()), attachmentReference);
     }
@@ -152,12 +158,13 @@ public class ThumbnailGenerator
     private ByteArrayInputStream getPDFContent(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
-        XWiki wiki = wikiContext.getWiki();
-        XWikiDocument document = wiki.getDocument(attachmentReference.getDocumentReference(), wikiContext);
+        XWikiDocument document =
+            wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         try (InputStream is = document.getAttachment(attachmentReference.getName())
             .getContentInputStream(wikiContext); ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
-            OfficeManager manager = ExternalOfficeManager.builder().portNumbers(8100).build();
+            OfficeManager manager =
+                ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts()).build();
             manager.start();
             LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.PDF).execute();
             manager.stop();
@@ -190,8 +197,8 @@ public class ThumbnailGenerator
         throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
-        XWiki wiki = wikiContext.getWiki();
-        XWikiDocument document = wiki.getDocument(attachmentReference.getDocumentReference(), wikiContext);
+        XWikiDocument document =
+            wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
 
         try (InputStream is = document.getAttachment(attachmentReference.getName())
             .getContentInputStream(wikiContext))

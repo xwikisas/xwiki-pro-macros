@@ -40,7 +40,7 @@ import com.xpn.xwiki.internal.event.AttachmentUpdatedEvent;
  * Listens to attachments delete and update events and attempt to remove the existing thumbnails if they exist.
  *
  * @version $Id$
- * @since 1.26.20
+ * @since 1.26.22
  */
 @Component
 @Named(AttachmentModificationListener.HINT)

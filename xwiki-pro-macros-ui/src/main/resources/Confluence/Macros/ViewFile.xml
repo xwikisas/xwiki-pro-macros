@@ -299,6 +299,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         const clonedButton = collaboraButton.clone(true, true);
         clonedButton.addClass('btn btn-default');
         clonedButton.addClass('viewfile-header-button');
+        clonedButton.attr('target', '_blank');
         $(spanContainer).find('.viewFileModal-downloadLink').after(clonedButton);
       }
     }
@@ -340,6 +341,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         const $button = $(data);
         $button.addClass('btn btn-default');
         $button.addClass('viewfile-header-button');
+        $button.attr('target', '_blank');
         $(spanContainer).find('.viewFileModal-downloadLink').after($button);
       });
     }
@@ -364,7 +366,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       const spanContainer = document.createElement("span");
       spanContainer.className = 'viewfile-actions-header';
       downloadLink.download = true;
-      downloadLink.textContent = a.textContent;
+      downloadLink.textContent = " " + $(a).find(".viewFileName").text();
       downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink viewfile-header-button';
       downloadLink.href = a.href;
       spanContainer.appendChild(downloadLink);
@@ -592,7 +594,7 @@ span.viewFileThumbnailCard {
   position: relative;
 }
 
-.macro-thumbnail {
+.viewfile-thumbnail-image {
   display: block;
 }
 
@@ -613,12 +615,10 @@ span.viewFileThumbnailCard {
 
 .overlay-text {
   color: $theme.buttonPrimaryTextColor;
-  font-size: 20px;
+  font-size: 2rem;
   position: absolute;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-align: center;
 }

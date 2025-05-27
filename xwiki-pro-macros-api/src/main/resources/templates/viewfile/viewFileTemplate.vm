@@ -72,9 +72,11 @@
        title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))">
       #if (!$thumbnailBase64.isEmpty())
         <$elem class="image-container">
-          <img class="macro-thumbnail" src="data:image/jpeg;base64,$thumbnailBase64" alt="Thumbnail" />
+          <img class="viewfile-thumbnail-image" src="data:image/jpeg;base64,$thumbnailBase64"
+            alt="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.image.alt'))"/>
           <$elem class="overlay">
-            <span class="overlay-text">View file</span>
+            <span class="overlay-text">$escapetool.xml($services.localization.render(
+              'rendering.macro.viewFile.thumbnail.button.overlay'))</span>
           </$elem>
         </$elem>
       #else
@@ -83,8 +85,10 @@
       <span class="viewFileName">$escapetool.xml($attachmentRef.getName())</span>
     </a>
     <span hidden>
+      ## Add the collabora button as hidden to be able to copy it in the modal popup.
       #tableButtonTemplate()
-      <span hidden data-ooExists="$xwiki.exists('UI.XWikiOnlyOfficeCode')" class='oo-installed-check'></span>
+      ## Add a hidden data to check if the OnlyOffice extension is installed.
+      <span hidden data-ooExists="$xwiki.exists('XWikiOnlyOfficeCode.UI')" class='oo-installed-check'></span>
     </span>
   </$elem>
   {{/html}}
