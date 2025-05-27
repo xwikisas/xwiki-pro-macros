@@ -18,8 +18,6 @@
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
 ##!source.syntax=xwiki/2.1
-{{include reference='Collabora.Code.UIMacros' /}}
-
 {{velocity output='false'}}
 #template('attachment_macros.vm')
 
@@ -84,12 +82,6 @@
       #end
       <span class="viewFileName">$escapetool.xml($attachmentRef.getName())</span>
     </a>
-    <span hidden>
-      ## Add the collabora button as hidden to be able to copy it in the modal popup.
-      #tableButtonTemplate()
-      ## Add a hidden data to check if the OnlyOffice extension is installed.
-      <span hidden data-ooExists="$xwiki.exists('XWikiOnlyOfficeCode.UI')" class='oo-installed-check'></span>
-    </span>
   </$elem>
   {{/html}}
 #end
