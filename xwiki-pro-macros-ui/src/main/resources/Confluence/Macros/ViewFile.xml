@@ -259,7 +259,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       const a = e.target.closest('a');
       const downloadLink = document.createElement("a");
       downloadLink.download = true;
-      downloadLink.textContent = " " + $(a).find(".viewFileName").text();
+      downloadLink.textContent = ' ' + $(a).find('.viewFileName').text();
       downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink';
       downloadLink.href = a.href;
       popup.dialogBox.insertBefore(downloadLink, popup.dialogBox.firstChild)
