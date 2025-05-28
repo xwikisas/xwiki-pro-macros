@@ -422,6 +422,8 @@ rendering.macro.view-file.parameter.width.name=Width
 rendering.macro.view-file.parameter.width.description=The viewer width, accepts values in pixels or in percentage. Default value set at 100%.
 rendering.macro.viewFile.modal.title=Content view
 rendering.macro.viewFile.thumbnail.button.title=View file content
+rendering.macro.viewFile.thumbnail.button.overlay=View file
+rendering.macro.viewFile.thumbnail.button.image.alt=Thumbnail image
 rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.</content>
   <object>
     <name>XWiki.Macros.Translations</name>

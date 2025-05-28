@@ -68,7 +68,18 @@
        download="download"
        #if ($thumbnailStyle == "Button") class="button button-primary" #end
        title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))">
-      $thumbnail
+      #if (!$thumbnailBase64.isEmpty())
+        <$elem class="image-container">
+          <img class="viewfile-thumbnail-image" src="data:image/jpeg;base64,$thumbnailBase64"
+            alt="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.image.alt'))"/>
+          <$elem class="overlay">
+            <span class="overlay-text">$escapetool.xml($services.localization.render(
+              'rendering.macro.viewFile.thumbnail.button.overlay'))</span>
+          </$elem>
+        </$elem>
+      #else
+        $thumbnail
+      #end
       <span class="viewFileName">$escapetool.xml($attachmentRef.getName())</span>
     </a>
   </$elem>
