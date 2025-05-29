@@ -190,197 +190,170 @@ Full Presentation:
 // are shown, a custom implementation was made to dynamically update the displyed attachments in corelation to the
 // selected page parameter. This can be removed after the implementation of https://jira.xwiki.org/browse/XWIKI-22850.
 require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
-  const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
-  const styleObserver = new MutationObserver(function(mutations) {
-    for (const mutation of mutations) {
-      if (mutation.target.style.display === 'none') {
-        styleObserver.disconnect();
-        pageObserver.observe(document.body, { childList: true, subtree: true });
-        return;
-      }
-    }
+  require(['collabora-utils'], function(collabora) {
+    initUI(collabora);
+  }, function (err) {
+    console.warn("collabora-utils not found, continuing without it.");
+    initUI(null);
   });
 
-  const initializeAttachments = function(selectElement) {
-    let scope = "document:";
-    if (selectElement.val() != null) {
-      scope += selectElement.val();
-    }
-    var inputElement = $('input[name="name"]');
-    if (inputElement.length) {
-      let selectize = inputElement.siblings('.selectize-control');
-      if (selectize.length) {
-        selectize.remove();
-        inputElement.removeAttr("class tabindex style").val('');
-        const clone = inputElement.clone().appendTo(inputElement.parent());
-        inputElement.remove();
-        inputElement = clone;
+  function initUI(collabora) {
+    const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
+    const styleObserver = new MutationObserver(function(mutations) {
+      for (const mutation of mutations) {
+        if (mutation.target.style.display === 'none') {
+          styleObserver.disconnect();
+          pageObserver.observe(document.body, { childList: true, subtree: true });
+          return;
+        }
       }
-      const allowUpload = selectElement.val() == xm.document || !selectElement.val();
-      inputElement.suggestAttachments({
-        maxItems: 1,
-        accept: acceptedExtensions,
-        searchScope: scope,
-        uploadAllowed: allowUpload
-      });
-    }
-  }
+    });
 
-  const pageObserver = new MutationObserver(function(mutationsList, observer) {
-    const selectElement = $('select[name="page"]');
-    if (selectElement.length) {
-      const modal = selectElement.closest(".macro-editor-modal")[0];
-      if (modal.style.display !== 'none') {
-        observer.disconnect();
-        styleObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
-        $(selectElement).change(function() {
-          initializeAttachments($(this))
+    const initializeAttachments = function(selectElement) {
+      let scope = "document:";
+      if (selectElement.val() != null) {
+        scope += selectElement.val();
+      }
+      var inputElement = $('input[name="name"]');
+      if (inputElement.length) {
+        let selectize = inputElement.siblings('.selectize-control');
+        if (selectize.length) {
+          selectize.remove();
+          inputElement.removeAttr("class tabindex style").val('');
+          const clone = inputElement.clone().appendTo(inputElement.parent());
+          inputElement.remove();
+          inputElement = clone;
+        }
+        const allowUpload = selectElement.val() == xm.document || !selectElement.val();
+        inputElement.suggestAttachments({
+          maxItems: 1,
+          accept: acceptedExtensions,
+          searchScope: scope,
+          uploadAllowed: allowUpload
         });
-        initializeAttachments(selectElement)
       }
     }
-  });
 
-  pageObserver.observe(document.body, { childList: true, subtree: true });
-
-  const getFileExtension = function(fileName) {
-    return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
-  }
-
-  const collaboraGetExtAcceptedAction = function() {
-    const canDoByExt = {};
-    ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'rtf', 'txt', 'odt', 'ods', 'odp', 'odg'].forEach(function(x) {
-      canDoByExt[x] = 'edit';
+    const pageObserver = new MutationObserver(function(mutationsList, observer) {
+      const selectElement = $('select[name="page"]');
+      if (selectElement.length) {
+        const modal = selectElement.closest(".macro-editor-modal")[0];
+        if (modal.style.display !== 'none') {
+          observer.disconnect();
+          styleObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
+          $(selectElement).change(function() {
+            initializeAttachments($(this))
+          });
+          initializeAttachments(selectElement)
+        }
+      }
     });
-    ['pdf', 'fb2'].forEach(function(x) {
-      canDoByExt[x] = 'view';
-    });
-    return canDoByExt;
-  };
-  const collaboraCanDoByExt = collaboraGetExtAcceptedAction();
 
-  const getCollaboraAccessRights = function(fileName) {
-    const fileType = getFileExtension(fileName);
-    let accessRights = collaboraCanDoByExt[fileType];
-    if (!accessRights) {
-      return false;
+    pageObserver.observe(document.body, { childList: true, subtree: true });
+
+    const getFileExtension = function(fileName) {
+      return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
     }
-    if (!XWiki.hasEdit) {
-      accessRights = 'view';
-    }
-    return accessRights;
-  };
 
-  const getCollaboraActionURL = function(fileName, accessRights, editURL) {
-    const fileParts = fileName.split('@');
-    const queryString = $.param({
-      'document': fileParts[0],
-      'filename': fileParts[1],
-      'action': accessRights,
-      'xpage': 'plain'
-    });
-    editURL += (editURL.indexOf('?') &lt; 0 ? '?' : '&amp;') + queryString;
-    return editURL;
-  };
-
-  const populateCollaboraButton = function(thisButton, fileName, accessRights) {
-    const title = accessRights == 'edit' ? 'Edit using Collabora' : 'View using Collabora';
-    thisButton.attr('title', title);
-    thisButton.find('img').attr('alt', title);
-    thisButton.attr('href', getCollaboraActionURL(fileName, accessRights, thisButton.data('editUrl')));
-  };
-
-  const decorateWithCollaboraButton = function(viewFile, fileRef, spanContainer) {
-    var collaboraButton = $(viewFile).find('a.collaboraEdit');
-    if (collaboraButton.length != 0) {
-      const accessRights = getCollaboraAccessRights(fileRef);
-      if (accessRights) {
-        populateCollaboraButton(collaboraButton, fileRef, accessRights);
+    const decorateWithCollaboraButton = function(viewFile, fileRef, spanContainer) {
+      const fileParts = fileRef.split('@');
+      var collaboraButton = $(viewFile).find('a.collaboraEdit');
+      if (collaboraButton.length != 0) {
+        const accessRights = collabora.getAccessRights(fileParts[1]);
+        if (!accessRights) {
+          return;
+        }
+        collabora.populateCollaboraButton(collaboraButton, fileParts[1], accessRights, fileParts[0]);
         const clonedButton = collaboraButton.clone(true, true);
         clonedButton.addClass('btn btn-default');
         clonedButton.addClass('viewfile-header-button');
+        clonedButton.attr('target', '_blank');
         $(spanContainer).find('.viewFileModal-downloadLink').after(clonedButton);
       }
     }
-  }
 
-  const decorateWithXooButton = function(viewFile, fileRef, spanContainer) {
-    if ($(viewFile).find('span.oo-installed-check').data('ooexists')) {
-      const codeDocument = new XWiki.Document('UI', 'XWikiOnlyOfficeCode');
-      var ooCanDoByExt = { };
-      const editableFormats = ['docx', 'xlsx', 'pptx'];
-      const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht', 'html', 'htm'];
-      editableFormats.forEach(function(x) {
-        ooCanDoByExt[x] = 'edit';
-      });
-      convertibleFormats.forEach(function(x) {
-        ooCanDoByExt[x] = 'convert';
-      });
-      ['pdf', 'djvu', 'fb2', 'epub', 'xps'].forEach(function(x) {
-        ooCanDoByExt[x] = 'view';
-      });
-      var fileType = getFileExtension(fileRef);
-      var whatCanDo = ooCanDoByExt[fileType];
-      if (!whatCanDo) {
+    const decorateWithXooButton = function(viewFile, fileRef, spanContainer) {
+      if ($(viewFile).find('span.oo-installed-check').data('ooexists')) {
+        const codeDocument = new XWiki.Document('UI', 'XWikiOnlyOfficeCode');
+        var ooCanDoByExt = { };
+        const editableFormats = ['docx', 'xlsx', 'pptx'];
+        const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht', 'html', 'htm'];
+        editableFormats.forEach(function(x) {
+          ooCanDoByExt[x] = 'edit';
+        });
+        convertibleFormats.forEach(function(x) {
+          ooCanDoByExt[x] = 'convert';
+        });
+        ['pdf', 'djvu', 'fb2', 'epub', 'xps'].forEach(function(x) {
+          ooCanDoByExt[x] = 'view';
+        });
+        var fileType = getFileExtension(fileRef);
+        var whatCanDo = ooCanDoByExt[fileType];
+        if (!whatCanDo) {
+          return;
+        }
+        if (!XWiki.hasEdit) {
+          whatCanDo = 'view';
+        }
+        const fileParts = fileRef.split('@');
+        var queryString = $.param({
+          'elem': 'oOActionButtons',
+          'document': fileParts[0],
+          'filename': fileParts[1],
+          'whatCanDo': whatCanDo,
+          'asLink': true
+        });
+
+        $.post(new XWiki.Document('UI', 'XWikiOnlyOfficeCode').getURL('get', queryString), function(data) {
+          const $button = $(data);
+          $button.addClass('btn btn-default');
+          $button.addClass('viewfile-header-button');
+          $button.attr('target', '_blank');
+          $(spanContainer).find('.viewFileModal-downloadLink').after($button);
+        });
+      }
+    };
+
+    $(document).on("click", async function (e) {
+      if (("" + document.getElementById("xwikicontent")?.contentEditable) == "true") {
         return;
       }
-      if (!XWiki.hasEdit) {
-        whatCanDo = 'view';
+      const viewFile = e.target?.closest(".viewFileThumbnail");
+      if (viewFile &amp;&amp; viewFile.dataset.preview === 'true') {
+        const fileRef = viewFile.dataset.ref;
+        const popup = new XWiki.widgets.ModalPopup();
+        popup.createDialog();
+        popup.setContent("&lt;span class='fa fa-spinner'&gt;&lt;/span&gt;");
+        popup.dialogBox.classList.add("viewFileModal");
+        popup.dialogBox.style.top = "2.5vh";
+        popup.dialogBox.style.width = "95vw";
+        popup.dialogBox.style.height = "95vh";
+        const a = e.target.closest('a');
+        const downloadLink = document.createElement('a');
+        const spanContainer = document.createElement('span');
+        spanContainer.className = 'viewfile-actions-header';
+        downloadLink.download = true;
+        downloadLink.textContent = ' ' + $(a).find('.viewFileName').text();
+        downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink viewfile-header-button';
+        downloadLink.href = a.href;
+        spanContainer.appendChild(downloadLink);
+        decorateWithXooButton(viewFile, fileRef, spanContainer);
+        if (collabora != null)
+        {
+          decorateWithCollaboraButton(viewFile, fileRef, spanContainer);
+        }
+        $(popup.dialogBox).prepend(spanContainer);
+        popup.showDialog();
+        e.preventDefault();
+        const response = await fetch(XWiki.contextPath + "/wiki/" + XWiki.currentWiki + "/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=" + encodeURIComponent(fileRef));
+        popup.setContent(await response.text());
+        const gallery = popup.dialogBox.querySelector(".gallery");
+        if (gallery) {
+          new XWiki.Gallery(gallery);
+        }
       }
-      const fileParts = fileRef.split('@');
-      var queryString = $.param({
-        'elem': 'oOActionButtons',
-        'document': fileParts[0],
-        'filename': fileParts[1],
-        'whatCanDo': whatCanDo,
-        'asLink': true
-      });
-
-      $.post(new XWiki.Document('UI', 'XWikiOnlyOfficeCode').getURL('get', queryString), function(data) {
-        const $button = $(data);
-        $button.addClass('btn btn-default');
-        $button.addClass('viewfile-header-button');
-        $(spanContainer).find('.viewFileModal-downloadLink').after($button);
-      });
-    }
-  };
-
-  $(document).on("click", async function (e) {
-    if (("" + document.getElementById("xwikicontent")?.contentEditable) == "true") {
-      return;
-    }
-    const viewFile = e.target?.closest(".viewFileThumbnail");
-    if (viewFile &amp;&amp; viewFile.dataset.preview === 'true') {
-      const fileRef = viewFile.dataset.ref;
-      const popup = new XWiki.widgets.ModalPopup();
-      popup.createDialog();
-      popup.setContent("&lt;span class='fa fa-spinner'&gt;&lt;/span&gt;");
-      popup.dialogBox.classList.add("viewFileModal");
-      popup.dialogBox.style.top = "2.5vh";
-      popup.dialogBox.style.width = "95vw";
-      popup.dialogBox.style.height = "95vh";
-      const a = e.target.closest('a');
-      const downloadLink = document.createElement('a');
-      const spanContainer = document.createElement('span');
-      spanContainer.className = 'viewfile-actions-header';
-      downloadLink.download = true;
-      downloadLink.textContent = ' ' + $(a).find('.viewFileName').text();
-      downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink viewfile-header-button';
-      downloadLink.href = a.href;
-      spanContainer.appendChild(downloadLink);
-      decorateWithXooButton(viewFile, fileRef, spanContainer);
-      decorateWithCollaboraButton(viewFile, fileRef, spanContainer);
-      $(popup.dialogBox).prepend(spanContainer);
-      popup.showDialog();
-      e.preventDefault();
-      const response = await fetch(XWiki.contextPath + "/wiki/" + XWiki.currentWiki + "/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=" + encodeURIComponent(fileRef));
-      popup.setContent(await response.text());
-      const gallery = popup.dialogBox.querySelector(".gallery");
-      if (gallery) {
-        new XWiki.Gallery(gallery);
-      }
-    }
-  });
+    });
+  }
 });</code>
     </property>
     <property>
