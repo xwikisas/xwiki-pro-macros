@@ -272,7 +272,8 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 ## only for the results we are sure to display
 #macro (fetchResults_resolveProperties $results)
   #foreach ($result in $results)
-    #set ($documentFullname = "${result.wiki}:${result.fullname}")
+    #set ($documentName = $result.name.replaceAll('\.', '\\\.'))
+    #set ($documentFullname = "${result.wiki}:${result.space}.${documentName}")
     #set ($document = $xwiki.getDocument($documentFullname))
     #if ($result.type.equals('page') || $result.type.equals('blogpost'))
       #set ($discard = $result.put('href', $document.getURL()))
