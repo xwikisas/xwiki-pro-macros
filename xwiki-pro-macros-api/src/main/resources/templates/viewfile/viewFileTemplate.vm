@@ -147,12 +147,20 @@
     #end
     {{/html}}
   #else
-    #continueExecutingMacro##
+    #set ($attachmentRef = $services.model.resolveAttachment($unescapedFilename))
+    #if ($xwiki.checkAccess($attachmentRef, 'view'))
+      #continueExecutingMacro##
+    #else
+    {{html clean=false}}
+      <span class='box warningmessage'>
+        $escapetool.xml($services.localization.render('rendering.macro.viewFile.norights'))
+      </span>
+    {{/html}}
+    #end
   #end
 #end
 
 #macro (continueExecutingMacro)
-  #set ($attachmentRef = $services.model.resolveAttachment($unescapedFilename))
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.ViewFile'))
   #set ($extension = $attachmentRef.getName().substring($attachmentRef.getName().lastIndexOf('.') + 1).toLowerCase())
   #set ($width = $params.getWidth())

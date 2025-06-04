@@ -256,14 +256,16 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
     }
 
     const decorateWithCollaboraButton = function(viewFile, fileRef, spanContainer) {
-      const fileParts = fileRef.split('@');
+      const attachment = XWiki.Model.resolve(fileRef, XWiki.EntityType.ATTACHMENT);
+      var fileName = attachment.getName();
+      var fileParent = attachment.parent.toString();
       var collaboraButton = $(viewFile).find('a.collaboraEdit');
       if (collaboraButton.length != 0) {
-        const accessRights = collabora.getAccessRights(fileParts[1]);
+        const accessRights = collabora.getAccessRights(fileName);
         if (!accessRights) {
           return;
         }
-        collabora.populateCollaboraButton(collaboraButton, fileParts[1], accessRights, fileParts[0]);
+        collabora.populateCollaboraButton(collaboraButton, fileName, accessRights, fileParent);
         const clonedButton = collaboraButton.clone(true, true);
         clonedButton.addClass('btn btn-default');
         clonedButton.addClass('viewfile-header-button');
@@ -272,34 +274,39 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     }
 
+    const determineOOAction = function(fileRef) {
+      var ooCanDoByExt = { };
+      const editableFormats = ['docx', 'xlsx', 'pptx'];
+      const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht', 'html', 'htm'];
+      editableFormats.forEach(function(x) {
+        ooCanDoByExt[x] = 'edit';
+      });
+      convertibleFormats.forEach(function(x) {
+        ooCanDoByExt[x] = 'convert';
+      });
+      ['pdf', 'djvu', 'fb2', 'epub', 'xps'].forEach(function(x) {
+        ooCanDoByExt[x] = 'view';
+      });
+      var fileType = getFileExtension(fileRef);
+      return ooCanDoByExt[fileType];
+    }
+
     const decorateWithXooButton = function(viewFile, fileRef, spanContainer) {
       if ($(viewFile).find('span.oo-installed-check').data('ooexists')) {
-        const codeDocument = new XWiki.Document('UI', 'XWikiOnlyOfficeCode');
-        var ooCanDoByExt = { };
-        const editableFormats = ['docx', 'xlsx', 'pptx'];
-        const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht', 'html', 'htm'];
-        editableFormats.forEach(function(x) {
-          ooCanDoByExt[x] = 'edit';
-        });
-        convertibleFormats.forEach(function(x) {
-          ooCanDoByExt[x] = 'convert';
-        });
-        ['pdf', 'djvu', 'fb2', 'epub', 'xps'].forEach(function(x) {
-          ooCanDoByExt[x] = 'view';
-        });
-        var fileType = getFileExtension(fileRef);
-        var whatCanDo = ooCanDoByExt[fileType];
+        var whatCanDo = determineOOAction(fileRef);
         if (!whatCanDo) {
           return;
         }
         if (!XWiki.hasEdit) {
           whatCanDo = 'view';
         }
-        const fileParts = fileRef.split('@');
+        const attachment = XWiki.Model.resolve(fileRef, XWiki.EntityType.ATTACHMENT);
+        var fileName = attachment.getName();
+        var fileParent = attachment.parent.toString();
         var queryString = $.param({
           'elem': 'oOActionButtons',
-          'document': fileParts[0],
-          'filename': fileParts[1],
+          'document': fileParent,
+          'filename': fileName,
           'whatCanDo': whatCanDo,
           'asLink': true
         });
