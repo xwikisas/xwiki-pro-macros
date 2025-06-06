@@ -193,7 +193,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
   require(['collabora-utils'], function(collabora) {
     initUI(collabora);
   }, function (err) {
-    console.warn("collabora-utils not found, continuing without it.");
+    console.warn('collabora-utils not found, continuing without it.');
     initUI(null);
   });
 
@@ -232,7 +232,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
           uploadAllowed: allowUpload
         });
       }
-    }
+    };
 
     const pageObserver = new MutationObserver(function(mutationsList, observer) {
       const selectElement = $('select[name="page"]');
@@ -253,7 +253,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
 
     const getFileExtension = function(fileName) {
       return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
-    }
+    };
 
     const decorateWithCollaboraButton = function(viewFile, fileRef, spanContainer) {
       const attachment = XWiki.Model.resolve(fileRef, XWiki.EntityType.ATTACHMENT);
@@ -271,7 +271,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         clonedButton.attr('target', '_blank');
         $(spanContainer).find('.viewFileModal-downloadLink').after(clonedButton);
       }
-    }
+    };
 
     // This function has been taken from OnlyOffice Connector Application, as it's being used to determine what
     // action the user can take on a file depending on the file extension.
@@ -291,7 +291,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       });
       var fileType = getFileExtension(fileRef);
       return ooCanDoByExt[fileType];
-    }
+    };
 
     const decorateWithXooButton = function(viewFile, fileRef, spanContainer) {
       if ($(viewFile).find('span.oo-installed-check').data('ooexists')) {
@@ -345,14 +345,14 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         downloadLink.href = a.href;
         spanContainer.appendChild(downloadLink);
         decorateWithXooButton(viewFile, fileRef, spanContainer);
-        if (collabora != null)
-        {
+        if (collabora != null) {
           decorateWithCollaboraButton(viewFile, fileRef, spanContainer);
         }
         $(popup.dialogBox).prepend(spanContainer);
         popup.showDialog();
         e.preventDefault();
-        const response = await fetch(XWiki.contextPath + "/wiki/" + XWiki.currentWiki + "/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=" + encodeURIComponent(fileRef));
+        const response = await fetch(XWiki.contextPath + '/wiki/' + XWiki.currentWiki +
+          '/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=' + encodeURIComponent(fileRef));
         popup.setContent(await response.text());
         const gallery = popup.dialogBox.querySelector(".gallery");
         if (gallery) {
