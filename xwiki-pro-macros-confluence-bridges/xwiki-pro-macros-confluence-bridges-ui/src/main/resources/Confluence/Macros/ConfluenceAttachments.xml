@@ -167,7 +167,7 @@ require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function
 
   // Trigger Collabora integration.
   $(document).on('xwiki:livedata:entriesUpdated', function(){
-    $(document).trigger("xwiki:collabora:addButtons");
+    $(document).trigger('xwiki:collabora:addButtons');
   })
 
   var enhanceUploadInputs = function(liveDataElems) {
