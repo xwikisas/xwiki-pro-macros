@@ -165,7 +165,7 @@ Additionally, the {{{ "created date" }}} value of the {{{ sortBy }}} property be
 
 require(['jquery', 'xwiki-l10n!xwiki-confluence-attachments-messages'], function($, l10n) {
 
-  // Trigger collabora integration.
+  // Trigger Collabora integration.
   $(document).on('xwiki:livedata:entriesUpdated', function(){
     $(document).trigger("xwiki:collabora:addButtons");
   })
