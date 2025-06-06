@@ -424,7 +424,8 @@ rendering.macro.viewFile.modal.title=Content view
 rendering.macro.viewFile.thumbnail.button.title=View file content
 rendering.macro.viewFile.thumbnail.button.overlay=View file
 rendering.macro.viewFile.thumbnail.button.image.alt=Thumbnail image
-rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.</content>
+rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.
+rendering.macro.viewFile.norights=Missing view rights for file</content>
   <object>
     <name>XWiki.Macros.Translations</name>
     <number>0</number>
