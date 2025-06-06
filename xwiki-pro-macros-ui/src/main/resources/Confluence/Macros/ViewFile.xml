@@ -258,14 +258,13 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
     const decorateWithCollaboraButton = function(viewFile, fileRef, spanContainer) {
       const attachment = XWiki.Model.resolve(fileRef, XWiki.EntityType.ATTACHMENT);
       var fileName = attachment.getName();
-      var fileParent = attachment.parent.toString();
       var collaboraButton = $(viewFile).find('a.collaboraEdit');
       if (collaboraButton.length != 0) {
         const accessRights = collabora.getAccessRights(fileName);
         if (!accessRights) {
           return;
         }
-        collabora.populateCollaboraButton(collaboraButton, fileName, accessRights, fileParent);
+        collabora.populateCollaboraButton(collaboraButton, fileName, accessRights, XWiki.Model.serialize(attachment.parent));
         const clonedButton = collaboraButton.clone(true, true);
         clonedButton.addClass('btn btn-default');
         clonedButton.addClass('viewfile-header-button');
@@ -274,10 +273,13 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     }
 
+    // This function has been taken from OnlyOffice Connector Application, as it's being used to determine what
+    // action the user can take on a file depending on the file extension.
     const determineOOAction = function(fileRef) {
       var ooCanDoByExt = { };
       const editableFormats = ['docx', 'xlsx', 'pptx'];
-      const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht', 'html', 'htm'];
+      const convertibleFormats = ['odt', 'ods', 'odp', 'xls', 'csv', 'doc', 'ppt', 'pps', 'ppsx', 'rtf', 'txt', 'mht',
+        'html', 'htm'];
       editableFormats.forEach(function(x) {
         ooCanDoByExt[x] = 'edit';
       });
@@ -301,12 +303,10 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
           whatCanDo = 'view';
         }
         const attachment = XWiki.Model.resolve(fileRef, XWiki.EntityType.ATTACHMENT);
-        var fileName = attachment.getName();
-        var fileParent = attachment.parent.toString();
         var queryString = $.param({
           'elem': 'oOActionButtons',
-          'document': fileParent,
-          'filename': fileName,
+          'document': XWiki.Model.serialize(attachment.parent),
+          'filename': attachment.getName(),
           'whatCanDo': whatCanDo,
           'asLink': true
         });
