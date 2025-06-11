@@ -20,7 +20,6 @@
 package com.xwiki.macros.viewfile.internal;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -52,6 +51,7 @@ import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.environment.Environment;
 import org.xwiki.model.reference.AttachmentReference;
+import org.xwiki.officeimporter.server.OfficeServer;
 import org.xwiki.officeimporter.server.OfficeServerConfiguration;
 
 import com.xpn.xwiki.XWikiContext;
@@ -98,6 +98,9 @@ public class ThumbnailGenerator
     @Inject
     private OfficeServerConfiguration officeServerConfig;
 
+    @Inject
+    private OfficeServer officeServer;
+
     /**
      * Checks if a thumbnail already exists for the given attachment reference, and if not, attempts to create a
      * thumbnail image and returns the byte array for it.
@@ -109,14 +112,19 @@ public class ThumbnailGenerator
     public byte[] getThumbnailData(AttachmentReference attachmentReference)
     {
         try {
-            File tempDir = new File(environment.getTemporaryDirectory(),
-                String.format(THUMBNAILS_PATH, attachmentReference.getDocumentReference().toString()));
+            if (isOfficeServerConnected()) {
+                File tempDir = new File(environment.getTemporaryDirectory(),
+                    String.format(THUMBNAILS_PATH, attachmentReference.getDocumentReference().toString()));
 
-            File thumbnail = new File(tempDir, attachmentReference.getName() + JPG_EXTENSION);
-            if (!thumbnail.exists()) {
-                return generateAndGetThumbnailBytes(attachmentReference);
+                File thumbnail = new File(tempDir, attachmentReference.getName() + JPG_EXTENSION);
+                if (!thumbnail.exists()) {
+                    return generateAndGetThumbnailBytes(attachmentReference);
+                } else {
+                    return Files.readAllBytes(thumbnail.toPath());
+                }
             } else {
-                return Files.readAllBytes(thumbnail.toPath());
+                logger.warn("Unable to generate thumbnail byte data. Office server is not connected.");
+                return new byte[0];
             }
         } catch (Exception e) {
             logger.error("There was an error while attempting to get the thumbnail byte data. Root cause is: [{}]",
@@ -160,8 +168,8 @@ public class ThumbnailGenerator
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
-        try (InputStream is = document.getAttachment(attachmentReference.getName())
-            .getContentInputStream(wikiContext); ByteArrayOutputStream baos = new ByteArrayOutputStream())
+        try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
             OfficeManager manager =
                 ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts()).build();
@@ -220,11 +228,12 @@ public class ThumbnailGenerator
     private byte[] getSlideThumbnail(HSLFSlideShow ppt, AttachmentReference attachmentReference) throws IOException
     {
         HSLFSlide slide = ppt.getSlides().get(0);
-        Dimension pageSize = ppt.getPageSize();
-        BufferedImage img = new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB);
+        int width = ppt.getPageSize().width;
+        int height = ppt.getPageSize().height;
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = img.createGraphics();
         graphics.setPaint(Color.white);
-        graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
+        graphics.fill(new Rectangle2D.Float(0, 0, width, height));
         slide.draw(graphics);
 
         return getSlideBytes(attachmentReference, img);
@@ -233,11 +242,12 @@ public class ThumbnailGenerator
     private byte[] getSlideThumbnail(XMLSlideShow ppt, AttachmentReference attachmentReference) throws IOException
     {
         XSLFSlide slide = ppt.getSlides().get(0);
-        Dimension pageSize = ppt.getPageSize();
-        BufferedImage img = new BufferedImage(pageSize.width, pageSize.height, BufferedImage.TYPE_INT_RGB);
+        int width = ppt.getPageSize().width;
+        int height = ppt.getPageSize().height;
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = img.createGraphics();
         graphics.setPaint(Color.white);
-        graphics.fill(new Rectangle2D.Float(0, 0, pageSize.width, pageSize.height));
+        graphics.fill(new Rectangle2D.Float(0, 0, width, height));
         slide.draw(graphics);
 
         return getSlideBytes(attachmentReference, img);
@@ -261,5 +271,11 @@ public class ThumbnailGenerator
     private String getExtension(String fileName)
     {
         return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+    }
+
+    private boolean isOfficeServerConnected()
+    {
+        this.officeServer.refreshState();
+        return this.officeServer.getState() == OfficeServer.ServerState.CONNECTED;
     }
 }
