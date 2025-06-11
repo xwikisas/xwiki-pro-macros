@@ -93,32 +93,34 @@
       ## Parameter for the drawio macro
       #set($diagramName = $xcontext.macro.params.diagramName)
     #end
+    ## By default the diagramDocument should be the current doc
+    #set ($diagramDocument = $doc)
     ## Get original document
     #set ($originalDoc = $xcontext.macro.params.originalDocumentRef)
     #if ("$!originalDoc" != '')
-      #set ($doc = $xwiki.getDocument($originalDoc))
+      #set ($diagramDocument = $xwiki.getDocument($originalDoc))
     #end
     ## Used for gliffy macros that include a diagram from another page.
     #set ($pageID = $xcontext.macro.params.pageid)
     #if ("$!pageID" != '' &amp;&amp; "$!originalDoc" == '')
-      #set ($doc = $xwiki.getDocument($services.gliffyscript.getReferenceFromConfluenceID($pageID)))
-      #set ($originalDoc = $doc)
+      #set ($diagramDocument = $xwiki.getDocument($services.gliffyscript.getReferenceFromConfluenceID($pageID)))
+      #set ($originalDoc = $diagramDocument)
     #end
     ## "Constants"
     #set($previewImageName = "${diagramName}.png")
-    #set($previewImage = $doc.getAttachment($previewImageName))
+    #set($previewImage = $diagramDocument.getAttachment($previewImageName))
     #if (!$previewImage)
       ## In some cases, the drawio file name is not the same as the PNG one.
       #set($previewImageName = $xcontext.macro.params.tempPreview)
-      #set($previewImage = $doc.getAttachment($previewImageName))
+      #set($previewImage = $diagramDocument.getAttachment($previewImageName))
     #end
     ## Variables
     #set($displayDiagram = true)
     #set($diagram = $NULL)
     ##
     ## Check if the diagram page exists
-    #set($docReferenceSerialized = $services.model.serialize($doc.documentReference, 'local'))
-    #set($diagrams = $services.query.xwql('from doc.object(Confluence.Macros.DiagramClass) as diagramObj where diagramObj.page = :page and diagramObj.diagramName = :diagramName').bindValue('page', $docReferenceSerialized).bindValue('diagramName', "$!diagramName").setLimit(1).execute())
+    #set($diagramDocumentReferenceSerialized = $services.model.serialize($diagramDocument.documentReference, 'local'))
+    #set($diagrams = $services.query.xwql('from doc.object(Confluence.Macros.DiagramClass) as diagramObj where diagramObj.page = :page and diagramObj.diagramName = :diagramName').bindValue('page', $diagramDocumentReferenceSerialized).bindValue('diagramName', "$!diagramName").setLimit(1).execute())
     #if($diagrams.size() &gt; 0)
       #set($diagram = $diagrams.get(0))
     #end
@@ -155,14 +157,14 @@
           #end
           ##
           ## Display a button allowing the user to create an XWiki diagram
-          #if ($services.security.authorization.hasAccess('edit', $doc.documentReference) &amp;&amp; $xcontext.action != 'export')
+          #if ($services.security.authorization.hasAccess('edit', $diagramDocument.documentReference) &amp;&amp; $xcontext.action != 'export')
             (% class="caption" %)(((
               {{translation key='confluencediagram.create'/}}
 
               {{html clean=false}}
                 &lt;form action="" method="post"&gt;
                   &lt;input name="action" value="createDiagram" type="hidden" /&gt;
-                  &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($docReferenceSerialized)" type="hidden" /&gt;
+                  &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($diagramDocumentReferenceSerialized)" type="hidden" /&gt;
                   &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" /&gt;
                   &lt;input name="diagramPNGName" class="create-diagram-png-name" value="$escapetool.xml($previewImageName)" type="hidden" /&gt;
                   &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$escapetool.xml($services.localization.render('confluencediagram.create.confirm'))&lt;/button&gt;
@@ -171,6 +173,12 @@
             )))
           )))
         #end
+      #else
+        ##If the display fails then show a warning.
+        #set ($syntax = $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))
+        #set ($message = $services.localization.render('confluencediagram.warning.notfound'))
+
+        {{warning}}$message{{/warning}}
       #end
     )))
   #end

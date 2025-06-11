@@ -54,6 +54,7 @@ confluencediagram.modal.btn.close=Close
 confluencediagram.modal.btn.confirm=Confirm
 confluencediagram.delete.success=The editable diagram was successfully deleted.
 confluencediagram.delete.error=The diagram could not be deleted.
+confluencediagram.warning.notfound=The diagram was not found. Please check that the reference is valid.
 confluence.nonefound=None found
 
 ## Section macro
