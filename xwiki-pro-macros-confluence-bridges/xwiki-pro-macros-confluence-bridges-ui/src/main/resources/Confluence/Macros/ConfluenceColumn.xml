@@ -152,7 +152,6 @@ This macro is a bridge for the Confluence Column macro. This macro is used in co
     </property>
     <property>
       <code>.macro-column {
-  display: table-cell;
   padding: 5px;
 }</code>
     </property>
@@ -392,6 +391,8 @@ This macro is a bridge for the Confluence Column macro. This macro is used in co
   #if ("$!xcontext.macro.params.width" != '')
     #set ($escapedWidth = $services.rendering.escape($xcontext.macro.params.width, 'xwiki/2.1'))
     #set ($style = "style='width: $escapedWidth'")
+  #else
+    #set ($style = "style='width:100%'")
   #end
   (% class="macro-column" data-width="$escapedWidth" $style %)(((
     {{wikimacrocontent /}}
