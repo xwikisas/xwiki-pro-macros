@@ -41,11 +41,14 @@ import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
+import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.MacroId;
 import org.xwiki.rendering.macro.MacroLookupException;
@@ -98,6 +101,9 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
 
     @Inject
     private Logger logger;
+
+    @Inject
+    private EntityReferenceSerializer<String> entityReferenceSerializer;
 
     /**
      * Constructs an instance of ExcerptIncludeMacro. Initializes the macro descriptor with a specific name,
@@ -162,8 +168,17 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         }
 
         MacroBlock panel = new MacroBlock("panel", panelParameters, excerptContent, false);
+        String source = this.entityReferenceSerializer.serialize(reference);
+        MetaData extraMeta = new MetaData();
+        extraMeta.addMetaData(MetaData.SOURCE, source);
+        extraMeta.addMetaData(MetaData.BASE, source);
+        // We wrap the MacroBlock panel with the metadata to correctly render the relative references.
+        MetaDataBlock metadataContent = new MetaDataBlock(
+            Collections.<Block>singletonList(panel),
+            extraMeta
+        );
 
-        return Collections.singletonList(panel);
+        return Collections.singletonList(metadataContent);
     }
 
     private XDOM getExcerpt(String name, XWikiDocument document, DocumentReference reference,
@@ -172,6 +187,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
         displayParameters.setContentTransformed(true);
         displayParameters.setExecutionContextIsolated(true);
+        displayParameters.setTransformationContextIsolated(true);
         XDOM displayContent = getExcerptFromXDOM(name, document.getXDOM(), document, reference, context,
                 displayParameters, inline);
 
