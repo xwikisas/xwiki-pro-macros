@@ -56,7 +56,7 @@ public class GliffyScriptService implements ScriptService
     public DocumentReference getReferenceFromConfluenceID(String id) throws ConfluenceResolverException
     {
         if (StringUtils.isNumeric(id)) {
-            EntityReference entityReference = confluencePageIdResolver.getDocumentById(Integer.valueOf(id));
+            EntityReference entityReference = confluencePageIdResolver.getDocumentById(Long.valueOf(id));
             if (entityReference == null) {
                 return null;
             }
