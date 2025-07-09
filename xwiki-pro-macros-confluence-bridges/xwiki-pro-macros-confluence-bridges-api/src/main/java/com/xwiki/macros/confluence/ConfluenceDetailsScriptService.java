@@ -57,14 +57,15 @@ import org.xwiki.stability.Unstable;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
+import com.xwiki.macros.confluence.internal.DetailsMacroExtractor;
 
 import static com.xwiki.macros.confluence.internal.XDOMUtils.getMacroXDOM;
-import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
  * Confluence details script services. Mostly to implement the detailssummary macro.
- * @since 1.19.0
+ *
  * @version $Id$
+ * @since 1.19.0
  */
 @Component
 @Singleton
@@ -73,9 +74,10 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 public class ConfluenceDetailsScriptService implements ScriptService
 {
     private static final BlockMatcher CELL_MATCHER = new ClassBlockMatcher(TableCellBlock.class);
+
     private static final BlockMatcher ROW_MATCHER = new ClassBlockMatcher(TableRowBlock.class);
+
     private static final ClassBlockMatcher MACRO_MATCHER = new ClassBlockMatcher(MacroBlock.class);
-    private static final String ID = "id";
 
     @Inject
     private Provider<XWikiContext> contextProvider;
@@ -97,36 +99,15 @@ public class ConfluenceDetailsScriptService implements ScriptService
     @Inject
     private Logger logger;
 
-
-    private List<XDOM> findDetailsMacros(XDOM xdom, String syntaxId, String id)
-    {
-        List<XDOM> results = new ArrayList<>(1);
-        List<MacroBlock> macros = xdom.getBlocks(MACRO_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
-        for (MacroBlock macroBlock : macros) {
-            try {
-                if (StringUtils.equals("confluence_details", macroBlock.getId())) {
-                    if (StringUtils.equals(id, defaultString(macroBlock.getParameter(ID)))) {
-                        results.add(getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId));
-                    }
-                } else {
-                    XDOM macroXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
-                    if (macroXDOM != null) {
-                        results.addAll(findDetailsMacros(macroXDOM, syntaxId, id));
-                    }
-                }
-            } catch (ComponentLookupException e) {
-                logger.error("Component lookup error trying to find the confluence_details macro", e);
-            }
-        }
-        return results;
-    }
+    @Inject
+    private DetailsMacroExtractor detailsMacroExtractor;
 
     /**
-     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter
-     *          and the results
      * @param id the id of the details macros to consider
      * @param headingsParam the headings confluence parameter
      * @param results the results of the CQL query of the detailsummary macro
+     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter and
+     *     the results
      */
     public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results)
     {
@@ -134,21 +115,20 @@ public class ConfluenceDetailsScriptService implements ScriptService
     }
 
     /**
-     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter
-     *          and the results
      * @param id the id of the details macros to consider
      * @param headingsParam the headings confluence parameter
      * @param results the results of the CQL query of the detailsummary macro
      * @param sortBy the column to sort against
      * @param reverseSort whether to reverse the sort
+     * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter and
+     *     the results
      */
     public List<List<String>> getDetails(String id, String headingsParam, List<Map<String, Object>> results,
         String sortBy, boolean reverseSort)
     {
         List<String> headings = parseHeadings(headingsParam);
         List<String> columns = headings.isEmpty() ? new ArrayList<>() : headings;
-        List<String> columnsLower = headings.isEmpty()
-            ? new ArrayList<>()
+        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>()
             : headings.stream().map(String::toLowerCase).collect(Collectors.toList());
 
         List<List<String>> rows = new ArrayList<>(results.size() + 1);
@@ -164,7 +144,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 continue;
             }
 
-            List<XDOM> details = findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(),
+            List<XDOM> details = detailsMacroExtractor.findDetailsMacros(doc.getXDOM(), doc.getSyntax().toIdString(),
                 StringUtils.defaultString(id));
             if (CollectionUtils.isEmpty(details)) {
                 continue;
@@ -255,9 +235,8 @@ public class ConfluenceDetailsScriptService implements ScriptService
         List<String> columnsLower, Syntax syntax)
     {
         List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
-        List<String> row = new ArrayList<>(1 + (headings.isEmpty()
-            ? Math.max(columns.size(), xdomRows.size())
-            : headings.size()));
+        List<String> row =
+            new ArrayList<>(1 + (headings.isEmpty() ? Math.max(columns.size(), xdomRows.size()) : headings.size()));
         for (TableRowBlock xdomRow : xdomRows) {
             List<TableCellBlock> cells = xdomRow.getBlocks(CELL_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
             if (cells.size() < 2) {
