@@ -328,7 +328,11 @@ Bridges are there for compatibility with content migrated from Confluence and t
             #if (!$title)
               #set ($title = $cell)
             #end
-            | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}$cell#end ))) ##
+            | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}##
+            {{context document="$row.get(0)" restricted="true"}}##
+              $cell##
+            {{/context}}
+            #end )))##
           #end##
           #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
           #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
