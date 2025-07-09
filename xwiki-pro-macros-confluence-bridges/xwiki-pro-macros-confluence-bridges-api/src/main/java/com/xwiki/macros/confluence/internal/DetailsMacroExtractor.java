@@ -94,7 +94,11 @@ public class DetailsMacroExtractor
         for (MacroBlock macroBlock : macros) {
             try {
                 if (StringUtils.equals("confluence_details", macroBlock.getId())) {
-                    if (StringUtils.equals(id, defaultString(macroBlock.getParameter(ID)))) {
+                    // If the id is blank we should display all the details macro, otherwise the id of the details macro
+                    // should match the id given as a parameter.
+                    if (!StringUtils.isNotBlank(id)
+                        || StringUtils.equals(id, defaultString(macroBlock.getParameter(ID))))
+                    {
                         XDOM detailXDOM = getMacroXDOM(componentManagerProvider.get(), macroBlock, syntaxId);
                         processImageBlocks(detailXDOM.getBlocks(new ClassBlockMatcher(ImageBlock.class),
                             Block.Axes.DESCENDANT_OR_SELF), sourceDocument);
