@@ -57,6 +57,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             overrides = {
                 "features=org.bouncycastle:bcprov-jdk15on"
             }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcpkix-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcpkix-jdk15on"
+            }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcmail-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcmail-jdk15on"
+            }
         )
     })
 public class GenericMacrosIT
