@@ -49,6 +49,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             overrides = {
                 "features=com.google.code.findbugs:annotations"
             }
+        ),
+        // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
+        // parent upgrade if this is still needed.
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcprov-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcprov-jdk15on"
+            }
         )
     })
 public class GenericMacrosIT
