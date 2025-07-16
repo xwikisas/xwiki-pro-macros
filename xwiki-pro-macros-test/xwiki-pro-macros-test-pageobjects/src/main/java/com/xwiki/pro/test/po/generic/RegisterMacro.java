@@ -24,6 +24,12 @@ import java.util.List;
 
 import org.xwiki.test.ui.po.editor.EditPage;
 
+/**
+ * Helps registering broken rendering macros tht are stored in XWiki pages.
+ *
+ * @version $Id$
+ * @since 1.27.2
+ */
 public class RegisterMacro extends EditPage
 {
     /**

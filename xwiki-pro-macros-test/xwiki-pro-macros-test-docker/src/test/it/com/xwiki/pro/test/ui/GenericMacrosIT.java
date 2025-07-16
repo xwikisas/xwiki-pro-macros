@@ -89,7 +89,12 @@ public class GenericMacrosIT
 
     private void registerMacros(){
         RegisterMacro register = new RegisterMacro();
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Button");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"MicrosoftStream");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Panel");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Taglist");
+
     }
 
     @BeforeAll
