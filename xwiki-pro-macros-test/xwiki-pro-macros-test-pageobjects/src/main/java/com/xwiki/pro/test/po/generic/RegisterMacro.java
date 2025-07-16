@@ -26,10 +26,13 @@ import org.xwiki.test.ui.po.editor.EditPage;
 
 public class RegisterMacro extends EditPage
 {
+    /**
+     * Register a macro by resaving the document.
+     * @param space space of the document
+     * @param pageName name of the document
+     */
     public void registerMacro(List<String> space, String pageName) {
-        // Enter in edit mode directly to avoid
         getUtil().gotoPage(space, pageName, "edit", Collections.singletonMap("force", 1));
-        // Save the page to register the macro.
         clickSaveAndView();
     }
 }
