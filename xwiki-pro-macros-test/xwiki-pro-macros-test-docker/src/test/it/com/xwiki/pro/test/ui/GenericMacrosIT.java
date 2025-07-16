@@ -73,8 +73,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
                 "features=org.bouncycastle:bcmail-jdk15on"
             }
         )
-    }
-)
+    })
 public class GenericMacrosIT
 {
     private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
