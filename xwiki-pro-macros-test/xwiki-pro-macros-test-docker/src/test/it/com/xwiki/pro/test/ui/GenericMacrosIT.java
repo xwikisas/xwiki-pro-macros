@@ -19,6 +19,8 @@
  */
 package com.xwiki.pro.test.ui;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
+import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +73,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
                 "features=org.bouncycastle:bcmail-jdk15on"
             }
         )
-    })
+    }
+)
 public class GenericMacrosIT
 {
     private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
@@ -81,6 +85,14 @@ public class GenericMacrosIT
         + "\n"
         + "{{team tag=\"nonExistentTag\" /}}";
 
+
+    private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
+
+    private void registerMacros(){
+        RegisterMacro register = new RegisterMacro();
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
+    }
+
     @BeforeAll
     void setup(TestUtils setup)
     {
@@ -90,6 +102,8 @@ public class GenericMacrosIT
         setup.createUser("UserTest3", "UserTest", "");
 
         setup.deletePage(pageWithTeamMacros);
+        registerMacros();
+
     }
 
     @Test
