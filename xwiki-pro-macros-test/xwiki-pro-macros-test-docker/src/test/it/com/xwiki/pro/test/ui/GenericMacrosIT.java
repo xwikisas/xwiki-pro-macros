@@ -19,6 +19,7 @@
  */
 package com.xwiki.pro.test.ui;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -31,10 +32,17 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
+import com.xwiki.pro.test.po.generic.ButtonMacroPage;
+import com.xwiki.pro.test.po.generic.ExpandMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
+import com.xwiki.pro.test.po.generic.StatusMacroPage;
+import com.xwiki.pro.test.po.generic.TagListMacroPage;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * UI tests for the generic Pro Macros.
@@ -44,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @UITest(
     properties = {
-    "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
+        "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
     },
     extensionOverrides = {
         @ExtensionOverride(
@@ -78,23 +86,71 @@ public class GenericMacrosIT
 {
     private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
 
+    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
+
+    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
+
+    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
+
+    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
+
+    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
+
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
         + "{{team tag=\"testTag\" /}}\n"
         + "\n"
         + "{{team tag=\"nonExistentTag\" /}}";
 
+    private static final String PAGE_WITH_BUTTON_MACROS_CONTENT =
+        "{{button id=\"testbtn1\" label=\"test1\" url=\"https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting\" color=\"#ff66ff\" newTab=\"true\" icon=\"check\" width=\"100px\"/}}\n"
+            + "\n"
+            + "{{button id=\"testbtn2\" label=\"test2\" url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"DANGER\" width=\"60%\"/}}\n"
+            + "{{button id=\"testbtn3\" label=\"test3\" color=\"#ff66ff\"  url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"SUCCESS\" icon=\"check\"  width=\"80px\"/}}\n"
+            + "{{button id=\"testbtn4\" label=\"test4\" url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"WARNING\" color=\"#ff66ff\" width=\"80px\"/}}\n"
+            + "{{button id=\"testbtn5\" label=\"test5\" url=\"https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting\" icon=\"page\"  newTab=\"true\"  width=\"100px\"/}}\n";
+
+    private static final String PAGE_WITH_STATUS_MACROS_CONTENT = "{{status title =\"test1\" /}}"
+        + "\n"
+        + "{{status title =\"test2\" colour =\"Yellow\" subtle =\"true\"/}}"
+        + "\n"
+        + "{{status title =\"test3\" colour =\"Yellow\" subtle=\"false\"/}}";
+
+    private static final String PAGE_WITH_TAGLIST_MACROS_CONTENT = "{{tagList /}}\n"
+        + "\n"
+        + "{{tagList excludedTags=\"beta\"/}}\n"
+        + "\n"
+        + "{{tagList spaces =\"Main,XWiki\" excludedTags=\"gamma\"/}}\n";
+
+    private static final String PAGE_WITH_EXPAND_MACROS_CONTENT =
+        "{{expand title=\"ExpandTest1\" expanded=\"true\"}}\n"
+            + "test0\n"
+            + "test1\n"
+            + "image:example.jpg\"\n"
+            + "\n"
+            + "{{expand title=\"ExpandTest2\"}}\n"
+            + "test0\n"
+            + "test1\n"
+            + "\n"
+            + "{{/expand}}\n"
+            + "\n"
+            + "test2\n"
+            + "\n"
+            + "{{/expand}}";
 
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
-    private void registerMacros(){
+    private void registerMacros()
+    {
         RegisterMacro register = new RegisterMacro();
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Button");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"MicrosoftStream");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Panel");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Button");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "MicrosoftStream");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Panel");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Taglist");
-
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Expand");
     }
 
     @BeforeAll
@@ -106,8 +162,25 @@ public class GenericMacrosIT
         setup.createUser("UserTest3", "UserTest", "");
 
         setup.deletePage(pageWithTeamMacros);
-        registerMacros();
+        setup.deletePage(pageWithButtonMacros);
+        setup.deletePage(pageWithStatusMacros);
+        setup.deletePage(pageWithTagListMacros);
+        setup.deletePage(pageWithExpandMacro);
 
+        setup.createPage(pageWithTags, "Test content for tagging");
+        setup.gotoPage(pageWithTags);
+        TaggablePage taggablePage = new TaggablePage();
+        AddTagsPane tagsPane = taggablePage.addTags();
+        tagsPane.setTags("alpha, beta, gamma");
+        tagsPane.add();
+
+        setup.createPage(pageWithTags2, "Test content for tagging");
+        setup.gotoPage(pageWithTags2);
+        TaggablePage taggablePage2 = new TaggablePage();
+        AddTagsPane tagsPane2 = taggablePage2.addTags();
+        tagsPane2.setTags("z, x, y");
+        tagsPane2.add();
+        registerMacros();
     }
 
     @Test
@@ -133,4 +206,194 @@ public class GenericMacrosIT
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
         assertEquals(0, page.getTeamMacroUsers(2).size());
     }
+
+    @Test
+    @Order(2)
+    void buttonMacroTest(TestUtils setup)
+    {
+        setup.deletePage(pageWithButtonMacros);
+        setup.gotoPage("XWiki", "ButtonTest");
+        setup.createPage(pageWithButtonMacros, PAGE_WITH_BUTTON_MACROS_CONTENT);
+
+        ButtonMacroPage page = new ButtonMacroPage();
+
+        //Checks the width of the buttons
+        assertEquals("100px", page.getButtonWidth("testbtn1"));
+        assertEquals("80px", page.getButtonWidth("testbtn3"));
+
+        //Checks the color of the buttons
+        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn1"));
+        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn3"));
+        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn4"));
+
+        //Checks the label of the buttons
+        assertEquals("test1", page.getButtonLabel("testbtn1"));
+        assertEquals("test2", page.getButtonLabel("testbtn2"));
+        assertEquals("test3", page.getButtonLabel("testbtn3"));
+        assertEquals("test4", page.getButtonLabel("testbtn4"));
+        assertEquals("test5", page.getButtonLabel("testbtn5"));
+
+        //Checks the <a> tag of the parents' buttons
+        assertEquals("a", page.getButtonParentTag("testbtn1"));
+        assertEquals("a", page.getButtonParentTag("testbtn2"));
+        assertEquals("a", page.getButtonParentTag("testbtn3"));
+        assertEquals("a", page.getButtonParentTag("testbtn4"));
+        assertEquals("a", page.getButtonParentTag("testbtn5"));
+
+        //Checks the url of the parents' buttons
+        assertEquals("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting",
+            page.getButtonParentUrl("testbtn1"));
+        assertEquals(
+            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin",
+            page.getButtonParentUrl("testbtn2"));
+
+        //Checks whether the url is opening in a new tab or not
+        assertEquals("_blank", page.getButtonParentTarget("testbtn1"));
+        assertEquals("", page.getButtonParentTarget("testbtn2"));
+
+        //The type of the button (DEFAULT/ DANGER/ SUCCESS / WARNING)
+        assertTrue(page.getButtonClass("testbtn1").endsWith("-default"));
+        assertTrue(page.getButtonClass("testbtn2").endsWith("-danger"));
+        assertTrue(page.getButtonClass("testbtn3").endsWith("-success"));
+        assertTrue(page.getButtonClass("testbtn4").endsWith("-warning"));
+        assertTrue(page.getButtonClass("testbtn5").endsWith("-default"));
+
+        //The button has/ doesn't have an Icon assigned
+        assertTrue(page.hasIcon("testbtn1"));
+        assertFalse(page.hasIcon("testbtn2"));
+        assertTrue(page.hasIcon("testbtn3"));
+        assertFalse(page.hasIcon("testbtn4"));
+        assertTrue(page.hasIcon("testbtn5"));
+    }
+
+    @Test
+    @Order(3)
+    void statusMacroTest(TestUtils setup)
+
+    {
+        setup.deletePage(pageWithButtonMacros);
+        setup.gotoPage("XWiki", "StatusTest");
+        setup.createPage(pageWithStatusMacros, PAGE_WITH_STATUS_MACROS_CONTENT);
+
+        StatusMacroPage page = new StatusMacroPage();
+
+        //Checks the titles of the status macros
+        assertEquals("test1", page.getStatusTitle(0));
+        assertEquals("test2", page.getStatusTitle(1));
+        assertEquals("test3", page.getStatusTitle(2));
+
+        //Checks the type of the status macros/ the color
+        assertEquals("grey", page.getStatusColor(0));
+        assertEquals("yellow", page.getStatusColor(1));
+        assertEquals("yellow", page.getStatusColor(2));
+
+        //Checks the subtle property
+        assertFalse(page.isSubtle(0));
+        assertTrue(page.isSubtle(1));
+        assertFalse(page.isSubtle(2));
+    }
+
+    @Test
+    @Order(4)
+    void tagListMacroTest(TestUtils setup)
+    {
+        setup.deletePage(pageWithTagListMacros);
+        setup.gotoPage("XWiki", "TagListTest");
+        setup.createPage(pageWithTagListMacros, PAGE_WITH_TAGLIST_MACROS_CONTENT);
+
+        TagListMacroPage page = new TagListMacroPage();
+
+        //Checks the ordered titles of the tags from the tagList
+        List<String> expectedTitles1 = Arrays.asList("A-B", "G");
+        assertEquals(expectedTitles1, page.getGlossaryTitles(0));
+
+        //Checks the ordered titles of the tags from the tagList
+        List<String> expectedTitles2 = Arrays.asList("A-G");
+        assertEquals(expectedTitles2, page.getGlossaryTitles(1));
+
+        //Checks the ordered names of the tags from the tagList
+        List<String> expectedTagNames1 = Arrays.asList("alpha", "beta", "gamma");
+        assertEquals(expectedTagNames1, page.getTagNames(0));
+
+        //Checks the ordered names of the tags from the tagList
+        List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
+        assertEquals(expectedTagNames2, page.getTagNames(1));
+
+        //Checks the <a> tags of the tags from the tagList
+        for (String i : expectedTagNames1) {
+            assertEquals("a", page.getHtmlTagForTagName(0, i));
+        }
+
+        //Checks the <a> tags of the tags from the tagList
+        for (String i : expectedTagNames2) {
+            assertEquals("a", page.getHtmlTagForTagName(1, i));
+        }
+
+        //Checks the ordered titles of the tags from the tagList, multiple spaces
+        List<String> expectedTitles3 = Arrays.asList("A-X", "Y-Z");
+        assertEquals(expectedTitles3, page.getGlossaryTitles(2));
+
+        //Checks the ordered names of the tags from the tagList
+        List<String> expectedTagNames3 = Arrays.asList("alpha", "beta", "testTag", "x", "y", "z");
+        assertEquals(expectedTagNames3, page.getTagNames(2));
+
+        //Checks the <a> tags of the tags from the tagList
+        for (String i : expectedTagNames3) {
+            assertEquals("a", page.getHtmlTagForTagName(2, i));
+        }
+    }
+
+    @Test
+    @Order(5)
+    void expandMacroTest(TestUtils setup)
+    {
+        setup.deletePage(pageWithExpandMacro);
+        setup.gotoPage("Main", "ExpandMacroTest");
+        setup.createPage(pageWithExpandMacro, PAGE_WITH_EXPAND_MACROS_CONTENT);
+
+        ExpandMacroPage page = new ExpandMacroPage();
+
+        //Nested Expand macros
+        assertEquals("ExpandTest1", page.getTitleText(0));
+        assertEquals("ExpandTest2", page.getTitleText(1));
+
+        //Checking the icon
+        assertTrue(page.hasIcon(0));
+        assertTrue(page.hasIcon(1));
+
+        List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
+        //Expanded = true
+        assertTrue(page.isExpanded(0));
+        assertEquals(expectedContent, page.getParagraphs(0));
+        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
+
+        //Click -> closed macro, content not visible
+        page.toggleMacro(0);
+        assertFalse(page.isExpanded(0));
+        assertNotEquals(expectedContent, page.getParagraphs(0));
+        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
+
+        //Click again -> open macro, content visible
+        page.toggleMacro(0);
+        assertTrue(page.isExpanded(0));
+        assertEquals(expectedContent, page.getParagraphs(0));
+        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
+
+        List<String> expectedContent2 = Arrays.asList("test0\ntest1");
+        //Expanded = false
+        //Closed macro, content not visible
+        assertFalse(page.isExpanded(1));
+        assertNotEquals(expectedContent2, page.getParagraphs(1));
+
+        //Click -> opened macro, content visible
+        page.toggleMacro(1);
+        assertTrue(page.isExpanded(1));
+        assertEquals(expectedContent2, page.getParagraphs(1));
+
+        //Click again -> closed macro, content not visible
+        page.toggleMacro(1);
+        assertFalse(page.isExpanded(1));
+        assertNotEquals(expectedContent2, page.getParagraphs(1));
+    }
 }
+
