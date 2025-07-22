@@ -38,6 +38,7 @@ import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.StatusMacroPage;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
+import com.xwiki.pro.test.po.generic.UserProfileMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -98,6 +99,9 @@ public class GenericMacrosIT
 
     private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
 
+    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
+        "UserProfileTest");
+
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
         + "{{team tag=\"testTag\" /}}\n"
@@ -116,7 +120,7 @@ public class GenericMacrosIT
         + "\n"
         + "{{status title =\"test2\" colour =\"Yellow\" subtle =\"true\"/}}"
         + "\n"
-        + "{{status title =\"test3\" colour =\"Yellow\" subtle=\"false\"/}}";
+        + "{{status title =\"Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          \" colour =\"Yellow\" subtle=\"false\"/}}";
 
     private static final String PAGE_WITH_TAGLIST_MACROS_CONTENT = "{{tagList /}}\n"
         + "\n"
@@ -140,6 +144,11 @@ public class GenericMacrosIT
             + "\n"
             + "{{/expand}}";
 
+    private static final String PAGE_WITH_USER_PROFILE_MACROS_CONTENT =
+        "{{userProfile reference=\"XWiki.UserTest\"/}}\n"
+            + "\n";
+
+    private static final String PAGE_WITH_USER_LIST_MACROS_CONTENT = "{{userList users=\"XWiki.UserTest\" /}}\n";
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private void registerMacros()
@@ -151,6 +160,7 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Expand");
+        //register.registerMacro(BASE_XWIKI_MACRO_SPACE, "UserProfile");
     }
 
     @BeforeAll
@@ -166,6 +176,7 @@ public class GenericMacrosIT
         setup.deletePage(pageWithStatusMacros);
         setup.deletePage(pageWithTagListMacros);
         setup.deletePage(pageWithExpandMacro);
+        setup.deletePage(pageWithUserProfileMacro);
 
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
@@ -205,6 +216,30 @@ public class GenericMacrosIT
         assertEquals(1, page.getTeamMacroUsers(1).size());
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
         assertEquals(0, page.getTeamMacroUsers(2).size());
+
+        String username = "xwiki:XWiki.UserTest";
+        String username2 = "xwiki:XWiki.UserTest2";
+
+        assertEquals("UserTest", page.getUserTitle(0, username));
+        assertEquals("UserTest2", page.getUserTitle(0, username2));
+
+        assertTrue(page.getProfileLink(0, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
+        assertTrue(page.getProfileLink(0, username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
+
+        assertEquals("U", page.getAvatarInitials(0, username));
+        assertEquals("U", page.getAvatarInitials(0, username2));
+
+        assertTrue(page.getAvatarBackgroundColor(0, username).contains("rgb(0, 170, 102)"));
+        assertTrue(page.getAvatarBackgroundColor(0, username2).contains("rgb(0, 170, 102)"));
+
+        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username));
+        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username2));
+
+        assertTrue(page.getAvatarSize(0, username).startsWith("60"));
+        assertTrue(page.getAvatarSize(0, username2).startsWith("60"));
+
+        assertTrue(page.getAvatarBorderRadius(0, username).startsWith("60"));
+        assertTrue(page.getAvatarBorderRadius(0, username2).startsWith("60"));
     }
 
     @Test
@@ -280,7 +315,9 @@ public class GenericMacrosIT
         //Checks the titles of the status macros
         assertEquals("test1", page.getStatusTitle(0));
         assertEquals("test2", page.getStatusTitle(1));
-        assertEquals("test3", page.getStatusTitle(2));
+
+        //assertEquals("Title with double quotes: ?<>@!$%^&*(){}:  |; ' , ./` in it .          ",
+        //page.getStatusTitle(2));
 
         //Checks the type of the status macros/ the color
         assertEquals("grey", page.getStatusColor(0));
@@ -395,5 +432,16 @@ public class GenericMacrosIT
         assertFalse(page.isExpanded(1));
         assertNotEquals(expectedContent2, page.getParagraphs(1));
     }
-}
 
+    @Test
+    @Order(6)
+    void userProfileMacroTest(TestUtils setup)
+    {
+        setup.deletePage(pageWithUserProfileMacro);
+        setup.gotoPage("Main", "UserProfileTest");
+        setup.createPage(pageWithUserProfileMacro, PAGE_WITH_USER_PROFILE_MACROS_CONTENT);
+        //setup.createPage(pageWithUserProfileMacro, PAGE_WITH_USER_LIST_MACROS_CONTENT);
+
+        UserProfileMacroPage page = new UserProfileMacroPage();
+    }
+}

@@ -20,6 +20,7 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -44,4 +45,54 @@ public class TeamMacroPage extends ViewPage
     public List<WebElement> getTeamMacroUsers(int i) {
         return teamMacros.get(i).findElements(By.className("xwikiteam-user"));
     }
-}
+
+    private WebElement getUserByUsername(int macroIndex, String dataUsername) {
+        return teamMacros.get(macroIndex)
+            .findElements(By.className("xwikiteam-user"))
+            .stream()
+            .filter(user -> dataUsername.equals(user.getAttribute("data-username")))
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("User not found: " + dataUsername));
+    }
+
+
+    public String getUserTitle(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername).getAttribute("title");
+    }
+
+
+
+    public String getProfileLink(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.tagName("a")).getAttribute("href");
+    }
+
+    public String getAvatarInitials(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar-initials-letters")).getText();
+    }
+
+    public String getAvatarBackgroundColor(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("background-color");
+    }
+
+    public String getAvatarFontColor(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar-initials-letters")).getCssValue("color");
+    }
+
+    public String getAvatarSize(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("height");
+    }
+
+    public String getAvatarBorderRadius(int macroIndex, String dataUsername) {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("border-radius");
+    }
+
+
+    }
+
+
