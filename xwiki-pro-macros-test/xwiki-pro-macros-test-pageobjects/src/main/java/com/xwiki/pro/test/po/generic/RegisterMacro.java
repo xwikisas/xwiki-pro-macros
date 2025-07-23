@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,24 +16,29 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package com.xwiki.pro.test.po.generic;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.xwiki.pro</groupId>
-    <artifactId>xwiki-pro-macros-test</artifactId>
-    <version>1.27.2-SNAPSHOT</version>
-  </parent>
-  <artifactId>xwiki-pro-macros-test-pageobjects</artifactId>
-  <name>Pro Macros - Tests - Page Objects</name>
-  <description>Pro Macros - Tests - Page Objects</description>
-  <packaging>jar</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-test-ui</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-  </dependencies>
-</project>
+import java.util.Collections;
+import java.util.List;
+
+import org.xwiki.test.ui.po.editor.EditPage;
+
+/**
+ * Helps registering broken rendering macros tht are stored in XWiki pages.
+ *
+ * @version $Id$
+ * @since 1.27.2
+ */
+public class RegisterMacro extends EditPage
+{
+    /**
+     * Register a macro by resaving the document.
+     * @param space space of the document
+     * @param pageName name of the document
+     */
+    public void registerMacro(List<String> space, String pageName) {
+        getUtil().gotoPage(space, pageName, "edit", Collections.singletonMap("force", 1));
+        clickSaveAndView();
+    }
+}

@@ -19,6 +19,8 @@
  */
 package com.xwiki.pro.test.ui;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
+import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,6 +52,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
             overrides = {
                 "features=com.google.code.findbugs:annotations"
             }
+        ),
+        // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
+        // parent upgrade if this is still needed.
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcprov-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcprov-jdk15on"
+            }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcpkix-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcpkix-jdk15on"
+            }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcmail-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcmail-jdk15on"
+            }
         )
     })
 public class GenericMacrosIT
@@ -61,6 +84,19 @@ public class GenericMacrosIT
         + "\n"
         + "{{team tag=\"nonExistentTag\" /}}";
 
+
+    private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
+
+    private void registerMacros(){
+        RegisterMacro register = new RegisterMacro();
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Button");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"MicrosoftStream");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Panel");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE,"Taglist");
+
+    }
+
     @BeforeAll
     void setup(TestUtils setup)
     {
@@ -70,6 +106,8 @@ public class GenericMacrosIT
         setup.createUser("UserTest3", "UserTest", "");
 
         setup.deletePage(pageWithTeamMacros);
+        registerMacros();
+
     }
 
     @Test

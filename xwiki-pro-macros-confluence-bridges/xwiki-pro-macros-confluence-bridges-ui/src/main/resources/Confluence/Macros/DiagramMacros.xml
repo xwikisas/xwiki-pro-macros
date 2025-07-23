@@ -103,7 +103,13 @@
     ## Used for gliffy macros that include a diagram from another page.
     #set ($pageID = $xcontext.macro.params.pageid)
     #if ("$!pageID" != '' &amp;&amp; "$!originalDoc" == '')
-      #set ($diagramDocument = $xwiki.getDocument($services.gliffyscript.getReferenceFromConfluenceID($pageID)))
+      #set ($reference = $services.gliffyscript.getReferenceFromConfluenceID($pageID))
+      ## When the reference is null we should display a warning.
+      #if ($reference)
+        #set ($diagramDocument = $xwiki.getDocument($reference))
+      #else
+        #set ($displayWarning = true)
+      #end
       #set ($originalDoc = $diagramDocument)
     #end
     ## "Constants"
@@ -173,7 +179,7 @@
             )))
           )))
         #end
-      #else
+      #elseif("$pageID" != "" &amp;&amp; $displayWarning)
         ##If the display fails then show a warning.
         #set ($syntax = $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))
         #set ($message = $services.localization.render('confluencediagram.warning.notfound'))
