@@ -53,6 +53,9 @@
     #set ($elem = 'span')
     #set ($clean = false)
   #end
+  #if ($isOversize)
+    #set ($previewSupported = false)
+  #end
   #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
   #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
   #if ($thumbnail.charAt(0) == '#')
@@ -180,7 +183,7 @@
   #end
   #set ($inEditMode = $xcontext.action == 'edit' || $targetSyntaxId == 'annotatedhtml' ||
     $targetSyntaxId == 'annotatedxhtml' || $request.outputSyntax == 'annotatedhtml')
-  #if (($display == 'FULL' || $display == 'full') && ($isInline || $inEditMode))
+  #if (($display == 'FULL' || $display == 'full') && ($isInline || $inEditMode || $isOversize))
     #set ($display = 'thumbnail')
   #end
   #if ($display == 'FULL' || $display == 'full')
