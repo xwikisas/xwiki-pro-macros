@@ -102,6 +102,12 @@ public class GenericMacrosIT
     private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
         "UserProfileTest");
 
+    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
+        "UserListTest");
+
+    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
+        "RecentlyUpdatedTest");
+
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
         + "{{team tag=\"testTag\" /}}\n"
@@ -120,7 +126,8 @@ public class GenericMacrosIT
         + "\n"
         + "{{status title =\"test2\" colour =\"Yellow\" subtle =\"true\"/}}"
         + "\n"
-        + "{{status title =\"Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          \" colour =\"Yellow\" subtle=\"false\"/}}";
+        + "{{status title =\"Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .\" colour "
+        + "=\"Yellow\" subtle=\"false\"/}}";
 
     private static final String PAGE_WITH_TAGLIST_MACROS_CONTENT = "{{tagList /}}\n"
         + "\n"
@@ -145,10 +152,16 @@ public class GenericMacrosIT
             + "{{/expand}}";
 
     private static final String PAGE_WITH_USER_PROFILE_MACROS_CONTENT =
-        "{{userProfile reference=\"XWiki.UserTest\"/}}\n"
-            + "\n";
+        "{{userProfile properties=\"company,email,phone,address\" reference=\"XWiki.UserTest\"/}}\n"
+            + "\n"
+            + "{{userProfile reference=\"XWiki.UserTest2\"/}}\n"
+            + "\n"
+            + "{{userProfile properties=\"blogfeed,email,blog\" reference=\"XWiki.UserTest3\"/}}\n";
 
     private static final String PAGE_WITH_USER_LIST_MACROS_CONTENT = "{{userList users=\"XWiki.UserTest\" /}}\n";
+
+    private static final String PAGE_WITH_RECENTLY_UPDATED_CONTENT = "{{recently-updated/}}\n";
+
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private void registerMacros()
@@ -160,16 +173,20 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Expand");
-        //register.registerMacro(BASE_XWIKI_MACRO_SPACE, "UserProfile");
     }
 
     @BeforeAll
     void setup(TestUtils setup)
     {
         setup.loginAsSuperAdmin();
-        setup.createUser("UserTest", "UserTest", "");
-        setup.createUser("UserTest2", "UserTest", "");
-        setup.createUser("UserTest3", "UserTest", "");
+        setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
+            , "usertest@example.com", "address", "userTestAddress", "comment", "test","blog","https://example.com/",
+            "blogfeed","https://example.com/");
+        setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
+            , "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
+        setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
+            , "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog","https://example"
+                + ".com/", "blogfeed","https://example.com/");
 
         setup.deletePage(pageWithTeamMacros);
         setup.deletePage(pageWithButtonMacros);
@@ -177,6 +194,8 @@ public class GenericMacrosIT
         setup.deletePage(pageWithTagListMacros);
         setup.deletePage(pageWithExpandMacro);
         setup.deletePage(pageWithUserProfileMacro);
+        setup.deletePage(pageWithUserListMacro);
+        setup.deletePage(pageWithRecentlyUpdatedMacro);
 
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
@@ -315,9 +334,7 @@ public class GenericMacrosIT
         //Checks the titles of the status macros
         assertEquals("test1", page.getStatusTitle(0));
         assertEquals("test2", page.getStatusTitle(1));
-
-        //assertEquals("Title with double quotes: ?<>@!$%^&*(){}:  |; ' , ./` in it .          ",
-        //page.getStatusTitle(2));
+        assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", page.getStatusTitle(2));
 
         //Checks the type of the status macros/ the color
         assertEquals("grey", page.getStatusColor(0));
@@ -440,8 +457,57 @@ public class GenericMacrosIT
         setup.deletePage(pageWithUserProfileMacro);
         setup.gotoPage("Main", "UserProfileTest");
         setup.createPage(pageWithUserProfileMacro, PAGE_WITH_USER_PROFILE_MACROS_CONTENT);
-        //setup.createPage(pageWithUserProfileMacro, PAGE_WITH_USER_LIST_MACROS_CONTENT);
 
         UserProfileMacroPage page = new UserProfileMacroPage();
+
+        assertTrue(page.linkImageProfile(0, "UserTest"));
+        assertTrue(page.linkImageProfile(1, "UserTest2"));
+
+        assertTrue(page.imageHasTitle(0, "UserTest"));
+        assertTrue(page.imageHasTitle(1, "UserTest2"));
+
+        assertTrue(page.getProfileLinkHref(0, "UserTest"));
+        assertTrue(page.getProfileLinkHref(1, "UserTest2"));
+
+        assertEquals("UserTest", page.getProfileLinkText(0));
+        assertEquals("UserTest2", page.getProfileLinkText(1));
+
+        assertEquals(4, page.getPropertiesCount(0));
+        assertEquals(4, page.getPropertiesCount(1));
+        assertEquals(3, page.getPropertiesCount(2));
+
+        assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
+            page.getPropertiesText(0));
+        assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
+            page.getPropertiesText(1));
+        assertEquals(List.of("https://example.com/", "usertest3@example.com","https://example.com/"),
+            page.getPropertiesText(2));
+
+        assertTrue(page.isEmailLinkCorrect(0, 1, "usertest@example.com"));
+        assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
+        assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
+
+        assertEquals("test",page.getProfileComment(0));
+        assertEquals("test2",page.getProfileComment(1));
+        assertEquals("test3",page.getProfileComment(2));
+    }
+
+    @Test
+    @Order(7)
+    void userListMacroTest(TestUtils setup)
+    {
+        setup.deletePage(pageWithUserListMacro);
+        setup.gotoPage("Main", "UserProfileTest");
+        setup.createPage(pageWithUserListMacro, PAGE_WITH_USER_LIST_MACROS_CONTENT);
+    }
+
+    @Test
+    @Order(8)
+    void recentlyUpdatedTest(TestUtils setup)
+    {
+        setup.loginAsSuperAdmin();
+        setup.deletePage(pageWithRecentlyUpdatedMacro);
+        setup.gotoPage("Main", "RecentlyUpdatedTest");
+        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_RECENTLY_UPDATED_CONTENT);
     }
 }

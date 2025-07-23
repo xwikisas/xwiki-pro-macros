@@ -65,6 +65,19 @@
       <artifactId>xwiki-platform-tag-test-pageobjects</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <!-- Dependencies needed by the User List and User Profile macros -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-display-html</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-wiki-user-default</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+    <!--  Until here.  -->
+
     <dependency>
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-test-api</artifactId>

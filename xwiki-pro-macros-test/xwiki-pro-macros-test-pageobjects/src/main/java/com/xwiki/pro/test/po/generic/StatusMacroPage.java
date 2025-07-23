@@ -35,16 +35,6 @@ public class StatusMacroPage extends ViewPage
         return statusBox.get(i).getAttribute("title");
     }
 
-    private String extractColorFromClass(String classAttr)
-    {
-        for (String className : classAttr.split("\\s+")) {
-            if (className.endsWith("Status") && !className.equals("statusBox")) {
-                return className.replace("Status", "");
-            }
-        }
-        return "unknown";
-    }
-
     public String getStatusColor(int i)
     {
         String classAttr = statusBox.get(i).getAttribute("class");
@@ -54,6 +44,16 @@ public class StatusMacroPage extends ViewPage
     public boolean isSubtle(int i)
     {
         return statusBox.get(i).getAttribute("class").contains("subtle");
+    }
+
+    private String extractColorFromClass(String classAttr)
+    {
+        for (String className : classAttr.split("\\s+")) {
+            if (className.endsWith("Status") && !className.equals("statusBox")) {
+                return className.replace("Status", "");
+            }
+        }
+        return "unknown";
     }
 }
 
