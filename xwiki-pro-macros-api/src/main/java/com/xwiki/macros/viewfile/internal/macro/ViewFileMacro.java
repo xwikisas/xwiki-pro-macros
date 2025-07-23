@@ -29,6 +29,7 @@ import javax.script.ScriptContext;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -38,6 +39,7 @@ import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
 
 import com.xwiki.macros.AbstractProMacro;
+import com.xwiki.macros.viewfile.internal.AttachmentSizeValidator;
 import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
@@ -65,6 +67,9 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     @Named("current")
     private AttachmentReferenceResolver<String> attachmentReferenceResolver;
 
+    @Inject
+    private AttachmentSizeValidator attachmentSizeValidator;
+
     /**
      * Create and initialize the descriptor of the macro.
      */
@@ -83,20 +88,26 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     protected List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-        byte[] thumbnailBytes =
-            thumbnailGenerator.getThumbnailData(attachmentReferenceResolver.resolve(parameters.getName()));
-        Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
-        ScriptContext scriptContext = scriptContextManager.getScriptContext();
-
-        scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
-        scriptContext.setAttribute("isInline", context.isInline(), ScriptContext.ENGINE_SCOPE);
-        String base64 = Base64.getEncoder().encodeToString(thumbnailBytes);
-        scriptContext.setAttribute("thumbnailBase64", base64, ScriptContext.ENGINE_SCOPE);
-        if (context.getTransformationContext().getTargetSyntax() != null) {
-            String targetSyntaxId = context.getTransformationContext().getTargetSyntax().getType().getId();
-            scriptContext.setAttribute("targetSyntaxId", targetSyntaxId, ScriptContext.ENGINE_SCOPE);
-        }
         try {
+            AttachmentReference attachRef = attachmentReferenceResolver.resolve(parameters.getName());
+            boolean isOversize = attachmentSizeValidator.isAttachmentOversize(attachRef);
+            byte[] thumbnailBytes = new byte[0];
+            // Get the thumbnail data only if the display is thumbnail and the attachment is not oversize.
+            if (!isOversize) {
+                thumbnailBytes = thumbnailGenerator.getThumbnailData(attachRef);
+            }
+            Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
+            ScriptContext scriptContext = scriptContextManager.getScriptContext();
+
+            scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
+            scriptContext.setAttribute("isInline", context.isInline(), ScriptContext.ENGINE_SCOPE);
+            String base64 = Base64.getEncoder().encodeToString(thumbnailBytes);
+            scriptContext.setAttribute("thumbnailBase64", base64, ScriptContext.ENGINE_SCOPE);
+            scriptContext.setAttribute("isOversize", isOversize, ScriptContext.ENGINE_SCOPE);
+            if (context.getTransformationContext().getTargetSyntax() != null) {
+                String targetSyntaxId = context.getTransformationContext().getTargetSyntax().getType().getId();
+                scriptContext.setAttribute("targetSyntaxId", targetSyntaxId, ScriptContext.ENGINE_SCOPE);
+            }
             return this.templateManager.execute(customTemplate).getChildren();
         } catch (Exception e) {
             throw new MacroExecutionException(ExceptionUtils.getRootCauseMessage(e));

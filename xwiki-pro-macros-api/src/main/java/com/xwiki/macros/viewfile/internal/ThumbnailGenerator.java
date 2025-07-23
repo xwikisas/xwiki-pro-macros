@@ -171,8 +171,9 @@ public class ThumbnailGenerator
         try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
              ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
-            OfficeManager manager =
-                ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts()).build();
+            // Set an execution timeout equivalent to 10 seconds.
+            OfficeManager manager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
+                .taskExecutionTimeout(10000L).build();
             manager.start();
             LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.PDF).execute();
             manager.stop();
