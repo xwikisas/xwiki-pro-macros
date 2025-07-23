@@ -48,7 +48,8 @@ import com.xpn.xwiki.doc.XWikiDocument;
  * Checks if Office 2007 and ODF document attachments are oversize by checking the ZIP entries size or if an excessive
  * amount of paragraphs is present. This validator prevents documents from causing performance or memory issues during
  * processing (e.g., conversion or rendering), by applying constraints derived from Apache POI and LibreOffice
- * limitations.
+ * limitations. This class can be removed after this issue is fixed:
+ * XWIKI-11174: Do not compromise the XWiki instance when viewing an office document too large to be HTML-cleaned
  *
  * @version $Id$
  * @since 1.27.1
