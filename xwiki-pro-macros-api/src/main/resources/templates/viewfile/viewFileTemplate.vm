@@ -29,6 +29,8 @@
 
 #macro (renderThumbnailButton $attachmentRef $previewSupported $width $height $forceCard $inEditMode)
   #set ($style = '')
+  #set ($elem = 'div')
+  #set ($clean = true)
   #if ("$!width" != '')
     #set ($style = $style + " width: $width;")
   #end
@@ -45,13 +47,11 @@
     #set ($thumbnailStyle = 'Card')
   #else
     #set ($thumbnailStyle = 'Button')
+    #set ($elem = 'span')
   #end
-  #if ($isInline || $thumbnailStyle == 'Button')
+  #if ($isInline)
     #set ($elem = 'span')
     #set ($clean = false)
-  #else
-    #set ($elem = 'div')
-    #set ($clean = true)
   #end
   #set ($attachment = $xwiki.getDocument($attachmentRef.getParent()).getAttachment($attachmentRef.getName()))
   #set ($thumbnail = "#displayAttachmentMimeType($attachment)")
@@ -70,7 +70,7 @@
        download="download"
        #if ($thumbnailStyle == "Button") class="button button-primary" #end
        title="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.title'))">
-      #if (!$thumbnailBase64.isEmpty())
+      #if (!$thumbnailBase64.isEmpty() && $thumbnailStyle == 'Card')
         <$elem class="image-container">
           <img class="viewfile-thumbnail-image" src="data:image/jpeg;base64,$thumbnailBase64"
             alt="$escapetool.xml($services.localization.render('rendering.macro.viewFile.thumbnail.button.image.alt'))"/>
