@@ -169,9 +169,12 @@ public class ConfluenceDetailsScriptService implements ScriptService
             if (CollectionUtils.isEmpty(details)) {
                 continue;
             }
-            List<String> row = getRow(details, headings, columns, columnsLower, doc.getSyntax());
-            row.add(0, fullName);
-            rows.add(row);
+            for (XDOM detailMacro : details) {
+                List<String> row = getRow(List.of(detailMacro), headings, columns, columnsLower, doc.getSyntax());
+                row.add(0, fullName);
+                rows.add(row);
+            }
+
         }
 
         maybeSort(sortBy, reverseSort, columnsLower, rows);
