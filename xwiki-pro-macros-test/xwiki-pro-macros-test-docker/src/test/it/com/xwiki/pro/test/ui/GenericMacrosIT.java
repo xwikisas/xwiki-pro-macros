@@ -34,6 +34,7 @@ import org.xwiki.test.ui.TestUtils;
 
 import com.xwiki.pro.test.po.generic.ButtonMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacroPage;
+import com.xwiki.pro.test.po.generic.RecentlyUpdatedMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.StatusMacroPage;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
@@ -86,6 +87,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     })
 public class GenericMacrosIT
 {
+    private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
+
+    private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
+
+    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
+
+    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
+
+    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
+
+    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
+
+    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
+
+    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
+        "UserProfileTest");
+
+    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
+        "UserListTest");
+
+    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
+        "RecentlyUpdatedTest");
+
+    private final DocumentReference pageWithContributorsMacro = new DocumentReference("xwiki", "Main",
+        "ContributorsTest");
+
+
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
         + "{{team tag=\"testTag\" /}}\n"
@@ -142,34 +172,13 @@ public class GenericMacrosIT
         + "{{userList fixedTableLayout=\"true\" groups=\"XWiki.XWikiAllGroup\" properties=\"avatar,username,phone,"
         + "email,address,blogfeed\"/}}\n";
 
-    private static final String PAGE_WITH_RECENTLY_UPDATED_CONTENT = "{{recently-updated/}}\n";
+    private static final String PAGE_WITH_RECENTLY_UPDATED_CONTENT = "{{recently-updated/}}\n"
+        +"\n"
+        +"{{recently-updated spaces=\"@global\" theme=\"concise\" max=\"5\"/}}\n";
 
     private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors/}}\n";
 
-    private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
-    private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
-
-    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
-
-    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
-
-    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
-
-    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
-
-    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-
-    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
-
-    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
-        "UserProfileTest");
-
-    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
-        "UserListTest");
-
-    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
-        "RecentlyUpdatedTest");
 
     private void registerMacros()
     {
@@ -203,6 +212,7 @@ public class GenericMacrosIT
         setup.deletePage(pageWithUserProfileMacro);
         setup.deletePage(pageWithUserListMacro);
         setup.deletePage(pageWithRecentlyUpdatedMacro);
+        setup.deletePage(pageWithContributorsMacro);
 
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
@@ -332,7 +342,7 @@ public class GenericMacrosIT
     void statusMacroTest(TestUtils setup)
 
     {
-        setup.deletePage(pageWithButtonMacros);
+        setup.deletePage(pageWithStatusMacros);
         setup.gotoPage("XWiki", "StatusTest");
         setup.createPage(pageWithStatusMacros, PAGE_WITH_STATUS_MACROS_CONTENT);
 
@@ -542,11 +552,27 @@ public class GenericMacrosIT
 
     @Test
     @Order(8)
-    void recentlyUpdatedTest(TestUtils setup)
+    void recentlyUpdatedMacroTest(TestUtils setup)
     {
         setup.loginAsSuperAdmin();
         setup.deletePage(pageWithRecentlyUpdatedMacro);
         setup.gotoPage("Main", "RecentlyUpdatedTest");
-        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
+        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_RECENTLY_UPDATED_CONTENT);
+
+        RecentlyUpdatedMacroPage page = new RecentlyUpdatedMacroPage();
+        //assertEquals(10,page.getRecentlyUpdatedItemCount(0));
+
     }
+
+    @Test
+    @Order(9)
+    void contributorsMacroTest(TestUtils setup)
+    {
+        setup.loginAsSuperAdmin();
+        setup.deletePage(pageWithContributorsMacro);
+        setup.gotoPage("Main", "ContributorsTest");
+        setup.createPage(pageWithContributorsMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
+    }
+
+
 }
