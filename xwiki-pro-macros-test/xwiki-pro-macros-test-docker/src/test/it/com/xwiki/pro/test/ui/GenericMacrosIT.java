@@ -38,6 +38,7 @@ import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.StatusMacroPage;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
+import com.xwiki.pro.test.po.generic.UserListMacroPage;
 import com.xwiki.pro.test.po.generic.UserProfileMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,29 +86,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     })
 public class GenericMacrosIT
 {
-    private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
-
-    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
-
-    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
-
-    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
-
-    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
-
-    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-
-    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
-
-    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
-        "UserProfileTest");
-
-    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
-        "UserListTest");
-
-    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
-        "RecentlyUpdatedTest");
-
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
         + "{{team tag=\"testTag\" /}}\n"
@@ -158,11 +136,40 @@ public class GenericMacrosIT
             + "\n"
             + "{{userProfile properties=\"blogfeed,email,blog\" reference=\"XWiki.UserTest3\"/}}\n";
 
-    private static final String PAGE_WITH_USER_LIST_MACROS_CONTENT = "{{userList users=\"XWiki.UserTest\" /}}\n";
+    private static final String PAGE_WITH_USER_LIST_MACROS_CONTENT = "{{userList users=\"XWiki.UserTest, XWiki"
+        + ".UserTest2\" properties=\"avatar,username,phone,email\" /}}\n"
+        + "\n"
+        + "{{userList fixedTableLayout=\"true\" groups=\"XWiki.XWikiAllGroup\" properties=\"avatar,username,phone,"
+        + "email,address,blogfeed\"/}}\n";
 
     private static final String PAGE_WITH_RECENTLY_UPDATED_CONTENT = "{{recently-updated/}}\n";
 
+    private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors/}}\n";
+
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
+
+    private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
+
+    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
+
+    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
+
+    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
+
+    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
+
+    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
+
+    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
+        "UserProfileTest");
+
+    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
+        "UserListTest");
+
+    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
+        "RecentlyUpdatedTest");
 
     private void registerMacros()
     {
@@ -172,7 +179,7 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Panel");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Expand");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Contributors");
     }
 
     @BeforeAll
@@ -180,13 +187,13 @@ public class GenericMacrosIT
     {
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
-            , "usertest@example.com", "address", "userTestAddress", "comment", "test","blog","https://example.com/",
-            "blogfeed","https://example.com/");
+            , "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
+            "blogfeed", "https://example.com/");
         setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
             , "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
         setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
-            , "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog","https://example"
-                + ".com/", "blogfeed","https://example.com/");
+            , "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog", "https://example"
+                + ".com/", "blogfeed", "https://example.com/");
 
         setup.deletePage(pageWithTeamMacros);
         setup.deletePage(pageWithButtonMacros);
@@ -480,16 +487,16 @@ public class GenericMacrosIT
             page.getPropertiesText(0));
         assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
             page.getPropertiesText(1));
-        assertEquals(List.of("https://example.com/", "usertest3@example.com","https://example.com/"),
+        assertEquals(List.of("https://example.com/", "usertest3@example.com", "https://example.com/"),
             page.getPropertiesText(2));
 
         assertTrue(page.isEmailLinkCorrect(0, 1, "usertest@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
 
-        assertEquals("test",page.getProfileComment(0));
-        assertEquals("test2",page.getProfileComment(1));
-        assertEquals("test3",page.getProfileComment(2));
+        assertEquals("test", page.getProfileComment(0));
+        assertEquals("test2", page.getProfileComment(1));
+        assertEquals("test3", page.getProfileComment(2));
     }
 
     @Test
@@ -499,6 +506,38 @@ public class GenericMacrosIT
         setup.deletePage(pageWithUserListMacro);
         setup.gotoPage("Main", "UserProfileTest");
         setup.createPage(pageWithUserListMacro, PAGE_WITH_USER_LIST_MACROS_CONTENT);
+
+        UserListMacroPage page = new UserListMacroPage();
+
+        assertEquals(2, page.getUserCountInList(0));
+        for (int i = 0; i < 2; i++) {
+            assertEquals(4, page.getUserPropertiesCount(0, i));
+            assertEquals(List.of("avatar", "username", "phone", "email"), page.getUserPropertyTypes(0, i));
+        }
+
+        assertEquals("UserTest", page.getUserAvatarTitle(0, 0));
+        assertEquals("UserTest", page.getUserAvatarAlt(0, 0));
+        assertTrue(page.getUserLinkHref(0, 0, "UserTest"));
+        assertEquals("UserTest", page.getUsernameLinkText(0, 0));
+        assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), page.getUserPropertiesText(0, 0));
+        assertTrue(page.isEmailLinkValid(0, 0, "usertest@example.com"));
+
+        assertEquals("UserTest2", page.getUserAvatarTitle(0, 1));
+        assertEquals("UserTest2", page.getUserAvatarAlt(0, 1));
+        assertTrue(page.getUserLinkHref(0, 1, "UserTest2"));
+        assertEquals("UserTest2", page.getUsernameLinkText(0, 1));
+        assertEquals(List.of("", "UserTest2", "07777777", "usertest2@example.com"), page.getUserPropertiesText(0, 1));
+        assertTrue(page.isEmailLinkValid(0, 1, "usertest2@example.com"));
+
+        assertEquals(3, page.getUserCountInList(1));
+        for (int i = 0; i < 3; i++) {
+            assertEquals(6, page.getUserPropertiesCount(1, i));
+            assertEquals(List.of("avatar", "username", "phone", "email", "address", "blogfeed"),
+                page.getUserPropertyTypes(1,
+                    i));
+        }
+
+        assertTrue(page.hasFixedLayout(1));
     }
 
     @Test
@@ -508,6 +547,6 @@ public class GenericMacrosIT
         setup.loginAsSuperAdmin();
         setup.deletePage(pageWithRecentlyUpdatedMacro);
         setup.gotoPage("Main", "RecentlyUpdatedTest");
-        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_RECENTLY_UPDATED_CONTENT);
+        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
     }
 }

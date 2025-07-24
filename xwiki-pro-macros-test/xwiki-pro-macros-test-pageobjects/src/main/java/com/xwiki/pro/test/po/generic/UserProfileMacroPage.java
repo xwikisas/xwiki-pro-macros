@@ -89,7 +89,6 @@ public class UserProfileMacroPage extends ViewPage
         WebElement emailElement = getPropertiesList(index).get(propertyIndex);
         WebElement emailLink = emailElement.findElement(By.tagName("a"));
         String href = emailLink.getAttribute("href");
-        String text = emailLink.getText();
         return href != null && href.equals("mailto:" + expectedEmail);
     }
 
