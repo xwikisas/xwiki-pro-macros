@@ -84,6 +84,9 @@ public class AttachmentSizeValidator
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document = wikiContext.getWiki().getDocument(attachRef.getDocumentReference(), wikiContext);
         XWikiAttachment attachment = document.getAttachment(attachRef.getName());
+        if (attachment == null) {
+            return true;
+        }
         String extension = attachRef.getName().substring(attachRef.getName().lastIndexOf('.') + 1).toLowerCase();
         boolean isOversize = false;
         if (!OLD_OFFICE_EXTENSIONS.contains(extension)) {
