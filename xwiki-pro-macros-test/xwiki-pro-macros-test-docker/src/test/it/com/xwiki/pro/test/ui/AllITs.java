@@ -37,4 +37,10 @@ class AllITs
     class NestedGenericMacrosIT extends GenericMacrosIT
     {
     }
+
+    @Nested
+    @DisplayName("Tests for the DetailsSummary Macro")
+    class NestedDetailsSummaryIT extends DetailsSummaryIT
+    {
+    }
 }
