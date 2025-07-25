@@ -170,7 +170,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 continue;
             }
             for (XDOM detailMacro : details) {
-                List<String> row = getRow(List.of(detailMacro), headings, columns, columnsLower, doc.getSyntax());
+                List<String> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
                 row.add(0, fullName);
                 rows.add(row);
             }
@@ -237,24 +237,7 @@ public class ConfluenceDetailsScriptService implements ScriptService
         return Collections.emptyList();
     }
 
-    private List<TableRowBlock> findRows(List<XDOM> xdoms, Syntax syntax)
-    {
-        if (xdoms.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        if (xdoms.size() == 1) {
-            return findRows(xdoms.get(0), syntax);
-        }
-
-        List<TableRowBlock> xdomRows = new ArrayList<>();
-        for (XDOM xdom : xdoms) {
-            xdomRows.addAll(findRows(xdom, syntax));
-        }
-        return xdomRows;
-    }
-
-    private List<String> getRow(List<XDOM> xdomDetails, List<String> headings, List<String> columns,
+    private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
         List<String> columnsLower, Syntax syntax)
     {
         List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
