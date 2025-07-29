@@ -531,22 +531,28 @@ public class GenericMacrosIT
 
         UserProfileMacroPage page = new UserProfileMacroPage();
 
+        //Checks the links of the avatar pictures for each user
         assertTrue(page.linkImageProfile(0, "UserTest"));
         assertTrue(page.linkImageProfile(1, "UserTest2"));
 
+        //Checks the titles of the avatar pictures for each user
         assertTrue(page.imageHasTitle(0, "UserTest"));
         assertTrue(page.imageHasTitle(1, "UserTest2"));
 
+        //Checks the validity of the link for each user
         assertTrue(page.getProfileLinkHref(0, "UserTest"));
         assertTrue(page.getProfileLinkHref(1, "UserTest2"));
 
+        //Checks the link for the profile
         assertEquals("UserTest", page.getProfileLinkText(0));
         assertEquals("UserTest2", page.getProfileLinkText(1));
 
+        //Checks the number of properties shown for each user
         assertEquals(4, page.getPropertiesCount(0));
         assertEquals(4, page.getPropertiesCount(1));
         assertEquals(3, page.getPropertiesCount(2));
 
+        //Checks the properties shown for each user
         assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
             page.getPropertiesText(0));
         assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
@@ -554,10 +560,12 @@ public class GenericMacrosIT
         assertEquals(List.of("https://example.com/", "usertest3@example.com", "https://example.com/"),
             page.getPropertiesText(2));
 
+        //Checks that the email link is valid
         assertTrue(page.isEmailLinkCorrect(0, 1, "usertest@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
 
+        //Checks the text from the "about" section for each user
         assertEquals("test", page.getProfileComment(0));
         assertEquals("test2", page.getProfileComment(1));
         assertEquals("test3", page.getProfileComment(2));
@@ -573,17 +581,27 @@ public class GenericMacrosIT
 
         UserListMacroPage page = new UserListMacroPage();
 
+        //Checks the number of users in a list
         assertEquals(2, page.getUserCountInList(0));
         for (int i = 0; i < 2; i++) {
             assertEquals(4, page.getUserPropertiesCount(0, i));
             assertEquals(List.of("avatar", "username", "phone", "email"), page.getUserPropertyTypes(0, i));
         }
 
+        //Checks the avatar titles
         assertEquals("UserTest", page.getUserAvatarTitle(0, 0));
         assertEquals("UserTest", page.getUserAvatarAlt(0, 0));
+
+        //Checks the user link
         assertTrue(page.getUserLinkHref(0, 0, "UserTest"));
+
+        //Checks the link, that has the correct username
         assertEquals("UserTest", page.getUsernameLinkText(0, 0));
+
+        //Checks the properties shown for each user
         assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), page.getUserPropertiesText(0, 0));
+
+        //Checks that the email link is valid
         assertTrue(page.isEmailLinkValid(0, 0, "usertest@example.com"));
 
         assertEquals("UserTest2", page.getUserAvatarTitle(0, 1));
@@ -601,11 +619,13 @@ public class GenericMacrosIT
                     i));
         }
 
+        //Checks that fixedTableLayout="true" works
         assertTrue(page.hasFixedLayout(1));
     }
 
     void createTestPages(TestUtils setup)
     {
+        //Creating test pages foe recently-updated and contributors macros
         setup.deletePage(testPage);
         setup.deletePage(testPage2);
         setup.deletePage(testPage3);
@@ -781,6 +801,8 @@ public class GenericMacrosIT
 
         createTestPages(setup);
         ContributorsMacroPage page = new ContributorsMacroPage();
+
+        //Checks how many contributors appear in each macro
         assertEquals(1,page.getContributorNameCount(0));
         assertEquals(3,page.getContributorNameCount(1));
         assertEquals(3,page.getContributorNameCount(2));
@@ -790,20 +812,29 @@ public class GenericMacrosIT
         List<String> expectedMacro2 = Arrays.asList("UserTest2", "UserTest3", "UserTest");
 
 
-
+        //Checks the contributors' names
         assertEquals(expectedMacro0, page.getContributorNames(0));
         assertEquals(expectedMacro1, page.getContributorNames(1));
         assertEquals(expectedMacro2, page.getContributorNames(2));
 
+        //Checks the inline/list mode of the macro, default= inline
         assertFalse(page.isListMode(0));
         assertTrue(page.isListMode(1));
         assertFalse(page.isListMode(2));
 
+        //Checks how many counts of results a macro has (showCount=true, default= false)
         assertEquals(0, page.getContributorCount(0));
         assertEquals(3, page.getContributorCount(1));
         assertEquals(0, page.getContributorCount(2));
 
-        //assertEquals(Arrays.asList(3, 1, 1), page.getContributionCounts(1));
+        //Checks the count of results
+        assertEquals(Arrays.asList(3, 1, 1), page.getContributionCounts(1));
+
+        //Checks if showLastTime="true" works, the default= false
+        assertFalse(page.hasLastModifiedDates(0));
+        assertTrue(page.hasLastModifiedDates(1));
+        assertFalse(page.hasLastModifiedDates(2));
+
 
     }
 }

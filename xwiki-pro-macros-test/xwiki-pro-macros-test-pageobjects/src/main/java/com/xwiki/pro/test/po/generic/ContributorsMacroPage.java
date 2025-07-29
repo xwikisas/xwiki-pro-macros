@@ -107,12 +107,9 @@ public class ContributorsMacroPage extends ViewPage
             .collect(Collectors.toList());
     }
 
-    public List<String> getLastModifiedDates(int index)
-    {
+    public boolean hasLastModifiedDates(int index) {
         WebElement macro = contributors.get(index);
-        return macro.findElements(By.cssSelector(".contributor-last-contribution-date"))
-            .stream()
-            .map(e -> e.getText().trim().replaceAll("[()]", ""))
-            .collect(Collectors.toList());
+        return !macro.findElements(By.cssSelector(".contributor-last-contribution-date")).isEmpty();
     }
+
 }
