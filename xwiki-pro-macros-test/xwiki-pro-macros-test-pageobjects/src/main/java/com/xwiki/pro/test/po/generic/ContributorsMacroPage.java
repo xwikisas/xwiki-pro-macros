@@ -48,40 +48,25 @@ public class ContributorsMacroPage extends ViewPage
         List<String> result = new ArrayList<>();
 
         for (WebElement contributor : nameLinks) {
-            String text = contributor.getText().trim();
+            String text = contributor.getText();
             if (!text.isEmpty()) {
                 result.add(text);
                 continue;
             }
-
-            boolean found = false;
             boolean nextIsTarget = false;
-
             for (WebElement link : allLinks) {
                 if (nextIsTarget) {
-                    String nextText = link.getText().trim();
+                    String nextText = link.getText();
                     if (!nextText.isEmpty()) {
                         result.add(nextText);
-                        found = true;
-                        break;
                     }
+                    break;
                 }
-
                 if (link.equals(contributor)) {
                     nextIsTarget = true;
                 }
             }
-
-            if (!found) {
-                String href = contributor.getAttribute("href");
-                if (href != null && href.contains("/")) {
-                    result.add(href.substring(href.lastIndexOf("/") + 1));
-                } else {
-                    result.add("(unknown)");
-                }
-            }
         }
-
         return result;
     }
 
@@ -94,22 +79,35 @@ public class ContributorsMacroPage extends ViewPage
 
     public int getContributorCount(int index)
     {
-        WebElement macro = contributors.get(index);
-        return macro.findElements(By.cssSelector(".contributor-contribution-count")).size();
+
+        return contributors.get(index).findElements(By.cssSelector(".contributor-contribution-count")).size();
     }
 
     public List<Integer> getContributionCounts(int index)
     {
-        WebElement macro = contributors.get(index);
-        return macro.findElements(By.cssSelector(".contributor-contribution-count"))
+
+        return contributors.get(index).findElements(By.cssSelector(".contributor-contribution-count"))
             .stream()
-            .map(el -> Integer.parseInt(el.getText().trim()))
+            .map(el -> Integer.parseInt(el.getText()))
             .collect(Collectors.toList());
     }
 
-    public boolean hasLastModifiedDates(int index) {
-        WebElement macro = contributors.get(index);
-        return !macro.findElements(By.cssSelector(".contributor-last-contribution-date")).isEmpty();
+    public boolean hasLastModifiedDates(int index)
+    {
+        return !contributors.get(index).findElements(By.cssSelector(".contributor-last-contribution-date")).isEmpty();
     }
 
+    public String getNoneFoundMessage(int index)
+    {
+
+        List<WebElement> paragraphs = contributors.get(index).findElements(By.tagName("p"));
+
+        return paragraphs.get(0).getText();
+    }
+
+    public boolean hasPages(int index)
+    {
+
+        return contributors.get(index).getText().contains("Pages:");
+    }
 }

@@ -217,11 +217,23 @@ public class GenericMacrosIT
     private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors/}}\n"
         + "\n"
         + "{{contributors include=\"authors,comments\" reverse=\"true\" limit=\"3\" mode=\"list\" "
-        + "showCount=\"true\" showLastTime=\"true\"  "
-        + "noneFoundMessage=\"None found :(\" global=\"true\"/}}\n"
+        + " showLastTime=\"true\"  "
+        + "noneFoundMessage=\"None found :(\" global=\"true\" /}}\n"
         + "\n"
         + "{{contributors include=\"authors,comments\" limit=\"3\" mode=\"inline\" "
-        + "showCount=\"false\" global=\"true\"/}}";
+        + "showCount=\"false\" global=\"true\"/}}\n"
+        + "\n"
+        + "{{contributors include=\"authors,comments\" spaces=\"DateMacro\" limit=\"3\" noneFoundMessage=\"None "
+        + "found :(\"  showCount=\"true\"/}}\n"
+        + "\n"
+        + "{{contributors  spaces=\"NonExistingSpace\"  noneFoundMessage=\"None "
+        + "found :(\"/}}\n"
+        + "\n"
+        + "{{contributors include=\"authors,comments\" scope=\"Descendants\" "
+        + "showCount=\"false\" global=\"true\" /}}\n"
+        + "\n"
+        + "{{contributors include=\"authors,comments\" scope=\"Specified\" "
+        + "showCount=\"false\" global=\"true\" showPages=\"true\"/}}\n";
 
     private void registerMacros()
     {
@@ -231,6 +243,7 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Panel");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
+        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "RecentlyUpdated");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Contributors");
     }
 
@@ -308,10 +321,11 @@ public class GenericMacrosIT
         String username = "xwiki:XWiki.UserTest";
         String username2 = "xwiki:XWiki.UserTest2";
 
-        //
+        //Checks the users' titles
         assertEquals("UserTest", page.getUserTitle(0, username));
         assertEquals("UserTest2", page.getUserTitle(0, username2));
 
+        //Checks the users' profile links
         assertTrue(page.getProfileLink(0, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
         assertTrue(page.getProfileLink(0, username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
 
@@ -372,7 +386,7 @@ public class GenericMacrosIT
             "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin",
             page.getButtonParentUrl("testbtn2"));
 
-        //Checks whether the url is opening in a new tab or not
+        //Checks whether the link is opening in a new tab or not
         assertEquals("_blank", page.getButtonParentTarget("testbtn1"));
         assertEquals("", page.getButtonParentTarget("testbtn2"));
 
@@ -478,7 +492,7 @@ public class GenericMacrosIT
 
         ExpandMacroPage page = new ExpandMacroPage();
 
-        //Nested Expand macros
+        //Nested Expand macros - Checks the titles of the macros
         assertEquals("ExpandTest1", page.getTitleText(0));
         assertEquals("ExpandTest2", page.getTitleText(1));
 
@@ -539,7 +553,7 @@ public class GenericMacrosIT
         assertTrue(page.imageHasTitle(0, "UserTest"));
         assertTrue(page.imageHasTitle(1, "UserTest2"));
 
-        //Checks the validity of the link for each user
+        //Checks the validity of the profile link for each user
         assertTrue(page.getProfileLinkHref(0, "UserTest"));
         assertTrue(page.getProfileLinkHref(1, "UserTest2"));
 
@@ -552,7 +566,7 @@ public class GenericMacrosIT
         assertEquals(4, page.getPropertiesCount(1));
         assertEquals(3, page.getPropertiesCount(2));
 
-        //Checks the properties shown for each user
+        //Checks the list of properties shown for each user
         assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
             page.getPropertiesText(0));
         assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
@@ -592,13 +606,13 @@ public class GenericMacrosIT
         assertEquals("UserTest", page.getUserAvatarTitle(0, 0));
         assertEquals("UserTest", page.getUserAvatarAlt(0, 0));
 
-        //Checks the user link
+        //Checks the validity of the users' profile links
         assertTrue(page.getUserLinkHref(0, 0, "UserTest"));
 
         //Checks the link, that has the correct username
         assertEquals("UserTest", page.getUsernameLinkText(0, 0));
 
-        //Checks the properties shown for each user
+        //Checks the list of properties shown for each user
         assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), page.getUserPropertiesText(0, 0));
 
         //Checks that the email link is valid
@@ -702,7 +716,7 @@ public class GenericMacrosIT
 
         RecentlyUpdatedMacroPage page = new RecentlyUpdatedMacroPage();
 
-        //Checking the number of results the macros include (all the macros select the pages with the tag "recent"
+        //Checking the number of results the macros include (all the macros select the pages with the tag "recent")
 
         //Checks that the macro shows pages with both tags "recent" and "MainRecent" and the RecentlyUpdatedTest
         //and that it shows pages from the current XWiki space
@@ -803,14 +817,17 @@ public class GenericMacrosIT
         ContributorsMacroPage page = new ContributorsMacroPage();
 
         //Checks how many contributors appear in each macro
-        assertEquals(1,page.getContributorNameCount(0));
-        assertEquals(3,page.getContributorNameCount(1));
-        assertEquals(3,page.getContributorNameCount(2));
+        assertEquals(1, page.getContributorNameCount(0));
+        assertEquals(3, page.getContributorNameCount(1));
+        assertEquals(3, page.getContributorNameCount(2));
+        assertEquals(1, page.getContributorNameCount(3));
+        assertEquals(0, page.getContributorNameCount(4));
+        assertEquals(1, page.getContributorNameCount(5));
+        assertEquals(1, page.getContributorNameCount(6));
 
         List<String> expectedMacro0 = Arrays.asList("superadmin");
         List<String> expectedMacro1 = Arrays.asList("superadmin", "UserTest2", "UserTest3");
         List<String> expectedMacro2 = Arrays.asList("UserTest2", "UserTest3", "UserTest");
-
 
         //Checks the contributors' names
         assertEquals(expectedMacro0, page.getContributorNames(0));
@@ -824,17 +841,23 @@ public class GenericMacrosIT
 
         //Checks how many counts of results a macro has (showCount=true, default= false)
         assertEquals(0, page.getContributorCount(0));
-        assertEquals(3, page.getContributorCount(1));
+        assertEquals(0, page.getContributorCount(1));
         assertEquals(0, page.getContributorCount(2));
+        assertEquals(1, page.getContributorCount(3));
+        assertEquals(0, page.getContributorCount(4));
 
-        //Checks the count of results
-        assertEquals(Arrays.asList(3, 1, 1), page.getContributionCounts(1));
+        //Checks the count shown
+        assertEquals(Arrays.asList(1), page.getContributionCounts(3));
 
         //Checks if showLastTime="true" works, the default= false
         assertFalse(page.hasLastModifiedDates(0));
         assertTrue(page.hasLastModifiedDates(1));
         assertFalse(page.hasLastModifiedDates(2));
 
+        //Checks the personalized "None found" message
+        assertEquals("None found :(", page.getNoneFoundMessage(4));
 
+        //Checks that showPages="true" works
+        assertTrue(page.hasPages(6));
     }
 }
