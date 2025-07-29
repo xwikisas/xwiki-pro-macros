@@ -601,7 +601,8 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
       <defaultCategories/>
     </property>
     <property>
-      <description/>    </property>
+      <description/>
+    </property>
     <property>
       <id>panel</id>
     </property>
