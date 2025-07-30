@@ -133,5 +133,18 @@
       <version>${confluence.version}</version>
       <optional>true</optional>
     </dependency>
-  </dependencies>
+    <!-- for the favpages bridge -->
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>application-favorites</artifactId>
+      <type>xar</type>
+      <version>${favorites.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.xwiki.platform</groupId>
+          <artifactId>xwiki-platform-user-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+ </dependencies>
 </project>
