@@ -44,7 +44,7 @@
     <confluencepro.version>1.31.1</confluencepro.version>
     <cql.version>0.1.0</cql.version>
     <embed.version>1.1.0</embed.version>
-    <pro.commons.version>1.1.1</pro.commons.version>
+    <pro.commons.version>1.2.0</pro.commons.version>
     <favorites.version>1.4.1</favorites.version>
   </properties>
   <issueManagement>
