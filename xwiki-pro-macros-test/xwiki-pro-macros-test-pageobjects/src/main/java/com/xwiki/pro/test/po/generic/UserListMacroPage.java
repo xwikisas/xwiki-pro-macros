@@ -125,4 +125,14 @@ public class UserListMacroPage extends ViewPage
         String classAttr = userListTable.getAttribute("class");
         return classAttr != null && classAttr.contains("fixed-layout");
     }
+
+    public List<String> getUsernamesFromList(int listIndex)
+    {
+        return userLists.get(listIndex)
+            .findElements(By.cssSelector("tbody tr"))
+            .stream()
+            .map(row -> row.findElement(By.cssSelector(".xwiki-userlist-user-username a")).getText())
+            .collect(Collectors.toList());
+    }
+
 }

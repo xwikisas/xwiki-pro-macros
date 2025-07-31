@@ -110,6 +110,13 @@ public class TeamMacroPage extends ViewPage
     {
         return teamMacros.get(macroIndex).getText().equals("There is nobody to show.");
     }
+
+    public boolean hasAvatarInitials(int macroIndex, String dataUsername)
+    {
+        WebElement user = getUserByUsername(macroIndex, dataUsername);
+        return !user.findElements(By.className("xwikiteam-avatar-initials")).isEmpty();
+    }
+
 }
 
 

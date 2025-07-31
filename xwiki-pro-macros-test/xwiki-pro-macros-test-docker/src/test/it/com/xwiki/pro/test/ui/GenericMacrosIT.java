@@ -117,11 +117,11 @@ public class GenericMacrosIT
     private final DocumentReference PageWithMStreamMacros = new DocumentReference("xwiki", "Main",
         "MicrosoftStreamTest");
 
-    private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
+    private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team letterAvatarFontColor=\"rgb(204, 0, 255)\"/}}\n"
         + "\n"
-        + "{{team tag=\"testTag\" /}}\n"
+        + "{{team tag=\"testTag\" showUsernames=\"true\" disableTools=\"true\" disableLetterAvatars=\"true\" requireExternalAuth=\"false\" /}}\n"
         + "\n"
-        + "{{team tag=\"nonExistentTag\" /}}";
+        + "{{team tag=\"nonExistentTag\"  /}}";
 
     private static final String PAGE_WITH_BUTTON_MACROS_CONTENT =
         "{{button id=\"testbtn1\" label=\"test1\" url=\"https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting\" color=\"#ff66ff\" newTab=\"true\" icon=\"check\" width=\"100px\"/}}\n"
@@ -148,7 +148,7 @@ public class GenericMacrosIT
         "{{expand title=\"ExpandTest1\" expanded=\"true\"}}\n"
             + "test0\n"
             + "test1\n"
-            + "image:example.jpg\"\n"
+            + "image:example.jpg\n"
             + "\n"
             + "{{expand title=\"ExpandTest2\"}}\n"
             + "test0\n"
@@ -295,24 +295,29 @@ public class GenericMacrosIT
 
         assertTrue(page.getProfileLink(1, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
 
+        //Ckecs the existence of avatar initials
+        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest"));
+        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest2"));
+        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest3"));
+
         //Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius
         assertEquals("U", page.getAvatarInitials(0, username));
         assertEquals("U", page.getAvatarInitials(0, username2));
         assertEquals("U", page.getAvatarInitials(0, username3));
 
-        assertEquals("U", page.getAvatarInitials(1, username));
+        // disableLetterAvatars="true"
+        assertFalse(page.hasAvatarInitials(1, "xwiki:XWiki.UserTest"));
 
+        //default color
         assertTrue(page.getAvatarBackgroundColor(0, username).contains("rgb(0, 170, 102)"));
         assertTrue(page.getAvatarBackgroundColor(0, username2).contains("rgb(0, 170, 102)"));
         assertTrue(page.getAvatarBackgroundColor(0, username3).contains("rgb(0, 170, 102)"));
 
-        assertTrue(page.getAvatarBackgroundColor(1, username).contains("rgb(0, 170, 102)"));
+        //personalized color
+        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username));
+        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username2));
+        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username3));
 
-        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username));
-        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username2));
-        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username3));
-
-        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(1, username));
 
         assertTrue(page.getAvatarSize(0, username).startsWith("60"));
         assertTrue(page.getAvatarSize(0, username2).startsWith("60"));
@@ -324,14 +329,12 @@ public class GenericMacrosIT
         assertTrue(page.getAvatarBorderRadius(0, username2).startsWith("60"));
         assertTrue(page.getAvatarBorderRadius(0, username3).startsWith("60"));
 
-        assertTrue(page.getAvatarBorderRadius(1, username).startsWith("60"));
-
         //Checks the property of hidden usernames
         assertTrue(page.isUsernameHidden(0));
-        assertTrue(page.isUsernameHidden(1));
+        assertFalse(page.isUsernameHidden(1));
         assertTrue(page.isUsernameHidden(2));
 
-        //Checks that if a team macro is empty (0 users), the message "There is nobody to show." apeears
+        //Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears
         assertTrue(page.hasEmptyTeamMessage(2));
     }
 
@@ -638,6 +641,11 @@ public class GenericMacrosIT
 
         //Checks that fixedTableLayout="true" works
         assertTrue(page.hasFixedLayout(1));
+
+        //Check the users in the list
+        assertEquals(Arrays.asList("UserTest", "UserTest2"), page.getUsernamesFromList(0));
+        assertEquals(Arrays.asList("UserTest", "UserTest2","UserTest3"), page.getUsernamesFromList(1));
+
     }
 
     @Test
