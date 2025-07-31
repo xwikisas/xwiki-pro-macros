@@ -35,6 +35,11 @@ public class StatusMacroPage extends ViewPage
         return statusBox.get(i).getAttribute("title");
     }
 
+    public int getStatusCount()
+    {
+        return statusBox.size();
+    }
+
     public String getStatusColor(int i)
     {
         String classAttr = statusBox.get(i).getAttribute("class");

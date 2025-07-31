@@ -30,12 +30,17 @@ import org.xwiki.test.ui.po.ViewPage;
 public class TagListMacroPage extends ViewPage
 {
     @FindBy(css = ".glossaryListRoot")
-    private List<WebElement> listRoots;
+    private List<WebElement> taglistRoots;
+
+    public int getTagListCount()
+    {
+        return taglistRoots.size();
+    }
 
     public List<String> getGlossaryTitles(int rootIndex)
     {
 
-        WebElement root = listRoots.get(rootIndex);
+        WebElement root = taglistRoots.get(rootIndex);
         List<WebElement> glossaryTitles = root.findElements(By.cssSelector(".glossaryBinTitle"));
         List<String> titles = new ArrayList<>();
         for (WebElement el : glossaryTitles) {
@@ -47,7 +52,7 @@ public class TagListMacroPage extends ViewPage
     public List<String> getTagNames(int rootIndex)
     {
 
-        WebElement root = listRoots.get(rootIndex);
+        WebElement root = taglistRoots.get(rootIndex);
         List<WebElement> glossaryElements = root.findElements(By.cssSelector(".glossaryBinElement"));
         List<String> tagNames = new ArrayList<>();
         for (WebElement el : glossaryElements) {
@@ -59,7 +64,7 @@ public class TagListMacroPage extends ViewPage
     public String getHtmlTagForTagName(int rootIndex, String tagName)
     {
 
-        WebElement root = listRoots.get(rootIndex);
+        WebElement root = taglistRoots.get(rootIndex);
         String xpath = ".//li[contains(@class, 'glossaryBinElement')]/a[text()='" + tagName + "']";
         List<WebElement> elements = root.findElements(By.xpath(xpath));
 

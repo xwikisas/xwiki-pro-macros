@@ -98,6 +98,18 @@ public class TeamMacroPage extends ViewPage
             .findFirst()
             .orElseThrow(() -> new NoSuchElementException("User not found: " + dataUsername));
     }
+
+    public boolean isUsernameHidden(int macroIndex)
+    {
+        WebElement container = teamMacros.get(macroIndex);
+        String classAttr = container.getAttribute("class");
+        return classAttr.contains("usernames-hidden");
+    }
+
+    public boolean hasEmptyTeamMessage(int macroIndex)
+    {
+        return teamMacros.get(macroIndex).getText().equals("There is nobody to show.");
+    }
 }
 
 

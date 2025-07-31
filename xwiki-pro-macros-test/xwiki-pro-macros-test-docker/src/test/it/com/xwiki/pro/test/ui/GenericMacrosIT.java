@@ -31,12 +31,11 @@ import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
-import org.xwiki.test.ui.po.CommentsTab;
 
 import com.xwiki.pro.test.po.generic.ButtonMacroPage;
-import com.xwiki.pro.test.po.generic.ContributorsMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacroPage;
-import com.xwiki.pro.test.po.generic.RecentlyUpdatedMacroPage;
+import com.xwiki.pro.test.po.generic.MicrosoftStreamMacroPage;
+import com.xwiki.pro.test.po.generic.PanelMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.StatusMacroPage;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
@@ -47,6 +46,7 @@ import com.xwiki.pro.test.po.generic.UserProfileMacroPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -111,29 +111,11 @@ public class GenericMacrosIT
     private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
         "UserListTest");
 
-    private final DocumentReference pageWithRecentlyUpdatedMacro = new DocumentReference("xwiki", "Main",
-        "RecentlyUpdatedTest");
+    private final DocumentReference PageWithPanelMacros = new DocumentReference("xwiki", "Main",
+        "PanelTest");
 
-    private final DocumentReference pageWithContributorsMacro = new DocumentReference("xwiki", "Main",
-        "ContributorsTest");
-
-    private final DocumentReference testPage = new DocumentReference("xwiki", "Main",
-        "testPage");
-
-    private final DocumentReference testPage2 = new DocumentReference("xwiki", "Main",
-        "testPage2");
-
-    private final DocumentReference testPage3 = new DocumentReference("xwiki", "Main",
-        "testPage3");
-
-    private final DocumentReference testPage4 = new DocumentReference("xwiki", "XWiki",
-        "testPage4");
-
-    private final DocumentReference testPage5 = new DocumentReference("xwiki", "Main",
-        "testPage5");
-
-    private final DocumentReference testPage6 = new DocumentReference("xwiki", "XWiki",
-        "testPage6");
+    private final DocumentReference PageWithMStreamMacros = new DocumentReference("xwiki", "Main",
+        "MicrosoftStreamTest");
 
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team/}}\n"
         + "\n"
@@ -191,49 +173,35 @@ public class GenericMacrosIT
         + "{{userList fixedTableLayout=\"true\" groups=\"XWiki.XWikiAllGroup\" properties=\"avatar,username,phone,"
         + "email,address,blogfeed\"/}}\n";
 
-    private static final String PAGE_WITH_RECENTLY_UPDATED_CONTENT = "{{recently-updated labels=\"recent,MainRecent\""
-        + " width=\"250px\" types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated width=\"150\" labels=\"recent\" spaces=\"@global\" theme=\"concise\" max=\"5\" "
-        + "types=\"page,attachment,comment\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" excludedLabels=\"recent2\" spaces=\"@global\" types=\"page\" /}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" showProfilePic=\"true\" types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" excludedLabels=\"recent2\" theme=\"social\" showProfilePic=\"false\" "
-        + "hideHeading=\"true\" types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" excludedLabels=\"recent2\" spaces=\"@global\" theme=\"sidebar\" "
-        + "excludedSpaces=\"Main\" types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" currentWiki=\"true\" types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" spaces=\"@global\" currentWiki=\"true\"  types=\"page\"/}}\n"
-        + "\n"
-        + "{{recently-updated labels=\"recent\" excludedLabels=\"recent2\" spaces=\"@global\" types=\"page\" "
-        + "author=\"XWiki.UserTest\"/}}\n";
+    private static final String PAGE_WITH_PANEL_CONTENT =
+        "{{panel borderColor=\"#f536f5\" borderStyle=\"dashed\" borderWidth=\"2\" bgColor=\"#edfa34\" "
+            + "contentTextColor=\"red\" titleBGColor=\"#452fd4\" "
+            + "titleColor=\"#74d927\" width=\"300px\" borderRadius=\"20px\" "
+            + "footerBGColor=\"#ac4de8\" footerColor=\"#6beded\" height=\"50%\" "
+            + "title=\"PanelTestTitle\" footer=\"PanelTestFooter\" }}\n"
+            + "Content for PanelMacroTest\n"
+            + "Content2 for PanelMacroTest\n"
+            + "\n"
+            + "{{/panel}}\n"
+            + "\n"
+            + "{{panel borderColor=\"#f536f5\" borderStyle=\"solid\" title=\"NestedPanelsTestTitle\"}}\n"
+            + "Content3 for PanelMacroTest\n"
+            + "\n"
+            + "{{panel borderColor=\"rgb(153, 0, 153)\" borderStyle=\"groove\" classes=\"testCssClass\" "
+            + "title=\"NestedPanelsTestTitle2\"}}\n"
+            + "Content4 for PanelMacroTest\n"
+            + "\n"
+            + "{{/panel}}\n"
+            + "\n"
+            + "{{/panel}}\n";
 
-    private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors/}}\n"
-        + "\n"
-        + "{{contributors include=\"authors,comments\" reverse=\"true\" limit=\"3\" mode=\"list\" "
-        + " showLastTime=\"true\"  "
-        + "noneFoundMessage=\"None found :(\" global=\"true\" /}}\n"
-        + "\n"
-        + "{{contributors include=\"authors,comments\" limit=\"3\" mode=\"inline\" "
-        + "showCount=\"false\" global=\"true\"/}}\n"
-        + "\n"
-        + "{{contributors include=\"authors,comments\" spaces=\"DateMacro\" limit=\"3\" noneFoundMessage=\"None "
-        + "found :(\"  showCount=\"true\"/}}\n"
-        + "\n"
-        + "{{contributors  spaces=\"NonExistingSpace\"  noneFoundMessage=\"None "
-        + "found :(\"/}}\n"
-        + "\n"
-        + "{{contributors include=\"authors,comments\" scope=\"Descendants\" "
-        + "showCount=\"false\" global=\"true\" /}}\n"
-        + "\n"
-        + "{{contributors include=\"authors,comments\" scope=\"Specified\" "
-        + "showCount=\"false\" global=\"true\" showPages=\"true\"/}}\n";
+    private static final String PAGE_WITH_MICROSOFT_STREAM_CONTENT =
+        "{{msStream url=\"www.youtube.com\" alignment=\"RIGHT\" "
+            + "start=\"01:12:13\" showinfo=\"true\" autoplay=\"true\" width=\"600px\" height=\"400px\"/}}\n"
+            + "\n"
+            + "{{msStream url=\"www.youtube.com\" alignment=\"LEFT\" start=\"03:12:13\" textWrap=\"true\"/}}\n"
+            + "\n"
+            + "{{msStream url=\"www.youtube.com\" alignment=\"CENTER\" showinfo=\"false\" autoplay=\"false\"/}}\n";
 
     private void registerMacros()
     {
@@ -243,8 +211,6 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Panel");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "RecentlyUpdated");
-        register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Contributors");
     }
 
     @BeforeAll
@@ -269,15 +235,9 @@ public class GenericMacrosIT
         setup.deletePage(pageWithExpandMacro);
         setup.deletePage(pageWithUserProfileMacro);
         setup.deletePage(pageWithUserListMacro);
-        setup.deletePage(pageWithRecentlyUpdatedMacro);
-        setup.deletePage(pageWithContributorsMacro);
-
-        setup.deletePage(testPage);
-        setup.deletePage(testPage2);
-        setup.deletePage(testPage3);
-        setup.deletePage(testPage4);
-        setup.deletePage(testPage5);
-        setup.deletePage(testPage6);
+        setup.deletePage(PageWithPanelMacros);
+        setup.deletePage(pageWithTags);
+        setup.deletePage(PageWithMStreamMacros);
 
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
@@ -320,30 +280,59 @@ public class GenericMacrosIT
 
         String username = "xwiki:XWiki.UserTest";
         String username2 = "xwiki:XWiki.UserTest2";
+        String username3 = "xwiki:XWiki.UserTest3";
 
         //Checks the users' titles
         assertEquals("UserTest", page.getUserTitle(0, username));
         assertEquals("UserTest2", page.getUserTitle(0, username2));
+        assertEquals("UserTest3", page.getUserTitle(0, username3));
 
+        assertEquals("UserTest", page.getUserTitle(1, username));
         //Checks the users' profile links
         assertTrue(page.getProfileLink(0, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
         assertTrue(page.getProfileLink(0, username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
+        assertTrue(page.getProfileLink(0, username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
+
+        assertTrue(page.getProfileLink(1, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
 
         //Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius
         assertEquals("U", page.getAvatarInitials(0, username));
         assertEquals("U", page.getAvatarInitials(0, username2));
+        assertEquals("U", page.getAvatarInitials(0, username3));
+
+        assertEquals("U", page.getAvatarInitials(1, username));
 
         assertTrue(page.getAvatarBackgroundColor(0, username).contains("rgb(0, 170, 102)"));
         assertTrue(page.getAvatarBackgroundColor(0, username2).contains("rgb(0, 170, 102)"));
+        assertTrue(page.getAvatarBackgroundColor(0, username3).contains("rgb(0, 170, 102)"));
+
+        assertTrue(page.getAvatarBackgroundColor(1, username).contains("rgb(0, 170, 102)"));
 
         assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username));
         assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username2));
+        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(0, username3));
+
+        assertEquals("rgb(255, 255, 255)", page.getAvatarFontColor(1, username));
 
         assertTrue(page.getAvatarSize(0, username).startsWith("60"));
         assertTrue(page.getAvatarSize(0, username2).startsWith("60"));
+        assertTrue(page.getAvatarSize(0, username3).startsWith("60"));
+
+        assertTrue(page.getAvatarSize(1, username).startsWith("60"));
 
         assertTrue(page.getAvatarBorderRadius(0, username).startsWith("60"));
         assertTrue(page.getAvatarBorderRadius(0, username2).startsWith("60"));
+        assertTrue(page.getAvatarBorderRadius(0, username3).startsWith("60"));
+
+        assertTrue(page.getAvatarBorderRadius(1, username).startsWith("60"));
+
+        //Checks the property of hidden usernames
+        assertTrue(page.isUsernameHidden(0));
+        assertTrue(page.isUsernameHidden(1));
+        assertTrue(page.isUsernameHidden(2));
+
+        //Checks that if a team macro is empty (0 users), the message "There is nobody to show." apeears
+        assertTrue(page.hasEmptyTeamMessage(2));
     }
 
     @Test
@@ -361,9 +350,9 @@ public class GenericMacrosIT
         assertEquals("80px", page.getButtonWidth("testbtn3"));
 
         //Checks the color of the buttons
-        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn1"));
-        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn3"));
-        assertEquals("rgb(255, 102, 255)", page.getButtonColor("testbtn4"));
+        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn1"));
+        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn3"));
+        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn4"));
 
         //Checks the label of the buttons
         assertEquals("test1", page.getButtonLabel("testbtn1"));
@@ -416,6 +405,9 @@ public class GenericMacrosIT
 
         StatusMacroPage page = new StatusMacroPage();
 
+        // There should be 3 status macros.
+        assertEquals(3, page.getStatusCount());
+
         //Checks the titles of the status macros
         assertEquals("test1", page.getStatusTitle(0));
         assertEquals("test2", page.getStatusTitle(1));
@@ -441,6 +433,9 @@ public class GenericMacrosIT
         setup.createPage(pageWithTagListMacros, PAGE_WITH_TAGLIST_MACROS_CONTENT);
 
         TagListMacroPage page = new TagListMacroPage();
+
+        // There should be 3 tagList macros.
+        assertEquals(3, page.getTagListCount());
 
         //Checks the ordered titles of the tags from the tagList
         List<String> expectedTitles1 = Arrays.asList("A-B", "G");
@@ -492,6 +487,8 @@ public class GenericMacrosIT
 
         ExpandMacroPage page = new ExpandMacroPage();
 
+        // There should be 2 expand macros.
+        assertEquals(2, page.getExpandCount());
         //Nested Expand macros - Checks the titles of the macros
         assertEquals("ExpandTest1", page.getTitleText(0));
         assertEquals("ExpandTest2", page.getTitleText(1));
@@ -545,6 +542,9 @@ public class GenericMacrosIT
 
         UserProfileMacroPage page = new UserProfileMacroPage();
 
+        // There should be 3 userProfile macros.
+        assertEquals(3, page.getUserProfileCount());
+
         //Checks the links of the avatar pictures for each user
         assertTrue(page.linkImageProfile(0, "UserTest"));
         assertTrue(page.linkImageProfile(1, "UserTest2"));
@@ -595,6 +595,9 @@ public class GenericMacrosIT
 
         UserListMacroPage page = new UserListMacroPage();
 
+        // There should be 2 userList macros.
+        assertEquals(2, page.getUserListsCount());
+
         //Checks the number of users in a list
         assertEquals(2, page.getUserCountInList(0));
         for (int i = 0; i < 2; i++) {
@@ -637,227 +640,155 @@ public class GenericMacrosIT
         assertTrue(page.hasFixedLayout(1));
     }
 
-    void createTestPages(TestUtils setup)
+    @Test
+    @Order(8)
+    void panelMacroTest(TestUtils setup)
     {
-        //Creating test pages foe recently-updated and contributors macros
-        setup.deletePage(testPage);
-        setup.deletePage(testPage2);
-        setup.deletePage(testPage3);
-        setup.deletePage(testPage4);
-        setup.deletePage(testPage5);
-        setup.deletePage(testPage6);
-
-        setup.createPage(pageWithRecentlyUpdatedMacro, PAGE_WITH_RECENTLY_UPDATED_CONTENT);
-        setup.gotoPage(pageWithRecentlyUpdatedMacro);
-        CommentsTab commentsTab = setup.gotoPage(pageWithRecentlyUpdatedMacro).openCommentsDocExtraPane();
-        commentsTab.postComment("test", true);
-        TaggablePage taggablePage7 = new TaggablePage();
-        AddTagsPane tagsPane7 = taggablePage7.addTags();
-        tagsPane7.setTags("MainRecent");
-        tagsPane7.add();
-
-        setup.createPage(testPage, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage);
-        TaggablePage taggablePage = new TaggablePage();
-        AddTagsPane tagsPane = taggablePage.addTags();
-        tagsPane.setTags("recent");
-        tagsPane.add();
-
-        setup.createPage(testPage2, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage2);
-        TaggablePage taggablePage2 = new TaggablePage();
-        AddTagsPane tagsPane2 = taggablePage2.addTags();
-        tagsPane2.setTags("recent, recent2");
-        tagsPane2.add();
-
-        setup.createPage(testPage3, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage3);
-        TaggablePage taggablePage3 = new TaggablePage();
-        AddTagsPane tagsPane3 = taggablePage3.addTags();
-        tagsPane3.setTags("recent");
-        tagsPane3.add();
-
-        setup.login("UserTest3", "UserTest");
-        setup.createPage(testPage4, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage4);
-        TaggablePage taggablePage4 = new TaggablePage();
-        AddTagsPane tagsPane4 = taggablePage4.addTags();
-        tagsPane4.setTags("recent, recent2");
-        tagsPane4.add();
-
-        setup.login("UserTest2", "UserTest");
-        setup.createPage(testPage5, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage5);
-        TaggablePage taggablePage5 = new TaggablePage();
-        AddTagsPane tagsPane5 = taggablePage5.addTags();
-        tagsPane5.setTags("recent, recent2");
-        tagsPane5.add();
-
-        setup.login("UserTest", "UserTest");
-        setup.createPage(testPage6, "test page for recentlyUpdatedMacroTest");
-        setup.gotoPage(testPage6);
-        TaggablePage taggablePage6 = new TaggablePage();
-        AddTagsPane tagsPane6 = taggablePage6.addTags();
-        tagsPane6.setTags("recent");
-        tagsPane6.add();
-
         setup.loginAsSuperAdmin();
-        setup.createPage(pageWithContributorsMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
+        setup.gotoPage("Main", "PanelTest");
+        setup.createPage(PageWithPanelMacros, PAGE_WITH_PANEL_CONTENT);
+
+        PanelMacroPage page = new PanelMacroPage();
+
+        //There should be 3 panel macros on the page
+        assertEquals(3, page.getPanelCount());
+
+        //Panel container 1st panel
+        assertEquals("300px", page.getPanelWidth(0));
+        assertEquals("50%", page.getPanelHeight(0));
+        assertEquals("20px", page.getPanelBorderRadius(0));
+        assertEquals("2px dashed " + hexToRgb("#f536f5"), page.getPanelBorderStyle(0));
+
+        //Title section 1st panel
+        assertEquals("PanelTestTitle", page.getTitleText(0));
+        assertEquals(hexToRgb("#452fd4"), page.getTitleBackgroundColor(0));
+        assertEquals(hexToRgb("#74d927"), page.getTitleColor(0));
+
+        //Content section 1st panel
+        assertEquals("Content for PanelMacroTest\nContent2 for PanelMacroTest", page.getContentText(0));
+        assertEquals(hexToRgb("#edfa34"), page.getContentBackgroundColor(0));
+        assertEquals("red", page.getContentColor(0));
+
+        //Footer section 1st panel
+        assertEquals("PanelTestFooter", page.getFooterText(0));
+        assertEquals(hexToRgb("#ac4de8"), page.getFooterBackgroundColor(0));
+        assertEquals(hexToRgb("#6beded"), page.getFooterColor(0));
+
+        //Nested Panels
+
+        //Panel container 2nd panel
+        assertEquals("solid " + hexToRgb("#f536f5"), page.getPanelBorderStyle(1));
+        assertNull(page.getPanelWidth(1));
+        assertNull(page.getPanelHeight(1));
+        assertNull(page.getPanelBorderRadius(1));
+
+        //Title section 2nd panel
+        assertEquals("NestedPanelsTestTitle", page.getTitleText(1));
+        assertNull(page.getTitleBackgroundColor(1));
+        assertNull(page.getTitleColor(1));
+
+        //Content section 2nd panel
+        assertEquals("Content3 for PanelMacroTest\nNestedPanelsTestTitle2\nContent4 for PanelMacroTest",
+            page.getContentText(1));
+        assertNull(page.getContentBackgroundColor(1));
+        assertNull(page.getContentColor(1));
+
+        // Checks the CSS class of the 3rd panel
+        assertTrue(page.getPanelClass(2).contains("macro-panel"));
+        assertTrue(page.getPanelClass(2).contains("testCssClass"));
+
+        //Panel container 3rd panel
+        assertEquals("groove rgb(153, 0, 153)", page.getPanelBorderStyle(2));
+        assertNull(page.getPanelWidth(2));
+        assertNull(page.getPanelHeight(2));
+        assertNull(page.getPanelBorderRadius(2));
+
+        //Title section 3rd panel
+        assertEquals("NestedPanelsTestTitle2", page.getTitleText(2));
+        assertNull(page.getTitleBackgroundColor(2));
+        assertNull(page.getTitleColor(2));
+
+        //Content section 3rd panel
+        assertEquals("Content4 for PanelMacroTest", page.getContentText(2));
+        assertNull(page.getContentBackgroundColor(2));
+        assertNull(page.getContentColor(2));
     }
 
     @Test
     @Order(9)
-    void recentlyUpdatedMacroTest(TestUtils setup)
+    void microsoftStreamMacroTest(TestUtils setup)
     {
         setup.loginAsSuperAdmin();
-        createTestPages(setup);
+        setup.gotoPage("Main", "MicrosoftStreamMacroPage");
+        setup.createPage(PageWithMStreamMacros, PAGE_WITH_MICROSOFT_STREAM_CONTENT);
 
-        setup.gotoPage("Main", "RecentlyUpdatedTest");
+        MicrosoftStreamMacroPage page = new MicrosoftStreamMacroPage();
 
-        RecentlyUpdatedMacroPage page = new RecentlyUpdatedMacroPage();
+        //There should be 3 MicrosoftSream macros
+        assertEquals(3, page.getMstreamCount());
 
-        //Checking the number of results the macros include (all the macros select the pages with the tag "recent")
+        //Checks the alignment of the macro
+        assertEquals("right", page.getAlignment(0));
 
-        //Checks that the macro shows pages with both tags "recent" and "MainRecent" and the RecentlyUpdatedTest
-        //and that it shows pages from the current XWiki space
-        assertEquals(5, page.getRecentlyUpdatedItemCount(0));
+        //Checks the width of the macro, default = "500px"
+        assertEquals("600px", page.getIframeWidth(0));
 
-        //Checks that the macro shows 5 pages with the tag "recent", global space
-        assertEquals(5, page.getRecentlyUpdatedItemCount(1));
-        //Checks that when there are more results than the set max number a "Show more" button exists
-        assertTrue(page.hasShowMoreButton(1));
-        //Function that clicks the "Show more" button
-        page.clickShowMore(1);
-        //Checks that after clicking the "Show more" button, more result will appear
-        assertEquals(7, page.getRecentlyUpdatedItemCount(1));
+        //Checks the height of the macro, default = "300px"
+        assertEquals("400px", page.getIframeHeight(0));
 
-        //Checks that the macro shows pages with the tag "recent", but not with the "recent2" tag
-        //If the pages have both tags, they will not appear as results
-        //global space
-        assertEquals(3, page.getRecentlyUpdatedItemCount(2));
+        //Checks the autoplay property, default ="false"
+        assertTrue(page.hasAutoplay(0));
+        //Checks the showInfo property, default ="false"
+        assertTrue(page.hasShowInfo(0));
+        //Checks the StartTime property existence
+        assertTrue(page.hasStartTime(0));
+        //Checks the StartTime property
+        assertEquals(convertStartTime("01:12:13"), page.getStartTime(0));
+        //Checks the actual URL of the microsoftStream
+        assertTrue(page.hasCorrectURL(0, "www.youtube.com"));
 
-        //Checks that the macro shows pages with the tag "recent" from the current XWiki space
-        assertEquals(4, page.getRecentlyUpdatedItemCount(3));
+        assertEquals("left", page.getAlignment(1));
+        assertEquals("500px", page.getIframeWidth(1));
+        assertEquals("300px", page.getIframeHeight(1));
+        assertFalse(page.hasAutoplay(1));
+        assertFalse(page.hasShowInfo(1));
+        assertTrue(page.hasStartTime(1));
+        assertEquals(convertStartTime("03:12:13"), page.getStartTime(1));
+        assertTrue(page.hasCorrectURL(1, "www.youtube.com"));
 
-        //excludedLabels="recent2"
-        assertEquals(2, page.getRecentlyUpdatedItemCount(4));
-
-        //excludedLabels="recent2" spaces="@global" theme="sidebar" excludedSpaces="Main"
-        assertEquals(3, page.getRecentlyUpdatedItemCount(5));
-
-        //currentWiki="true"
-        assertEquals(6, page.getRecentlyUpdatedItemCount(6));
-
-        //spaces="@global" currentWiki="true"
-        assertEquals(6, page.getRecentlyUpdatedItemCount(7));
-        //excludedLabels="recent2" spaces="@global" author="XWiki.UserTest"
-        assertEquals(1, page.getRecentlyUpdatedItemCount(8));
-
-        //Checking the contributors/ authors of the results
-        assertEquals("UserTest2", page.getAuthorName(0, 0));
-        assertEquals("superadmin", page.getAuthorName(0, 1));
-
-        assertEquals("UserTest", page.getAuthorName(1, 0));
-        assertEquals("UserTest2", page.getAuthorName(1, 1));
-        assertEquals("UserTest3", page.getAuthorName(1, 2));
-
-        assertEquals("UserTest", page.getAuthorName(8, 0));
-
-        //Checks whether the macro has the heading "Recently Updated" visible
-        assertTrue(page.macroHasHeading(0));
-        assertTrue(page.macroHasHeading(1));
-        assertTrue(page.macroHasHeading(2));
-        assertTrue(page.macroHasHeading(3));
-        //hideHeading="true"
-        assertFalse(page.macroHasHeading(4));
-
-        //Checks whether the macro has the profile pictures of contributors visible
-        //default: showProfilePic="false"
-        assertFalse(page.macroHasAvatars(0));
-        assertFalse(page.macroHasAvatars(1));
-        assertFalse(page.macroHasAvatars(2));
-        //showProfilePic="true"
-        assertTrue(page.macroHasAvatars(3));
-        //showProfilePic="false"
-        assertFalse(page.macroHasAvatars(4));
-        assertFalse(page.macroHasAvatars(5));
-        assertFalse(page.macroHasAvatars(6));
-        assertFalse(page.macroHasAvatars(7));
-        assertFalse(page.macroHasAvatars(8));
-
-        //Checks the theme of the macro (CONCISE/ SOCIAL/ SIDEBAR)
-        //default = concise
-        for (int i = 0; i < 9 && (i != 4 && i != 5); i++) {
-            assertEquals("concise", page.getResultsTheme(i));
-            assertTrue(page.themeStructureIsCorrect(i, "concise"));
-        }
-
-        assertEquals("social", page.getResultsTheme(4));
-        assertTrue(page.themeStructureIsCorrect(4, "social"));
-        assertEquals("sidebar", page.getResultsTheme(5));
-        assertTrue(page.themeStructureIsCorrect(5, "sidebar"));
-
-        //Check the set/ default width of the macros
-        assertEquals("250px", page.getMacroWidth(0));
-        assertEquals("150", page.getMacroWidth(1));
-        //the default value is 100
-        for (int i = 2; i < 9; i++) {
-            assertEquals("100", page.getMacroWidth(i));
-        }
+        assertEquals("center", page.getAlignment(2));
+        assertEquals("500px", page.getIframeWidth(2));
+        assertEquals("300px", page.getIframeHeight(2));
+        assertFalse(page.hasAutoplay(2));
+        assertFalse(page.hasShowInfo(2));
+        assertFalse(page.hasStartTime(2));
+        assertTrue(page.hasCorrectURL(2, "www.youtube.com"));
     }
 
-    @Test
-    @Order(9)
-    void contributorsMacroTest(TestUtils setup)
+    //Function to convert color codes from hex to rgb
+    private String hexToRgb(String hex)
     {
-        setup.loginAsSuperAdmin();
-        setup.gotoPage("Main", "ContributorsTest");
+        hex = hex.substring(1);
+        if (hex.length() == 3) {
+            hex = "" + hex.charAt(0) + hex.charAt(0)
+                + hex.charAt(1) + hex.charAt(1)
+                + hex.charAt(2) + hex.charAt(2);
+        }
 
-        createTestPages(setup);
-        ContributorsMacroPage page = new ContributorsMacroPage();
+        int r = Integer.parseInt(hex.substring(0, 2), 16);
+        int g = Integer.parseInt(hex.substring(2, 4), 16);
+        int b = Integer.parseInt(hex.substring(4, 6), 16);
 
-        //Checks how many contributors appear in each macro
-        assertEquals(1, page.getContributorNameCount(0));
-        assertEquals(3, page.getContributorNameCount(1));
-        assertEquals(3, page.getContributorNameCount(2));
-        assertEquals(1, page.getContributorNameCount(3));
-        assertEquals(0, page.getContributorNameCount(4));
-        assertEquals(1, page.getContributorNameCount(5));
-        assertEquals(1, page.getContributorNameCount(6));
+        return String.format("rgb(%d, %d, %d)", r, g, b);
+    }
 
-        List<String> expectedMacro0 = Arrays.asList("superadmin");
-        List<String> expectedMacro1 = Arrays.asList("superadmin", "UserTest2", "UserTest3");
-        List<String> expectedMacro2 = Arrays.asList("UserTest2", "UserTest3", "UserTest");
-
-        //Checks the contributors' names
-        assertEquals(expectedMacro0, page.getContributorNames(0));
-        assertEquals(expectedMacro1, page.getContributorNames(1));
-        assertEquals(expectedMacro2, page.getContributorNames(2));
-
-        //Checks the inline/list mode of the macro, default= inline
-        assertFalse(page.isListMode(0));
-        assertTrue(page.isListMode(1));
-        assertFalse(page.isListMode(2));
-
-        //Checks how many counts of results a macro has (showCount=true, default= false)
-        assertEquals(0, page.getContributorCount(0));
-        assertEquals(0, page.getContributorCount(1));
-        assertEquals(0, page.getContributorCount(2));
-        assertEquals(1, page.getContributorCount(3));
-        assertEquals(0, page.getContributorCount(4));
-
-        //Checks the count shown
-        assertEquals(Arrays.asList(1), page.getContributionCounts(3));
-
-        //Checks if showLastTime="true" works, the default= false
-        assertFalse(page.hasLastModifiedDates(0));
-        assertTrue(page.hasLastModifiedDates(1));
-        assertFalse(page.hasLastModifiedDates(2));
-
-        //Checks the personalized "None found" message
-        assertEquals("None found :(", page.getNoneFoundMessage(4));
-
-        //Checks that showPages="true" works
-        assertTrue(page.hasPages(6));
+    //Function to convert HH:MM:SS to seconds
+    public int convertStartTime(String time)
+    {
+        String[] parts = time.split(":");
+        int h = Integer.parseInt(parts[0]);
+        int m = Integer.parseInt(parts[1]);
+        int s = Integer.parseInt(parts[2]);
+        return h * 3600 + m * 60 + s;
     }
 }

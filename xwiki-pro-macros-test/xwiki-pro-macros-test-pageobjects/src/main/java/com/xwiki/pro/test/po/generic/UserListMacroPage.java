@@ -33,6 +33,11 @@ public class UserListMacroPage extends ViewPage
     @FindBy(css = ".xwiki-userlist")
     private List<WebElement> userLists;
 
+    public int getUserListsCount()
+    {
+        return userLists.size();
+    }
+
     public int getUserCountInList(int listIndex)
     {
         return userLists.get(listIndex).findElements(By.cssSelector("tbody tr")).size();

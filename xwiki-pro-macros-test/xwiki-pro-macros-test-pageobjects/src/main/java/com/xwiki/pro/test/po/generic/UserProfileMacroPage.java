@@ -38,6 +38,11 @@ public class UserProfileMacroPage extends ViewPage
     @FindBy(css = ".xwiki-user-profile-comment")
     private List<WebElement> userProfileComment;
 
+    public int getUserProfileCount()
+    {
+        return userProfileBoxes.size();
+    }
+
     public boolean linkImageProfile(int index, String username)
     {
         WebElement profileBox = userProfileBoxes.get(index);
