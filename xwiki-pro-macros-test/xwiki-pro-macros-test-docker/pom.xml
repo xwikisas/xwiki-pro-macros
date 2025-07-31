@@ -38,7 +38,7 @@
   <dependencies>
     <dependency>
       <groupId>com.xwiki.pro</groupId>
-      <artifactId>xwiki-pro-macros-ui</artifactId>
+      <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
       <version>${project.version}</version>
       <type>xar</type>
       <exclusions>
@@ -89,10 +89,9 @@
       <artifactId>xwiki-platform-model-api</artifactId>
       <version>${platform.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-rendering-macro-groovy</artifactId>
+      <artifactId>xwiki-platform-search-solr-query</artifactId>
       <version>${platform.version}</version>
     </dependency>
   </dependencies>
