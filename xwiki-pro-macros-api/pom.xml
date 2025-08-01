@@ -82,7 +82,6 @@
       <artifactId>xwiki-platform-display-html</artifactId>
       <version>${platform.version}</version>
     </dependency>
-
     <!--  Until here.  -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>

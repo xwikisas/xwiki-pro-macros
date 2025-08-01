@@ -70,7 +70,7 @@ public class PanelMacroPage extends ViewPage
         return null;
     }
 
-    //Panel container attributes
+    // Panel container attributes.
     public String getPanelWidth(int index)
     {
         return getStyleAttribute(panels.get(index), "width");
@@ -91,7 +91,7 @@ public class PanelMacroPage extends ViewPage
         return getStyleAttribute(panels.get(index), "border-radius");
     }
 
-    //Title
+    // Title.
     public String getTitleBackgroundColor(int index)
     {
         return getStyleAttribute(getTitle(index), "background-color");
@@ -113,7 +113,7 @@ public class PanelMacroPage extends ViewPage
         return getStyleAttribute(getContent(index), "color");
     }
 
-    //Footer
+    // Footer.
     public String getFooterBackgroundColor(int index)
     {
         return getStyleAttribute(getFooter(index), "background-color");
@@ -124,7 +124,7 @@ public class PanelMacroPage extends ViewPage
         return getStyleAttribute(getFooter(index), "color");
     }
 
-    //Text content
+    // Text content.
     public String getTitleText(int index)
     {
         return getTitle(index).getText();

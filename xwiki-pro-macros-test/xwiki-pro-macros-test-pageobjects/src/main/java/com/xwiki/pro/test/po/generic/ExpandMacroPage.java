@@ -62,13 +62,13 @@ public class ExpandMacroPage extends ViewPage
         return expandMacros.size();
     }
 
-    // Get all <img> tags inside the panel
+    // Gets all <img> tags inside the panel.
     public List<WebElement> getImages(int index)
     {
         return getPanel(index).findElements(By.tagName("img"));
     }
 
-    //Gel all test from paragraphs (<p> tag) inside panel body
+    // Gets all the text from paragraphs (<p> tag) inside the panel body.
     public List<String> getParagraphs(int index)
     {
         WebElement panel = expandMacros.get(index).findElement(By.cssSelector(".panel-body"));
@@ -80,21 +80,21 @@ public class ExpandMacroPage extends ViewPage
             .collect(Collectors.toList());
     }
 
-    // Checks if an <img> with a certain src is present
+    // Checks if an <img> with a certain src is present.
     public boolean containsImageWithSrc(int index, String partialSrc)
     {
         return getImages(index).stream()
             .anyMatch(img -> img.getAttribute("src").contains(partialSrc));
     }
 
-    //Checks whether the macro is expanded or not
+    // Checks whether the macro is expanded or not.
     public boolean isExpanded(int index)
     {
         WebElement macro = expandMacros.get(index);
         return macro.getAttribute("open") != null;
     }
 
-    //Clicks the macro to open/ close it
+    // Clicks the macro to open/ close it.
     public void toggleMacro(int index)
     {
         WebElement macro = expandMacros.get(index);

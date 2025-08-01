@@ -229,17 +229,12 @@ public class GenericMacrosIT
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
-        setup.deletePage(pageWithTeamMacros);
-        setup.deletePage(pageWithButtonMacros);
-        setup.deletePage(pageWithStatusMacros);
-        setup.deletePage(pageWithTagListMacros);
-        setup.deletePage(pageWithExpandMacro);
-        setup.deletePage(pageWithUserProfileMacro);
-        setup.deletePage(pageWithUserListMacro);
-        setup.deletePage(PageWithPanelMacros);
-        setup.deletePage(pageWithTags);
-        setup.deletePage(PageWithMStreamMacros);
+        registerMacros();
+    }
 
+    public void createPagesWithTags(TestUtils setup)
+    {
+        setup.loginAsSuperAdmin();
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
         TaggablePage taggablePage = new TaggablePage();
@@ -253,13 +248,13 @@ public class GenericMacrosIT
         AddTagsPane tagsPane2 = taggablePage2.addTags();
         tagsPane2.setTags("z, x, y");
         tagsPane2.add();
-        registerMacros();
     }
 
     @Test
     @Order(1)
     void teamMacroTest(TestUtils setup)
     {
+        setup.deletePage(pageWithTeamMacros);
         setup.gotoPage("XWiki", "UserTest");
         TaggablePage taggablePage = new TaggablePage();
         AddTagsPane tagsPane = taggablePage.addTags();
@@ -283,38 +278,38 @@ public class GenericMacrosIT
         String username2 = "xwiki:XWiki.UserTest2";
         String username3 = "xwiki:XWiki.UserTest3";
 
-        //Checks the users' titles
+        // Checks the users' titles.
         assertEquals("UserTest", page.getUserTitle(0, username));
         assertEquals("UserTest2", page.getUserTitle(0, username2));
         assertEquals("UserTest3", page.getUserTitle(0, username3));
 
         assertEquals("UserTest", page.getUserTitle(1, username));
-        //Checks the users' profile links
+        // Checks the users' profile links.
         assertTrue(page.getProfileLink(0, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
         assertTrue(page.getProfileLink(0, username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
         assertTrue(page.getProfileLink(0, username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
 
         assertTrue(page.getProfileLink(1, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
 
-        //Checks the existence of avatar initials
+        // Checks the existence of avatar initials.
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest"));
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest2"));
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest3"));
 
-        //Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius
+        // Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
         assertEquals("U", page.getAvatarInitials(0, username));
         assertEquals("U", page.getAvatarInitials(0, username2));
         assertEquals("U", page.getAvatarInitials(0, username3));
 
-        // disableLetterAvatars="true"
+        // disableLetterAvatars="true".
         assertFalse(page.hasAvatarInitials(1, "xwiki:XWiki.UserTest"));
 
-        //default color
+        // default color.
         assertTrue(page.getAvatarBackgroundColor(0, username).contains("rgb(0, 170, 102)"));
         assertTrue(page.getAvatarBackgroundColor(0, username2).contains("rgb(0, 170, 102)"));
         assertTrue(page.getAvatarBackgroundColor(0, username3).contains("rgb(0, 170, 102)"));
 
-        //personalized color
+        // personalized color.
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username));
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username2));
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username3));
@@ -329,12 +324,12 @@ public class GenericMacrosIT
         assertTrue(page.getAvatarBorderRadius(0, username2).startsWith("60"));
         assertTrue(page.getAvatarBorderRadius(0, username3).startsWith("60"));
 
-        //Checks the property of hidden usernames
+        // Checks the property of hidden usernames.
         assertTrue(page.isUsernameHidden(0));
         assertFalse(page.isUsernameHidden(1));
         assertTrue(page.isUsernameHidden(2));
 
-        //Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears
+        // Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears.
         assertTrue(page.hasEmptyTeamMessage(2));
     }
 
@@ -348,48 +343,48 @@ public class GenericMacrosIT
 
         ButtonMacroPage page = new ButtonMacroPage();
 
-        //Checks the width of the buttons
+        // Checks the width of the buttons.
         assertEquals("100px", page.getButtonWidth("testbtn1"));
         assertEquals("80px", page.getButtonWidth("testbtn3"));
 
-        //Checks the color of the buttons
+        // Checks the color of the buttons.
         assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn1"));
         assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn3"));
         assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn4"));
 
-        //Checks the label of the buttons
+        // Checks the label of the buttons.
         assertEquals("test1", page.getButtonLabel("testbtn1"));
         assertEquals("test2", page.getButtonLabel("testbtn2"));
         assertEquals("test3", page.getButtonLabel("testbtn3"));
         assertEquals("test4", page.getButtonLabel("testbtn4"));
         assertEquals("test5", page.getButtonLabel("testbtn5"));
 
-        //Checks the <a> tag of the parents' buttons
+        // Checks the <a> tag of the parents' buttons.
         assertEquals("a", page.getButtonParentTag("testbtn1"));
         assertEquals("a", page.getButtonParentTag("testbtn2"));
         assertEquals("a", page.getButtonParentTag("testbtn3"));
         assertEquals("a", page.getButtonParentTag("testbtn4"));
         assertEquals("a", page.getButtonParentTag("testbtn5"));
 
-        //Checks the url of the parents' buttons
+        // Checks the url of the parents' buttons.
         assertEquals("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting",
             page.getButtonParentUrl("testbtn1"));
         assertEquals(
             "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin",
             page.getButtonParentUrl("testbtn2"));
 
-        //Checks whether the link is opening in a new tab or not
+        // Checks whether the link is opening in a new tab or not.
         assertEquals("_blank", page.getButtonParentTarget("testbtn1"));
         assertEquals("", page.getButtonParentTarget("testbtn2"));
 
-        //The type of the button (DEFAULT/ DANGER/ SUCCESS / WARNING)
+        // The type of the button (DEFAULT/ DANGER/ SUCCESS / WARNING).
         assertTrue(page.getButtonClass("testbtn1").endsWith("-default"));
         assertTrue(page.getButtonClass("testbtn2").endsWith("-danger"));
         assertTrue(page.getButtonClass("testbtn3").endsWith("-success"));
         assertTrue(page.getButtonClass("testbtn4").endsWith("-warning"));
         assertTrue(page.getButtonClass("testbtn5").endsWith("-default"));
 
-        //The button has/ doesn't have an Icon assigned
+        // The button has/ doesn't have an Icon assigned.
         assertTrue(page.hasIcon("testbtn1"));
         assertFalse(page.hasIcon("testbtn2"));
         assertTrue(page.hasIcon("testbtn3"));
@@ -411,17 +406,17 @@ public class GenericMacrosIT
         // There should be 3 status macros.
         assertEquals(3, page.getStatusCount());
 
-        //Checks the titles of the status macros
+        // Checks the titles of the status macros.
         assertEquals("test1", page.getStatusTitle(0));
         assertEquals("test2", page.getStatusTitle(1));
         assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", page.getStatusTitle(2));
 
-        //Checks the type of the status macros/ the color
+        // Checks the type of the status macros/ the color.
         assertEquals("grey", page.getStatusColor(0));
         assertEquals("yellow", page.getStatusColor(1));
         assertEquals("yellow", page.getStatusColor(2));
 
-        //Checks the subtle property
+        // Checks the subtle property.
         assertFalse(page.isSubtle(0));
         assertTrue(page.isSubtle(1));
         assertFalse(page.isSubtle(2));
@@ -432,6 +427,7 @@ public class GenericMacrosIT
     void tagListMacroTest(TestUtils setup)
     {
         setup.deletePage(pageWithTagListMacros);
+        createPagesWithTags(setup);
         setup.gotoPage("XWiki", "TagListTest");
         setup.createPage(pageWithTagListMacros, PAGE_WITH_TAGLIST_MACROS_CONTENT);
 
@@ -440,41 +436,41 @@ public class GenericMacrosIT
         // There should be 3 tagList macros.
         assertEquals(3, page.getTagListCount());
 
-        //Checks the ordered titles of the tags from the tagList
+        // Checks the ordered titles of the tags from the tagList.
         List<String> expectedTitles1 = Arrays.asList("A-B", "G");
         assertEquals(expectedTitles1, page.getGlossaryTitles(0));
 
-        //Checks the ordered titles of the tags from the tagList
+        // Checks the ordered titles of the tags from the tagList.
         List<String> expectedTitles2 = Arrays.asList("A-G");
         assertEquals(expectedTitles2, page.getGlossaryTitles(1));
 
-        //Checks the ordered names of the tags from the tagList
+        // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames1 = Arrays.asList("alpha", "beta", "gamma");
         assertEquals(expectedTagNames1, page.getTagNames(0));
 
-        //Checks the ordered names of the tags from the tagList
+        // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
         assertEquals(expectedTagNames2, page.getTagNames(1));
 
-        //Checks the <a> tags of the tags from the tagList
+        // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames1) {
             assertEquals("a", page.getHtmlTagForTagName(0, i));
         }
 
-        //Checks the <a> tags of the tags from the tagList
+        // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames2) {
             assertEquals("a", page.getHtmlTagForTagName(1, i));
         }
 
-        //Checks the ordered titles of the tags from the tagList, multiple spaces
+        // Checks the ordered titles of the tags from the tagList, multiple spaces.
         List<String> expectedTitles3 = Arrays.asList("A-X", "Y-Z");
         assertEquals(expectedTitles3, page.getGlossaryTitles(2));
 
-        //Checks the ordered names of the tags from the tagList
+        // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames3 = Arrays.asList("alpha", "beta", "testTag", "x", "y", "z");
         assertEquals(expectedTagNames3, page.getTagNames(2));
 
-        //Checks the <a> tags of the tags from the tagList
+        // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames3) {
             assertEquals("a", page.getHtmlTagForTagName(2, i));
         }
@@ -492,44 +488,44 @@ public class GenericMacrosIT
 
         // There should be 2 expand macros.
         assertEquals(2, page.getExpandCount());
-        //Nested Expand macros - Checks the titles of the macros
+        // Nested Expand macros - Checks the titles of the macros.
         assertEquals("ExpandTest1", page.getTitleText(0));
         assertEquals("ExpandTest2", page.getTitleText(1));
 
-        //Checking the icon
+        // Checking the icon.
         assertTrue(page.hasIcon(0));
         assertTrue(page.hasIcon(1));
 
         List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
-        //Expanded = true
+        // Expanded = true.
         assertTrue(page.isExpanded(0));
         assertEquals(expectedContent, page.getParagraphs(0));
         assertTrue(page.containsImageWithSrc(0, "example.jpg"));
 
-        //Click -> closed macro, content not visible
+        // Click -> closed macro, content not visible.
         page.toggleMacro(0);
         assertFalse(page.isExpanded(0));
         assertNotEquals(expectedContent, page.getParagraphs(0));
         assertTrue(page.containsImageWithSrc(0, "example.jpg"));
 
-        //Click again -> open macro, content visible
+        // Click again -> open macro, content visible.
         page.toggleMacro(0);
         assertTrue(page.isExpanded(0));
         assertEquals(expectedContent, page.getParagraphs(0));
         assertTrue(page.containsImageWithSrc(0, "example.jpg"));
 
         List<String> expectedContent2 = Arrays.asList("test0\ntest1");
-        //Expanded = false
-        //Closed macro, content not visible
+        // Expanded = false.
+        // Closed macro, content not visible.
         assertFalse(page.isExpanded(1));
         assertNotEquals(expectedContent2, page.getParagraphs(1));
 
-        //Click -> opened macro, content visible
+        // Click -> opened macro, content visible.
         page.toggleMacro(1);
         assertTrue(page.isExpanded(1));
         assertEquals(expectedContent2, page.getParagraphs(1));
 
-        //Click again -> closed macro, content not visible
+        // Click again -> closed macro, content not visible.
         page.toggleMacro(1);
         assertFalse(page.isExpanded(1));
         assertNotEquals(expectedContent2, page.getParagraphs(1));
@@ -548,28 +544,28 @@ public class GenericMacrosIT
         // There should be 3 userProfile macros.
         assertEquals(3, page.getUserProfileCount());
 
-        //Checks the links of the avatar pictures for each user
+        // Checks the links of the avatar pictures for each user.
         assertTrue(page.linkImageProfile(0, "UserTest"));
         assertTrue(page.linkImageProfile(1, "UserTest2"));
 
-        //Checks the titles of the avatar pictures for each user
+        // Checks the titles of the avatar pictures for each user.
         assertTrue(page.imageHasTitle(0, "UserTest"));
         assertTrue(page.imageHasTitle(1, "UserTest2"));
 
-        //Checks the validity of the profile link for each user
+        // Checks the validity of the profile link for each user.
         assertTrue(page.getProfileLinkHref(0, "UserTest"));
         assertTrue(page.getProfileLinkHref(1, "UserTest2"));
 
-        //Checks the link for the profile
+        // Checks the link for the profile.
         assertEquals("UserTest", page.getProfileLinkText(0));
         assertEquals("UserTest2", page.getProfileLinkText(1));
 
-        //Checks the number of properties shown for each user
+        // Checks the number of properties shown for each user.
         assertEquals(4, page.getPropertiesCount(0));
         assertEquals(4, page.getPropertiesCount(1));
         assertEquals(3, page.getPropertiesCount(2));
 
-        //Checks the list of properties shown for each user
+        // Checks the list of properties shown for each user.
         assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
             page.getPropertiesText(0));
         assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
@@ -577,12 +573,12 @@ public class GenericMacrosIT
         assertEquals(List.of("https://example.com/", "usertest3@example.com", "https://example.com/"),
             page.getPropertiesText(2));
 
-        //Checks that the email link is valid
+        // Checks that the email link is valid.
         assertTrue(page.isEmailLinkCorrect(0, 1, "usertest@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
         assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
 
-        //Checks the text from the "about" section for each user
+        // Checks the text from the "about" section for each user.
         assertEquals("test", page.getProfileComment(0));
         assertEquals("test2", page.getProfileComment(1));
         assertEquals("test3", page.getProfileComment(2));
@@ -601,27 +597,27 @@ public class GenericMacrosIT
         // There should be 2 userList macros.
         assertEquals(2, page.getUserListsCount());
 
-        //Checks the number of users in a list
+        // Checks the number of users in a list.
         assertEquals(2, page.getUserCountInList(0));
         for (int i = 0; i < 2; i++) {
             assertEquals(4, page.getUserPropertiesCount(0, i));
             assertEquals(List.of("avatar", "username", "phone", "email"), page.getUserPropertyTypes(0, i));
         }
 
-        //Checks the avatar titles
+        // Checks the avatar titles.
         assertEquals("UserTest", page.getUserAvatarTitle(0, 0));
         assertEquals("UserTest", page.getUserAvatarAlt(0, 0));
 
-        //Checks the validity of the users' profile links
+        // Checks the validity of the users' profile links.
         assertTrue(page.getUserLinkHref(0, 0, "UserTest"));
 
-        //Checks the link, that has the correct username
+        // Checks the link, that has the correct username.
         assertEquals("UserTest", page.getUsernameLinkText(0, 0));
 
-        //Checks the list of properties shown for each user
+        // Checks the list of properties shown for each user.
         assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), page.getUserPropertiesText(0, 0));
 
-        //Checks that the email link is valid
+        // Checks that the email link is valid.
         assertTrue(page.isEmailLinkValid(0, 0, "usertest@example.com"));
 
         assertEquals("UserTest2", page.getUserAvatarTitle(0, 1));
@@ -639,10 +635,10 @@ public class GenericMacrosIT
                     i));
         }
 
-        //Checks that fixedTableLayout="true" works
+        // Checks that fixedTableLayout="true" works.
         assertTrue(page.hasFixedLayout(1));
 
-        //Check the users in the list
+        // Check the users in the list.
         assertEquals(Set.of("UserTest", "UserTest2"), page.getUsernamesFromList(0));
         assertEquals(Set.of("UserTest", "UserTest2", "UserTest3"), page.getUsernamesFromList(1));
     }
@@ -657,65 +653,65 @@ public class GenericMacrosIT
 
         PanelMacroPage page = new PanelMacroPage();
 
-        //There should be 3 panel macros on the page
+        // There should be 3 panel macros on the page.
         assertEquals(3, page.getPanelCount());
 
-        //Panel container 1st panel
+        // Panel container 1st panel.
         assertEquals("300px", page.getPanelWidth(0));
         assertEquals("50%", page.getPanelHeight(0));
         assertEquals("20px", page.getPanelBorderRadius(0));
         assertEquals("2px dashed " + hexToRgb("#f536f5"), page.getPanelBorderStyle(0));
 
-        //Title section 1st panel
+        // Title section 1st panel.
         assertEquals("PanelTestTitle", page.getTitleText(0));
         assertEquals(hexToRgb("#452fd4"), page.getTitleBackgroundColor(0));
         assertEquals(hexToRgb("#74d927"), page.getTitleColor(0));
 
-        //Content section 1st panel
+        // Content section 1st panel.
         assertEquals("Content for PanelMacroTest\nContent2 for PanelMacroTest", page.getContentText(0));
         assertEquals(hexToRgb("#edfa34"), page.getContentBackgroundColor(0));
         assertEquals("red", page.getContentColor(0));
 
-        //Footer section 1st panel
+        // Footer section 1st panel.
         assertEquals("PanelTestFooter", page.getFooterText(0));
         assertEquals(hexToRgb("#ac4de8"), page.getFooterBackgroundColor(0));
         assertEquals(hexToRgb("#6beded"), page.getFooterColor(0));
 
-        //Nested Panels
+        // Nested Panels.
 
-        //Panel container 2nd panel
+        // Panel container 2nd panel.
         assertEquals("solid " + hexToRgb("#f536f5"), page.getPanelBorderStyle(1));
         assertNull(page.getPanelWidth(1));
         assertNull(page.getPanelHeight(1));
         assertNull(page.getPanelBorderRadius(1));
 
-        //Title section 2nd panel
+        // Title section 2nd panel.
         assertEquals("NestedPanelsTestTitle", page.getTitleText(1));
         assertNull(page.getTitleBackgroundColor(1));
         assertNull(page.getTitleColor(1));
 
-        //Content section 2nd panel
+        // Content section 2nd panel.
         assertEquals("Content3 for PanelMacroTest\nNestedPanelsTestTitle2\nContent4 for PanelMacroTest",
             page.getContentText(1));
         assertNull(page.getContentBackgroundColor(1));
         assertNull(page.getContentColor(1));
 
-        // Checks the CSS class of the 3rd panel
+        // Checks the CSS class of the 3rd panel.
         assertTrue(page.getPanelClass(2).contains("macro-panel"));
         assertTrue(page.getPanelClass(2).contains("testCssClass"));
 
-        //Panel container 3rd panel
+        // Panel container 3rd panel.
         assertEquals("groove rgb(153, 0, 153)", page.getPanelBorderStyle(2));
         assertNull(page.getPanelWidth(2));
         assertNull(page.getPanelHeight(2));
         assertNull(page.getPanelBorderRadius(2));
 
-        //Title section 3rd panel
+        // Title section 3rd panel.
         assertEquals("NestedPanelsTestTitle2", page.getTitleText(2));
         assertNull(page.getTitleBackgroundColor(2));
         assertNull(page.getTitleColor(2));
 
-        //Content section 3rd panel
+        // Content section 3rd panel.
         assertEquals("Content4 for PanelMacroTest", page.getContentText(2));
         assertNull(page.getContentBackgroundColor(2));
         assertNull(page.getContentColor(2));
@@ -731,27 +727,27 @@ public class GenericMacrosIT
 
         MicrosoftStreamMacroPage page = new MicrosoftStreamMacroPage();
 
-        //There should be 3 MicrosoftSream macros
+        // There should be 3 MicrosoftStream macros.
         assertEquals(3, page.getMstreamCount());
 
-        //Checks the alignment of the macro
+        // Checks the alignment of the macro.
         assertEquals("right", page.getAlignment(0));
 
-        //Checks the width of the macro, default = "500px"
+        // Checks the width of the macro, default = "500px".
         assertEquals("600px", page.getIframeWidth(0));
 
-        //Checks the height of the macro, default = "300px"
+        // Checks the height of the macro, default = "300px".
         assertEquals("400px", page.getIframeHeight(0));
 
-        //Checks the autoplay property, default ="false"
+        // Checks the autoplay property, default = "false".
         assertTrue(page.hasAutoplay(0));
-        //Checks the showInfo property, default ="false"
+        // Checks the showInfo property, default = "false".
         assertTrue(page.hasShowInfo(0));
-        //Checks the StartTime property existence
+        // Checks the StartTime property existence.
         assertTrue(page.hasStartTime(0));
-        //Checks the StartTime property
+        // Checks the StartTime property.
         assertEquals(convertStartTime("01:12:13"), page.getStartTime(0));
-        //Checks the actual URL of the microsoftStream
+        // Checks the actual URL of the microsoftStream.
         assertTrue(page.hasCorrectURL(0, "www.youtube.com"));
 
         assertEquals("left", page.getAlignment(1));
@@ -772,7 +768,7 @@ public class GenericMacrosIT
         assertTrue(page.hasCorrectURL(2, "www.youtube.com"));
     }
 
-    //Function to convert color codes from hex to rgb
+    // Function to convert color codes from hex to rgb.
     private String hexToRgb(String hex)
     {
         hex = hex.substring(1);
@@ -789,7 +785,7 @@ public class GenericMacrosIT
         return String.format("rgb(%d, %d, %d)", r, g, b);
     }
 
-    //Function to convert HH:MM:SS to seconds
+    // Function to convert HH:MM:SS to seconds.
     public int convertStartTime(String time)
     {
         String[] parts = time.split(":");
