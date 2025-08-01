@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceMathinline" locale="">
+<xwikidoc version="1.6" reference="Confluence.Macros.ConfluenceFavpages" locale="">
   <web>Confluence.Macros</web>
-  <name>ConfluenceMathinline</name>
+  <name>ConfluenceFavpages</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,37 +31,31 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Confluence bridge for Mathinline</title>
+  <title>Confluence bridge for Favorite Pages</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content>= Description =
 
-This is a bridge for the Confluence Mathinline macro to XWiki's [[Mathjax macro&gt;&gt;https://extensions.xwiki.org/xwiki/bin/view/Extension/MathJaxMacro]].
+This is a Confluence bridge for the Favorite Pages macro.
 
-|=Parameter|=Description|=Mandatory?
-|##body##|The math expression. It can start with ##~-~-uriencoded~-~-##, in which case the math expression needs to be url-encoded.|Yes
+This macro takes no parameters.
 
-== Usage example ==
+= Example Usage =
 
-{{code language="none"}}
-The answer is {{confluence_mathinline body="--uriencoded--\sqrt%7B2+x%5e3%7D=\cfrac%7B1%7D%7Ba_1%7D"/}}
+Display the children of the current page:
+
+{{code}}
+{{confluence_favpages/}}
 {{/code}}
 
-Result:
-
-The answer is {{confluence_mathinline body="--uriencoded--\sqrt%7B2+x%5e3%7D=\cfrac%7B1%7D%7Ba_1%7D"/}}
-
-See also:
-
-* [[Mathblock]]
-* [[MathblockRef]]</content>
+{{confluence_favpages/}}</content>
   <object>
-    <name>Confluence.Macros.ConfluenceMathinline</name>
+    <name>Confluence.Macros.ConfluenceFavpages</name>
     <number>0</number>
     <className>XWiki.WikiMacroClass</className>
-    <guid>1eb9a26b-6dc4-4fdc-904c-9b1547fd643a</guid>
+    <guid>0161e85c-c48b-465e-b6e3-c217b444d49b</guid>
     <class>
       <name>XWiki.WikiMacroClass</name>
       <customClass/>
@@ -97,7 +91,7 @@ See also:
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -273,25 +267,11 @@ See also:
     </property>
     <property>
       <code>{{velocity}}
-## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
-## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
-## don't have view right on those pages.
-#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
-  #set ($mathinlineexpression ="$!wikimacro.parameters.body")##
-  #if ($mathinlineexpression.startsWith("--uriencoded--"))##
-    #set ($mathinlineexpression = $util.decodeURI($mathinlineexpression.substring(14)))##
-  #end##
-  ## try to avoid injection by removing the possibility to close the mathjax macro. Its content is not XWiki-parsed IIUC.
-  #set ($mathinlineexpression = $mathinlineexpression.replace("{{/", "{{ /"))
-  {{mathjax}}\($mathinlineexpression\){{/mathjax}}
-#else
-  {{missingLicenseMessage extensionName="proMacros.extension.name"/}}
-#end
-{{/velocity}}
-</code>
+$xwiki.getDocument("Favorites.Code.FavoritesPanel").get("content")
+{{/velocity}}</code>
     </property>
     <property>
-      <contentDescription>The LaTeX code to show.</contentDescription>
+      <contentDescription/>
     </property>
     <property>
       <contentJavaType/>
@@ -305,101 +285,22 @@ See also:
       </defaultCategories>
     </property>
     <property>
-      <description>Confluence bridge macro for the Mathinline macro (LaTeX math inline expressions).</description>
+      <description>Confluence bridge for the Favorite Pages macro</description>
     </property>
     <property>
-      <id>confluence_mathinline</id>
+      <id>confluence_favpages</id>
     </property>
     <property>
-      <name>Confluence bridge for Mathinline</name>
+      <name>Confluence bridge for Favorite Pages</name>
     </property>
     <property>
       <priority/>
     </property>
     <property>
-      <supportsInlineMode>1</supportsInlineMode>
+      <supportsInlineMode>0</supportsInlineMode>
     </property>
     <property>
       <visibility>Current Wiki</visibility>
-    </property>
-  </object>
-  <object>
-    <name>Confluence.Macros.ConfluenceMathinline</name>
-    <number>1</number>
-    <className>XWiki.WikiMacroParameterClass</className>
-    <guid>b695ce37-aa72-4559-8fea-aa0abb693751</guid>
-    <class>
-      <name>XWiki.WikiMacroParameterClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <defaultValue>
-        <disabled>0</disabled>
-        <name>defaultValue</name>
-        <number>4</number>
-        <prettyName>Parameter default value</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </defaultValue>
-      <description>
-        <disabled>0</disabled>
-        <name>description</name>
-        <number>2</number>
-        <prettyName>Parameter description</prettyName>
-        <restricted>0</restricted>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </description>
-      <mandatory>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>mandatory</name>
-        <number>3</number>
-        <prettyName>Parameter mandatory</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </mandatory>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Parameter name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <type>
-        <disabled>0</disabled>
-        <name>type</name>
-        <number>5</number>
-        <prettyName>Parameter type</prettyName>
-        <size>60</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </type>
-    </class>
-    <property>
-      <defaultValue/>
-    </property>
-    <property>
-      <description>The math expression to show.</description>
-    </property>
-    <property>
-      <mandatory>1</mandatory>
-    </property>
-    <property>
-      <name>body</name>
-    </property>
-    <property>
-      <type/>
     </property>
   </object>
 </xwikidoc>

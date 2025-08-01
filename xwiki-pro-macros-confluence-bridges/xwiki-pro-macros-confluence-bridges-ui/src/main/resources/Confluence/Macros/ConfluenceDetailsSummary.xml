@@ -305,38 +305,40 @@ Bridges are there for compatibility with content migrated from Confluence and t
     #if ($details.size() &lt; 2)
       $services.localization.render('rendering.macro.detailssummary.noresults')
     #else
-      #foreach ($row in $details)
-        #if ($foreach.first)
-          |=$title##
-          #foreach ($cell in $row)
-            |=$cell##
-          #end##
-          #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
-          #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
-          #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
+      (% class="details_summary" %)
+      (((
+        #foreach ($row in $details)
+          #if ($foreach.first)
+            |=$title##
+            #foreach ($cell in $row)
+              |=$cell##
+            #end##
+            #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
+            #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
+            #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
 
-        #else
-          #set ($d = $xwiki.getDocument($row.get(0)))
-          #foreach ($cell in $row)
-            #set ($title = $d.getTitle())
-            #if (!$title)
-              #set ($title = $d.getDocumentReference().getName())
-              #if ($title == "WebHome")
-                #set ($title = $d.getDocumentReference().getParent().getName())
+          #else
+            #set ($d = $xwiki.getDocument($row.get(0)))
+            #foreach ($cell in $row)
+              #set ($title = $d.getTitle())
+              #if (!$title)
+                #set ($title = $d.getDocumentReference().getName())
+                #if ($title == "WebHome")
+                  #set ($title = $d.getDocumentReference().getParent().getName())
+                #end
               #end
-            #end
-            #if (!$title)
-              #set ($title = $cell)
-            #end
-            | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}##
-            {{context document="$row.get(0)" restricted="true"}}##
-              $cell##
-            {{/context}}
-            #end )))##
-          #end##
-          #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
-          #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
-          #if ($showPageLabels)|#showTags($d)#end##
+              #if (!$title)
+                #set ($title = $cell)
+              #end
+              | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}##
+              {{context document="$row.get(0)" restricted="true"}}##
+                $cell##
+              {{/context}}
+              #end )))##
+            #end##
+            #if ($showLastModified)|$xwiki.formatDate($d.getDate())#end##
+            #if ($showCreator)|#if ($d.getCreator() == "XWiki.superadmin")superadmin#else[[$d.getCreator()]]#end#end##
+            #if ($showPageLabels)|#showTags($d)#end##
 
         #end
       #end
@@ -350,7 +352,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}

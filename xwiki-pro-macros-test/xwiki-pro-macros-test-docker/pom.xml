@@ -89,6 +89,11 @@
       <artifactId>xwiki-platform-model-api</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-search-solr-query</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>

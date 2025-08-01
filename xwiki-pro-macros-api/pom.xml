@@ -110,11 +110,6 @@
       <artifactId>query</artifactId>
       <version>${cql.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.jodconverter</groupId>
-      <artifactId>jodconverter-local</artifactId>
-      <version>4.4.2</version>
-    </dependency>
   </dependencies>
   <build>
    <plugins>
