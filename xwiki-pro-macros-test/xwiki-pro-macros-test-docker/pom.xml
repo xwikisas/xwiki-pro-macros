@@ -94,6 +94,19 @@
       <artifactId>xwiki-platform-search-solr-query</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
+      <exclusions>
+        <!-- Run the functional tests without a license. -->
+        <exclusion>
+          <groupId>com.xwiki.licensing</groupId>
+          <artifactId>application-licensing-licensor-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>
