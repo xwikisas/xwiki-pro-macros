@@ -20,6 +20,7 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -37,11 +38,82 @@ public class TeamMacroPage extends ViewPage
     @FindBy(css = ".xwikiteam")
     private List<WebElement> teamMacros;
 
-    public int getTeamMacrosCount() {
+    public int getTeamMacrosCount()
+    {
         return teamMacros.size();
     }
 
-    public List<WebElement> getTeamMacroUsers(int i) {
+    public List<WebElement> getTeamMacroUsers(int i)
+    {
         return teamMacros.get(i).findElements(By.className("xwikiteam-user"));
+    }
+
+    public String getUserTitle(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername).getAttribute("title");
+    }
+
+    public String getProfileLink(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.tagName("a")).getAttribute("href");
+    }
+
+    public String getAvatarInitials(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar-initials-letters")).getText();
+    }
+
+    public String getAvatarBackgroundColor(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("background-color");
+    }
+
+    public String getAvatarFontColor(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar-initials-letters")).getCssValue("color");
+    }
+
+    public String getAvatarSize(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("height");
+    }
+
+    public String getAvatarBorderRadius(int macroIndex, String dataUsername)
+    {
+        return getUserByUsername(macroIndex, dataUsername)
+            .findElement(By.className("xwikiteam-avatar")).getCssValue("border-radius");
+    }
+
+    private WebElement getUserByUsername(int macroIndex, String dataUsername)
+    {
+        return teamMacros.get(macroIndex)
+            .findElements(By.className("xwikiteam-user"))
+            .stream()
+            .filter(user -> dataUsername.equals(user.getAttribute("data-username")))
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("User not found: " + dataUsername));
+    }
+
+    public boolean isUsernameHidden(int macroIndex)
+    {
+        WebElement container = teamMacros.get(macroIndex);
+        String classAttr = container.getAttribute("class");
+        return classAttr.contains("usernames-hidden");
+    }
+
+    public boolean hasEmptyTeamMessage(int macroIndex)
+    {
+        return teamMacros.get(macroIndex).getText().equals("There is nobody to show.");
+    }
+
+    public boolean hasAvatarInitials(int macroIndex, String dataUsername)
+    {
+        WebElement user = getUserByUsername(macroIndex, dataUsername);
+        return !user.findElements(By.className("xwikiteam-avatar-initials")).isEmpty();
     }
 }
