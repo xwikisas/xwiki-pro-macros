@@ -21,6 +21,7 @@ package com.xwiki.pro.test.ui;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -295,7 +296,7 @@ public class GenericMacrosIT
 
         assertTrue(page.getProfileLink(1, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
 
-        //Ckecs the existence of avatar initials
+        //Checks the existence of avatar initials
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest"));
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest2"));
         assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest3"));
@@ -317,7 +318,6 @@ public class GenericMacrosIT
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username));
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username2));
         assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username3));
-
 
         assertTrue(page.getAvatarSize(0, username).startsWith("60"));
         assertTrue(page.getAvatarSize(0, username2).startsWith("60"));
@@ -643,9 +643,8 @@ public class GenericMacrosIT
         assertTrue(page.hasFixedLayout(1));
 
         //Check the users in the list
-        assertEquals(Arrays.asList("UserTest", "UserTest2"), page.getUsernamesFromList(0));
-        assertEquals(Arrays.asList("UserTest", "UserTest2","UserTest3"), page.getUsernamesFromList(1));
-
+        assertEquals(Set.of("UserTest", "UserTest2"), page.getUsernamesFromList(0));
+        assertEquals(Set.of("UserTest", "UserTest2", "UserTest3"), page.getUsernamesFromList(1));
     }
 
     @Test

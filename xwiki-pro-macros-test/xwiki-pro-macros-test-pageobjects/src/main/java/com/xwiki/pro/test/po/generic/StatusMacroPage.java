@@ -61,4 +61,3 @@ public class StatusMacroPage extends ViewPage
         return "unknown";
     }
 }
-

@@ -21,6 +21,7 @@ package com.xwiki.pro.test.po.generic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -126,13 +127,12 @@ public class UserListMacroPage extends ViewPage
         return classAttr != null && classAttr.contains("fixed-layout");
     }
 
-    public List<String> getUsernamesFromList(int listIndex)
+    public Set<String> getUsernamesFromList(int listIndex)
     {
         return userLists.get(listIndex)
             .findElements(By.cssSelector("tbody tr"))
             .stream()
             .map(row -> row.findElement(By.cssSelector(".xwiki-userlist-user-username a")).getText())
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
-
 }

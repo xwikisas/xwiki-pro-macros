@@ -145,8 +145,3 @@ public class PanelMacroPage extends ViewPage
         return panels.get(index).getAttribute("class");
     }
 }
-
-
-
-
-
