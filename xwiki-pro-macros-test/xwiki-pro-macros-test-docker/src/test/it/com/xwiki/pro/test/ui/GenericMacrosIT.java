@@ -19,9 +19,14 @@
  */
 package com.xwiki.pro.test.ui;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -118,92 +123,6 @@ public class GenericMacrosIT
     private final DocumentReference PageWithMStreamMacros = new DocumentReference("xwiki", "Main",
         "MicrosoftStreamTest");
 
-    private static final String PAGE_WITH_TEAM_MACROS_CONTENT = "{{team letterAvatarFontColor=\"rgb(204, 0, 255)\"/}}\n"
-        + "\n"
-        + "{{team tag=\"testTag\" showUsernames=\"true\" disableTools=\"true\" disableLetterAvatars=\"true\" requireExternalAuth=\"false\" /}}\n"
-        + "\n"
-        + "{{team tag=\"nonExistentTag\"  /}}";
-
-    private static final String PAGE_WITH_BUTTON_MACROS_CONTENT =
-        "{{button id=\"testbtn1\" label=\"test1\" url=\"https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting\" color=\"#ff66ff\" newTab=\"true\" icon=\"check\" width=\"100px\"/}}\n"
-            + "\n"
-            + "{{button id=\"testbtn2\" label=\"test2\" url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"DANGER\" width=\"60%\"/}}\n"
-            + "{{button id=\"testbtn3\" label=\"test3\" color=\"#ff66ff\"  url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"SUCCESS\" icon=\"check\"  width=\"80px\"/}}\n"
-            + "{{button id=\"testbtn4\" label=\"test4\" url=\"https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin\" newTab=\"false\" type=\"WARNING\" color=\"#ff66ff\" width=\"80px\"/}}\n"
-            + "{{button id=\"testbtn5\" label=\"test5\" url=\"https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting\" icon=\"page\"  newTab=\"true\"  width=\"100px\"/}}\n";
-
-    private static final String PAGE_WITH_STATUS_MACROS_CONTENT = "{{status title =\"test1\" /}}"
-        + "\n"
-        + "{{status title =\"test2\" colour =\"Yellow\" subtle =\"true\"/}}"
-        + "\n"
-        + "{{status title =\"Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .\" colour "
-        + "=\"Yellow\" subtle=\"false\"/}}";
-
-    private static final String PAGE_WITH_TAGLIST_MACROS_CONTENT = "{{tagList /}}\n"
-        + "\n"
-        + "{{tagList excludedTags=\"beta\"/}}\n"
-        + "\n"
-        + "{{tagList spaces =\"Main,XWiki\" excludedTags=\"gamma\"/}}\n";
-
-    private static final String PAGE_WITH_EXPAND_MACROS_CONTENT =
-        "{{expand title=\"ExpandTest1\" expanded=\"true\"}}\n"
-            + "test0\n"
-            + "test1\n"
-            + "image:example.jpg\n"
-            + "\n"
-            + "{{expand title=\"ExpandTest2\"}}\n"
-            + "test0\n"
-            + "test1\n"
-            + "\n"
-            + "{{/expand}}\n"
-            + "\n"
-            + "test2\n"
-            + "\n"
-            + "{{/expand}}";
-
-    private static final String PAGE_WITH_USER_PROFILE_MACROS_CONTENT =
-        "{{userProfile properties=\"company,email,phone,address\" reference=\"XWiki.UserTest\"/}}\n"
-            + "\n"
-            + "{{userProfile reference=\"XWiki.UserTest2\"/}}\n"
-            + "\n"
-            + "{{userProfile properties=\"blogfeed,email,blog\" reference=\"XWiki.UserTest3\"/}}\n";
-
-    private static final String PAGE_WITH_USER_LIST_MACROS_CONTENT = "{{userList users=\"XWiki.UserTest, XWiki"
-        + ".UserTest2\" properties=\"avatar,username,phone,email\" /}}\n"
-        + "\n"
-        + "{{userList fixedTableLayout=\"true\" groups=\"XWiki.XWikiAllGroup\" properties=\"avatar,username,phone,"
-        + "email,address,blogfeed\"/}}\n";
-
-    private static final String PAGE_WITH_PANEL_CONTENT =
-        "{{panel borderColor=\"#f536f5\" borderStyle=\"dashed\" borderWidth=\"2\" bgColor=\"#edfa34\" "
-            + "contentTextColor=\"red\" titleBGColor=\"#452fd4\" "
-            + "titleColor=\"#74d927\" width=\"300px\" borderRadius=\"20px\" "
-            + "footerBGColor=\"#ac4de8\" footerColor=\"#6beded\" height=\"50%\" "
-            + "title=\"PanelTestTitle\" footer=\"PanelTestFooter\" }}\n"
-            + "Content for PanelMacroTest\n"
-            + "Content2 for PanelMacroTest\n"
-            + "\n"
-            + "{{/panel}}\n"
-            + "\n"
-            + "{{panel borderColor=\"#f536f5\" borderStyle=\"solid\" title=\"NestedPanelsTestTitle\"}}\n"
-            + "Content3 for PanelMacroTest\n"
-            + "\n"
-            + "{{panel borderColor=\"rgb(153, 0, 153)\" borderStyle=\"groove\" classes=\"testCssClass\" "
-            + "title=\"NestedPanelsTestTitle2\"}}\n"
-            + "Content4 for PanelMacroTest\n"
-            + "\n"
-            + "{{/panel}}\n"
-            + "\n"
-            + "{{/panel}}\n";
-
-    private static final String PAGE_WITH_MICROSOFT_STREAM_CONTENT =
-        "{{msStream url=\"www.youtube.com\" alignment=\"RIGHT\" "
-            + "start=\"01:12:13\" showinfo=\"true\" autoplay=\"true\" width=\"600px\" height=\"400px\"/}}\n"
-            + "\n"
-            + "{{msStream url=\"www.youtube.com\" alignment=\"LEFT\" start=\"03:12:13\" textWrap=\"true\"/}}\n"
-            + "\n"
-            + "{{msStream url=\"www.youtube.com\" alignment=\"CENTER\" showinfo=\"false\" autoplay=\"false\"/}}\n";
-
     private void registerMacros()
     {
         RegisterMacro register = new RegisterMacro();
@@ -250,6 +169,22 @@ public class GenericMacrosIT
         tagsPane2.add();
     }
 
+    public String createContent(String filename)
+    {
+        try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
+            if (inputStream == null) {
+                throw new RuntimeException("Failed to load " + filename + " from resources.");
+            }
+
+            return new BufferedReader(new InputStreamReader(inputStream))
+                .lines()
+                .filter(line -> !line.trim().startsWith("##"))
+                .collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read macro file: " + filename, e);
+        }
+    }
+
     @Test
     @Order(1)
     void teamMacroTest(TestUtils setup)
@@ -260,9 +195,7 @@ public class GenericMacrosIT
         AddTagsPane tagsPane = taggablePage.addTags();
         tagsPane.setTags("testTag");
         tagsPane.add();
-
-        setup.createPage(pageWithTeamMacros, PAGE_WITH_TEAM_MACROS_CONTENT);
-
+        setup.createPage(pageWithTeamMacros, createContent("team-macros.vm"));
         TeamMacroPage page = new TeamMacroPage();
 
         // There should be 3 team macros.
@@ -339,7 +272,7 @@ public class GenericMacrosIT
     {
         setup.deletePage(pageWithButtonMacros);
         setup.gotoPage("XWiki", "ButtonTest");
-        setup.createPage(pageWithButtonMacros, PAGE_WITH_BUTTON_MACROS_CONTENT);
+        setup.createPage(pageWithButtonMacros, createContent("button-macros.vm"));
 
         ButtonMacroPage page = new ButtonMacroPage();
 
@@ -399,7 +332,7 @@ public class GenericMacrosIT
     {
         setup.deletePage(pageWithStatusMacros);
         setup.gotoPage("XWiki", "StatusTest");
-        setup.createPage(pageWithStatusMacros, PAGE_WITH_STATUS_MACROS_CONTENT);
+        setup.createPage(pageWithStatusMacros, createContent("status-macros.vm"));
 
         StatusMacroPage page = new StatusMacroPage();
 
@@ -429,7 +362,7 @@ public class GenericMacrosIT
         setup.deletePage(pageWithTagListMacros);
         createPagesWithTags(setup);
         setup.gotoPage("XWiki", "TagListTest");
-        setup.createPage(pageWithTagListMacros, PAGE_WITH_TAGLIST_MACROS_CONTENT);
+        setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
 
         TagListMacroPage page = new TagListMacroPage();
 
@@ -478,11 +411,11 @@ public class GenericMacrosIT
 
     @Test
     @Order(5)
-    void expandMacroTest(TestUtils setup)
+    void expandMacroTest(TestUtils setup) throws IOException
     {
         setup.deletePage(pageWithExpandMacro);
         setup.gotoPage("Main", "ExpandMacroTest");
-        setup.createPage(pageWithExpandMacro, PAGE_WITH_EXPAND_MACROS_CONTENT);
+        setup.createPage(pageWithExpandMacro, createContent("expand-macros.vm"));
 
         ExpandMacroPage page = new ExpandMacroPage();
 
@@ -537,7 +470,7 @@ public class GenericMacrosIT
     {
         setup.deletePage(pageWithUserProfileMacro);
         setup.gotoPage("Main", "UserProfileTest");
-        setup.createPage(pageWithUserProfileMacro, PAGE_WITH_USER_PROFILE_MACROS_CONTENT);
+        setup.createPage(pageWithUserProfileMacro, createContent("userprofile-macros.vm"));
 
         UserProfileMacroPage page = new UserProfileMacroPage();
 
@@ -590,7 +523,7 @@ public class GenericMacrosIT
     {
         setup.deletePage(pageWithUserListMacro);
         setup.gotoPage("Main", "UserProfileTest");
-        setup.createPage(pageWithUserListMacro, PAGE_WITH_USER_LIST_MACROS_CONTENT);
+        setup.createPage(pageWithUserListMacro, createContent("userlist-macros.vm"));
 
         UserListMacroPage page = new UserListMacroPage();
 
@@ -649,7 +582,7 @@ public class GenericMacrosIT
     {
         setup.loginAsSuperAdmin();
         setup.gotoPage("Main", "PanelTest");
-        setup.createPage(PageWithPanelMacros, PAGE_WITH_PANEL_CONTENT);
+        setup.createPage(PageWithPanelMacros, createContent("panel-macros.vm"));
 
         PanelMacroPage page = new PanelMacroPage();
 
@@ -723,7 +656,7 @@ public class GenericMacrosIT
     {
         setup.loginAsSuperAdmin();
         setup.gotoPage("Main", "MicrosoftStreamMacroPage");
-        setup.createPage(PageWithMStreamMacros, PAGE_WITH_MICROSOFT_STREAM_CONTENT);
+        setup.createPage(PageWithMStreamMacros, createContent("microsoftstream-macros.vm"));
 
         MicrosoftStreamMacroPage page = new MicrosoftStreamMacroPage();
 
