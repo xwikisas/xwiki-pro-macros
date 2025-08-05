@@ -39,7 +39,6 @@ import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
 import com.xwiki.pro.test.po.generic.ButtonMacroPage;
-import com.xwiki.pro.test.po.generic.ExpandMacroPage;
 import com.xwiki.pro.test.po.generic.MicrosoftStreamMacroPage;
 import com.xwiki.pro.test.po.generic.PanelMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
@@ -51,7 +50,6 @@ import com.xwiki.pro.test.po.generic.UserProfileMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -108,8 +106,6 @@ public class GenericMacrosIT
     private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
 
     private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-
-    private final DocumentReference pageWithExpandMacro = new DocumentReference("xwiki", "Main", "ExpandTest");
 
     private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
         "UserProfileTest");
@@ -189,7 +185,6 @@ public class GenericMacrosIT
     @Order(1)
     void teamMacroTest(TestUtils setup)
     {
-        setup.deletePage(pageWithTeamMacros);
         setup.gotoPage("XWiki", "UserTest");
         TaggablePage taggablePage = new TaggablePage();
         AddTagsPane tagsPane = taggablePage.addTags();
@@ -262,6 +257,12 @@ public class GenericMacrosIT
         assertFalse(page.isUsernameHidden(1));
         assertTrue(page.isUsernameHidden(2));
 
+        // Checks the visibility of usernames.
+        assertFalse(page.isUsernameVisible(0, username));
+        assertFalse(page.isUsernameVisible(0, username2));
+        assertFalse(page.isUsernameVisible(0, username3));
+        assertTrue(page.isUsernameVisible(1, username));
+
         // Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears.
         assertTrue(page.hasEmptyTeamMessage(2));
     }
@@ -270,7 +271,6 @@ public class GenericMacrosIT
     @Order(2)
     void buttonMacroTest(TestUtils setup)
     {
-        setup.deletePage(pageWithButtonMacros);
         setup.gotoPage("XWiki", "ButtonTest");
         setup.createPage(pageWithButtonMacros, createContent("button-macros.vm"));
 
@@ -292,23 +292,22 @@ public class GenericMacrosIT
         assertEquals("test4", page.getButtonLabel("testbtn4"));
         assertEquals("test5", page.getButtonLabel("testbtn5"));
 
-        // Checks the <a> tag of the parents' buttons.
-        assertEquals("a", page.getButtonParentTag("testbtn1"));
-        assertEquals("a", page.getButtonParentTag("testbtn2"));
-        assertEquals("a", page.getButtonParentTag("testbtn3"));
-        assertEquals("a", page.getButtonParentTag("testbtn4"));
-        assertEquals("a", page.getButtonParentTag("testbtn5"));
-
-        // Checks the url of the parents' buttons.
-        assertEquals("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting",
-            page.getButtonParentUrl("testbtn1"));
-        assertEquals(
-            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin",
-            page.getButtonParentUrl("testbtn2"));
+        // Checks the url of the buttons.
+        assertTrue(page.hasLink("testbtn1", "https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
+        assertTrue(page.hasLink("testbtn2",
+            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(page.hasLink("testbtn3",
+            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(page.hasLink("testbtn4",
+            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(page.hasLink("testbtn5", "https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
 
         // Checks whether the link is opening in a new tab or not.
         assertEquals("_blank", page.getButtonParentTarget("testbtn1"));
         assertEquals("", page.getButtonParentTarget("testbtn2"));
+        assertEquals("", page.getButtonParentTarget("testbtn3"));
+        assertEquals("", page.getButtonParentTarget("testbtn4"));
+        assertEquals("_blank", page.getButtonParentTarget("testbtn5"));
 
         // The type of the button (DEFAULT/ DANGER/ SUCCESS / WARNING).
         assertTrue(page.getButtonClass("testbtn1").endsWith("-default"));
@@ -328,9 +327,7 @@ public class GenericMacrosIT
     @Test
     @Order(3)
     void statusMacroTest(TestUtils setup)
-
     {
-        setup.deletePage(pageWithStatusMacros);
         setup.gotoPage("XWiki", "StatusTest");
         setup.createPage(pageWithStatusMacros, createContent("status-macros.vm"));
 
@@ -359,7 +356,6 @@ public class GenericMacrosIT
     @Order(4)
     void tagListMacroTest(TestUtils setup)
     {
-        setup.deletePage(pageWithTagListMacros);
         createPagesWithTags(setup);
         setup.gotoPage("XWiki", "TagListTest");
         setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
@@ -411,64 +407,8 @@ public class GenericMacrosIT
 
     @Test
     @Order(5)
-    void expandMacroTest(TestUtils setup) throws IOException
-    {
-        setup.deletePage(pageWithExpandMacro);
-        setup.gotoPage("Main", "ExpandMacroTest");
-        setup.createPage(pageWithExpandMacro, createContent("expand-macros.vm"));
-
-        ExpandMacroPage page = new ExpandMacroPage();
-
-        // There should be 2 expand macros.
-        assertEquals(2, page.getExpandCount());
-        // Nested Expand macros - Checks the titles of the macros.
-        assertEquals("ExpandTest1", page.getTitleText(0));
-        assertEquals("ExpandTest2", page.getTitleText(1));
-
-        // Checking the icon.
-        assertTrue(page.hasIcon(0));
-        assertTrue(page.hasIcon(1));
-
-        List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
-        // Expanded = true.
-        assertTrue(page.isExpanded(0));
-        assertEquals(expectedContent, page.getParagraphs(0));
-        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
-
-        // Click -> closed macro, content not visible.
-        page.toggleMacro(0);
-        assertFalse(page.isExpanded(0));
-        assertNotEquals(expectedContent, page.getParagraphs(0));
-        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
-
-        // Click again -> open macro, content visible.
-        page.toggleMacro(0);
-        assertTrue(page.isExpanded(0));
-        assertEquals(expectedContent, page.getParagraphs(0));
-        assertTrue(page.containsImageWithSrc(0, "example.jpg"));
-
-        List<String> expectedContent2 = Arrays.asList("test0\ntest1");
-        // Expanded = false.
-        // Closed macro, content not visible.
-        assertFalse(page.isExpanded(1));
-        assertNotEquals(expectedContent2, page.getParagraphs(1));
-
-        // Click -> opened macro, content visible.
-        page.toggleMacro(1);
-        assertTrue(page.isExpanded(1));
-        assertEquals(expectedContent2, page.getParagraphs(1));
-
-        // Click again -> closed macro, content not visible.
-        page.toggleMacro(1);
-        assertFalse(page.isExpanded(1));
-        assertNotEquals(expectedContent2, page.getParagraphs(1));
-    }
-
-    @Test
-    @Order(6)
     void userProfileMacroTest(TestUtils setup)
     {
-        setup.deletePage(pageWithUserProfileMacro);
         setup.gotoPage("Main", "UserProfileTest");
         setup.createPage(pageWithUserProfileMacro, createContent("userprofile-macros.vm"));
 
@@ -518,10 +458,9 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     void userListMacroTest(TestUtils setup)
     {
-        setup.deletePage(pageWithUserListMacro);
         setup.gotoPage("Main", "UserProfileTest");
         setup.createPage(pageWithUserListMacro, createContent("userlist-macros.vm"));
 
@@ -577,7 +516,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(8)
+    @Order(7)
     void panelMacroTest(TestUtils setup)
     {
         setup.loginAsSuperAdmin();
@@ -651,7 +590,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(9)
+    @Order(8)
     void microsoftStreamMacroTest(TestUtils setup)
     {
         setup.loginAsSuperAdmin();

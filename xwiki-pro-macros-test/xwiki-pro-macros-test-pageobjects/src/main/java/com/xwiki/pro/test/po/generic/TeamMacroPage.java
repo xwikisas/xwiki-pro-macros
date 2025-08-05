@@ -116,4 +116,11 @@ public class TeamMacroPage extends ViewPage
         WebElement user = getUserByUsername(macroIndex, dataUsername);
         return !user.findElements(By.className("xwikiteam-avatar-initials")).isEmpty();
     }
+
+    public boolean isUsernameVisible(int macroIndex, String dataUsername)
+    {
+        WebElement user = getUserByUsername(macroIndex, dataUsername);
+        WebElement usernameElement = user.findElement(By.className("xwikiteam-username"));
+        return usernameElement.isDisplayed();
+    }
 }

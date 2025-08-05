@@ -47,20 +47,10 @@ public class ButtonMacroPage extends ViewPage
         return getButtonById(id).getText();
     }
 
-    public String getButtonParentTag(String id)
+    public boolean hasLink(String id, String expectedUrl)
     {
-        WebElement parent = getButtonById(id).findElement(By.xpath("ancestor::a"));
-        String tagName = parent.getTagName();
-
-        return tagName;
-    }
-
-    public String getButtonParentUrl(String id)
-    {
-        WebElement parent = getButtonById(id).findElement(By.xpath("ancestor::a"));
-        String href = parent.getAttribute("href");
-
-        return href;
+        WebElement link = getButtonById(id).findElement(By.xpath("ancestor::a"));
+        return expectedUrl.equals(link.getAttribute("href"));
     }
 
     public String getButtonParentTarget(String id)
@@ -68,14 +58,6 @@ public class ButtonMacroPage extends ViewPage
         WebElement parent = getButtonById(id).findElement(By.xpath("ancestor::a"));
         String target = parent.getAttribute("target");
         return target;
-    }
-
-    public String getButtonIcon(String id)
-    {
-        WebElement icon = getButtonById(id).findElement(By.tagName("span"));
-        String iconClass = icon.getAttribute("class");
-
-        return iconClass;
     }
 
     public String getButtonClass(String id)

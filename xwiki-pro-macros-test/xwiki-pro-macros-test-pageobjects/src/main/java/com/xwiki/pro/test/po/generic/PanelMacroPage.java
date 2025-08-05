@@ -62,7 +62,7 @@ public class PanelMacroPage extends ViewPage
         }
 
         for (String part : style.split(";")) {
-            String[] keyValue = part.split(":", 2);
+            String[] keyValue = part.split(":");
             if (keyValue.length == 2 && keyValue[0].trim().equals(attr)) {
                 return keyValue[1].trim();
             }
