@@ -32,6 +32,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
@@ -95,29 +96,11 @@ public class GenericMacrosIT
 {
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
-    private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
-
-    private final DocumentReference pageWithButtonMacros = new DocumentReference("xwiki", "Main", "ButtonTest");
-
-    private final DocumentReference pageWithStatusMacros = new DocumentReference("xwiki", "Main", "StatusTest");
-
     private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
 
     private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
 
     private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-
-    private final DocumentReference pageWithUserProfileMacro = new DocumentReference("xwiki", "Main",
-        "UserProfileTest");
-
-    private final DocumentReference pageWithUserListMacro = new DocumentReference("xwiki", "Main",
-        "UserListTest");
-
-    private final DocumentReference PageWithPanelMacros = new DocumentReference("xwiki", "Main",
-        "PanelTest");
-
-    private final DocumentReference PageWithMStreamMacros = new DocumentReference("xwiki", "Main",
-        "MicrosoftStreamTest");
 
     private void registerMacros()
     {
@@ -149,7 +132,6 @@ public class GenericMacrosIT
 
     public void createPagesWithTags(TestUtils setup)
     {
-        setup.loginAsSuperAdmin();
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
         TaggablePage taggablePage = new TaggablePage();
@@ -183,14 +165,14 @@ public class GenericMacrosIT
 
     @Test
     @Order(1)
-    void teamMacroTest(TestUtils setup)
+    void teamMacroTest(TestUtils setup,TestReference testReference)
     {
         setup.gotoPage("XWiki", "UserTest");
         TaggablePage taggablePage = new TaggablePage();
         AddTagsPane tagsPane = taggablePage.addTags();
         tagsPane.setTags("testTag");
         tagsPane.add();
-        setup.createPage(pageWithTeamMacros, createContent("team-macros.vm"));
+        setup.createPage(testReference, createContent("team-macros.vm"),"TeamTest");
         TeamMacroPage page = new TeamMacroPage();
 
         // There should be 3 team macros.
@@ -269,10 +251,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(2)
-    void buttonMacroTest(TestUtils setup)
+    void buttonMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.gotoPage("XWiki", "ButtonTest");
-        setup.createPage(pageWithButtonMacros, createContent("button-macros.vm"));
+        setup.createPage(testReference, createContent("button-macros.vm"),"ButtonTest");
 
         ButtonMacroPage page = new ButtonMacroPage();
 
@@ -326,10 +307,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(3)
-    void statusMacroTest(TestUtils setup)
+    void statusMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.gotoPage("XWiki", "StatusTest");
-        setup.createPage(pageWithStatusMacros, createContent("status-macros.vm"));
+        setup.createPage(testReference, createContent("status-macros.vm"),"StatusTest");
 
         StatusMacroPage page = new StatusMacroPage();
 
@@ -342,9 +322,9 @@ public class GenericMacrosIT
         assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", page.getStatusTitle(2));
 
         // Checks the type of the status macros/ the color.
-        assertEquals("grey", page.getStatusColor(0));
-        assertEquals("yellow", page.getStatusColor(1));
-        assertEquals("yellow", page.getStatusColor(2));
+        assertTrue(page.hasColor(0,"grey"));
+        assertTrue(page.hasColor(1,"yellow"));
+        assertTrue(page.hasColor(2,"yellow"));
 
         // Checks the subtle property.
         assertFalse(page.isSubtle(0));
@@ -407,10 +387,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(5)
-    void userProfileMacroTest(TestUtils setup)
+    void userProfileMacroTest(TestUtils setup,TestReference testReference)
     {
-        setup.gotoPage("Main", "UserProfileTest");
-        setup.createPage(pageWithUserProfileMacro, createContent("userprofile-macros.vm"));
+        setup.createPage(testReference, createContent("userprofile-macros.vm"),"UserProfileTest");
 
         UserProfileMacroPage page = new UserProfileMacroPage();
 
@@ -459,10 +438,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(6)
-    void userListMacroTest(TestUtils setup)
+    void userListMacroTest(TestUtils setup,TestReference testReference)
     {
-        setup.gotoPage("Main", "UserProfileTest");
-        setup.createPage(pageWithUserListMacro, createContent("userlist-macros.vm"));
+        setup.createPage(testReference, createContent("userlist-macros.vm"),"UserListTest");
 
         UserListMacroPage page = new UserListMacroPage();
 
@@ -517,11 +495,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(7)
-    void panelMacroTest(TestUtils setup)
+    void panelMacroTest(TestUtils setup,TestReference testReference)
     {
-        setup.loginAsSuperAdmin();
-        setup.gotoPage("Main", "PanelTest");
-        setup.createPage(PageWithPanelMacros, createContent("panel-macros.vm"));
+        setup.createPage(testReference, createContent("panel-macros.vm"),"PanelTest");
 
         PanelMacroPage page = new PanelMacroPage();
 
@@ -591,11 +567,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(8)
-    void microsoftStreamMacroTest(TestUtils setup)
+    void microsoftStreamMacroTest(TestUtils setup,TestReference testReference)
     {
-        setup.loginAsSuperAdmin();
-        setup.gotoPage("Main", "MicrosoftStreamMacroPage");
-        setup.createPage(PageWithMStreamMacros, createContent("microsoftstream-macros.vm"));
+        setup.createPage(testReference, createContent("microsoftstream-macros.vm"),"MicrosoftStreamTest");
 
         MicrosoftStreamMacroPage page = new MicrosoftStreamMacroPage();
 

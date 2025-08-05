@@ -40,24 +40,14 @@ public class StatusMacroPage extends ViewPage
         return statusBox.size();
     }
 
-    public String getStatusColor(int i)
-    {
-        String classAttr = statusBox.get(i).getAttribute("class");
-        return extractColorFromClass(classAttr);
-    }
-
     public boolean isSubtle(int i)
     {
         return statusBox.get(i).getAttribute("class").contains("subtle");
     }
 
-    private String extractColorFromClass(String classAttr)
+    public boolean hasColor(int i, String color)
     {
-        for (String className : classAttr.split("\\s+")) {
-            if (className.endsWith("Status") && !className.equals("statusBox")) {
-                return className.replace("Status", "");
-            }
-        }
-        return "unknown";
+        String classAttr = statusBox.get(i).getAttribute("class").toLowerCase();
+        return classAttr.contains((color + "Status").toLowerCase());
     }
 }
