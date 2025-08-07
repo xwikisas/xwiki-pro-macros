@@ -24,25 +24,21 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-/**
- * Represents a page containing one or more Team macros.
- *
- * @version $Id$
- * @since 1.25.2
- */
-public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
-{
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+// Represents a page containing one or more Status macros.
 
-    public TeamMacroPage()
+public class StatusMacroPage extends AbstractGenericMacroPage<StatusMacro>
+{
+    @FindBy(css = "span.statusBox")
+    private List<WebElement> statusElements;
+
+    public StatusMacroPage()
     {
-        super(TeamMacro::new);
+        super(StatusMacro::new);
     }
 
     @Override
     protected List<WebElement> getElements()
     {
-        return teamMacros;
+        return statusElements;
     }
 }
