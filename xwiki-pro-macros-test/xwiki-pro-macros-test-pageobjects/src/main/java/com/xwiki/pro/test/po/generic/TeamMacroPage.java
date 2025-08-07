@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
 
 /**
  * Represents a page containing one or more Team macros.
@@ -31,18 +30,19 @@ import org.xwiki.test.ui.po.ViewPage;
  * @version $Id$
  * @since 1.25.2
  */
-public class TeamMacroPage extends ViewPage
+public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
 {
     @FindBy(css = ".xwikiteam")
     private List<WebElement> teamMacros;
 
-    public int getTeamMacrosCount()
+    public TeamMacroPage()
     {
-        return teamMacros.size();
+        super(TeamMacro::new);
     }
 
-    public TeamMacro getMacro(int index)
+    @Override
+    protected List<WebElement> getElements()
     {
-        return new TeamMacro(teamMacros.get(index));
+        return teamMacros;
     }
 }

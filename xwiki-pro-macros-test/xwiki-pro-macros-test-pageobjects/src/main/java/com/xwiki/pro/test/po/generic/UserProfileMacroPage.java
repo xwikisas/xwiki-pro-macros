@@ -23,22 +23,22 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
 
 // Represents a page containing one or more UserProfile macros.
 
-public class UserProfileMacroPage extends ViewPage
+public class UserProfileMacroPage extends AbstractGenericMacroPage<UserProfileMacro>
 {
     @FindBy(css = ".xwiki-user-profile-box")
     private List<WebElement> userProfileElements;
 
-    public int getUserProfileCount()
+    public UserProfileMacroPage()
     {
-        return userProfileElements.size();
+        super(UserProfileMacro::new);
     }
 
-    public UserProfileMacro getUserProfile(int index)
+    @Override
+    protected List<WebElement> getElements()
     {
-        return new UserProfileMacro(userProfileElements.get(index));
+        return userProfileElements;
     }
 }

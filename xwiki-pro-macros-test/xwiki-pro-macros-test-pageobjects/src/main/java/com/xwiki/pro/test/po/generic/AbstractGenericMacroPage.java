@@ -20,25 +20,29 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.xwiki.test.ui.po.ViewPage;
 
-// Represents a page containing one or more TagList macros.
-
-public class TagListMacroPage extends AbstractGenericMacroPage<TagListMacro>
+public abstract class AbstractGenericMacroPage<T> extends ViewPage
 {
-    @FindBy(css = ".glossaryListRoot")
-    private List<WebElement> tagLists;
+    private final Function<WebElement, T> constructor;
 
-    public TagListMacroPage()
+    public AbstractGenericMacroPage(Function<WebElement, T> constructor)
     {
-        super(TagListMacro::new);
+        this.constructor = constructor;
     }
 
-    @Override
-    protected List<WebElement> getElements()
+    public int getMacroCount()
     {
-        return tagLists;
+        return getElements().size();
     }
+
+    public T getMacro(int index)
+    {
+        return constructor.apply(getElements().get(index));
+    }
+
+    protected abstract List<WebElement> getElements();
 }

@@ -23,22 +23,22 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
 
 // Represents a page containing one or more UserList macros.
 
-public class UserListMacroPage extends ViewPage
+public class UserListMacroPage extends AbstractGenericMacroPage<UserListMacro>
 {
     @FindBy(css = ".xwiki-userlist")
     private List<WebElement> userLists;
 
-    public int getUserListsCount()
+    public UserListMacroPage()
     {
-        return userLists.size();
+        super(UserListMacro::new);
     }
 
-    public UserListMacro getUserList(int index)
+    @Override
+    protected List<WebElement> getElements()
     {
-        return new UserListMacro(userLists.get(index));
+        return userLists;
     }
 }

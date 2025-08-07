@@ -32,10 +32,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
+import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
@@ -164,7 +164,7 @@ public class GenericMacrosIT
         TeamMacro team3 = page.getMacro(2);
 
         // There should be 3 team macros.
-        assertEquals(3, page.getTeamMacrosCount());
+        assertEquals(3, page.getMacroCount());
         // First team macro should display 2 users (admin and the created user).
         assertEquals(3, team1.getUsers().size());
         // Second team macro should display 1 user - the one with "testTag".
@@ -306,11 +306,11 @@ public class GenericMacrosIT
         StatusMacroPage page = new StatusMacroPage();
 
         // There should be 3 status macros.
-        assertEquals(3, page.getStatusCount());
+        assertEquals(3, page.getMacroCount());
 
-        StatusMacro status1 = page.getStatus(0);
-        StatusMacro status2 = page.getStatus(1);
-        StatusMacro status3 = page.getStatus(2);
+        StatusMacro status1 = page.getMacro(0);
+        StatusMacro status2 = page.getMacro(1);
+        StatusMacro status3 = page.getMacro(2);
 
         // Checks the titles of the status macros.
         assertEquals("test1", status1.getTitle());
@@ -337,12 +337,12 @@ public class GenericMacrosIT
         setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
 
         TagListMacroPage page = new TagListMacroPage();
-        TagListMacro tagList1 = page.getTagList(0);
-        TagListMacro tagList2 = page.getTagList(1);
-        TagListMacro tagList3 = page.getTagList(2);
+        TagListMacro tagList1 = page.getMacro(0);
+        TagListMacro tagList2 = page.getMacro(1);
+        TagListMacro tagList3 = page.getMacro(2);
 
         // There should be 3 tagList macros.
-        assertEquals(3, page.getTagListCount());
+        assertEquals(3, page.getMacroCount());
 
         // Checks the ordered titles of the tags from the tagList.
         List<String> expectedTitles1 = Arrays.asList("A-B", "G");
@@ -392,12 +392,12 @@ public class GenericMacrosIT
 
         UserProfileMacroPage page = new UserProfileMacroPage();
 
-        UserProfileMacro user1 = page.getUserProfile(0);
-        UserProfileMacro user2 = page.getUserProfile(1);
-        UserProfileMacro user3 = page.getUserProfile(2);
+        UserProfileMacro user1 = page.getMacro(0);
+        UserProfileMacro user2 = page.getMacro(1);
+        UserProfileMacro user3 = page.getMacro(2);
 
         // There should be 3 userProfile macros.
-        assertEquals(3, page.getUserProfileCount());
+        assertEquals(3, page.getMacroCount());
 
         // Checks the links of the avatar pictures for each user.
         assertTrue(user1.hasLinkImage("UserTest"));
@@ -446,11 +446,11 @@ public class GenericMacrosIT
         setup.createPage(testReference, createContent("userlist-macros.vm"), "UserListTest");
 
         UserListMacroPage page = new UserListMacroPage();
-        UserListMacro userList1 = page.getUserList(0);
-        UserListMacro userList2 = page.getUserList(1);
+        UserListMacro userList1 = page.getMacro(0);
+        UserListMacro userList2 = page.getMacro(1);
 
         // There should be 2 userList macros.
-        assertEquals(2, page.getUserListsCount());
+        assertEquals(2, page.getMacroCount());
 
         // Checks the number of users in a list.
         assertEquals(2, userList1.getUserCount());
@@ -586,7 +586,7 @@ public class GenericMacrosIT
         MicrosoftStreamMacro mStream3 = page.getMacro(2);
 
         // There should be 3 MicrosoftStream macros.
-        assertEquals(3, page.getMStreamCount());
+        assertEquals(3, page.getMacroCount());
 
         // Checks the alignment of the macro.
         assertEquals("right", mStream1.getAlignment());

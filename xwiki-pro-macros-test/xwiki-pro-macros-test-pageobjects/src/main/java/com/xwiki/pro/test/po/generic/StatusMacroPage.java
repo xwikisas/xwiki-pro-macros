@@ -23,22 +23,22 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
 
 // Represents a page containing one or more Status macros.
 
-public class StatusMacroPage extends ViewPage
+public class StatusMacroPage extends AbstractGenericMacroPage<StatusMacro>
 {
     @FindBy(css = "span.statusBox")
     private List<WebElement> statusElements;
 
-    public int getStatusCount()
+    public StatusMacroPage()
     {
-        return statusElements.size();
+        super(StatusMacro::new);
     }
 
-    public StatusMacro getStatus(int index)
+    @Override
+    protected List<WebElement> getElements()
     {
-        return new StatusMacro(statusElements.get(index));
+        return statusElements;
     }
 }

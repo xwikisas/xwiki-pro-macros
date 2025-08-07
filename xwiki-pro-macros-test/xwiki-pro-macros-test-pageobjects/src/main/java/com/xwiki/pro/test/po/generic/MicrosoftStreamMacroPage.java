@@ -23,22 +23,22 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
 
 // Represents a page containing one or more MicrosoftStream macros.
 
-public class MicrosoftStreamMacroPage extends ViewPage
+public class MicrosoftStreamMacroPage extends AbstractGenericMacroPage<MicrosoftStreamMacro>
 {
     @FindBy(css = ".msStreamMacro")
     private List<WebElement> mStreamElements;
 
-    public int getMStreamCount()
+    public MicrosoftStreamMacroPage()
     {
-        return mStreamElements.size();
+        super(MicrosoftStreamMacro::new);
     }
 
-    public MicrosoftStreamMacro getMacro(int index)
+    @Override
+    protected List<WebElement> getElements()
     {
-        return new MicrosoftStreamMacro(mStreamElements.get(index));
+        return mStreamElements;
     }
 }
