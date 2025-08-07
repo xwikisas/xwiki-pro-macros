@@ -25,6 +25,11 @@ import java.util.function.Function;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.ViewPage;
 
+/**
+ * Generic base class for pages containing lists of macros.
+ *
+ * @param <T> the macro type to wrap each WebElement
+ */
 public abstract class AbstractGenericMacroPage<T> extends ViewPage
 {
     private final Function<WebElement, T> constructor;
