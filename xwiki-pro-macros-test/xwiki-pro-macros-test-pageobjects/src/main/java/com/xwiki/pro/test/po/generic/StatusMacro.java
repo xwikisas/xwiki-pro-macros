@@ -19,26 +19,33 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.List;
-
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
+import org.xwiki.test.ui.po.BaseElement;
 
-// Represents a page containing one or more UserProfile macros.
+// Represents a single instance of the Status macro and provides access to its attributes.
 
-public class UserProfileMacroPage extends ViewPage
+public class StatusMacro extends BaseElement
 {
-    @FindBy(css = ".xwiki-user-profile-box")
-    private List<WebElement> userProfileElements;
+    private final WebElement status;
 
-    public int getUserProfileCount()
+    public StatusMacro(WebElement status)
     {
-        return userProfileElements.size();
+        this.status = status;
     }
 
-    public UserProfileMacro getUserProfile(int index)
+    public String getTitle()
     {
-        return new UserProfileMacro(userProfileElements.get(index));
+        return status.getAttribute("title");
+    }
+
+    public boolean isSubtle()
+    {
+        return status.getAttribute("class").contains("subtle");
+    }
+
+    public boolean hasColor(String color)
+    {
+        String classAttr = status.getAttribute("class").toLowerCase();
+        return classAttr.contains((color + "Status").toLowerCase());
     }
 }

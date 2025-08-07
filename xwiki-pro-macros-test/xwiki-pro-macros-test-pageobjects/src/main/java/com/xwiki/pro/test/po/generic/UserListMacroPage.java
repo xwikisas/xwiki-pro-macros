@@ -19,15 +19,13 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
+
+// Represents a page containing one or more UserList macros.
 
 public class UserListMacroPage extends ViewPage
 {
@@ -39,100 +37,8 @@ public class UserListMacroPage extends ViewPage
         return userLists.size();
     }
 
-    public int getUserCountInList(int listIndex)
+    public UserListMacro getUserList(int index)
     {
-        return userLists.get(listIndex).findElements(By.cssSelector("tbody tr")).size();
-    }
-
-    public WebElement getUserRow(int listIndex, int userIndex)
-    {
-        return userLists.get(listIndex).findElements(By.cssSelector("tbody tr")).get(userIndex);
-    }
-
-    public int getUserPropertiesCount(int listIndex, int userIndex)
-    {
-        return getUserRow(listIndex, userIndex).findElements(By.tagName("td")).size();
-    }
-
-    public List<WebElement> getUserProperties(int listIndex, int userIndex)
-    {
-        return getUserRow(listIndex, userIndex).findElements(By.tagName("td"));
-    }
-
-    public List<String> getUserPropertiesText(int listIndex, int userIndex)
-    {
-        return getUserProperties(listIndex, userIndex).stream()
-            .map(WebElement::getText)
-            .collect(Collectors.toList());
-    }
-
-    public List<String> getUserPropertyTypes(int listIndex, int userIndex)
-    {
-        List<WebElement> tds = getUserProperties(listIndex, userIndex);
-        List<String> types = new ArrayList<>();
-
-        for (WebElement td : tds) {
-            String classAttr = td.getAttribute("class");
-            if (classAttr != null && classAttr.startsWith("xwiki-userlist-user-")) {
-                String type = classAttr.substring("xwiki-userlist-user-".length());
-                types.add(type);
-            } else {
-                types.add("");
-            }
-        }
-
-        return types;
-    }
-
-    public boolean isEmailLinkValid(int listIndex, int userIndex, String expectedEmail)
-    {
-        WebElement emailTd = getUserProperties(listIndex, userIndex).get(3);
-        WebElement emailLink = emailTd.findElement(By.tagName("a"));
-        String href = emailLink.getAttribute("href");
-        return href != null && href.equals("mailto:" + expectedEmail);
-    }
-
-    public String getUserAvatarTitle(int listIndex, int userIndex)
-    {
-        WebElement avatarTd = getUserProperties(listIndex, userIndex).get(0);
-        WebElement img = avatarTd.findElement(By.tagName("img"));
-        return img.getAttribute("title");
-    }
-
-    public String getUserAvatarAlt(int listIndex, int userIndex)
-    {
-        WebElement avatarTd = getUserProperties(listIndex, userIndex).get(0);
-        WebElement img = avatarTd.findElement(By.tagName("img"));
-        return img.getAttribute("alt");
-    }
-
-    public boolean getUserLinkHref(int listIndex, int userIndex, String username)
-    {
-        WebElement usernameTd = getUserProperties(listIndex, userIndex).get(1);
-        WebElement link = usernameTd.findElement(By.tagName("a"));
-        return link.getAttribute("href").contains("/xwiki/bin/view/XWiki/" + username);
-    }
-
-    public String getUsernameLinkText(int listIndex, int userIndex)
-    {
-        WebElement usernameTd = getUserProperties(listIndex, userIndex).get(1);
-        WebElement link = usernameTd.findElement(By.tagName("a"));
-        return link.getText();
-    }
-
-    public boolean hasFixedLayout(int listIndex)
-    {
-        WebElement userListTable = userLists.get(listIndex);
-        String classAttr = userListTable.getAttribute("class");
-        return classAttr != null && classAttr.contains("fixed-layout");
-    }
-
-    public Set<String> getUsernamesFromList(int listIndex)
-    {
-        return userLists.get(listIndex)
-            .findElements(By.cssSelector("tbody tr"))
-            .stream()
-            .map(row -> row.findElement(By.cssSelector(".xwiki-userlist-user-username a")).getText())
-            .collect(Collectors.toSet());
+        return new UserListMacro(userLists.get(index));
     }
 }

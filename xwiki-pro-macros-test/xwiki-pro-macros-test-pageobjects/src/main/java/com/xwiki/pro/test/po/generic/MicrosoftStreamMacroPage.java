@@ -21,83 +21,24 @@ package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
 
+// Represents a page containing one or more MicrosoftStream macros.
+
 public class MicrosoftStreamMacroPage extends ViewPage
 {
     @FindBy(css = ".msStreamMacro")
-    private List<WebElement> macros;
+    private List<WebElement> mStreamElements;
 
-    public int getMstreamCount()
+    public int getMStreamCount()
     {
-        return macros.size();
+        return mStreamElements.size();
     }
 
-    private WebElement getIframe(int index)
+    public MicrosoftStreamMacro getMacro(int index)
     {
-        return macros.get(index).findElement(By.tagName("iframe"));
-    }
-
-    public String getIframeWidth(int index)
-    {
-        return getIframe(index).getAttribute("width");
-    }
-
-    public String getIframeHeight(int index)
-    {
-        return getIframe(index).getAttribute("height");
-    }
-
-    public String getIframeSrc(int index)
-    {
-        return getIframe(index).getAttribute("src");
-    }
-
-    public boolean hasAutoplay(int index)
-    {
-        return getIframeSrc(index).contains("autoplay=true");
-    }
-
-    public boolean hasShowInfo(int index)
-    {
-        return getIframeSrc(index).contains("showinfo=true");
-    }
-
-    public String getAlignment(int index)
-    {
-        String classes = macros.get(index).getAttribute("class");
-        if (classes.contains("msStreamMacro-right")) {
-            return "right";
-        } else if (classes.contains("pull-left")) {
-            return "left";
-        } else if (classes.contains("msStreamMacro-center")) {
-            return "center";
-        } else {
-            return "none";
-        }
-    }
-
-    public boolean hasStartTime(int index)
-    {
-        return getIframeSrc(index).contains("st=");
-    }
-
-    public int getStartTime(int index)
-    {
-        String src = getIframeSrc(index);
-        for (String part : src.split("[?&]")) {
-            if (part.startsWith("st=")) {
-                return Integer.parseInt(part.substring(3));
-            }
-        }
-        return -1;
-    }
-
-    public boolean hasCorrectURL(int index, String url)
-    {
-        return getIframeSrc(index).contains(url);
+        return new MicrosoftStreamMacro(mStreamElements.get(index));
     }
 }

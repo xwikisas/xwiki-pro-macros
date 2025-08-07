@@ -19,55 +19,26 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
 
+// Represents a page containing one or more TagList macros.
+
 public class TagListMacroPage extends ViewPage
 {
     @FindBy(css = ".glossaryListRoot")
-    private List<WebElement> taglistRoots;
+    private List<WebElement> tagLists;
 
     public int getTagListCount()
     {
-        return taglistRoots.size();
+        return tagLists.size();
     }
 
-    public List<String> getGlossaryTitles(int rootIndex)
+    public TagListMacro getTagList(int index)
     {
-
-        WebElement root = taglistRoots.get(rootIndex);
-        List<WebElement> glossaryTitles = root.findElements(By.cssSelector(".glossaryBinTitle"));
-        List<String> titles = new ArrayList<>();
-        for (WebElement el : glossaryTitles) {
-            titles.add(el.getText());
-        }
-        return titles;
-    }
-
-    public List<String> getTagNames(int rootIndex)
-    {
-
-        WebElement root = taglistRoots.get(rootIndex);
-        List<WebElement> glossaryElements = root.findElements(By.cssSelector(".glossaryBinElement"));
-        List<String> tagNames = new ArrayList<>();
-        for (WebElement el : glossaryElements) {
-            tagNames.add(el.getText());
-        }
-        return tagNames;
-    }
-
-    public String getHtmlTagForTagName(int rootIndex, String tagName)
-    {
-
-        WebElement root = taglistRoots.get(rootIndex);
-        String xpath = ".//li[contains(@class, 'glossaryBinElement')]/a[text()='" + tagName + "']";
-        List<WebElement> elements = root.findElements(By.xpath(xpath));
-
-        return elements.get(0).getTagName();
+        return new TagListMacro(tagLists.get(index));
     }
 }

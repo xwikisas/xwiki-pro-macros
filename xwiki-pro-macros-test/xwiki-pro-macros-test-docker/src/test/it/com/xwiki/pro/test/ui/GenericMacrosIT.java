@@ -39,14 +39,21 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
-import com.xwiki.pro.test.po.generic.ButtonMacroPage;
+import com.xwiki.pro.test.po.generic.ButtonMacro;
+import com.xwiki.pro.test.po.generic.MicrosoftStreamMacro;
 import com.xwiki.pro.test.po.generic.MicrosoftStreamMacroPage;
+import com.xwiki.pro.test.po.generic.PanelMacro;
 import com.xwiki.pro.test.po.generic.PanelMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
+import com.xwiki.pro.test.po.generic.StatusMacro;
 import com.xwiki.pro.test.po.generic.StatusMacroPage;
+import com.xwiki.pro.test.po.generic.TagListMacro;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
+import com.xwiki.pro.test.po.generic.TeamMacro;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
+import com.xwiki.pro.test.po.generic.UserListMacro;
 import com.xwiki.pro.test.po.generic.UserListMacroPage;
+import com.xwiki.pro.test.po.generic.UserProfileMacro;
 import com.xwiki.pro.test.po.generic.UserProfileMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,38 +67,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version $Id$
  * @since 1.25.2
  */
-@UITest(
-    properties = {
-        "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
-    },
-    extensionOverrides = {
-        @ExtensionOverride(
-            extensionId = "com.google.code.findbugs:jsr305",
-            overrides = {
-                "features=com.google.code.findbugs:annotations"
-            }
-        ),
-        // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
-        // parent upgrade if this is still needed.
-        @ExtensionOverride(
-            extensionId = "org.bouncycastle:bcprov-jdk18on",
-            overrides = {
-                "features=org.bouncycastle:bcprov-jdk15on"
-            }
-        ),
-        @ExtensionOverride(
-            extensionId = "org.bouncycastle:bcpkix-jdk18on",
-            overrides = {
-                "features=org.bouncycastle:bcpkix-jdk15on"
-            }
-        ),
-        @ExtensionOverride(
-            extensionId = "org.bouncycastle:bcmail-jdk18on",
-            overrides = {
-                "features=org.bouncycastle:bcmail-jdk15on"
-            }
-        )
-    })
+@UITest(properties = { "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin", }, extensionOverrides = {
+    @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
+        "features=com.google.code.findbugs:annotations" }),
+    // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
+    // parent upgrade if this is still needed.
+    @ExtensionOverride(extensionId = "org.bouncycastle:bcprov-jdk18on", overrides = {
+        "features=org.bouncycastle:bcprov-jdk15on" }),
+    @ExtensionOverride(extensionId = "org.bouncycastle:bcpkix-jdk18on", overrides = {
+        "features=org.bouncycastle:bcpkix-jdk15on" }),
+    @ExtensionOverride(extensionId = "org.bouncycastle:bcmail-jdk18on", overrides = {
+        "features=org.bouncycastle:bcmail-jdk15on" }) })
 public class GenericMacrosIT
 {
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
@@ -116,14 +102,14 @@ public class GenericMacrosIT
     void setup(TestUtils setup)
     {
         setup.loginAsSuperAdmin();
-        setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
-            , "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
+        setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
             "blogfeed", "https://example.com/");
-        setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
-            , "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
-        setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email"
-            , "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog", "https://example"
-                + ".com/", "blogfeed", "https://example.com/");
+        setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
+        setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog",
+            "https://example" + ".com/", "blogfeed", "https://example.com/");
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
@@ -154,10 +140,8 @@ public class GenericMacrosIT
                 throw new RuntimeException("Failed to load " + filename + " from resources.");
             }
 
-            return new BufferedReader(new InputStreamReader(inputStream))
-                .lines()
-                .filter(line -> !line.trim().startsWith("##"))
-                .collect(Collectors.joining("\n"));
+            return new BufferedReader(new InputStreamReader(inputStream)).lines()
+                .filter(line -> !line.trim().startsWith("##")).collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new RuntimeException("Failed to read macro file: " + filename, e);
         }
@@ -165,171 +149,183 @@ public class GenericMacrosIT
 
     @Test
     @Order(1)
-    void teamMacroTest(TestUtils setup,TestReference testReference)
+    void teamMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.gotoPage("XWiki", "UserTest");
         TaggablePage taggablePage = new TaggablePage();
         AddTagsPane tagsPane = taggablePage.addTags();
         tagsPane.setTags("testTag");
         tagsPane.add();
-        setup.createPage(testReference, createContent("team-macros.vm"),"TeamTest");
+        setup.createPage(testReference, createContent("team-macros.vm"), "TeamTest");
         TeamMacroPage page = new TeamMacroPage();
+
+        TeamMacro team1 = page.getMacro(0);
+        TeamMacro team2 = page.getMacro(1);
+        TeamMacro team3 = page.getMacro(2);
 
         // There should be 3 team macros.
         assertEquals(3, page.getTeamMacrosCount());
         // First team macro should display 2 users (admin and the created user).
-        assertEquals(3, page.getTeamMacroUsers(0).size());
+        assertEquals(3, team1.getUsers().size());
         // Second team macro should display 1 user - the one with "testTag".
-        assertEquals(1, page.getTeamMacroUsers(1).size());
+        assertEquals(1, team2.getUsers().size());
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
-        assertEquals(0, page.getTeamMacroUsers(2).size());
+        assertEquals(0, team3.getUsers().size());
 
         String username = "xwiki:XWiki.UserTest";
         String username2 = "xwiki:XWiki.UserTest2";
         String username3 = "xwiki:XWiki.UserTest3";
 
         // Checks the users' titles.
-        assertEquals("UserTest", page.getUserTitle(0, username));
-        assertEquals("UserTest2", page.getUserTitle(0, username2));
-        assertEquals("UserTest3", page.getUserTitle(0, username3));
+        assertEquals("UserTest", team1.getUserTitle(username));
+        assertEquals("UserTest2", team1.getUserTitle(username2));
+        assertEquals("UserTest3", team1.getUserTitle(username3));
 
-        assertEquals("UserTest", page.getUserTitle(1, username));
+        assertEquals("UserTest", team2.getUserTitle(username));
         // Checks the users' profile links.
-        assertTrue(page.getProfileLink(0, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
-        assertTrue(page.getProfileLink(0, username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
-        assertTrue(page.getProfileLink(0, username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
+        assertTrue(team1.getProfileLink(username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
+        assertTrue(team1.getProfileLink(username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
+        assertTrue(team1.getProfileLink(username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
 
-        assertTrue(page.getProfileLink(1, username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
+        assertTrue(team2.getProfileLink(username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
 
         // Checks the existence of avatar initials.
-        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest"));
-        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest2"));
-        assertTrue(page.hasAvatarInitials(0, "xwiki:XWiki.UserTest3"));
+        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest"));
+        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest2"));
+        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest3"));
 
         // Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
-        assertEquals("U", page.getAvatarInitials(0, username));
-        assertEquals("U", page.getAvatarInitials(0, username2));
-        assertEquals("U", page.getAvatarInitials(0, username3));
+        assertEquals("U", team1.getAvatarInitials(username));
+        assertEquals("U", team1.getAvatarInitials(username2));
+        assertEquals("U", team1.getAvatarInitials(username3));
 
         // disableLetterAvatars="true".
-        assertFalse(page.hasAvatarInitials(1, "xwiki:XWiki.UserTest"));
+        assertFalse(team2.hasAvatarInitials("xwiki:XWiki.UserTest"));
 
         // default color.
-        assertTrue(page.getAvatarBackgroundColor(0, username).contains("rgb(0, 170, 102)"));
-        assertTrue(page.getAvatarBackgroundColor(0, username2).contains("rgb(0, 170, 102)"));
-        assertTrue(page.getAvatarBackgroundColor(0, username3).contains("rgb(0, 170, 102)"));
+        assertTrue(team1.getAvatarBackgroundColor(username).contains("rgb(0, 170, 102)"));
+        assertTrue(team1.getAvatarBackgroundColor(username2).contains("rgb(0, 170, 102)"));
+        assertTrue(team1.getAvatarBackgroundColor(username3).contains("rgb(0, 170, 102)"));
 
         // personalized color.
-        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username));
-        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username2));
-        assertEquals("rgb(204, 0, 255)", page.getAvatarFontColor(0, username3));
+        assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username));
+        assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username2));
+        assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username3));
 
-        assertTrue(page.getAvatarSize(0, username).startsWith("60"));
-        assertTrue(page.getAvatarSize(0, username2).startsWith("60"));
-        assertTrue(page.getAvatarSize(0, username3).startsWith("60"));
+        assertTrue(team1.getAvatarSize(username).startsWith("60"));
+        assertTrue(team1.getAvatarSize(username2).startsWith("60"));
+        assertTrue(team1.getAvatarSize(username3).startsWith("60"));
 
-        assertTrue(page.getAvatarSize(1, username).startsWith("60"));
+        assertTrue(team2.getAvatarSize(username).startsWith("60"));
 
-        assertTrue(page.getAvatarBorderRadius(0, username).startsWith("60"));
-        assertTrue(page.getAvatarBorderRadius(0, username2).startsWith("60"));
-        assertTrue(page.getAvatarBorderRadius(0, username3).startsWith("60"));
+        assertTrue(team1.getAvatarBorderRadius(username).startsWith("60"));
+        assertTrue(team1.getAvatarBorderRadius(username2).startsWith("60"));
+        assertTrue(team1.getAvatarBorderRadius(username3).startsWith("60"));
 
         // Checks the property of hidden usernames.
-        assertTrue(page.isUsernameHidden(0));
-        assertFalse(page.isUsernameHidden(1));
-        assertTrue(page.isUsernameHidden(2));
+        assertTrue(team1.isUsernameHidden());
+        assertFalse(team2.isUsernameHidden());
+        assertTrue(team3.isUsernameHidden());
 
         // Checks the visibility of usernames.
-        assertFalse(page.isUsernameVisible(0, username));
-        assertFalse(page.isUsernameVisible(0, username2));
-        assertFalse(page.isUsernameVisible(0, username3));
-        assertTrue(page.isUsernameVisible(1, username));
+        assertFalse(team1.isUsernameVisible(username));
+        assertFalse(team1.isUsernameVisible(username2));
+        assertFalse(team1.isUsernameVisible(username3));
+        assertTrue(team2.isUsernameVisible(username));
 
         // Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears.
-        assertTrue(page.hasEmptyTeamMessage(2));
+        assertTrue(team3.hasEmptyTeamMessage());
     }
 
     @Test
     @Order(2)
     void buttonMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("button-macros.vm"),"ButtonTest");
+        setup.createPage(testReference, createContent("button-macros.vm"), "ButtonTest");
 
-        ButtonMacroPage page = new ButtonMacroPage();
+        ButtonMacro btn1 = new ButtonMacro("testbtn1");
+        ButtonMacro btn2 = new ButtonMacro("testbtn2");
+        ButtonMacro btn3 = new ButtonMacro("testbtn3");
+        ButtonMacro btn4 = new ButtonMacro("testbtn4");
+        ButtonMacro btn5 = new ButtonMacro("testbtn5");
 
         // Checks the width of the buttons.
-        assertEquals("100px", page.getButtonWidth("testbtn1"));
-        assertEquals("80px", page.getButtonWidth("testbtn3"));
+        assertEquals("100px", btn1.getWidth());
+        assertEquals("80px", btn3.getWidth());
 
         // Checks the color of the buttons.
-        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn1"));
-        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn3"));
-        assertEquals(hexToRgb("#ff66ff"), page.getButtonColor("testbtn4"));
+        assertEquals(hexToRgb("#ff66ff"), btn1.getColor());
+        assertEquals(hexToRgb("#ff66ff"), btn3.getColor());
+        assertEquals(hexToRgb("#ff66ff"), btn4.getColor());
 
         // Checks the label of the buttons.
-        assertEquals("test1", page.getButtonLabel("testbtn1"));
-        assertEquals("test2", page.getButtonLabel("testbtn2"));
-        assertEquals("test3", page.getButtonLabel("testbtn3"));
-        assertEquals("test4", page.getButtonLabel("testbtn4"));
-        assertEquals("test5", page.getButtonLabel("testbtn5"));
+        assertEquals("test1", btn1.getLabel());
+        assertEquals("test2", btn2.getLabel());
+        assertEquals("test3", btn3.getLabel());
+        assertEquals("test4", btn4.getLabel());
+        assertEquals("test5", btn5.getLabel());
 
         // Checks the url of the buttons.
-        assertTrue(page.hasLink("testbtn1", "https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
-        assertTrue(page.hasLink("testbtn2",
+        assertTrue(btn1.hasLink("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
+        assertTrue(btn2.hasLink(
             "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
-        assertTrue(page.hasLink("testbtn3",
+        assertTrue(btn3.hasLink(
             "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
-        assertTrue(page.hasLink("testbtn4",
+        assertTrue(btn4.hasLink(
             "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
-        assertTrue(page.hasLink("testbtn5", "https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
+        assertTrue(btn5.hasLink("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
 
         // Checks whether the link is opening in a new tab or not.
-        assertEquals("_blank", page.getButtonParentTarget("testbtn1"));
-        assertEquals("", page.getButtonParentTarget("testbtn2"));
-        assertEquals("", page.getButtonParentTarget("testbtn3"));
-        assertEquals("", page.getButtonParentTarget("testbtn4"));
-        assertEquals("_blank", page.getButtonParentTarget("testbtn5"));
+        assertEquals("_blank", btn1.getParentTarget());
+        assertEquals("", btn2.getParentTarget());
+        assertEquals("", btn3.getParentTarget());
+        assertEquals("", btn4.getParentTarget());
+        assertEquals("_blank", btn5.getParentTarget());
 
         // The type of the button (DEFAULT/ DANGER/ SUCCESS / WARNING).
-        assertTrue(page.getButtonClass("testbtn1").endsWith("-default"));
-        assertTrue(page.getButtonClass("testbtn2").endsWith("-danger"));
-        assertTrue(page.getButtonClass("testbtn3").endsWith("-success"));
-        assertTrue(page.getButtonClass("testbtn4").endsWith("-warning"));
-        assertTrue(page.getButtonClass("testbtn5").endsWith("-default"));
+        assertTrue(btn1.getCssClass().endsWith("-default"));
+        assertTrue(btn2.getCssClass().endsWith("-danger"));
+        assertTrue(btn3.getCssClass().endsWith("-success"));
+        assertTrue(btn4.getCssClass().endsWith("-warning"));
+        assertTrue(btn5.getCssClass().endsWith("-default"));
 
         // The button has/ doesn't have an Icon assigned.
-        assertTrue(page.hasIcon("testbtn1"));
-        assertFalse(page.hasIcon("testbtn2"));
-        assertTrue(page.hasIcon("testbtn3"));
-        assertFalse(page.hasIcon("testbtn4"));
-        assertTrue(page.hasIcon("testbtn5"));
+        assertTrue(btn1.hasIcon());
+        assertFalse(btn2.hasIcon());
+        assertTrue(btn3.hasIcon());
+        assertFalse(btn4.hasIcon());
+        assertTrue(btn5.hasIcon());
     }
 
     @Test
     @Order(3)
     void statusMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("status-macros.vm"),"StatusTest");
+        setup.createPage(testReference, createContent("status-macros.vm"), "StatusTest");
 
         StatusMacroPage page = new StatusMacroPage();
 
         // There should be 3 status macros.
         assertEquals(3, page.getStatusCount());
 
+        StatusMacro status1 = page.getStatus(0);
+        StatusMacro status2 = page.getStatus(1);
+        StatusMacro status3 = page.getStatus(2);
+
         // Checks the titles of the status macros.
-        assertEquals("test1", page.getStatusTitle(0));
-        assertEquals("test2", page.getStatusTitle(1));
-        assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", page.getStatusTitle(2));
+        assertEquals("test1", status1.getTitle());
+        assertEquals("test2", status2.getTitle());
+        assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", status3.getTitle());
 
         // Checks the type of the status macros/ the color.
-        assertTrue(page.hasColor(0,"grey"));
-        assertTrue(page.hasColor(1,"yellow"));
-        assertTrue(page.hasColor(2,"yellow"));
+        assertTrue(status1.hasColor("grey"));
+        assertTrue(status2.hasColor("yellow"));
+        assertTrue(status3.hasColor("yellow"));
 
         // Checks the subtle property.
-        assertFalse(page.isSubtle(0));
-        assertTrue(page.isSubtle(1));
-        assertFalse(page.isSubtle(2));
+        assertFalse(status1.isSubtle());
+        assertTrue(status2.isSubtle());
+        assertFalse(status3.isSubtle());
     }
 
     @Test
@@ -341,277 +337,293 @@ public class GenericMacrosIT
         setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
 
         TagListMacroPage page = new TagListMacroPage();
+        TagListMacro tagList1 = page.getTagList(0);
+        TagListMacro tagList2 = page.getTagList(1);
+        TagListMacro tagList3 = page.getTagList(2);
 
         // There should be 3 tagList macros.
         assertEquals(3, page.getTagListCount());
 
         // Checks the ordered titles of the tags from the tagList.
         List<String> expectedTitles1 = Arrays.asList("A-B", "G");
-        assertEquals(expectedTitles1, page.getGlossaryTitles(0));
+        assertEquals(expectedTitles1, tagList1.getGlossaryTitles());
 
         // Checks the ordered titles of the tags from the tagList.
         List<String> expectedTitles2 = Arrays.asList("A-G");
-        assertEquals(expectedTitles2, page.getGlossaryTitles(1));
+        assertEquals(expectedTitles2, tagList2.getGlossaryTitles());
 
         // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames1 = Arrays.asList("alpha", "beta", "gamma");
-        assertEquals(expectedTagNames1, page.getTagNames(0));
+        assertEquals(expectedTagNames1, tagList1.getTagNames());
 
         // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
-        assertEquals(expectedTagNames2, page.getTagNames(1));
+        assertEquals(expectedTagNames2, tagList2.getTagNames());
 
         // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames1) {
-            assertEquals("a", page.getHtmlTagForTagName(0, i));
+            assertEquals("a", tagList1.getHtmlTagForTagName(i));
         }
 
         // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames2) {
-            assertEquals("a", page.getHtmlTagForTagName(1, i));
+            assertEquals("a", tagList2.getHtmlTagForTagName(i));
         }
 
         // Checks the ordered titles of the tags from the tagList, multiple spaces.
         List<String> expectedTitles3 = Arrays.asList("A-X", "Y-Z");
-        assertEquals(expectedTitles3, page.getGlossaryTitles(2));
+        assertEquals(expectedTitles3, tagList3.getGlossaryTitles());
 
         // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames3 = Arrays.asList("alpha", "beta", "testTag", "x", "y", "z");
-        assertEquals(expectedTagNames3, page.getTagNames(2));
+        assertEquals(expectedTagNames3, tagList3.getTagNames());
 
         // Checks the <a> tags of the tags from the tagList.
         for (String i : expectedTagNames3) {
-            assertEquals("a", page.getHtmlTagForTagName(2, i));
+            assertEquals("a", tagList3.getHtmlTagForTagName(i));
         }
     }
 
     @Test
     @Order(5)
-    void userProfileMacroTest(TestUtils setup,TestReference testReference)
+    void userProfileMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("userprofile-macros.vm"),"UserProfileTest");
+        setup.createPage(testReference, createContent("userprofile-macros.vm"), "UserProfileTest");
 
         UserProfileMacroPage page = new UserProfileMacroPage();
+
+        UserProfileMacro user1 = page.getUserProfile(0);
+        UserProfileMacro user2 = page.getUserProfile(1);
+        UserProfileMacro user3 = page.getUserProfile(2);
 
         // There should be 3 userProfile macros.
         assertEquals(3, page.getUserProfileCount());
 
         // Checks the links of the avatar pictures for each user.
-        assertTrue(page.linkImageProfile(0, "UserTest"));
-        assertTrue(page.linkImageProfile(1, "UserTest2"));
+        assertTrue(user1.hasLinkImage("UserTest"));
+        assertTrue(user2.hasLinkImage("UserTest2"));
 
         // Checks the titles of the avatar pictures for each user.
-        assertTrue(page.imageHasTitle(0, "UserTest"));
-        assertTrue(page.imageHasTitle(1, "UserTest2"));
+        assertTrue(user1.imageHasTitle("UserTest"));
+        assertTrue(user2.imageHasTitle("UserTest2"));
 
         // Checks the validity of the profile link for each user.
-        assertTrue(page.getProfileLinkHref(0, "UserTest"));
-        assertTrue(page.getProfileLinkHref(1, "UserTest2"));
+        assertTrue(user1.getProfileLink("UserTest"));
+        assertTrue(user2.getProfileLink("UserTest2"));
 
         // Checks the link for the profile.
-        assertEquals("UserTest", page.getProfileLinkText(0));
-        assertEquals("UserTest2", page.getProfileLinkText(1));
+        assertEquals("UserTest", user1.getLinkText());
+        assertEquals("UserTest2", user2.getLinkText());
 
         // Checks the number of properties shown for each user.
-        assertEquals(4, page.getPropertiesCount(0));
-        assertEquals(4, page.getPropertiesCount(1));
-        assertEquals(3, page.getPropertiesCount(2));
+        assertEquals(4, user1.getPropertiesCount());
+        assertEquals(4, user2.getPropertiesCount());
+        assertEquals(3, user3.getPropertiesCount());
 
         // Checks the list of properties shown for each user.
         assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
-            page.getPropertiesText(0));
+            user1.getPropertiesText());
         assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
-            page.getPropertiesText(1));
+            user2.getPropertiesText());
         assertEquals(List.of("https://example.com/", "usertest3@example.com", "https://example.com/"),
-            page.getPropertiesText(2));
+            user3.getPropertiesText());
 
         // Checks that the email link is valid.
-        assertTrue(page.isEmailLinkCorrect(0, 1, "usertest@example.com"));
-        assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
-        assertTrue(page.isEmailLinkCorrect(1, 1, "usertest2@example.com"));
+        assertTrue(user1.isEmailLinkCorrect(1, "usertest@example.com"));
+        assertTrue(user2.isEmailLinkCorrect(1, "usertest2@example.com"));
+        assertTrue(user3.isEmailLinkCorrect(1, "usertest3@example.com"));
 
         // Checks the text from the "about" section for each user.
-        assertEquals("test", page.getProfileComment(0));
-        assertEquals("test2", page.getProfileComment(1));
-        assertEquals("test3", page.getProfileComment(2));
+        assertEquals("test", user1.getComment());
+        assertEquals("test2", user2.getComment());
+        assertEquals("test3", user3.getComment());
     }
 
     @Test
     @Order(6)
-    void userListMacroTest(TestUtils setup,TestReference testReference)
+    void userListMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("userlist-macros.vm"),"UserListTest");
+        setup.createPage(testReference, createContent("userlist-macros.vm"), "UserListTest");
 
         UserListMacroPage page = new UserListMacroPage();
+        UserListMacro userList1 = page.getUserList(0);
+        UserListMacro userList2 = page.getUserList(1);
 
         // There should be 2 userList macros.
         assertEquals(2, page.getUserListsCount());
 
         // Checks the number of users in a list.
-        assertEquals(2, page.getUserCountInList(0));
+        assertEquals(2, userList1.getUserCount());
         for (int i = 0; i < 2; i++) {
-            assertEquals(4, page.getUserPropertiesCount(0, i));
-            assertEquals(List.of("avatar", "username", "phone", "email"), page.getUserPropertyTypes(0, i));
+            assertEquals(4, userList1.getUserPropertiesCount(i));
+            assertEquals(List.of("avatar", "username", "phone", "email"), userList1.getUserPropertyTypes(i));
         }
 
         // Checks the avatar titles.
-        assertEquals("UserTest", page.getUserAvatarTitle(0, 0));
-        assertEquals("UserTest", page.getUserAvatarAlt(0, 0));
+        assertEquals("UserTest", userList1.getUserAvatarTitle(0));
+        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
 
         // Checks the validity of the users' profile links.
-        assertTrue(page.getUserLinkHref(0, 0, "UserTest"));
+        assertTrue(userList1.getUserLinkHref(0, "UserTest"));
 
         // Checks the link, that has the correct username.
-        assertEquals("UserTest", page.getUsernameLinkText(0, 0));
+        assertEquals("UserTest", userList1.getUsernameLinkText(0));
 
         // Checks the list of properties shown for each user.
-        assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), page.getUserPropertiesText(0, 0));
+        assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), userList1.getUserPropertiesText(0));
 
         // Checks that the email link is valid.
-        assertTrue(page.isEmailLinkValid(0, 0, "usertest@example.com"));
+        assertTrue(userList1.isEmailLinkValid(0, "usertest@example.com"));
 
-        assertEquals("UserTest2", page.getUserAvatarTitle(0, 1));
-        assertEquals("UserTest2", page.getUserAvatarAlt(0, 1));
-        assertTrue(page.getUserLinkHref(0, 1, "UserTest2"));
-        assertEquals("UserTest2", page.getUsernameLinkText(0, 1));
-        assertEquals(List.of("", "UserTest2", "07777777", "usertest2@example.com"), page.getUserPropertiesText(0, 1));
-        assertTrue(page.isEmailLinkValid(0, 1, "usertest2@example.com"));
+        assertEquals("UserTest2", userList1.getUserAvatarTitle(1));
+        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
 
-        assertEquals(3, page.getUserCountInList(1));
+        assertTrue(userList1.getUserLinkHref(1, "UserTest2"));
+        assertEquals("UserTest2", userList1.getUsernameLinkText(1));
+
+        assertEquals(List.of("", "UserTest2", "07777777", "usertest2@example.com"), userList1.getUserPropertiesText(1));
+        assertTrue(userList1.isEmailLinkValid(1, "usertest2@example.com"));
+
+        assertEquals(3, userList2.getUserCount());
         for (int i = 0; i < 3; i++) {
-            assertEquals(6, page.getUserPropertiesCount(1, i));
+            assertEquals(6, userList2.getUserPropertiesCount(i));
             assertEquals(List.of("avatar", "username", "phone", "email", "address", "blogfeed"),
-                page.getUserPropertyTypes(1,
-                    i));
+                userList2.getUserPropertyTypes(i));
         }
 
         // Checks that fixedTableLayout="true" works.
-        assertTrue(page.hasFixedLayout(1));
+        assertTrue(userList2.hasFixedLayout());
 
         // Check the users in the list.
-        assertEquals(Set.of("UserTest", "UserTest2"), page.getUsernamesFromList(0));
-        assertEquals(Set.of("UserTest", "UserTest2", "UserTest3"), page.getUsernamesFromList(1));
+        assertEquals(Set.of("UserTest", "UserTest2"), userList1.getUsernames());
+        assertEquals(Set.of("UserTest", "UserTest2", "UserTest3"), userList2.getUsernames());
     }
 
     @Test
     @Order(7)
-    void panelMacroTest(TestUtils setup,TestReference testReference)
+    void panelMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("panel-macros.vm"),"PanelTest");
+        setup.createPage(testReference, createContent("panel-macros.vm"), "PanelTest");
 
         PanelMacroPage page = new PanelMacroPage();
+        PanelMacro panel1 = page.getPanel(0);
+        PanelMacro panel2 = page.getPanel(1);
+        PanelMacro panel3 = page.getPanel(2);
 
         // There should be 3 panel macros on the page.
         assertEquals(3, page.getPanelCount());
 
         // Panel container 1st panel.
-        assertEquals("300px", page.getPanelWidth(0));
-        assertEquals("50%", page.getPanelHeight(0));
-        assertEquals("20px", page.getPanelBorderRadius(0));
-        assertEquals("2px dashed " + hexToRgb("#f536f5"), page.getPanelBorderStyle(0));
+        assertEquals("300px", panel1.getWidth());
+        assertEquals("50%", panel1.getHeight());
+        assertEquals("20px", panel1.getBorderRadius());
+        assertEquals("2px dashed " + hexToRgb("#f536f5"), panel1.getBorderStyle());
 
         // Title section 1st panel.
-        assertEquals("PanelTestTitle", page.getTitleText(0));
-        assertEquals(hexToRgb("#452fd4"), page.getTitleBackgroundColor(0));
-        assertEquals(hexToRgb("#74d927"), page.getTitleColor(0));
+        assertEquals("PanelTestTitle", panel1.getTitleText());
+        assertEquals(hexToRgb("#452fd4"), panel1.getTitleBackgroundColor());
+        assertEquals(hexToRgb("#74d927"), panel1.getTitleColor());
 
         // Content section 1st panel.
-        assertEquals("Content for PanelMacroTest\nContent2 for PanelMacroTest", page.getContentText(0));
-        assertEquals(hexToRgb("#edfa34"), page.getContentBackgroundColor(0));
-        assertEquals("red", page.getContentColor(0));
+        assertEquals("Content for PanelMacroTest\nContent2 for PanelMacroTest", panel1.getContentText());
+        assertEquals(hexToRgb("#edfa34"), panel1.getContentBackgroundColor());
+        assertEquals("red", panel1.getContentColor());
 
         // Footer section 1st panel.
-        assertEquals("PanelTestFooter", page.getFooterText(0));
-        assertEquals(hexToRgb("#ac4de8"), page.getFooterBackgroundColor(0));
-        assertEquals(hexToRgb("#6beded"), page.getFooterColor(0));
+        assertEquals("PanelTestFooter", panel1.getFooterText());
+        assertEquals(hexToRgb("#ac4de8"), panel1.getFooterBackgroundColor());
+        assertEquals(hexToRgb("#6beded"), panel1.getFooterColor());
 
         // Nested Panels.
 
         // Panel container 2nd panel.
-        assertEquals("solid " + hexToRgb("#f536f5"), page.getPanelBorderStyle(1));
-        assertNull(page.getPanelWidth(1));
-        assertNull(page.getPanelHeight(1));
-        assertNull(page.getPanelBorderRadius(1));
+        assertEquals("solid " + hexToRgb("#f536f5"), panel2.getBorderStyle());
+        assertNull(panel2.getWidth());
+        assertNull(panel2.getHeight());
+        assertNull(panel2.getBorderRadius());
 
         // Title section 2nd panel.
-        assertEquals("NestedPanelsTestTitle", page.getTitleText(1));
-        assertNull(page.getTitleBackgroundColor(1));
-        assertNull(page.getTitleColor(1));
+        assertEquals("NestedPanelsTestTitle", panel2.getTitleText());
+        assertNull(panel2.getTitleBackgroundColor());
+        assertNull(panel2.getTitleColor());
 
         // Content section 2nd panel.
         assertEquals("Content3 for PanelMacroTest\nNestedPanelsTestTitle2\nContent4 for PanelMacroTest",
-            page.getContentText(1));
-        assertNull(page.getContentBackgroundColor(1));
-        assertNull(page.getContentColor(1));
+            panel2.getContentText());
+        assertNull(panel2.getContentBackgroundColor());
+        assertNull(panel2.getContentColor());
 
         // Checks the CSS class of the 3rd panel.
-        assertTrue(page.getPanelClass(2).contains("macro-panel"));
-        assertTrue(page.getPanelClass(2).contains("testCssClass"));
+        assertTrue(panel3.getCssClass().contains("testCssClass"));
 
         // Panel container 3rd panel.
-        assertEquals("groove rgb(153, 0, 153)", page.getPanelBorderStyle(2));
-        assertNull(page.getPanelWidth(2));
-        assertNull(page.getPanelHeight(2));
-        assertNull(page.getPanelBorderRadius(2));
+        assertEquals("groove rgb(153, 0, 153)", panel3.getBorderStyle());
+        assertNull(panel3.getWidth());
+        assertNull(panel3.getHeight());
+        assertNull(panel3.getBorderRadius());
 
         // Title section 3rd panel.
-        assertEquals("NestedPanelsTestTitle2", page.getTitleText(2));
-        assertNull(page.getTitleBackgroundColor(2));
-        assertNull(page.getTitleColor(2));
+        assertEquals("NestedPanelsTestTitle2", panel3.getTitleText());
+        assertNull(panel3.getTitleBackgroundColor());
+        assertNull(panel3.getTitleColor());
 
         // Content section 3rd panel.
-        assertEquals("Content4 for PanelMacroTest", page.getContentText(2));
-        assertNull(page.getContentBackgroundColor(2));
-        assertNull(page.getContentColor(2));
+        assertEquals("Content4 for PanelMacroTest", panel3.getContentText());
+        assertNull(panel3.getContentBackgroundColor());
+        assertNull(panel3.getContentColor());
     }
 
     @Test
     @Order(8)
-    void microsoftStreamMacroTest(TestUtils setup,TestReference testReference)
+    void microsoftStreamMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("microsoftstream-macros.vm"),"MicrosoftStreamTest");
+        setup.createPage(testReference, createContent("microsoftstream-macros.vm"), "MicrosoftStreamTest");
 
         MicrosoftStreamMacroPage page = new MicrosoftStreamMacroPage();
 
+        MicrosoftStreamMacro mStream1 = page.getMacro(0);
+        MicrosoftStreamMacro mStream2 = page.getMacro(1);
+        MicrosoftStreamMacro mStream3 = page.getMacro(2);
+
         // There should be 3 MicrosoftStream macros.
-        assertEquals(3, page.getMstreamCount());
+        assertEquals(3, page.getMStreamCount());
 
         // Checks the alignment of the macro.
-        assertEquals("right", page.getAlignment(0));
+        assertEquals("right", mStream1.getAlignment());
 
         // Checks the width of the macro, default = "500px".
-        assertEquals("600px", page.getIframeWidth(0));
+        assertEquals("600px", mStream1.getWidth());
 
         // Checks the height of the macro, default = "300px".
-        assertEquals("400px", page.getIframeHeight(0));
+        assertEquals("400px", mStream1.getHeight());
 
         // Checks the autoplay property, default = "false".
-        assertTrue(page.hasAutoplay(0));
+        assertTrue(mStream1.hasAutoplay());
         // Checks the showInfo property, default = "false".
-        assertTrue(page.hasShowInfo(0));
+        assertTrue(mStream1.hasShowInfo());
         // Checks the StartTime property existence.
-        assertTrue(page.hasStartTime(0));
+        assertTrue(mStream1.hasStartTime());
         // Checks the StartTime property.
-        assertEquals(convertStartTime("01:12:13"), page.getStartTime(0));
+        assertEquals(convertStartTime("01:12:13"), mStream1.getStartTime());
         // Checks the actual URL of the microsoftStream.
-        assertTrue(page.hasCorrectURL(0, "www.youtube.com"));
+        assertTrue(mStream1.hasCorrectURL("www.youtube.com"));
 
-        assertEquals("left", page.getAlignment(1));
-        assertEquals("500px", page.getIframeWidth(1));
-        assertEquals("300px", page.getIframeHeight(1));
-        assertFalse(page.hasAutoplay(1));
-        assertFalse(page.hasShowInfo(1));
-        assertTrue(page.hasStartTime(1));
-        assertEquals(convertStartTime("03:12:13"), page.getStartTime(1));
-        assertTrue(page.hasCorrectURL(1, "www.youtube.com"));
+        assertEquals("left", mStream2.getAlignment());
+        assertEquals("500px", mStream2.getWidth());
+        assertEquals("300px", mStream2.getHeight());
+        assertFalse(mStream2.hasAutoplay());
+        assertFalse(mStream2.hasShowInfo());
+        assertTrue(mStream2.hasStartTime());
+        assertEquals(convertStartTime("03:12:13"), mStream2.getStartTime());
+        assertTrue(mStream2.hasCorrectURL("www.youtube.com"));
 
-        assertEquals("center", page.getAlignment(2));
-        assertEquals("500px", page.getIframeWidth(2));
-        assertEquals("300px", page.getIframeHeight(2));
-        assertFalse(page.hasAutoplay(2));
-        assertFalse(page.hasShowInfo(2));
-        assertFalse(page.hasStartTime(2));
-        assertTrue(page.hasCorrectURL(2, "www.youtube.com"));
+        assertEquals("center", mStream3.getAlignment());
+        assertEquals("500px", mStream3.getWidth());
+        assertEquals("300px", mStream3.getHeight());
+        assertFalse(mStream3.hasAutoplay());
+        assertFalse(mStream3.hasShowInfo());
+        assertFalse(mStream3.hasStartTime());
+        assertTrue(mStream3.hasCorrectURL("www.youtube.com"));
     }
 
     // Function to convert color codes from hex to rgb.
@@ -619,9 +631,7 @@ public class GenericMacrosIT
     {
         hex = hex.substring(1);
         if (hex.length() == 3) {
-            hex = "" + hex.charAt(0) + hex.charAt(0)
-                + hex.charAt(1) + hex.charAt(1)
-                + hex.charAt(2) + hex.charAt(2);
+            hex = "" + hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
         }
 
         int r = Integer.parseInt(hex.substring(0, 2), 16);

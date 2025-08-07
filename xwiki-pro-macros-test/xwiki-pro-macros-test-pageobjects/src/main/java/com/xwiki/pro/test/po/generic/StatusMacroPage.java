@@ -25,29 +25,20 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
 
+// Represents a page containing one or more Status macros.
+
 public class StatusMacroPage extends ViewPage
 {
     @FindBy(css = "span.statusBox")
-    public List<WebElement> statusBox;
-
-    public String getStatusTitle(int i)
-    {
-        return statusBox.get(i).getAttribute("title");
-    }
+    private List<WebElement> statusElements;
 
     public int getStatusCount()
     {
-        return statusBox.size();
+        return statusElements.size();
     }
 
-    public boolean isSubtle(int i)
+    public StatusMacro getStatus(int index)
     {
-        return statusBox.get(i).getAttribute("class").contains("subtle");
-    }
-
-    public boolean hasColor(int i, String color)
-    {
-        String classAttr = statusBox.get(i).getAttribute("class").toLowerCase();
-        return classAttr.contains((color + "Status").toLowerCase());
+        return new StatusMacro(statusElements.get(index));
     }
 }
