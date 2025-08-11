@@ -1,0 +1,37 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+{{recently-updated labels="recent,MainRecent" width="250px" types="page,,attachment,comment"/}}
+
+{{recently-updated width="150" labels="recent" spaces="@global" theme="concise" max="2" types="page"/}}
+
+{{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" types="page" /}}
+
+{{recently-updated labels="recent" showProfilePic="true" types="page"/}}
+
+{{recently-updated labels="recent" excludedLabels="recent2" theme="social" showProfilePic="false" hideHeading="true"
+types="page"/}}
+
+{{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" theme="sidebar" excludedSpaces="Main" types="page"/}}
+
+{{recently-updated labels="recent" currentWiki="true" types="page"/}}
+
+{{recently-updated labels="recent" spaces="@global" currentWiki="true" types="page"/}}
+
+{{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" types="page" author="XWiki.UserTest"/}}
