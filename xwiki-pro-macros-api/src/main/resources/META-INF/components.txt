@@ -16,3 +16,6 @@ com.xwiki.macros.viewfile.internal.macro.ViewFileMacro
 com.xwiki.macros.viewfile.internal.AttachmentModificationListener
 com.xwiki.macros.viewfile.internal.ThumbnailGenerator
 com.xwiki.macros.viewfile.internal.AttachmentSizeValidator
+com.xwiki.macros.viewfile2.internal.macro.ViewFileJavaMacro
+com.xwiki.macros.viewfile2.internal.macro.ViewFileResourceManager
+com.xwiki.macros.viewfile2.internal.macro.ViewFileExternalBlockManager
