@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile2.internal.macro;
+package com.xwiki.macros.viewfile.internal.macro;
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +50,6 @@ final class StaticBlockWrapperFactory
     static Block constructBlockWrapper(boolean isInline, List<Block> content, Map<String, String> parameters)
     {
         if (isInline) {
-
-            // TODO fix me later.
             // This creates a span. I don't know if there is a better way to create one.
             return new FormatBlock(content, Format.NONE, parameters);
         } else {

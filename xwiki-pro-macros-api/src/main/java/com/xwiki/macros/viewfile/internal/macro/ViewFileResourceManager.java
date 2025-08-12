@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile2.internal.macro;
+package com.xwiki.macros.viewfile.internal.macro;
 
 import java.util.Collections;
 
@@ -29,7 +29,7 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.skinx.SkinExtension;
 
 /**
- * Utility class for handling resources for the {@link ViewFileJavaMacro}.
+ * Utility class for handling resources for the {@link ViewFileMacro}.
  *
  * @version $Id$
  * @since 1.27

@@ -17,36 +17,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.test.ui;
+package com.xwiki.pro.test.po.confluence.viewfile;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.xwiki.test.docker.junit5.UITest;
+import org.openqa.selenium.By;
+import org.xwiki.test.ui.po.ViewPage;
 
-/**
- * All UI tests for the Pro Macros application.
- *
- * @version $Id$
- * @since 1.25.2
- */
-@UITest
-class AllITs
+public class ViewFileViewPage extends ViewPage
 {
-    @Nested
-    @DisplayName("Tests for the generic Pro Macros.")
-    class NestedGenericMacrosIT extends GenericMacrosIT
-    {
+    public String getErrorMessage() {
+        return getDriver().findElement(By.cssSelector(".box.errormessage")).getText();
     }
 
-    @Nested
-    @DisplayName("Tests for the DetailsSummary Macro")
-    class NestedDetailsSummaryIT extends DetailsSummaryIT
-    {
+    public int getInlineViewFilesCount() {
+        return getDriver().findElements(By.cssSelector("span.viewFileThumbnail")).size();
     }
 
-    @Nested
-    @DisplayName("Tests for the ViewFile Macro")
-    class NestedViewFileIT extends ViewFileIT {
-
+    public int getBlockViewFiles() {
+        return getDriver().findElements(By.cssSelector("div.viewFileThumbnail")).size();
     }
 }

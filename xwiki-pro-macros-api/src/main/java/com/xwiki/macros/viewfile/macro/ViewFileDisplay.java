@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile2.macro;
+package com.xwiki.macros.viewfile.macro;
 
 /**
  * Enum for the display propert of {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.

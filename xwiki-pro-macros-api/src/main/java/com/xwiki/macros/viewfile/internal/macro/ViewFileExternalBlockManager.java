@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile2.internal.macro;
+package com.xwiki.macros.viewfile.internal.macro;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,6 @@ import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
 
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.XWikiException;
 
 /**
  * Handles the creation of blocks that come from velocity defined macros.
@@ -56,10 +55,8 @@ public class ViewFileExternalBlockManager
     /**
      * Returns blocks that are used for displaying a generic thumbnail.
      *
-     *
      * @param attachmentReference reference of the attachment.
      * @param isButtonView is the view is button.
-     *
      * @return a block that represents a thumbnail.
      */
     public Block getMimeTypeBlock(AttachmentReference attachmentReference, boolean isButtonView) throws Exception
@@ -79,8 +76,14 @@ public class ViewFileExternalBlockManager
         return this.templateManager.execute(customTemplate).getChildren().get(0);
     }
 
-    private Block getCollaboraBlock()
+    /**
+     * Handles the creation of the Collabora blocks.
+     * @return blocks needef for the COllabora integration.
+     */
+    public Block getCollaboraBlock() throws Exception
     {
-        return null;
+        Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileCollaboraIntegration.vm");
+        ScriptContext scriptContext = scriptContextManager.getScriptContext();
+        return this.templateManager.execute(customTemplate).getChildren().get(0);
     }
 }
