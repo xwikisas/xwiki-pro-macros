@@ -40,7 +40,7 @@ final class StaticBlockWrapperFactory
     }
 
     /**
-     * Creates a wrapper block depending on hte isInline parameter.
+     * Creates a wrapper block depending on the isInline parameter.
      *
      * @param isInline true if the macro is inline, false otherwise
      * @param content content of the block

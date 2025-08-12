@@ -53,7 +53,7 @@ public class ViewFileExternalBlockManager
     private Provider<XWikiContext> contextProvider;
 
     /**
-     * Returns blocks that are used for displaying a generic thumbnail.
+     * Returns the block that is used for displaying a generic thumbnail.
      *
      * @param attachmentReference reference of the attachment.
      * @param isButtonView is the view is button.
@@ -78,7 +78,7 @@ public class ViewFileExternalBlockManager
 
     /**
      * Handles the creation of the Collabora blocks.
-     * @return blocks needef for the COllabora integration.
+     * @return blocks needed for the Collabora integration.
      */
     public Block getCollaboraBlock() throws Exception
     {
