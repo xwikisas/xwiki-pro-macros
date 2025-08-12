@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,11 @@ import org.xwiki.test.ui.TestUtils;
 
 import com.xwiki.pro.test.po.generic.ExpandMacro;
 import com.xwiki.pro.test.po.generic.ExpandMacroPage;
+import com.xwiki.pro.test.po.generic.HideIfMacroPage;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
+import com.xwiki.pro.test.po.generic.ShowIfMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -67,6 +70,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GenericMacrosIT
 {
     private final DocumentReference pageWithTeamMacros = new DocumentReference("xwiki", "Main", "TeamTest");
+    private final DocumentReference pageWithHideIfMacro = new DocumentReference("xwiki", "Main", "HideIfTest");
 
     private static final String PAGE_WITH_TEAM_MACROS_CONTENT =
         "{{team/}}\n" + "\n" + "{{team tag=\"testTag\" /}}\n" + "\n" + "{{team tag=\"nonExistentTag\" /}}";
@@ -239,4 +243,49 @@ public class GenericMacrosIT
         assertFalse(picture1.hasAvatarInitials());
         assertTrue(picture2.hasAvatarInitials());
     }
+
+    @Test
+    @Order(3)
+    void showIfMacroTest(TestUtils setup, TestReference testReference)
+    {
+        setup.createPage(testReference, createContent("showIf-macros.vm"), "ShowIfTest");
+        ShowIfMacroPage page = new ShowIfMacroPage();
+
+        assertEquals(4, page.getAllVisibleParagraphs().size());
+        assertEquals(2, page.getAllVisibleImages().size());
+
+        assertTrue(page.isParagraphVisible("Content for testing the show-If macro"));
+        assertTrue(page.isParagraphVisible("Content for testing the show-If macro -2"));
+
+        assertTrue(page.isImageVisible("image1.png"));
+
+
+    }
+
+    @Test
+    @Order(4)
+    void hideIfMacroTest(TestUtils setup, TestReference testReference)
+    {
+
+        setup.createPage(testReference, createContent("hideIf-macros.vm"));
+
+        HideIfMacroPage page = new HideIfMacroPage();
+
+        /*assertEquals(3, page.getAllVisibleParagraphs().size());
+
+        assertTrue(page.isParagraphVisible("content1"));
+        assertTrue(page.isParagraphVisible("content3"));
+        assertTrue(page.isParagraphVisible("content4"));*/
+
+
+
+    }
+
+    @Test
+    @Order(5)
+    void tabGroupMacroTest(TestUtils setup, TestReference testReference)
+    {
+        setup.createPage(testReference, createContent("tabGroup-macros.vm"), "TabGroupTest");
+    }
+
 }
