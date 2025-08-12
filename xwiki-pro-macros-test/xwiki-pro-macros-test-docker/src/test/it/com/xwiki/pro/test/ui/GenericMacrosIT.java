@@ -67,26 +67,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version $Id$
  * @since 1.25.2
  */
-@UITest(properties = { "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin", }, extensionOverrides = {
-    @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
-        "features=com.google.code.findbugs:annotations" }),
-    // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
-    // parent upgrade if this is still needed.
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcprov-jdk18on", overrides = {
-        "features=org.bouncycastle:bcprov-jdk15on" }),
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcpkix-jdk18on", overrides = {
-        "features=org.bouncycastle:bcpkix-jdk15on" }),
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcmail-jdk18on", overrides = {
-        "features=org.bouncycastle:bcmail-jdk15on" }) })
+@UITest(
+    properties = {
+        "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
+    },
+    extensionOverrides = {
+        @ExtensionOverride(
+            extensionId = "com.google.code.findbugs:jsr305",
+            overrides = {
+                "features=com.google.code.findbugs:annotations"
+            }
+        ),
+        // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
+        // parent upgrade if this is still needed.
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcprov-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcprov-jdk15on"
+            }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcpkix-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcpkix-jdk15on"
+            }
+        ),
+        @ExtensionOverride(
+            extensionId = "org.bouncycastle:bcmail-jdk18on",
+            overrides = {
+                "features=org.bouncycastle:bcmail-jdk15on"
+            }
+        )
+    })
 public class GenericMacrosIT
 {
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
-
-    private final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
-
-    private final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
 
     private void registerMacros()
     {
@@ -116,8 +133,11 @@ public class GenericMacrosIT
         registerMacros();
     }
 
-    public void createPagesWithTags(TestUtils setup)
+    private void createPagesWithTags(TestUtils setup)
     {
+        final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+        final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
         TaggablePage taggablePage = new TaggablePage();
@@ -133,7 +153,7 @@ public class GenericMacrosIT
         tagsPane2.add();
     }
 
-    public String createContent(String filename)
+    private String createContent(String filename)
     {
         try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
             if (inputStream == null) {
@@ -194,20 +214,20 @@ public class GenericMacrosIT
         assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest2"));
         assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest3"));
 
-        // Checking avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
+        // Checks avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
         assertEquals("U", team1.getAvatarInitials(username));
         assertEquals("U", team1.getAvatarInitials(username2));
         assertEquals("U", team1.getAvatarInitials(username3));
 
-        // disableLetterAvatars="true".
+        // Checks that disableLetterAvatars="true" works.
         assertFalse(team2.hasAvatarInitials("xwiki:XWiki.UserTest"));
 
-        // default color.
+        // Checks the default color.
         assertTrue(team1.getAvatarBackgroundColor(username).contains("rgb(0, 170, 102)"));
         assertTrue(team1.getAvatarBackgroundColor(username2).contains("rgb(0, 170, 102)"));
         assertTrue(team1.getAvatarBackgroundColor(username3).contains("rgb(0, 170, 102)"));
 
-        // personalized color.
+        // Checks the personalized color.
         assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username));
         assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username2));
         assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username3));
@@ -312,19 +332,19 @@ public class GenericMacrosIT
         StatusMacro status2 = page.getMacro(1);
         StatusMacro status3 = page.getMacro(2);
 
-        // Checks the titles of the status macros.
+        // Checks the 1st status macro, with default properties.
         assertEquals("test1", status1.getTitle());
-        assertEquals("test2", status2.getTitle());
-        assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", status3.getTitle());
-
-        // Checks the type of the status macros/ the color.
         assertTrue(status1.hasColor("grey"));
-        assertTrue(status2.hasColor("yellow"));
-        assertTrue(status3.hasColor("yellow"));
-
-        // Checks the subtle property.
         assertFalse(status1.isSubtle());
+
+        // Checks the 2nd status macro, type Yellow and subtle="true".
+        assertEquals("test2", status2.getTitle());
+        assertTrue(status2.hasColor("yellow"));
         assertTrue(status2.isSubtle());
+
+        // Checks the 3rd status macro, with special characters in the title, type Yellow and subtle="true".
+        assertEquals("Title with double quotes: ?<>@!$%^&*(){}: |; ' , ./` in it .          .", status3.getTitle());
+        assertTrue(status3.hasColor("yellow"));
         assertFalse(status3.isSubtle());
     }
 
@@ -333,7 +353,6 @@ public class GenericMacrosIT
     void tagListMacroTest(TestUtils setup)
     {
         createPagesWithTags(setup);
-        setup.gotoPage("XWiki", "TagListTest");
         setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
 
         TagListMacroPage page = new TagListMacroPage();
@@ -344,32 +363,28 @@ public class GenericMacrosIT
         // There should be 3 tagList macros.
         assertEquals(3, page.getMacroCount());
 
-        // Checks the ordered titles of the tags from the tagList.
+        // Checks the 1st tagList macro, which should contain all the tags.
         List<String> expectedTitles1 = Arrays.asList("A-B", "G");
         assertEquals(expectedTitles1, tagList1.getGlossaryTitles());
 
-        // Checks the ordered titles of the tags from the tagList.
-        List<String> expectedTitles2 = Arrays.asList("A-G");
-        assertEquals(expectedTitles2, tagList2.getGlossaryTitles());
-
-        // Checks the ordered names of the tags from the tagList.
         List<String> expectedTagNames1 = Arrays.asList("alpha", "beta", "gamma");
         assertEquals(expectedTagNames1, tagList1.getTagNames());
 
-        // Checks the ordered names of the tags from the tagList.
-        List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
-        assertEquals(expectedTagNames2, tagList2.getTagNames());
-
-        // Checks the <a> tags of the tags from the tagList.
+        // Checks the links associated with the tags.
         for (String i : expectedTagNames1) {
             assertEquals("a", tagList1.getHtmlTagForTagName(i));
         }
 
-        // Checks the <a> tags of the tags from the tagList.
+        // Checks the 2nd tagList macro, which excludes the "beta" tag.
+        List<String> expectedTitles2 = Arrays.asList("A-G");
+        assertEquals(expectedTitles2, tagList2.getGlossaryTitles());
+        List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
+        assertEquals(expectedTagNames2, tagList2.getTagNames());
         for (String i : expectedTagNames2) {
             assertEquals("a", tagList2.getHtmlTagForTagName(i));
         }
 
+        
         // Checks the ordered titles of the tags from the tagList, multiple spaces.
         List<String> expectedTitles3 = Arrays.asList("A-X", "Y-Z");
         assertEquals(expectedTitles3, tagList3.getGlossaryTitles());
@@ -608,6 +623,7 @@ public class GenericMacrosIT
         // Checks the actual URL of the microsoftStream.
         assertTrue(mStream1.hasCorrectURL("www.youtube.com"));
 
+        // Checks the 2nd MicrosoftStream macro, with left alignment, personalized dimensions and set StartTime.
         assertEquals("left", mStream2.getAlignment());
         assertEquals("500px", mStream2.getWidth());
         assertEquals("300px", mStream2.getHeight());
@@ -617,6 +633,7 @@ public class GenericMacrosIT
         assertEquals(convertStartTime("03:12:13"), mStream2.getStartTime());
         assertTrue(mStream2.hasCorrectURL("www.youtube.com"));
 
+        // Checks the 2nd MicrosoftStream macro, with center alignment
         assertEquals("center", mStream3.getAlignment());
         assertEquals("500px", mStream3.getWidth());
         assertEquals("300px", mStream3.getHeight());
@@ -642,7 +659,7 @@ public class GenericMacrosIT
     }
 
     // Function to convert HH:MM:SS to seconds.
-    public int convertStartTime(String time)
+    private int convertStartTime(String time)
     {
         String[] parts = time.split(":");
         int h = Integer.parseInt(parts[0]);

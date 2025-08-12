@@ -29,6 +29,9 @@ import org.xwiki.test.ui.po.ViewPage;
  * Generic base class for pages containing lists of macros.
  *
  * @param <T> the macro type to wrap each WebElement
+ *
+ * * @version $Id$
+ *  * @since 1.25.2
  */
 public abstract class AbstractGenericMacroPage<T> extends ViewPage
 {

@@ -77,12 +77,6 @@ public class TeamMacro extends BaseElement
         return getAvatar(username).getCssValue("border-radius");
     }
 
-    private WebElement getUser(String username)
-    {
-        return getUsers().stream().filter(user -> username.equals(user.getAttribute("data-username"))).findFirst()
-            .orElseThrow(() -> new NoSuchElementException("User not found: " + username));
-    }
-
     public boolean isUsernameHidden()
     {
         return team.getAttribute("class").contains("usernames-hidden");
@@ -102,6 +96,12 @@ public class TeamMacro extends BaseElement
     {
         WebElement usernameElement = getUser(username).findElement(By.className("xwikiteam-username"));
         return usernameElement.isDisplayed();
+    }
+
+    private WebElement getUser(String username)
+    {
+        return getUsers().stream().filter(user -> username.equals(user.getAttribute("data-username"))).findFirst()
+            .orElseThrow(() -> new NoSuchElementException("User not found: " + username));
     }
 
     private WebElement getAvatar(String username)
