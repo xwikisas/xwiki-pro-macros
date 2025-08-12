@@ -288,4 +288,11 @@ public class GenericMacrosIT
         setup.createPage(testReference, createContent("tabGroup-macros.vm"), "TabGroupTest");
     }
 
+    @Test
+    @Order(6)
+    void tabMacroTest(TestUtils setup, TestReference testReference)
+    {
+        setup.createPage(testReference, createContent("tab-macros.vm"), "TabTest");
+    }
+
 }
