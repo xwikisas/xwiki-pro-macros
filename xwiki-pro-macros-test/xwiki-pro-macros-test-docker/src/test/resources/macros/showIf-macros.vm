@@ -1,0 +1,47 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+{{show-if displayType="DEFAULT" groups="XWiki.XWikiAllGroup"}}
+
+Content for testing the show-If macro
+
+image:image1.png
+
+{{/show-if}}
+
+{{show-if displayType="DEFAULT"}}
+
+Content for testing the show-If macro -2
+
+image:image1.png
+
+{{/show-if}}
+
+{{show-if displayType="NONE"}}
+
+Content for testing the show-If macro -3
+
+{{/show-if}}
+
+{{show-if authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
+users="XWiki.SuperAdmin"}}
+
+Content for testing the show-If macro -4
+
+{{/show-if}}
