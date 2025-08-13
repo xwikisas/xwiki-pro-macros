@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.AttachmentReference;
+import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.rendering.block.Block;
@@ -154,11 +155,7 @@ public class ViewFileMacroPrepareBlocks
     {
         // Inline Mod
         String message = contextLocalization.getTranslationPlain(key);
-        if (context.isInline()) {
-            return List.of(new MacroBlock(ERROR_MACRO_ID, new HashMap<>(), message, true));
-        } else {
-            return List.of(new MacroBlock(ERROR_MACRO_ID, new HashMap<>(), message, false));
-        }
+        return List.of(new MacroBlock(ERROR_MACRO_ID, new HashMap<>(), message, context.isInline()));
     }
 
     private List<Block> prepareThumbnailButton(ViewFileMacroParameters parameters, MacroTransformationContext context,
@@ -226,7 +223,7 @@ public class ViewFileMacroPrepareBlocks
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.image.alt");
         String overlayTextTranslation =
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.overlay");
-        String imageBase64 = String.format("data:image/jpeg;base64,%s", base64);
+        String imageBase64 = "data:image/jpeg;base64," + base64;
         ResourceReference reference = new ResourceReference(imageBase64, ResourceType.DATA);
         Block imageBlock =
             new ImageBlock(reference, false, Map.of(CLASS, "viewfile-thumbnail-image", "alt", imageAltTranslation));
@@ -244,8 +241,8 @@ public class ViewFileMacroPrepareBlocks
     private List<Block> prepareFullDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
         String fileName, AttachmentReference attachmentReference) throws Exception
     {
-        if (inEditMode || isOversize) {
-            // If we are in edit or the file is too big to be displayed we just show the thumbnail.
+        if (inEditMode || isOversize || context.isInline()) {
+            // If we are in edit, the file is too big to be displayed or the macro is inline we just show the thumbnail.
             return prepareThumbnailButton(parameters, context, fileName, attachmentReference);
         }
         String fileExtension = getFileExtension(fileName);
@@ -281,7 +278,9 @@ public class ViewFileMacroPrepareBlocks
 
     private boolean isPDFViewerMacroInstalled() throws XWikiException
     {
-        return !this.contextProvider.get().getWiki().getDocument(PDF_VIEWER_REFERENCE, contextProvider.get()).isNew();
+        XWikiContext context = contextProvider.get();
+        DocumentReference viewerWikiRef = new DocumentReference(PDF_VIEWER_REFERENCE, context.getWikiReference());
+        return context.getWiki().exists(viewerWikiRef, context);
     }
 
     private String getFileExtension(String fileName)

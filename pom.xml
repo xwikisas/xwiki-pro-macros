@@ -46,6 +46,7 @@
     <embed.version>1.1.0</embed.version>
     <pro.commons.version>1.1.1</pro.commons.version>
     <favorites.version>1.4.1</favorites.version>
+    <libreoffice.version>25.2.5</libreoffice.version>
   </properties>
   <issueManagement>
     <system>GitHub</system>

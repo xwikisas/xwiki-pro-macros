@@ -19,6 +19,9 @@
  */
 package com.xwiki.macros.viewfile.internal.macro;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -27,6 +30,9 @@ import javax.script.ScriptContext;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.rendering.block.Block;
+import org.xwiki.rendering.block.FormatBlock;
+import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.listener.Format;
 import org.xwiki.script.ScriptContextManager;
 import org.xwiki.template.Template;
 import org.xwiki.template.TemplateManager;
@@ -78,12 +84,18 @@ public class ViewFileExternalBlockManager
 
     /**
      * Handles the creation of the Collabora blocks.
+     *
      * @return blocks needed for the Collabora integration.
      */
     public Block getCollaboraBlock() throws Exception
     {
         Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileCollaboraIntegration.vm");
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
-        return this.templateManager.execute(customTemplate).getChildren().get(0);
+        // {{include reference='Collabora.Code.UIMacros' /}}
+        // We need to create a macro block because the template can not execute macro calls.
+        Block macroBlock =
+            new MacroBlock("include", Collections.singletonMap("reference", "Collabora.Code.UIMacros"), false);
+        Block callCollaboraVeloictyMacros = this.templateManager.execute(customTemplate).getChildren().get(0);
+        return new FormatBlock(List.of(macroBlock, callCollaboraVeloictyMacros), Format.NONE);
     }
 }

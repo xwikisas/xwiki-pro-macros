@@ -81,6 +81,55 @@
       <artifactId>xwiki-platform-search-solr-query</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-administration-ui</artifactId>
+      <version>${platform.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-office-importer</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-office-macro</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-administration-test-pageobjects</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-office-ui</artifactId>
+      <version>${platform.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-office-test-pageobjects</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-attachment-ui</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-attachment-test-pageobjects</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>
