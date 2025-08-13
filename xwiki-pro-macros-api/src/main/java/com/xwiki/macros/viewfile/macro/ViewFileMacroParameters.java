@@ -26,8 +26,9 @@ import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyId;
 import org.xwiki.properties.annotation.PropertyName;
 
+
 /**
- * The parameters of the {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.
+ * Parameter bean class for {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.
  *
  * @version $Id$
  * @since 1.27
@@ -47,44 +48,8 @@ public class ViewFileMacroParameters
     private String attFilename;
 
     /**
-     * Enumeration of supported view file display values.
-     *
-     * @version $Id$
-     * @since 1.3
+     * @return the name of the attachment.
      */
-    private enum ViewFileDisplay
-    {
-        /**
-         * Thumbnail.
-         */
-        thumbnail,
-
-        /**
-         * Button.
-         */
-        button,
-
-        /**
-         * Full.
-         */
-        full;
-
-        /**
-         * @param name the name of a display type.
-         * @return the display type corresponding to the name, or {@code null}.
-         */
-        public static ViewFileDisplay forName(String name)
-        {
-            for (ViewFileDisplay type : values()) {
-                if (name.equalsIgnoreCase(type.toString())) {
-                    return type;
-                }
-            }
-
-            return null;
-        }
-    }
-
     /**
      * @return the name of the attachment.
      */
