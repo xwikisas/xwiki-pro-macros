@@ -24,8 +24,12 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-// Represents a page containing one or more TagList macros.
-
+/**
+ * Represents a page containing one or more TagList macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class TagListMacroPage extends AbstractGenericMacroPage<TagListMacro>
 {
     @FindBy(css = ".glossaryListRoot")

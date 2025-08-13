@@ -22,8 +22,12 @@ package com.xwiki.pro.test.po.generic;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
-// Represents a single instance of the Status macro and provides access to its attributes.
-
+/**
+ * Represents a status macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class StatusMacro extends BaseElement
 {
     private final WebElement status;

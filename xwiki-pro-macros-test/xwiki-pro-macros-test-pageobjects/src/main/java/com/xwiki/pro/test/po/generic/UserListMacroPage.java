@@ -24,8 +24,12 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-// Represents a page containing one or more UserList macros.
-
+/**
+ * Represents a page containing one or more UserList macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class UserListMacroPage extends AbstractGenericMacroPage<UserListMacro>
 {
     @FindBy(css = ".xwiki-userlist")

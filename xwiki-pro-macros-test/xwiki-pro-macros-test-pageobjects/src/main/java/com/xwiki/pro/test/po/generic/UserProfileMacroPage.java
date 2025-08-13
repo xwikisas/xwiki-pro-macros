@@ -24,8 +24,12 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-// Represents a page containing one or more UserProfile macros.
-
+/**
+ * Represents a page containing one or more UserProfile macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class UserProfileMacroPage extends AbstractGenericMacroPage<UserProfileMacro>
 {
     @FindBy(css = ".xwiki-user-profile-box")

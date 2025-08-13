@@ -24,8 +24,12 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-// Represents a page containing one or more MicrosoftStream macros.
-
+/**
+ * Represents a page containing one or more MicrosoftStream macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class MicrosoftStreamMacroPage extends AbstractGenericMacroPage<MicrosoftStreamMacro>
 {
     @FindBy(css = ".msStreamMacro")

@@ -26,8 +26,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
-// Represents a single instance of the TagList macro and provides access to its attributes.
-
+/**
+ * Represents a TagList macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class TagListMacro extends BaseElement
 {
     private final WebElement tagList;

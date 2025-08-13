@@ -25,8 +25,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
 
-// Represents a page containing one or more Panel macros.
-
+/**
+ * Represents a page containing one or more Panel macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class PanelMacroPage extends ViewPage
 {
     @FindBy(css = ".macro-panel")

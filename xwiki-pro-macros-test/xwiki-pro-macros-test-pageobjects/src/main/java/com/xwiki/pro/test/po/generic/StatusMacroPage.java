@@ -24,8 +24,12 @@ import java.util.List;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-// Represents a page containing one or more Status macros.
-
+/**
+ * Represents a page containing one or more Status macros.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class StatusMacroPage extends AbstractGenericMacroPage<StatusMacro>
 {
     @FindBy(css = "span.statusBox")

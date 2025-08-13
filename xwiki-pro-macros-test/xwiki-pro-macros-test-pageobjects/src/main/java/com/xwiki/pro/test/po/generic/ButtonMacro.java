@@ -24,8 +24,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
-// Represents a single instance of the Button macro and provides access to its attributes.
-
+/**
+ * Represents a Button macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public final class ButtonMacro extends BaseElement
 {
     private WebElement button;
