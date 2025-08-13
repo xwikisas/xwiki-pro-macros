@@ -341,7 +341,7 @@ rendering.macro.tab-group.parameter.loopCards.name=Loop cards
 rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
 rendering.macro.tab-group.parameter.nextAfter.name=Next after
 rendering.macro.tab-group.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
-rendering.macro.tab-group.parameter.width.name=Height
+rendering.macro.tab-group.parameter.width.name=Width
 rendering.macro.tab-group.parameter.width.description=The width of the main element with the CSS unit
 
 ## User Profile macro
