@@ -25,24 +25,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Represents a page containing one or more UserList macros.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
+public class UserListMacroPage extends AbstractGenericMacroPage<UserListMacro>
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+    @FindBy(css = ".xwiki-userlist")
+    private List<WebElement> userLists;
 
-    public TeamMacroPage()
+    public UserListMacroPage()
     {
-        super(TeamMacro::new);
+        super(UserListMacro::new);
     }
 
     @Override
     protected List<WebElement> getElements()
     {
-        return teamMacros;
+        return userLists;
     }
 }

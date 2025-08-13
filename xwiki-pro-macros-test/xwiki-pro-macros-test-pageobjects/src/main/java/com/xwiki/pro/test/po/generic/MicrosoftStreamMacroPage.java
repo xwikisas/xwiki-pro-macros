@@ -25,24 +25,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Represents a page containing one or more MicrosoftStream macros.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
+public class MicrosoftStreamMacroPage extends AbstractGenericMacroPage<MicrosoftStreamMacro>
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+    @FindBy(css = ".msStreamMacro")
+    private List<WebElement> mStreamElements;
 
-    public TeamMacroPage()
+    public MicrosoftStreamMacroPage()
     {
-        super(TeamMacro::new);
+        super(MicrosoftStreamMacro::new);
     }
 
     @Override
     protected List<WebElement> getElements()
     {
-        return teamMacros;
+        return mStreamElements;
     }
 }

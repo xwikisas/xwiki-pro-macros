@@ -19,30 +19,37 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.List;
-
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.xwiki.test.ui.po.BaseElement;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Represents a status macro and provides access to its attributes.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
+public class StatusMacro extends BaseElement
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+    private final WebElement status;
 
-    public TeamMacroPage()
+    public StatusMacro(WebElement status)
     {
-        super(TeamMacro::new);
+        this.status = status;
     }
 
-    @Override
-    protected List<WebElement> getElements()
+    public String getTitle()
     {
-        return teamMacros;
+        return status.getAttribute("title");
+    }
+
+    public boolean isSubtle()
+    {
+        return status.getAttribute("class").contains("subtle");
+    }
+
+    public boolean hasColor(String color)
+    {
+        String classAttr = status.getAttribute("class").toLowerCase();
+        return classAttr.contains((color + "Status").toLowerCase());
     }
 }

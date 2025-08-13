@@ -23,26 +23,29 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.xwiki.test.ui.po.ViewPage;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Represents a page containing one or more Panel macros.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-public class TeamMacroPage extends AbstractGenericMacroPage<TeamMacro>
+public class PanelMacroPage extends ViewPage
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+    @FindBy(css = ".macro-panel")
+    private List<WebElement> panels;
 
-    public TeamMacroPage()
+    @FindBy(css = ".macro-border")
+    private List<WebElement> panelBorderElements;
+
+    public int getPanelCount()
     {
-        super(TeamMacro::new);
+        return panels.size();
     }
 
-    @Override
-    protected List<WebElement> getElements()
+    public PanelMacro getPanel(int index)
     {
-        return teamMacros;
+        return new PanelMacro(panels.get(index), panelBorderElements.get(index));
     }
 }
