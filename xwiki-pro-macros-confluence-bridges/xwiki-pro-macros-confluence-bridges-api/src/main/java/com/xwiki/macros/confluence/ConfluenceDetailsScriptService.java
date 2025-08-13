@@ -169,12 +169,15 @@ public class ConfluenceDetailsScriptService implements ScriptService
             if (CollectionUtils.isEmpty(details)) {
                 continue;
             }
+
+            List<String> row = null;
             for (XDOM detailMacro : details) {
-                List<String> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
+                row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax(), row);
+            }
+            if (row != null) {
                 row.add(0, fullName);
                 rows.add(row);
             }
-
         }
 
         maybeSort(sortBy, reverseSort, columnsLower, rows);
@@ -238,12 +241,14 @@ public class ConfluenceDetailsScriptService implements ScriptService
     }
 
     private List<String> getRow(XDOM xdomDetails, List<String> headings, List<String> columns,
-        List<String> columnsLower, Syntax syntax)
+        List<String> columnsLower, Syntax syntax, List<String> row)
     {
         List<TableRowBlock> xdomRows = findRows(xdomDetails, syntax);
-        List<String> row = new ArrayList<>(1 + (headings.isEmpty()
-            ? Math.max(columns.size(), xdomRows.size())
-            : headings.size()));
+        List<String> r = row == null
+            ? (new ArrayList<>(1 + (headings.isEmpty()
+                    ? Math.max(columns.size(), xdomRows.size())
+                    : headings.size())))
+            : row;
         for (TableRowBlock xdomRow : xdomRows) {
             List<TableCellBlock> cells = xdomRow.getBlocks(CELL_MATCHER, Block.Axes.DESCENDANT_OR_SELF);
             if (cells.size() < 2) {
@@ -269,12 +274,12 @@ public class ConfluenceDetailsScriptService implements ScriptService
                 columns.add(key);
                 columnsLower.add(keyLower);
             }
-            while (index >= row.size()) {
-                row.add("");
+            while (index >= r.size()) {
+                r.add("");
             }
-            row.set(index, value);
+            r.set(index, value);
         }
-        return row;
+        return r;
     }
 
     private List<String> parseHeadings(String headingsParam)
