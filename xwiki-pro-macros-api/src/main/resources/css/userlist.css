@@ -51,7 +51,6 @@
 
   table.xwiki-userlist tr::after {
     clear: both;
-    content: ;
     display: block;
     content: "";
   }
