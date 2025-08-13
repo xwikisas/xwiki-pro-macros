@@ -89,6 +89,11 @@ public class ViewFileExternalBlockManager
      */
     public Block getCollaboraBlock() throws Exception
     {
+        // We can not include the Collabora if we are in a comment because we will run into a nested script
+        // protection.
+        if (isExecutingInComment()) {
+            return new FormatBlock();
+        }
         Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileCollaboraIntegration.vm");
         ScriptContext scriptContext = scriptContextManager.getScriptContext();
         // {{include reference='Collabora.Code.UIMacros' /}}
@@ -97,5 +102,12 @@ public class ViewFileExternalBlockManager
             new MacroBlock("include", Collections.singletonMap("reference", "Collabora.Code.UIMacros"), false);
         Block callCollaboraVeloictyMacros = this.templateManager.execute(customTemplate).getChildren().get(0);
         return new FormatBlock(List.of(macroBlock, callCollaboraVeloictyMacros), Format.NONE);
+    }
+
+    private boolean isExecutingInComment()
+    {
+
+        String context = (String) scriptContextManager.getScriptContext().getAttribute("tname");
+        return context != null && context.contains("comment");
     }
 }

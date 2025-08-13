@@ -91,11 +91,7 @@ public class ViewFileMacroPrepareBlocks
 
     private static final String DEFAULT_HEIGHT = "1000";
 
-    private static final String TRUE_STRING = "true";
-
     private static final String ERROR_MACRO_ID = "error";
-
-    private static final String FALSE_STRING = "false";
 
     private boolean isOversize;
 
@@ -197,7 +193,7 @@ public class ViewFileMacroPrepareBlocks
 
         Map<String, String> rootElementParameters =
             Map.of(CLASS, String.format("viewFileThumbnail viewFileThumbnail%s", thumbnailType), STYLE, style,
-                "data-preview", hasPreview ? TRUE_STRING : FALSE_STRING, "data-ref",
+                "data-preview", Boolean.toString(hasPreview), "data-ref",
                 referenceSerializer.serialize(attachmentReference));
 
         String url = contextProvider.get().getWiki().getURL(attachmentReference, contextProvider.get());
