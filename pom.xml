@@ -39,7 +39,7 @@
     <mathjax.version>1.1.8</mathjax.version>
     <diagram.version>1.22.5</diagram.version>
     <locationsearch.version>1.5.1</locationsearch.version>
-    <datemacro.version>3.7.3</datemacro.version>
+    <datemacro.version>3.9.2</datemacro.version>
     <confluence.version>9.88.3</confluence.version>
     <confluencepro.version>1.35.5</confluencepro.version>
     <cql.version>0.1.1</cql.version>
