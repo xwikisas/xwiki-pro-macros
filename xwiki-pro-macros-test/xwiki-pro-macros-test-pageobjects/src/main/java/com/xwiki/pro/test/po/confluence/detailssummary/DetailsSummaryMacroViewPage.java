@@ -61,14 +61,21 @@ public class DetailsSummaryMacroViewPage extends ViewPage
     }
 
     /**
-     * @return the number of entries(details blocks) that where found by the macro.
+     * @return the number of entries (pages with details blocks) that where found by the macro.
      */
-    public int entriesCount(){
+    public int entriesCount()
+    {
         // The table header is also a row so we always should have at least one row.
-        return detailsSummaryMacro.findElements(By.cssSelector("tr")).size() -1;
+        return detailsSummaryMacro.findElements(By.cssSelector("tr")).size() - 1;
     }
 
-
+    /**
+     * @return the number of columns of the macro, including the document title.
+     */
+    public int columnCount()
+    {
+        return detailsSummaryMacro.findElements(By.cssSelector("th")).size();
+    }
 }
 
 

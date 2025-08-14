@@ -92,7 +92,8 @@ public class DetailsSummaryIT
             buildMacroCall(Collections.singletonMap("cql", "\"space = " + "currentSpace ( )\""));
         createPage(setup, "", "detailsSummary", detailsSummaryCall);
         DetailsSummaryMacroViewPage detailsSummaryMacroViewPage = new DetailsSummaryMacroViewPage();
-        assertEquals(10, detailsSummaryMacroViewPage.entriesCount());
+        assertEquals(1, detailsSummaryMacroViewPage.entriesCount());
+        assertEquals(3, detailsSummaryMacroViewPage.columnCount());
     }
 
     private String buildMacroCall(Map<String, String> parameters)
