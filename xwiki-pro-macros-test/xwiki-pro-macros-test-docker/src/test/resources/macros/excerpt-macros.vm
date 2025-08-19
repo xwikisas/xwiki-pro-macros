@@ -17,20 +17,26 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{tab label="tab0" cssClass="tabCssClass" effectDuration="2" id="tab_0" nextAfter="2" default="true"}}
+{{excerpt name="Excerpt1"}}
+Content for excerpt macro
 
-tab0-content
+| |
+| |
+| |
 
-{{/tab}}
 
-{{tab label="tab1" cssStyle="background-color: yellow; color: red ; border: 1px dashed #ccc" id="tab_1"}}
+{{/excerpt}}
 
-tab1-content
+{{excerpt name="Excerpt2" allowUnprivilegedInclude="true"}}
+Content for Excerpt macro -2
 
-{{/tab}}
+{{excerpt name="Excerpt3"}}
+Content for Excerpt macro -3
+{{/excerpt}}
 
-{{tab label="tab2" effectType="FADE" id="tab_2" nextAfter="3"}}
 
-tab2-content
+{{/excerpt}}
 
-{{/tab}}
+{{excerpt hidden="true" name="Excerpt4"}}
+Content for Excerpt macro -4
+{{/excerpt}}

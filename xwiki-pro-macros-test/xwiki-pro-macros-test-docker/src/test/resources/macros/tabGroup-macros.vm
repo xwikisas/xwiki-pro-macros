@@ -17,16 +17,84 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{tab-group effectDuration="10" effectType="FADE" id="tabgroup0" tabLocation="TOP" nextAfter="3"}}
-{{tab label="tab1" effectDuration="2" id="tab1"}}
-tabContent1
+{{tab-group effectDuration="10" cssClass="CssTabGroup" effectType="FADE" id="tabGroup_0" tabLocation="TOP"
+nextAfter="3"}}
+
+{{tab label="tab0" cssClass="tabCssClass" effectDuration="2" id="tab_0" nextAfter="2" default="true"}}
+
+tab0-content
+
 {{/tab}}
 
-{{tab label="tab2" effectDuration="2" id="tab2"}}
-tabContent2
+{{tab label="tab1" cssStyle="color: red" id="tab_1"}}
+
+tab1-content
+
 {{/tab}}
 
-{{tab label="tab3" effectDuration="2" id="tab3"}}
-tabContent3
+{{tab label="tab2" effectType="FADE" id="tab_2" nextAfter="3"}}
+
+tab2-content
+
 {{/tab}}
+
+{{/tab-group}}
+
+
+{{tab-group effectType="FADE" id="tabGroup_1" tabLocation="BOTTOM" height="100" loopCards="true" width="100"
+nextAfter="5"}}
+
+{{tab label="tab0" cssClass="tabCssClass" effectDuration="2" id="tab_3" nextAfter="2" }}
+
+tab0-content
+
+{{/tab}}
+
+{{tab label="tab1" cssStyle="color: red" id="tab_4"}}
+
+tab1-content
+
+{{/tab}}
+
+{{tab label="tab2" effectType="FADE" id="tab_5" nextAfter="3" default="true"}}
+
+tab2-content
+
+{{/tab}}
+
+{{/tab-group}}
+
+
+{{tab-group id="tabGroup_2" tabLocation="RIGHT" loopCards="true" nextAfter="1"}}
+
+{{tab label="tab0" cssClass="tabCssClass" id="tab_6" }}
+
+tab0-content
+
+{{/tab}}
+
+{{tab label="tab1" cssStyle="color: red" id="tab_7"}}
+
+tab1-content
+
+{{/tab}}
+
+{{/tab-group}}
+
+
+{{tab-group id="tabGroup_3" tabLocation="LEFT"}}
+
+{{tab label="tab0" id="tab_8" }}
+
+tab0-content
+
+{{/tab}}
+
+{{tab label="tab1" default="true" cssStyle=" background-color: yellow; color: red ; border: 1px dashed #ccc"
+id="tab_9"}}
+
+tab1-content
+
+{{/tab}}
+
 {{/tab-group}}
