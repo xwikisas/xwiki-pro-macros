@@ -20,40 +20,16 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.xwiki.test.ui.po.ViewPage;
 
-public class HideIfMacroPage
+public class HideIfMacroPage extends ViewPage
 {
-    @FindBy(id = "xwikicontent")
-    private WebElement macroContent;
-
-    public boolean isParagraphVisible(String paragraphText)
+    public boolean containsParagraph(String paragraphText)
     {
-
-        WebElement paragraph = macroContent.findElement(By.xpath(".//p[contains(text(), '" + paragraphText + "')]"));
-        return paragraph.isDisplayed();
-    }
-
-    public boolean isImageVisible(String altText)
-    {
-
-        WebElement image = macroContent.findElement(By.xpath(".//img[@alt='" + altText + "']"));
-        return image.isDisplayed();
-    }
-
-    public List<WebElement> getAllVisibleParagraphs()
-    {
-        return macroContent.findElements(By.tagName("p")).stream().filter(WebElement::isDisplayed)
-            .collect(Collectors.toList());
-    }
-
-    public List<WebElement> getAllVisibleImages()
-    {
-        return macroContent.findElements(By.tagName("img")).stream().filter(WebElement::isDisplayed)
-            .collect(Collectors.toList());
+        List<WebElement> paragraphs = getDriver().findElements(By.tagName("p"));
+        return paragraphs.stream().filter(WebElement::isDisplayed).anyMatch(p -> p.getText().contains(paragraphText));
     }
 }

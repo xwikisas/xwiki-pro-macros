@@ -23,13 +23,27 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.xwiki.test.ui.po.ViewPage;
+import org.openqa.selenium.support.FindBy;
 
-public class ShowIfMacroPage extends ViewPage
+public class ExcerptIncludeMacroPage extends AbstractGenericMacroPage<ExcerptIncludeMacro>
 {
-    public boolean containsParagraph(String paragraphText)
+    @FindBy(css = "div.macro-panel.macro-excerpt-include")
+    private List<WebElement> excerptElements;
+
+    public ExcerptIncludeMacroPage()
     {
-        List<WebElement> paragraphs = getDriver().findElements(By.tagName("p"));
-        return paragraphs.stream().filter(WebElement::isDisplayed).anyMatch(p -> p.getText().contains(paragraphText));
+        super(ExcerptIncludeMacro::new);
+    }
+
+    public boolean containsText(String text)
+    {
+        List<WebElement> all = getDriver().findElements(By.xpath("//*"));
+        return all.stream().filter(WebElement::isDisplayed).map(WebElement::getText).anyMatch(t -> t.contains(text));
+    }
+
+    @Override
+    protected List<WebElement> getElements()
+    {
+        return excerptElements;
     }
 }

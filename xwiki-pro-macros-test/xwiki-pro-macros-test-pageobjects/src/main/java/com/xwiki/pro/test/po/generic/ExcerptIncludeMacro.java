@@ -19,17 +19,31 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.xwiki.test.ui.po.ViewPage;
+import org.xwiki.test.ui.po.BaseElement;
 
-public class ShowIfMacroPage extends ViewPage
+public class ExcerptIncludeMacro extends BaseElement
 {
-    public boolean containsParagraph(String paragraphText)
+    private final WebElement excerpt;
+
+    public ExcerptIncludeMacro(WebElement excerpt)
     {
-        List<WebElement> paragraphs = getDriver().findElements(By.tagName("p"));
-        return paragraphs.stream().filter(WebElement::isDisplayed).anyMatch(p -> p.getText().contains(paragraphText));
+        this.excerpt = excerpt;
+    }
+
+    public String getTitle()
+    {
+        return excerpt.findElement(By.cssSelector(".macro-panel-title p")).getText();
+    }
+
+    public String getContentText()
+    {
+        return excerpt.findElement(By.cssSelector(".macro-panel-content")).getText().trim();
+    }
+
+    public boolean containsTable()
+    {
+        return !excerpt.findElement(By.cssSelector(".macro-panel-content")).findElements(By.tagName("table")).isEmpty();
     }
 }

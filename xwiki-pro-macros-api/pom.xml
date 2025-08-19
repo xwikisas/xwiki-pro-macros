@@ -97,11 +97,6 @@
       <artifactId>jodconverter-local</artifactId>
       <version>4.4.2</version>
     </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-skin-api</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
   </dependencies>
   <build>
    <plugins>

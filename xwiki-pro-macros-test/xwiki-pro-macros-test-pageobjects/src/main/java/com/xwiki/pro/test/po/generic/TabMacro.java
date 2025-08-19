@@ -19,17 +19,46 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.xwiki.test.ui.po.ViewPage;
+import org.xwiki.test.ui.po.BaseElement;
 
-public class ShowIfMacroPage extends ViewPage
+public class TabMacro extends BaseElement
 {
-    public boolean containsParagraph(String paragraphText)
+    private WebElement tab;
+
+    public TabMacro(String id)
     {
-        List<WebElement> paragraphs = getDriver().findElements(By.tagName("p"));
-        return paragraphs.stream().filter(WebElement::isDisplayed).anyMatch(p -> p.getText().contains(paragraphText));
+        this.tab = getDriver().findElement(By.id(id));
+    }
+
+    public boolean isActive()
+    {
+        return tab.getAttribute("class").contains("active");
+    }
+
+    public String getCssClass()
+    {
+        return tab.getAttribute("class");
+    }
+
+    public String getCssStyle()
+    {
+        return tab.getAttribute("style");
+    }
+
+    public String getNextAfter()
+    {
+        return tab.getAttribute("data-next-after");
+    }
+
+    public String getTextContent()
+    {
+        return tab.getText();
+    }
+
+    public boolean isDisplayed()
+    {
+        return tab.isDisplayed();
     }
 }
