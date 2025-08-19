@@ -31,11 +31,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.tag.test.po.AddTagsPane;
+import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
+import com.xwiki.pro.test.po.generic.ContentReportTableMacro;
+import com.xwiki.pro.test.po.generic.ContentReportTableMacroPage;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
@@ -51,6 +55,7 @@ import com.xwiki.pro.test.po.generic.TabMacro;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -113,6 +118,7 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
         register.registerMacro(CONF_XWIKI_MACRO_SPACE, "RecentlyUpdated");
+        register.registerMacro(CONF_XWIKI_MACRO_SPACE, "ContentReportTableMacro");
     }
 
     @BeforeAll
@@ -146,6 +152,27 @@ public class GenericMacrosIT
             throw new RuntimeException("Failed to read macro file: " + filename, e);
         }
     }
+
+    private void createPagesWithTags(TestUtils setup)
+    {
+        final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+        final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
+        setup.createPage(pageWithTags, "Test content for tagging");
+        setup.gotoPage(pageWithTags);
+        TaggablePage taggablePage = new TaggablePage();
+        AddTagsPane tagsPane = taggablePage.addTags();
+        tagsPane.setTags("alpha, beta, gamma");
+        tagsPane.add();
+
+        setup.createPage(pageWithTags2, "Test content for tagging");
+        setup.gotoPage(pageWithTags2);
+        TaggablePage taggablePage2 = new TaggablePage();
+        AddTagsPane tagsPane2 = taggablePage2.addTags();
+        tagsPane2.setTags("z, x, y");
+        tagsPane2.add();
+    }
+
 
 
     /*@Test
@@ -429,6 +456,44 @@ public class GenericMacrosIT
         assertTrue(page.containsText("Content for Excerpt macro -2Content for Excerpt macro -3"));
     }
 
+    @Test
+    @Order(8)
+    void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
+    {
+        createPagesWithTags(setup);
+        setup.createPage(testReference,createContent("contentReport-macros.vm"), "ContentReportTableTest");
+
+        ContentReportTableMacroPage page = new ContentReportTableMacroPage();
+        ContentReportTableMacro report0 = page.getMacro(0);
+        ContentReportTableMacro report1 = page.getMacro(1);
+        ContentReportTableMacro report2 = page.getMacro(2);
+        ContentReportTableMacro report3 = page.getMacro(3);
+
+        assertEquals(4,page.getMacroCount());
+
+        // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main,XWiki".
+        assertEquals(2,report0.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2","xwiki:Main.pageWithTags"),report0.getTitles());
+        assertEquals(Arrays.asList("superadmin","superadmin"),report0.getCreators());
+        assertEquals(2,report0.getModifiedDateCount());
+
+        // Checks the 2nd content-report-table macro, with the tags "alpha,x", the spaces "Main,XWiki" and max = 1.
+        assertEquals(1,report1.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"),report1.getTitles());
+        assertEquals(Arrays.asList("superadmin"),report1.getCreators());
+        assertEquals(1,report1.getModifiedDateCount());
+
+        // Checks the 3rd content-report-table macro, with the tag "x".
+        assertEquals(1,report2.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"),report2.getTitles());
+        assertEquals(Arrays.asList("superadmin"),report2.getCreators());
+        assertEquals(1,report2.getModifiedDateCount());
+
+        // Checks the 4th content-report-table macro, with the tag "nonExistingTag".
+        assertEquals(0,report3.getResultsCount());
+
+
+    }
     private void createExcerptPage(TestUtils setup)
     {
         DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "Excerpt");
