@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.support.Color;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
@@ -44,18 +45,17 @@ import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
 import com.xwiki.pro.test.po.generic.ExpandMacroPage;
-import com.xwiki.pro.test.po.generic.HideIfMacroPage;
+import com.xwiki.pro.test.po.generic.GenericMacroContent;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
-import com.xwiki.pro.test.po.generic.ShowIfMacroPage;
 import com.xwiki.pro.test.po.generic.TabGroupMacro;
 import com.xwiki.pro.test.po.generic.TabMacro;
+import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -121,24 +121,6 @@ public class GenericMacrosIT
         register.registerMacro(CONF_XWIKI_MACRO_SPACE, "ContentReportTableMacro");
     }
 
-    @BeforeAll
-    void setup(TestUtils setup)
-    {
-        setup.loginAsSuperAdmin();
-        setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
-            "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
-            "blogfeed", "https://example.com/");
-        setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
-            "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
-        setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
-            "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog",
-            "https://example" + ".com/", "blogfeed", "https://example.com/");
-
-        setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
-        setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
-        registerMacros();
-    }
-
     public String createContent(String filename)
     {
         try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
@@ -153,51 +135,29 @@ public class GenericMacrosIT
         }
     }
 
-    private void createPagesWithTags(TestUtils setup)
+    @BeforeAll
+    void setup(TestUtils setup)
     {
-        final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+        setup.loginAsSuperAdmin();
+        setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
+            "blogfeed", "https://example.com/", "avatar", "image1.png");
+        setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
+        setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
+            "usertest3@example.com", "address", "userTestAddress3", "comment", "test3", "blog",
+            "https://example" + ".com/", "blogfeed", "https://example.com/");
 
-        final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-        setup.createPage(pageWithTags, "Test content for tagging");
-        setup.gotoPage(pageWithTags);
-        TaggablePage taggablePage = new TaggablePage();
-        AddTagsPane tagsPane = taggablePage.addTags();
-        tagsPane.setTags("alpha, beta, gamma");
-        tagsPane.add();
-
-        setup.createPage(pageWithTags2, "Test content for tagging");
-        setup.gotoPage(pageWithTags2);
-        TaggablePage taggablePage2 = new TaggablePage();
-        AddTagsPane tagsPane2 = taggablePage2.addTags();
-        tagsPane2.setTags("z, x, y");
-        tagsPane2.add();
+        setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
+        setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
+        try {
+            setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
+                false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        registerMacros();
     }
-
-
-
-    /*@Test
-    @Order(1)
-    void teamMacroTest(TestUtils setup)
-    {
-        setup.gotoPage("XWiki", "UserTest");
-        TaggablePage taggablePage = new TaggablePage();
-        AddTagsPane tagsPane = taggablePage.addTags();
-        tagsPane.setTags("testTag");
-        tagsPane.add();
-
-        setup.createPage(pageWithTeamMacros, PAGE_WITH_TEAM_MACROS_CONTENT);
-
-        TeamMacroPage page = new TeamMacroPage();
-
-        // There should be 3 team macros.
-        assertEquals(3, page.getTeamMacrosCount());
-        // First team macro should display 2 users (admin and the created user).
-        assertEquals(3, page.getTeamMacroUsers(0).size());
-        // Second team macro should display 1 user - the one with "testTag".
-        assertEquals(1, page.getTeamMacroUsers(1).size());
-        // Third team macro should display 0 users - none exist with tag "nonExistentTag".
-        assertEquals(0, page.getTeamMacroUsers(2).size());
-    }*/
 
     @Test
     @Order(1)
@@ -255,24 +215,36 @@ public class GenericMacrosIT
         assertNotEquals(expectedContent2, expand2.getTextContent());
     }
 
-    void createUserWithPicture(TestUtils setup)
-    {
 
-        setup.loginAsSuperAdmin();
-        setup.createUser("UserTest4", "UserTest", "", "avatar", "image1.png");
-        try {
-            setup.attachFile("XWiki", "UserTest4", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
-                false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    @Order(1)
+    void teamMacroTest(TestUtils setup)
+    {
+        setup.gotoPage("XWiki", "UserTest");
+        TaggablePage taggablePage = new TaggablePage();
+        AddTagsPane tagsPane = taggablePage.addTags();
+        tagsPane.setTags("testTag");
+        tagsPane.add();
+
+        setup.createPage(pageWithTeamMacros, PAGE_WITH_TEAM_MACROS_CONTENT);
+
+        TeamMacroPage page = new TeamMacroPage();
+
+        // There should be 3 team macros.
+        assertEquals(3, page.getTeamMacrosCount());
+        // First team macro should display 2 users (admin and the created user).
+        assertEquals(3, page.getTeamMacroUsers(0).size());
+        // Second team macro should display 1 user - the one with "testTag".
+        assertEquals(1, page.getTeamMacroUsers(1).size());
+        // Third team macro should display 0 users - none exist with tag "nonExistentTag".
+        assertEquals(0, page.getTeamMacroUsers(2).size());
     }
 
     @Test
     @Order(2)
     void profilePictureMacroTest(TestUtils setup, TestReference testReference)
     {
-        createUserWithPicture(setup);
+
         setup.createPage(testReference, createContent("profilePicture-macros.vm"), "ProfilePictureTest");
         ProfilePictureMacroPage page = new ProfilePictureMacroPage();
 
@@ -282,8 +254,8 @@ public class GenericMacrosIT
         ProfilePictureMacro picture2 = page.getMacro(1);
 
         // Checks the 1st profilePicture macro, with an actual profile image.
-        assertEquals("UserTest4", picture1.getUserTitle());
-        assertTrue(picture1.linkContainsUsername("UserTest4"));
+        assertEquals("UserTest", picture1.getUserTitle());
+        assertTrue(picture1.linkContainsUsername("UserTest"));
         assertEquals("60px", picture1.getAvatarSize());
         assertTrue(picture1.hasProfileImage());
         assertFalse(picture1.hasAvatarInitials());
@@ -301,7 +273,7 @@ public class GenericMacrosIT
     void showIfMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("showIf-macros.vm"), "ShowIfTest");
-        ShowIfMacroPage page = new ShowIfMacroPage();
+        GenericMacroContent page = new GenericMacroContent();
 
         assertTrue(page.containsParagraph("Content for testing the show-If macro"));
         assertTrue(page.containsParagraph("Content for testing the show-If macro -2"));
@@ -315,7 +287,7 @@ public class GenericMacrosIT
     {
 
         setup.createPage(testReference, createContent("hideIf-macros.vm"), "HideIfTest");
-        HideIfMacroPage page = new HideIfMacroPage();
+        GenericMacroContent page = new GenericMacroContent();
 
         assertTrue(page.containsParagraph("content1"));
         assertFalse(page.containsParagraph("content2"));
@@ -345,7 +317,7 @@ public class GenericMacrosIT
         assertFalse(tab1.isActive());
         assertTrue(tab1.getCssStyle().contains("background-color: yellow"));
         assertTrue(tab1.getCssStyle().contains("color: red"));
-        assertTrue(tab1.getCssStyle().contains("border: 1px dashed " + hexToRgb("#ccc")));
+        assertTrue(tab1.getCssStyle().contains("border: 1px dashed " + Color.fromString("#ccc").asRgb()));
         assertEquals("0", tab1.getNextAfter());
         assertTrue(tab1.getTextContent().contains("tab1-content"));
         assertTrue(tab1.isDisplayed());
@@ -461,7 +433,7 @@ public class GenericMacrosIT
     void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
     {
         createPagesWithTags(setup);
-        setup.createPage(testReference,createContent("contentReport-macros.vm"), "ContentReportTableTest");
+        setup.createPage(testReference, createContent("contentReport-macros.vm"), "ContentReportTableTest");
 
         ContentReportTableMacroPage page = new ContentReportTableMacroPage();
         ContentReportTableMacro report0 = page.getMacro(0);
@@ -469,48 +441,67 @@ public class GenericMacrosIT
         ContentReportTableMacro report2 = page.getMacro(2);
         ContentReportTableMacro report3 = page.getMacro(3);
 
-        assertEquals(4,page.getMacroCount());
+        assertEquals(4, page.getMacroCount());
 
         // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main,XWiki".
-        assertEquals(2,report0.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2","xwiki:Main.pageWithTags"),report0.getTitles());
-        assertEquals(Arrays.asList("superadmin","superadmin"),report0.getCreators());
-        assertEquals(2,report0.getModifiedDateCount());
+        assertEquals(2, report0.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), report0.getTitles());
+        assertEquals(Arrays.asList("superadmin", "superadmin"), report0.getCreators());
+        assertEquals(2, report0.getModifiedDateCount());
 
         // Checks the 2nd content-report-table macro, with the tags "alpha,x", the spaces "Main,XWiki" and max = 1.
-        assertEquals(1,report1.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"),report1.getTitles());
-        assertEquals(Arrays.asList("superadmin"),report1.getCreators());
-        assertEquals(1,report1.getModifiedDateCount());
+        assertEquals(1, report1.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"), report1.getTitles());
+        assertEquals(Arrays.asList("superadmin"), report1.getCreators());
+        assertEquals(1, report1.getModifiedDateCount());
 
         // Checks the 3rd content-report-table macro, with the tag "x".
-        assertEquals(1,report2.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"),report2.getTitles());
-        assertEquals(Arrays.asList("superadmin"),report2.getCreators());
-        assertEquals(1,report2.getModifiedDateCount());
+        assertEquals(1, report2.getResultsCount());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"), report2.getTitles());
+        assertEquals(Arrays.asList("superadmin"), report2.getCreators());
+        assertEquals(1, report2.getModifiedDateCount());
 
         // Checks the 4th content-report-table macro, with the tag "nonExistingTag".
-        assertEquals(0,report3.getResultsCount());
+        assertEquals(0, report3.getResultsCount());
+    }
 
+    @Test
+    @Order(9)
+    void excerptMacroTest(TestUtils setup)
+    {
+        createExcerptPage(setup);
+        GenericMacroContent page = new GenericMacroContent();
+
+        assertTrue(page.containsParagraph("Content for excerpt macro"));
+        assertTrue(page.containsParagraph("Content for Excerpt macro -2"));
+        assertTrue(page.containsParagraph("Content for Excerpt macro -3"));
+        assertFalse(page.containsParagraph("Content for Excerpt macro -4"));
 
     }
+
+    private void createPagesWithTags(TestUtils setup)
+    {
+        final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
+
+        final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
+        setup.createPage(pageWithTags, "Test content for tagging");
+        setup.gotoPage(pageWithTags);
+        TaggablePage taggablePage = new TaggablePage();
+        AddTagsPane tagsPane = taggablePage.addTags();
+        tagsPane.setTags("alpha, beta, gamma");
+        tagsPane.add();
+
+        setup.createPage(pageWithTags2, "Test content for tagging");
+        setup.gotoPage(pageWithTags2);
+        TaggablePage taggablePage2 = new TaggablePage();
+        AddTagsPane tagsPane2 = taggablePage2.addTags();
+        tagsPane2.setTags("z, x, y");
+        tagsPane2.add();
+    }
+
     private void createExcerptPage(TestUtils setup)
     {
         DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "Excerpt");
         setup.createPage(pageWithExcerptMacros, createContent("excerpt-macros.vm"));
-    }
-
-    private String hexToRgb(String hex)
-    {
-        hex = hex.substring(1);
-        if (hex.length() == 3) {
-            hex = "" + hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
-        }
-
-        int r = Integer.parseInt(hex.substring(0, 2), 16);
-        int g = Integer.parseInt(hex.substring(2, 4), 16);
-        int b = Integer.parseInt(hex.substring(4, 6), 16);
-
-        return String.format("rgb(%d, %d, %d)", r, g, b);
     }
 }
