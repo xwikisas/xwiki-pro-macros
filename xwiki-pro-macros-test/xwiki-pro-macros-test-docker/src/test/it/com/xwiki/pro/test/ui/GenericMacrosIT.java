@@ -124,7 +124,7 @@ public class GenericMacrosIT
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
             "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",
-            "blogfeed", "https://example.com/");
+            "blogfeed", "https://example.com/", "avatar", "image1.png");
         setup.createUser("UserTest2", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
             "usertest2@example.com", "address", "userTestAddress2", "comment", "test2");
         setup.createUser("UserTest3", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
@@ -133,6 +133,12 @@ public class GenericMacrosIT
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
+        try {
+            setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
+                false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         registerMacros();
     }
 
@@ -206,17 +212,15 @@ public class GenericMacrosIT
         assertTrue(team1.getProfileLink(username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
 
         // Checks avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
-        assertEquals("U", team1.getAvatarInitials(username));
         assertEquals("U", team1.getAvatarInitials(username2));
         assertEquals("U", team1.getAvatarInitials(username3));
 
         // Checks the default color.
-        assertTrue(team1.getAvatarBackgroundColor(username).contains("rgb(0, 170, 102)"));
+        assertFalse(team1.getAvatarBackgroundColor(username).contains("rgb(0, 170, 102)"));
         assertTrue(team1.getAvatarBackgroundColor(username2).contains("rgb(0, 170, 102)"));
         assertTrue(team1.getAvatarBackgroundColor(username3).contains("rgb(0, 170, 102)"));
 
         // Checks the personalized color.
-        assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username));
         assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username2));
         assertEquals("rgb(204, 0, 255)", team1.getAvatarFontColor(username3));
 
@@ -224,7 +228,6 @@ public class GenericMacrosIT
         assertTrue(team1.getAvatarSize(username2).startsWith("60"));
         assertTrue(team1.getAvatarSize(username3).startsWith("60"));
 
-        assertTrue(team1.getAvatarBorderRadius(username).startsWith("60"));
         assertTrue(team1.getAvatarBorderRadius(username2).startsWith("60"));
         assertTrue(team1.getAvatarBorderRadius(username3).startsWith("60"));
 

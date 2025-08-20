@@ -47,10 +47,10 @@ public class UserProfileMacro extends BaseElement
 
         boolean linkMatches = href != null && href.contains("/xwiki/bin/view/XWiki/" + username);
 
-        WebElement image = mediaLeft.findElement(By.cssSelector("img.avatar"));
+        WebElement image = mediaLeft.findElement(By.tagName("img"));
         String actualTitle = image.getAttribute("title");
-
         boolean titleMatches = username.equals(actualTitle);
+
         return linkMatches && titleMatches;
     }
 
