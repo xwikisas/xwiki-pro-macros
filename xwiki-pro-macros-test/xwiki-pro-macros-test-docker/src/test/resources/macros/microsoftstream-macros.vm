@@ -17,9 +17,9 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{msStream url="www.youtube.com" alignment="RIGHT" start="01:12:13" showinfo="true" autoplay="true" width="600px"
+{{msStream url="www.stream.com" alignment="RIGHT" start="01:12:13" showinfo="true" autoplay="true" width="600px"
 height="400px"/}}
 
-{{msStream url="www.youtube.com" alignment="LEFT" start="03:12:13" textWrap="true"/}}
+{{msStream url="https://web.microsoftstream.com" alignment="LEFT" start="03:12:13" textWrap="true"/}}
 
-{{msStream url="www.youtube.com" alignment="CENTER" showinfo="false" autoplay="false"/}}
+{{msStream url="www.stream.com" alignment="CENTER" showinfo="false" autoplay="false"/}}

@@ -41,42 +41,34 @@ public class UserProfileMacro extends BaseElement
         this.userProfile = container;
     }
 
-    public boolean hasLinkImage(String username)
-    {
+    public boolean hasAvatarWithLink(String username) {
         WebElement mediaLeft = userProfile.findElement(By.cssSelector(".media-left a"));
         String href = mediaLeft.getAttribute("href");
-        return href != null && href.contains("/xwiki/bin/view/XWiki/" + username);
-    }
 
-    public boolean imageHasTitle(String expectedTitle)
-    {
-        WebElement image = userProfile.findElement(By.cssSelector(".media-left img.avatar"));
+        boolean linkMatches = href != null && href.contains("/xwiki/bin/view/XWiki/" + username);
+
+        WebElement image = mediaLeft.findElement(By.cssSelector("img.avatar"));
         String actualTitle = image.getAttribute("title");
-        return expectedTitle.equals(actualTitle);
+
+        boolean titleMatches = username.equals(actualTitle);
+        return linkMatches && titleMatches;
     }
 
-    public boolean getProfileLink(String username)
+    public boolean hasProfileLink(String username)
     {
-        String href = userProfile.findElement(By.cssSelector(".media-heading a")).getAttribute("href");
-        return href != null && href.contains("/xwiki/bin/view/XWiki/" + username);
-    }
+        WebElement link = userProfile.findElement(By.cssSelector(".media-heading a"));
+        String href = link.getAttribute("href");
 
-    public String getLinkText()
-    {
-        return userProfile.findElement(By.cssSelector(".media-heading a")).getText();
-    }
+        boolean textMatches = username.equals(link.getText());
 
+        return (href != null && href.contains("/xwiki/bin/view/XWiki/" + username)) && textMatches;
+    }
     public List<WebElement> getPropertiesList()
     {
         return userProfile.findElement(By.cssSelector(".xwiki-user-profile-body ul")).findElements(By.tagName("li"));
     }
 
-    public int getPropertiesCount()
-    {
-        return getPropertiesList().size();
-    }
-
-    public List<String> getPropertiesText()
+    public List<String> getProperties()
     {
         return getPropertiesList().stream().map(WebElement::getText).collect(Collectors.toList());
     }

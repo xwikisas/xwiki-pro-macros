@@ -21,6 +21,7 @@ package com.xwiki.pro.test.po.generic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -51,20 +52,19 @@ public class TagListMacro extends BaseElement
         return titles;
     }
 
-    public List<String> getTagNames()
-    {
-        List<WebElement> glossaryElements = tagList.findElements(By.cssSelector(".glossaryBinElement"));
-        List<String> tagNames = new ArrayList<>();
-        for (WebElement el : glossaryElements) {
-            tagNames.add(el.getText());
-        }
-        return tagNames;
+    public List<String> getTagNames() {
+        return tagList.findElements(By.cssSelector(".glossaryBinElement"))
+            .stream()
+            .map(WebElement::getText)
+            .collect(Collectors.toList());
     }
 
-    public String getHtmlTagForTagName(String tagName)
-    {
+    public boolean hasLink(String tagName) {
         String xpath = ".//li[contains(@class, 'glossaryBinElement')]/a[text()='" + tagName + "']";
-        List<WebElement> elements = tagList.findElements(By.xpath(xpath));
-        return elements.get(0).getTagName();
+        return tagList.findElements(By.xpath(xpath))
+            .stream()
+            .map(WebElement::getTagName)
+            .anyMatch(tag -> tag.equals("a"));
     }
+
 }

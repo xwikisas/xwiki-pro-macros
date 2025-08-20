@@ -17,9 +17,9 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{button id="testbtn1" label="test1" url="https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting" color="#ff66ff" newTab="true" icon="check" width="100px"/}}
+{{button id="testbtn1" label="test1" url="https://example.org" color="#ff66ff" newTab="true" icon="check" width="100px"/}}
 
-{{button id="testbtn2" label="test2" url="https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin" newTab="false" type="DANGER" width="60%"/}}
-{{button id="testbtn3" label="test3" color="#ff66ff"  url="https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin" newTab="false" type="SUCCESS" icon="check"  width="80px"/}}
-{{button id="testbtn4" label="test4" url="https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin" newTab="false" type="WARNING" color="#ff66ff" width="80px"/}}
-{{button id="testbtn5" label="test5" url="https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting" icon="page"  newTab="true"  width="100px"/}}
+{{button id="testbtn2" label="test2" url="https://example.org" newTab="false" type="DANGER" width="60%"/}}
+{{button id="testbtn3" label="test3" color="#ff66ff"  url="https://example.org" newTab="false" type="SUCCESS" icon="check"  width="80px"/}}
+{{button id="testbtn4" label="test4" url="https://example.org" newTab="false" type="WARNING" color="#ff66ff" width="80px"/}}
+{{button id="testbtn5" label="test5" url="https://example.org"/}}

@@ -19,7 +19,6 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,84 +42,13 @@ public class UserListMacro extends BaseElement
         this.userList = userList;
     }
 
-    public int getUserCount()
+    public List<UserListItem> getUsers()
     {
-        return userList.findElements(By.cssSelector("tbody tr")).size();
+        return userList.findElements(By.cssSelector("tbody tr")).stream().map(UserListItem::new)
+            .collect(Collectors.toList());
     }
 
-    public WebElement getUserRow(int userIndex)
-    {
-        return userList.findElements(By.cssSelector("tbody tr")).get(userIndex);
-    }
-
-    public int getUserPropertiesCount(int userIndex)
-    {
-        return getUserRow(userIndex).findElements(By.tagName("td")).size();
-    }
-
-    public List<WebElement> getUserProperties(int userIndex)
-    {
-        return getUserRow(userIndex).findElements(By.tagName("td"));
-    }
-
-    public List<String> getUserPropertiesText(int userIndex)
-    {
-        return getUserProperties(userIndex).stream().map(WebElement::getText).collect(Collectors.toList());
-    }
-
-    public List<String> getUserPropertyTypes(int userIndex)
-    {
-        List<WebElement> tds = getUserProperties(userIndex);
-        List<String> types = new ArrayList<>();
-
-        for (WebElement td : tds) {
-            String classAttr = td.getAttribute("class");
-            if (classAttr != null && classAttr.startsWith("xwiki-userlist-user-")) {
-                types.add(classAttr.substring("xwiki-userlist-user-".length()));
-            } else {
-                types.add("");
-            }
-        }
-
-        return types;
-    }
-
-    public boolean isEmailLinkValid(int userIndex, String expectedEmail)
-    {
-        WebElement emailTd = getUserProperties(userIndex).get(3);
-        WebElement emailLink = emailTd.findElement(By.tagName("a"));
-        String href = emailLink.getAttribute("href");
-        return href != null && href.equals("mailto:" + expectedEmail);
-    }
-
-    public String getUserAvatarTitle(int userIndex)
-    {
-        WebElement avatarTd = getUserProperties(userIndex).get(0);
-        WebElement img = avatarTd.findElement(By.tagName("img"));
-        return img.getAttribute("title");
-    }
-
-    public String getUserAvatarAlt(int userIndex)
-    {
-        WebElement avatarTd = getUserProperties(userIndex).get(0);
-        WebElement img = avatarTd.findElement(By.tagName("img"));
-        return img.getAttribute("alt");
-    }
-
-    public boolean getUserLinkHref(int userIndex, String username)
-    {
-        WebElement usernameTd = getUserProperties(userIndex).get(1);
-        WebElement link = usernameTd.findElement(By.tagName("a"));
-        return link.getAttribute("href").contains("/xwiki/bin/view/XWiki/" + username);
-    }
-
-    public String getUsernameLinkText(int userIndex)
-    {
-        WebElement usernameTd = getUserProperties(userIndex).get(1);
-        WebElement link = usernameTd.findElement(By.tagName("a"));
-        return link.getText();
-    }
-
+    // Note: This only checks the class attribute. The actual fixed-layout functionality cannot be verified.
     public boolean hasFixedLayout()
     {
         String classAttr = userList.getAttribute("class");
@@ -129,8 +57,6 @@ public class UserListMacro extends BaseElement
 
     public Set<String> getUsernames()
     {
-        return userList.findElements(By.cssSelector("tbody tr")).stream()
-            .map(row -> row.findElement(By.cssSelector(".xwiki-userlist-user-username a")).getText())
-            .collect(Collectors.toSet());
+        return getUsers().stream().map(UserListItem::getUsername).collect(Collectors.toSet());
     }
 }

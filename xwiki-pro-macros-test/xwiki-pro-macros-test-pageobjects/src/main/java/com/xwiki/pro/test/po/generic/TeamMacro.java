@@ -81,19 +81,9 @@ public class TeamMacro extends BaseElement
         return getAvatar(username).getCssValue("border-radius");
     }
 
-    public boolean isUsernameHidden()
-    {
-        return team.getAttribute("class").contains("usernames-hidden");
-    }
-
     public boolean hasEmptyTeamMessage()
     {
         return team.getText().equals("There is nobody to show.");
-    }
-
-    public boolean hasAvatarInitials(String username)
-    {
-        return !getUser(username).findElements(By.className("xwikiteam-avatar-initials")).isEmpty();
     }
 
     public boolean isUsernameVisible(String username)

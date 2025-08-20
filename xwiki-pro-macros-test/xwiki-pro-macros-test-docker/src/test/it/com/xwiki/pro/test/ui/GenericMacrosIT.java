@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.support.Color;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
@@ -51,6 +53,7 @@ import com.xwiki.pro.test.po.generic.TagListMacro;
 import com.xwiki.pro.test.po.generic.TagListMacroPage;
 import com.xwiki.pro.test.po.generic.TeamMacro;
 import com.xwiki.pro.test.po.generic.TeamMacroPage;
+import com.xwiki.pro.test.po.generic.UserListItem;
 import com.xwiki.pro.test.po.generic.UserListMacro;
 import com.xwiki.pro.test.po.generic.UserListMacroPage;
 import com.xwiki.pro.test.po.generic.UserProfileMacro;
@@ -192,7 +195,7 @@ public class GenericMacrosIT
         String username2 = "xwiki:XWiki.UserTest2";
         String username3 = "xwiki:XWiki.UserTest3";
 
-        // Checks the users' titles.
+        // Checks the user titles.
         assertEquals("UserTest", team1.getUserTitle(username));
         assertEquals("UserTest2", team1.getUserTitle(username2));
         assertEquals("UserTest3", team1.getUserTitle(username3));
@@ -201,11 +204,6 @@ public class GenericMacrosIT
         assertTrue(team1.getProfileLink(username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
         assertTrue(team1.getProfileLink(username2).endsWith("/xwiki/bin/view/XWiki/UserTest2"));
         assertTrue(team1.getProfileLink(username3).endsWith("/xwiki/bin/view/XWiki/UserTest3"));
-
-        // Checks the existence of avatar initials.
-        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest"));
-        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest2"));
-        assertTrue(team1.hasAvatarInitials("xwiki:XWiki.UserTest3"));
 
         // Checks avatar attributes: initials, backgroundColor, fontColor, size, borderRadius.
         assertEquals("U", team1.getAvatarInitials(username));
@@ -230,9 +228,6 @@ public class GenericMacrosIT
         assertTrue(team1.getAvatarBorderRadius(username2).startsWith("60"));
         assertTrue(team1.getAvatarBorderRadius(username3).startsWith("60"));
 
-        // Checks the property of hidden usernames.
-        assertTrue(team1.isUsernameHidden());
-
         // Checks the visibility of usernames.
         assertFalse(team1.isUsernameVisible(username));
         assertFalse(team1.isUsernameVisible(username2));
@@ -244,18 +239,15 @@ public class GenericMacrosIT
         assertEquals("UserTest", team2.getUserTitle(username));
         assertTrue(team2.getProfileLink(username).endsWith("/xwiki/bin/view/XWiki/UserTest"));
         // Checks that disableLetterAvatars="true" works.
-        assertFalse(team2.hasAvatarInitials("xwiki:XWiki.UserTest"));
         assertTrue(team2.getAvatarSize(username).startsWith("60"));
 
         // Checks that showUsernames="true" works.
-        assertFalse(team2.isUsernameHidden());
         assertTrue(team2.isUsernameVisible(username));
 
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
         assertEquals(0, team3.getUsers().size());
         // Checks that if a team macro is empty (0 users), the message "There is nobody to show." appears.
         assertTrue(team3.hasEmptyTeamMessage());
-        assertTrue(team3.isUsernameHidden());
     }
 
     @Test
@@ -270,11 +262,13 @@ public class GenericMacrosIT
         ButtonMacro btn4 = new ButtonMacro("testbtn4");
         ButtonMacro btn5 = new ButtonMacro("testbtn5");
 
+        String link = "https://example.org/";
+
         // Checks the 1st button, with a personalized width, newTab="true" and an associated icon.
         assertEquals("100px", btn1.getWidth());
-        assertEquals(hexToRgb("#ff66ff"), btn1.getColor());
+        assertEquals(Color.fromString("#ff66ff").asRgb(), btn1.getColor());
         assertEquals("test1", btn1.getLabel());
-        assertTrue(btn1.hasLink("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
+        assertTrue(btn1.hasLink(link));
         // Checks whether the link is opening in a new tab or not.
         assertEquals("_blank", btn1.getParentTarget());
         assertTrue(btn1.getCssClass().endsWith("-default"));
@@ -282,37 +276,34 @@ public class GenericMacrosIT
 
         // Checks the 2nd button, with type = "DANGER".
         assertEquals("test2", btn2.getLabel());
-        assertTrue(btn2.hasLink(
-            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(btn2.hasLink(link));
         assertEquals("", btn2.getParentTarget());
         assertTrue(btn2.getCssClass().endsWith("-danger"));
         assertFalse(btn2.hasIcon());
 
         // Checks the 3rd button, with a personalized width, type="SUCCESS", newTab="false" and an associated icon.
         assertEquals("80px", btn3.getWidth());
-        assertEquals(hexToRgb("#ff66ff"), btn3.getColor());
+        assertEquals(Color.fromString("#ff66ff").asRgb(), btn3.getColor());
         assertEquals("test3", btn3.getLabel());
-        assertTrue(btn3.hasLink(
-            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(btn3.hasLink(link));
         assertEquals("", btn3.getParentTarget());
         assertTrue(btn3.getCssClass().endsWith("-success"));
         assertTrue(btn3.hasIcon());
 
         // Checks the 4th button with type="WARNING" and newTab="false".
-        assertEquals(hexToRgb("#ff66ff"), btn4.getColor());
+        assertEquals(Color.fromString("#ff66ff").asRgb(), btn4.getColor());
         assertEquals("test4", btn4.getLabel());
-        assertTrue(btn4.hasLink(
-            "https://wiki.eniris.be/wiki/publicinformation/view/Help/Applications/Contributors/Charlie%20Chaplin"));
+        assertTrue(btn4.hasLink(link));
         assertEquals("", btn4.getParentTarget());
         assertTrue(btn4.getCssClass().endsWith("-warning"));
         assertFalse(btn4.hasIcon());
 
         // Tests for btn5 with newTab="false" and an associated icon.
         assertEquals("test5", btn5.getLabel());
-        assertTrue(btn5.hasLink("https://dev.xwiki.org/xwiki/bin/view/Community/Testing/DockerTesting"));
-        assertEquals("_blank", btn5.getParentTarget());
+        assertTrue(btn5.hasLink(link));
+        assertEquals("", btn5.getParentTarget());
         assertTrue(btn5.getCssClass().endsWith("-default"));
-        assertTrue(btn5.hasIcon());
+        assertFalse(btn5.hasIcon());
     }
 
     @Test
@@ -370,7 +361,7 @@ public class GenericMacrosIT
 
         // Checks the links associated with the tags.
         for (String i : expectedTagNames1) {
-            assertEquals("a", tagList1.getHtmlTagForTagName(i));
+            assertTrue(tagList1.hasLink(i));
         }
 
         // Checks the 2nd tagList macro, which excludes the "beta" tag.
@@ -379,7 +370,7 @@ public class GenericMacrosIT
         List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
         assertEquals(expectedTagNames2, tagList2.getTagNames());
         for (String i : expectedTagNames2) {
-            assertEquals("a", tagList2.getHtmlTagForTagName(i));
+            assertTrue(tagList2.hasLink(i));
         }
 
         // Checks the 3rd tagList macro, which targets specific spaces and excludes the "gamma" tag.
@@ -390,7 +381,7 @@ public class GenericMacrosIT
         assertEquals(expectedTagNames3, tagList3.getTagNames());
 
         for (String i : expectedTagNames3) {
-            assertEquals("a", tagList3.getHtmlTagForTagName(i));
+            assertTrue(tagList3.hasLink(i));
         }
     }
 
@@ -410,17 +401,14 @@ public class GenericMacrosIT
         assertEquals(3, page.getMacroCount());
 
         // Checks the 1st userProfile macro, with the properties: company, email, phone, address.
-        assertTrue(user1.hasLinkImage("UserTest"));
-        assertTrue(user1.imageHasTitle("UserTest"));
-        assertTrue(user1.getProfileLink("UserTest"));
-        assertEquals("UserTest", user1.getLinkText());
+        assertTrue(user1.hasAvatarWithLink("UserTest"));
+        assertTrue(user1.hasProfileLink("UserTest"));
 
         // Checks the number of properties shown for each user.
-        assertEquals(4, user1.getPropertiesCount());
+        assertEquals(4, user1.getPropertiesList().size());
 
         // Checks the list of properties shown for each user.
-        assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"),
-            user1.getPropertiesText());
+        assertEquals(List.of("xwiki", "usertest@example.com", "07777777", "userTestAddress"), user1.getProperties());
 
         // Checks that the email link is valid.
         assertTrue(user1.isEmailLinkCorrect(1, "usertest@example.com"));
@@ -429,23 +417,20 @@ public class GenericMacrosIT
         assertEquals("test", user1.getComment());
 
         // Checks the 2nd userProfile macro, with the default properties.
-        assertTrue(user2.hasLinkImage("UserTest2"));
-        assertTrue(user2.imageHasTitle("UserTest2"));
-        assertTrue(user2.getProfileLink("UserTest2"));
-        assertEquals("UserTest2", user2.getLinkText());
+        assertTrue(user2.hasAvatarWithLink("UserTest2"));
+        assertTrue(user2.hasProfileLink("UserTest2"));
 
-        assertEquals(4, user2.getPropertiesCount());
-        assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"),
-            user2.getPropertiesText());
+        assertEquals(4, user2.getPropertiesList().size());
+        assertEquals(List.of("xwiki", "usertest2@example.com", "07777777", "userTestAddress2"), user2.getProperties());
 
         assertTrue(user2.isEmailLinkCorrect(1, "usertest2@example.com"));
 
         assertEquals("test2", user2.getComment());
 
         // Checks the 3rd userProfile macro, with the properties: blogfeed, email, blog.
-        assertEquals(3, user3.getPropertiesCount());
+        assertEquals(3, user3.getPropertiesList().size());
         assertEquals(List.of("https://example.com/", "usertest3@example.com", "https://example.com/"),
-            user3.getPropertiesText());
+            user3.getProperties());
 
         assertTrue(user3.isEmailLinkCorrect(1, "usertest3@example.com"));
 
@@ -466,63 +451,56 @@ public class GenericMacrosIT
         assertEquals(2, page.getMacroCount());
 
         // Checks the 1st userList macro, which should contain 2 users and show specific properties for each.
-        assertEquals(2, userList1.getUserCount());
-        for (int i = 0; i < 2; i++) {
-            assertEquals(4, userList1.getUserPropertiesCount(i));
-            assertEquals(List.of("avatar", "username", "phone", "email"), userList1.getUserPropertyTypes(i));
+        List<UserListItem> users1 = userList1.getUsers();
+        assertEquals(2, users1.size());
+
+        for (UserListItem u : users1) {
+            assertEquals(4, u.getProperties().size());
+            assertEquals(List.of("avatar", "username", "phone", "email"), u.getPropertyTypes());
         }
+
+        UserListItem u1 = users1.get(0);
+        UserListItem u2 = users1.get(1);
+
+        assertEquals("UserTest", u1.getUsername());
+        assertEquals("UserTest2", u2.getUsername());
+
+        assertEquals("UserTest", u1.getAvatarTitle());
+        assertEquals("UserTest2", u2.getAvatarTitle());
+        assertEquals("UserTest", u1.getAvatarAlt());
+        assertEquals("UserTest2", u2.getAvatarAlt());
+
+        assertEquals("07777777", u1.getPhone());
+        assertEquals("07777777", u2.getPhone());
+
+        assertEquals("usertest@example.com", u1.getEmail());
+        assertEquals("usertest2@example.com", u2.getEmail());
+
+        assertTrue(u1.isEmailLinkValid("usertest@example.com"));
+        assertTrue(u2.isEmailLinkValid("usertest2@example.com"));
+
+        assertTrue(u1.hasProfileLink("UserTest"));
+        assertTrue(u2.hasProfileLink("UserTest2"));
 
         assertEquals(Set.of("UserTest", "UserTest2"), userList1.getUsernames());
 
-        // Checks the properties for each user from the 1st userList macro.
-        assertEquals("UserTest", userList1.getUserAvatarTitle(0));
-        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
-        assertTrue(userList1.getUserLinkHref(0, "UserTest"));
-        assertEquals("UserTest", userList1.getUsernameLinkText(0));
-
-        // Checks the list of properties shown for each user.
-        assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), userList1.getUserPropertiesText(0));
-
-        assertTrue(userList1.isEmailLinkValid(0, "usertest@example.com"));
-
-        assertEquals("UserTest2", userList1.getUserAvatarTitle(1));
-        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
-        assertTrue(userList1.getUserLinkHref(1, "UserTest2"));
-        assertEquals("UserTest2", userList1.getUsernameLinkText(1));
-        assertEquals(List.of("", "UserTest2", "07777777", "usertest2@example.com"), userList1.getUserPropertiesText(1));
-
-        // Checks the avatar titles.
-        assertEquals("UserTest", userList1.getUserAvatarTitle(0));
-        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
-
-        // Checks the validity of the users' profile links.
-        assertTrue(userList1.getUserLinkHref(0, "UserTest"));
-
-        // Checks the link, that has the correct username.
-        assertEquals("UserTest", userList1.getUsernameLinkText(0));
-
-        assertEquals(List.of("", "UserTest", "07777777", "usertest@example.com"), userList1.getUserPropertiesText(0));
-
-        // Checks that the email link is valid.
-        assertTrue(userList1.isEmailLinkValid(0, "usertest@example.com"));
-
-        assertEquals("UserTest2", userList1.getUserAvatarTitle(1));
-        assertEquals("UserTest2", userList1.getUserAvatarAlt(1));
-
-        assertTrue(userList1.getUserLinkHref(1, "UserTest2"));
-        assertEquals("UserTest2", userList1.getUsernameLinkText(1));
-
-        assertEquals(List.of("", "UserTest2", "07777777", "usertest2@example.com"), userList1.getUserPropertiesText(1));
-        assertTrue(userList1.isEmailLinkValid(1, "usertest2@example.com"));
-
         // Checks the 2nd userList macro, which should contain 3 users and show specific properties for each.
-        assertEquals(3, userList2.getUserCount());
-        for (int i = 0; i < 3; i++) {
-            assertEquals(6, userList2.getUserPropertiesCount(i));
-            assertEquals(List.of("avatar", "username", "phone", "email", "address", "blogfeed"),
-                userList2.getUserPropertyTypes(i));
-        }
+        List<UserListItem> users2 = userList2.getUsers();
+        assertEquals(3, users2.size());
         assertTrue(userList2.hasFixedLayout());
+
+        for (UserListItem u : users2) {
+            assertEquals(6, u.getProperties().size());
+            assertEquals(List.of("avatar", "username", "phone", "email", "address", "blogfeed"), u.getPropertyTypes());
+        }
+
+        UserListItem u3 = users2.get(2);
+
+        assertEquals("UserTest3", u3.getUsername());
+        assertEquals("usertest3@example.com", u3.getEmail());
+        assertEquals("userTestAddress3", u3.getAddress());
+        assertEquals("https://example.com/", u3.getBlogFeed());
+
         assertEquals(Set.of("UserTest", "UserTest2", "UserTest3"), userList2.getUsernames());
     }
 
@@ -544,27 +522,26 @@ public class GenericMacrosIT
         assertEquals("300px", panel1.getWidth());
         assertEquals("50%", panel1.getHeight());
         assertEquals("20px", panel1.getBorderRadius());
-        assertEquals("2px dashed " + hexToRgb("#f536f5"), panel1.getBorderStyle());
-
+        assertEquals("2px dashed " + Color.fromString("#f536f5").asRgb(), panel1.getBorderStyle());
         // Title section 1st panel.
         assertEquals("PanelTestTitle", panel1.getTitleText());
-        assertEquals(hexToRgb("#452fd4"), panel1.getTitleBackgroundColor());
-        assertEquals(hexToRgb("#74d927"), panel1.getTitleColor());
+        assertEquals(Color.fromString("#452fd4").asRgb(), panel1.getTitleBackgroundColor());
+        assertEquals(Color.fromString("#74d927").asRgb(), panel1.getTitleColor());
 
         // Content section 1st panel.
         assertEquals("Content for PanelMacroTest\nContent2 for PanelMacroTest", panel1.getContentText());
-        assertEquals(hexToRgb("#edfa34"), panel1.getContentBackgroundColor());
+        assertEquals(Color.fromString("#edfa34").asRgb(), panel1.getContentBackgroundColor());
         assertEquals("red", panel1.getContentColor());
 
         // Footer section 1st panel.
         assertEquals("PanelTestFooter", panel1.getFooterText());
-        assertEquals(hexToRgb("#ac4de8"), panel1.getFooterBackgroundColor());
-        assertEquals(hexToRgb("#6beded"), panel1.getFooterColor());
+        assertEquals(Color.fromString("#ac4de8").asRgb(), panel1.getFooterBackgroundColor());
+        assertEquals(Color.fromString("#6beded").asRgb(), panel1.getFooterColor());
 
         // Nested Panels.
 
         // Panel container 2nd panel.
-        assertEquals("solid " + hexToRgb("#f536f5"), panel2.getBorderStyle());
+        assertEquals("solid " + Color.fromString("#f536f5").asRgb(), panel2.getBorderStyle());
         assertNull(panel2.getWidth());
         assertNull(panel2.getHeight());
         assertNull(panel2.getBorderRadius());
@@ -631,9 +608,9 @@ public class GenericMacrosIT
         // Checks the StartTime property existence.
         assertTrue(mStream1.hasStartTime());
         // Checks the StartTime property.
-        assertEquals(convertStartTime("01:12:13"), mStream1.getStartTime());
+        assertEquals(LocalTime.parse("01:12:13").toSecondOfDay(), mStream1.getStartTime());
         // Checks the actual URL of the microsoftStream.
-        assertTrue(mStream1.hasCorrectURL("www.youtube.com"));
+        assertTrue(mStream1.hasCorrectURL("www.stream.com"));
 
         // Checks the 2nd MicrosoftStream macro, with left alignment, personalized dimensions and set StartTime.
         assertEquals("left", mStream2.getAlignment());
@@ -642,8 +619,8 @@ public class GenericMacrosIT
         assertFalse(mStream2.hasAutoplay());
         assertFalse(mStream2.hasShowInfo());
         assertTrue(mStream2.hasStartTime());
-        assertEquals(convertStartTime("03:12:13"), mStream2.getStartTime());
-        assertTrue(mStream2.hasCorrectURL("www.youtube.com"));
+        assertEquals(LocalTime.parse("03:12:13").toSecondOfDay(), mStream2.getStartTime());
+        assertTrue(mStream2.hasCorrectURL("https://web.microsoftstream.com"));
 
         // Checks the 2nd MicrosoftStream macro, with center alignment
         assertEquals("center", mStream3.getAlignment());
@@ -652,31 +629,6 @@ public class GenericMacrosIT
         assertFalse(mStream3.hasAutoplay());
         assertFalse(mStream3.hasShowInfo());
         assertFalse(mStream3.hasStartTime());
-        assertTrue(mStream3.hasCorrectURL("www.youtube.com"));
-    }
-
-    // Function to convert color codes from hex to rgb.
-    private String hexToRgb(String hex)
-    {
-        hex = hex.substring(1);
-        if (hex.length() == 3) {
-            hex = "" + hex.charAt(0) + hex.charAt(0) + hex.charAt(1) + hex.charAt(1) + hex.charAt(2) + hex.charAt(2);
-        }
-
-        int r = Integer.parseInt(hex.substring(0, 2), 16);
-        int g = Integer.parseInt(hex.substring(2, 4), 16);
-        int b = Integer.parseInt(hex.substring(4, 6), 16);
-
-        return String.format("rgb(%d, %d, %d)", r, g, b);
-    }
-
-    // Function to convert HH:MM:SS to seconds.
-    private int convertStartTime(String time)
-    {
-        String[] parts = time.split(":");
-        int h = Integer.parseInt(parts[0]);
-        int m = Integer.parseInt(parts[1]);
-        int s = Integer.parseInt(parts[2]);
-        return h * 3600 + m * 60 + s;
+        assertTrue(mStream3.hasCorrectURL("www.stream.com"));
     }
 }
