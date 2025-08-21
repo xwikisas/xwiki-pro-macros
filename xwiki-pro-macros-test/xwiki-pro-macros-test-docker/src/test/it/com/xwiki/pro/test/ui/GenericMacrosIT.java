@@ -41,6 +41,7 @@ import org.xwiki.test.ui.TestUtils;
 
 import com.xwiki.pro.test.po.generic.ContentReportTableMacro;
 import com.xwiki.pro.test.po.generic.ContentReportTableMacroPage;
+import com.xwiki.pro.test.po.generic.ContributorsMacroPage;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
@@ -108,6 +109,11 @@ public class GenericMacrosIT
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private static final List<String> CONF_XWIKI_MACRO_SPACE = List.of("Confluence", "Macros");
+    private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors spaces=\"NonExistingSpace\" "
+        + "noneFoundMessage=\"None found :(\"/}}"
+        +"\n";
+    private final DocumentReference pageWithContributorsMacro = new DocumentReference("xwiki", "Main",
+        "ContributorsTest");
 
     private void registerMacros()
     {
@@ -118,6 +124,7 @@ public class GenericMacrosIT
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Team");
         register.registerMacro(BASE_XWIKI_MACRO_SPACE, "Taglist");
         register.registerMacro(CONF_XWIKI_MACRO_SPACE, "RecentlyUpdated");
+        register.registerMacro(CONF_XWIKI_MACRO_SPACE, "Contributors");
         register.registerMacro(CONF_XWIKI_MACRO_SPACE, "ContentReportTableMacro");
     }
 
@@ -150,6 +157,7 @@ public class GenericMacrosIT
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
+        setup.createPage(pageWithContributorsMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
         try {
             setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
                 false);
@@ -498,6 +506,27 @@ public class GenericMacrosIT
         tagsPane2.setTags("z, x, y");
         tagsPane2.add();
     }
+
+    @Test
+    @Order(10)
+    void contributorsMacroTest(TestUtils setup)
+    {
+        setup.loginAsSuperAdmin();
+        setup.gotoPage("Main", "ContributorsTest");
+
+        ContributorsMacroPage page = new ContributorsMacroPage();
+
+        assertEquals(0, page.getContributorNameCount(0));
+        //Checks how many counts of results a macro has (showCount=true, default= false)
+
+        assertEquals(0, page.getContributorCount(0));
+
+        //Checks the personalized "None found" message
+        assertEquals("None found :(", page.getNoneFoundMessage(0));
+
+
+    }
+
 
     private void createExcerptPage(TestUtils setup)
     {

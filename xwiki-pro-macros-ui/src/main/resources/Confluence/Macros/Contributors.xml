@@ -463,7 +463,7 @@ Result:
     #set($query = $services.query.xwql("select comment.author, max(comment.date), count(distinct comment) from Document doc, doc.object('XWiki.XWikiComments') comment where doc.fullName in (:d) group by comment.author"))
     #addContributions($query, $pages)
   #end
-  #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse, $mathtool.toInteger($limit)))
+  #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse, $numbertool.toNumber($limit).intValue()))
 
 {{html clean=false}}
     &lt;div class="confluence-contributors"&gt;
