@@ -20,7 +20,9 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.openqa.selenium.By;
@@ -42,12 +44,15 @@ public class UserListMacro extends BaseElement
         this.userList = userList;
     }
 
-    public List<UserListItem> getUsers()
+    public Map<String, UserListItem> getUsers()
     {
-        return userList.findElements(By.cssSelector("tbody tr")).stream().map(UserListItem::new)
-            .collect(Collectors.toList());
+        return userList.findElements(By.cssSelector("tbody tr")).stream()
+            .map(UserListItem::new)
+            .collect(Collectors.toMap(
+                UserListItem::getUsername,
+                Function.identity()
+            ));
     }
-
     // Note: This only checks the class attribute. The actual fixed-layout functionality cannot be verified.
     public boolean hasFixedLayout()
     {
@@ -57,6 +62,8 @@ public class UserListMacro extends BaseElement
 
     public Set<String> getUsernames()
     {
-        return getUsers().stream().map(UserListItem::getUsername).collect(Collectors.toSet());
+        return getUsers().values().stream()
+            .map(UserListItem::getUsername)
+            .collect(Collectors.toSet());
     }
 }

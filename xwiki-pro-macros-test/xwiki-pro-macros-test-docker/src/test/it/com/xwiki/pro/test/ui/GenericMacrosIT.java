@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -454,19 +455,17 @@ public class GenericMacrosIT
         assertEquals(2, page.getMacroCount());
 
         // Checks the 1st userList macro, which should contain 2 users and show specific properties for each.
-        List<UserListItem> users1 = userList1.getUsers();
+        Map<String, UserListItem> users1 = userList1.getUsers();
         assertEquals(2, users1.size());
 
-        for (UserListItem u : users1) {
+        for (UserListItem u : users1.values()) {
             assertEquals(4, u.getProperties().size());
             assertEquals(List.of("avatar", "username", "phone", "email"), u.getPropertyTypes());
         }
 
-        UserListItem u1 = users1.get(0);
-        UserListItem u2 = users1.get(1);
+        UserListItem u1 = users1.get("UserTest");
+        UserListItem u2 = users1.get("UserTest2");
 
-        assertEquals("UserTest", u1.getUsername());
-        assertEquals("UserTest2", u2.getUsername());
 
         assertEquals("UserTest", u1.getAvatarTitle());
         assertEquals("UserTest2", u2.getAvatarTitle());
@@ -488,18 +487,17 @@ public class GenericMacrosIT
         assertEquals(Set.of("UserTest", "UserTest2"), userList1.getUsernames());
 
         // Checks the 2nd userList macro, which should contain 3 users and show specific properties for each.
-        List<UserListItem> users2 = userList2.getUsers();
+        Map<String, UserListItem> users2 = userList2.getUsers();
         assertEquals(3, users2.size());
         assertTrue(userList2.hasFixedLayout());
 
-        for (UserListItem u : users2) {
+        for (UserListItem u : users2.values()) {
             assertEquals(6, u.getProperties().size());
             assertEquals(List.of("avatar", "username", "phone", "email", "address", "blogfeed"), u.getPropertyTypes());
         }
 
-        UserListItem u3 = users2.get(2);
+        UserListItem u3 = users2.get("UserTest3");
 
-        assertEquals("UserTest3", u3.getUsername());
         assertEquals("usertest3@example.com", u3.getEmail());
         assertEquals("userTestAddress3", u3.getAddress());
         assertEquals("https://example.com/", u3.getBlogFeed());
