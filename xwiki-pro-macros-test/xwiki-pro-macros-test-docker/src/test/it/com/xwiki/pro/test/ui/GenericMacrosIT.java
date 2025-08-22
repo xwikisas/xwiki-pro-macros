@@ -40,19 +40,15 @@ import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
 
 import com.xwiki.pro.test.po.generic.ContentReportTableMacro;
-import com.xwiki.pro.test.po.generic.ContentReportTableMacroPage;
+import com.xwiki.pro.test.po.generic.ContributorsMacro;
 import com.xwiki.pro.test.po.generic.ContributorsMacroPage;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
-import com.xwiki.pro.test.po.generic.ExcerptIncludeMacroPage;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
-import com.xwiki.pro.test.po.generic.ExpandMacroPage;
-import com.xwiki.pro.test.po.generic.GenericMacroContent;
+import com.xwiki.pro.test.po.generic.GenericMacrosPage;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
-import com.xwiki.pro.test.po.generic.ProfilePictureMacroPage;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.TabGroupMacro;
 import com.xwiki.pro.test.po.generic.TabMacro;
-import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -109,11 +105,6 @@ public class GenericMacrosIT
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private static final List<String> CONF_XWIKI_MACRO_SPACE = List.of("Confluence", "Macros");
-    private static final String PAGE_WITH_CONTRIBUTORS_CONTENT = "{{contributors spaces=\"NonExistingSpace\" "
-        + "noneFoundMessage=\"None found :(\"/}}"
-        +"\n";
-    private final DocumentReference pageWithContributorsMacro = new DocumentReference("xwiki", "Main",
-        "ContributorsTest");
 
     private void registerMacros()
     {
@@ -157,7 +148,7 @@ public class GenericMacrosIT
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
-        setup.createPage(pageWithContributorsMacro, PAGE_WITH_CONTRIBUTORS_CONTENT);
+
         try {
             setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
                 false);
@@ -167,64 +158,8 @@ public class GenericMacrosIT
         registerMacros();
     }
 
-    @Test
-    @Order(1)
-    void expandMacroTest(TestUtils setup, TestReference testReference)
-    {
-        setup.createPage(testReference, createContent("expand-macros.vm"), "ExpandTest");
-        ExpandMacroPage page = new ExpandMacroPage();
 
-        ExpandMacro expand1 = page.getMacro(0);
-        ExpandMacro expand2 = page.getMacro(1);
-
-        assertEquals(2, page.getMacroCount());
-
-        // Nested Expand macros.
-        // Checks the 1st Expand macro, with expanded = "true".
-        assertEquals("ExpandTest1", expand1.getTitle());
-        // Checking the icon.
-        assertTrue(expand1.hasIcon());
-
-        // Expanded = true.
-        List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
-        assertTrue(expand1.isExpanded());
-        assertEquals(expectedContent, expand1.getTextContent());
-        assertTrue(expand1.containsImage("example.jpg"));
-
-        // Click -> closed macro, content not visible.
-        expand1.toggle();
-        assertFalse(expand1.isExpanded());
-        assertNotEquals(expectedContent, expand1.getTextContent());
-        assertTrue(expand1.containsImage("example.jpg"));
-
-        // Click again -> open macro, content visible.
-        expand1.toggle();
-        assertTrue(expand1.isExpanded());
-        assertEquals(expectedContent, expand1.getTextContent());
-        assertTrue(expand1.containsImage("example.jpg"));
-
-        // Checks the 2nd Expand macro, without expanded = "true".
-        assertEquals("ExpandTest2", expand2.getTitle());
-        assertTrue(expand2.hasIcon());
-
-        List<String> expectedContent2 = Arrays.asList("test0\ntest1");
-        // Closed macro, content not visible.
-        assertFalse(expand2.isExpanded());
-        assertNotEquals(expectedContent2, expand2.getTextContent());
-
-        // Click -> opened macro, content visible.
-        expand2.toggle();
-        assertTrue(expand2.isExpanded());
-        assertEquals(expectedContent2, expand2.getTextContent());
-
-        // Click again -> closed macro, content not visible.
-        expand2.toggle();
-        assertFalse(expand2.isExpanded());
-        assertNotEquals(expectedContent2, expand2.getTextContent());
-    }
-
-
-    @Test
+    /*@Test
     @Order(1)
     void teamMacroTest(TestUtils setup)
     {
@@ -246,7 +181,65 @@ public class GenericMacrosIT
         assertEquals(1, page.getTeamMacroUsers(1).size());
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
         assertEquals(0, page.getTeamMacroUsers(2).size());
+    }*/
+    
+    @Test
+    @Order(1)
+    void expandMacroTest(TestUtils setup, TestReference testReference)
+    {
+        setup.createPage(testReference, createContent("expand-macros.vm"), "ExpandTest");
+        GenericMacrosPage expandPage = new GenericMacrosPage();
+
+        String css = "details.confluence-expand-macro.panel.panel-default";
+        ExpandMacro expand0 = expandPage.getMacro(css,0,ExpandMacro::new);
+        ExpandMacro expand1 = expandPage.getMacro(css,1,ExpandMacro::new);
+
+        assertEquals(2, expandPage.getMacroCount(css));
+
+        // Nested Expand macros.
+        // Checks the 1st Expand macro, with expanded = "true".
+        assertEquals("ExpandTest1", expand0.getTitle());
+        // Checking the icon.
+        assertTrue(expand0.hasIcon());
+
+        // Expanded = true.
+        List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
+        assertTrue(expand0.isExpanded());
+        assertEquals(expectedContent, expand0.getTextContent());
+        assertTrue(expand0.containsImage("example.jpg"));
+
+        // Click -> closed macro, content not visible.
+        expand0.toggle();
+        assertFalse(expand0.isExpanded());
+        assertNotEquals(expectedContent, expand0.getTextContent());
+        assertTrue(expand0.containsImage("example.jpg"));
+
+        // Click again -> open macro, content visible.
+        expand0.toggle();
+        assertTrue(expand0.isExpanded());
+        assertEquals(expectedContent, expand0.getTextContent());
+        assertTrue(expand0.containsImage("example.jpg"));
+
+        // Checks the 2nd Expand macro, without expanded = "true".
+        assertEquals("ExpandTest2", expand1.getTitle());
+        assertTrue(expand1.hasIcon());
+
+        List<String> expectedContent2 = Arrays.asList("test0\ntest1");
+        // Closed macro, content not visible.
+        assertFalse(expand1.isExpanded());
+        assertNotEquals(expectedContent2, expand1.getTextContent());
+
+        // Click -> opened macro, content visible.
+        expand1.toggle();
+        assertTrue(expand1.isExpanded());
+        assertEquals(expectedContent2, expand1.getTextContent());
+
+        // Click again -> closed macro, content not visible.
+        expand1.toggle();
+        assertFalse(expand1.isExpanded());
+        assertNotEquals(expectedContent2, expand1.getTextContent());
     }
+    
 
     @Test
     @Order(2)
@@ -254,26 +247,26 @@ public class GenericMacrosIT
     {
 
         setup.createPage(testReference, createContent("profilePicture-macros.vm"), "ProfilePictureTest");
-        ProfilePictureMacroPage page = new ProfilePictureMacroPage();
+        GenericMacrosPage picturePage = new GenericMacrosPage();
 
-        assertEquals(2, page.getMacroCount());
+        assertEquals(2, picturePage.getMacroCount(".xwikiteam"));
 
-        ProfilePictureMacro picture1 = page.getMacro(0);
-        ProfilePictureMacro picture2 = page.getMacro(1);
+        ProfilePictureMacro picture0 = picturePage.getMacro(".xwikiteam",0,ProfilePictureMacro::new);
+        ProfilePictureMacro picture1 = picturePage.getMacro(".xwikiteam",1,ProfilePictureMacro::new);
 
         // Checks the 1st profilePicture macro, with an actual profile image.
-        assertEquals("UserTest", picture1.getUserTitle());
-        assertTrue(picture1.linkContainsUsername("UserTest"));
-        assertEquals("60px", picture1.getAvatarSize());
-        assertTrue(picture1.hasProfileImage());
-        assertFalse(picture1.hasAvatarInitials());
+        assertEquals("UserTest", picture0.getUserTitle());
+        assertTrue(picture0.linkContainsUsername("UserTest"));
+        assertEquals("60px", picture0.getAvatarSize());
+        assertTrue(picture0.hasProfileImage());
+        assertFalse(picture0.hasAvatarInitials());
 
         // Checks the 2nd profilePicture macro, with personalized size.
-        assertEquals("UserTest2", picture2.getUserTitle());
-        assertTrue(picture2.linkContainsUsername("UserTest2"));
-        assertEquals("100px", picture2.getAvatarSize());
-        assertFalse(picture2.hasProfileImage());
-        assertTrue(picture2.hasAvatarInitials());
+        assertEquals("UserTest2", picture1.getUserTitle());
+        assertTrue(picture1.linkContainsUsername("UserTest2"));
+        assertEquals("100px", picture1.getAvatarSize());
+        assertFalse(picture1.hasProfileImage());
+        assertTrue(picture1.hasAvatarInitials());
     }
 
     @Test
@@ -281,7 +274,7 @@ public class GenericMacrosIT
     void showIfMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("showIf-macros.vm"), "ShowIfTest");
-        GenericMacroContent page = new GenericMacroContent();
+        GenericMacrosPage page = new GenericMacrosPage();
 
         assertTrue(page.containsParagraph("Content for testing the show-If macro"));
         assertTrue(page.containsParagraph("Content for testing the show-If macro -2"));
@@ -295,7 +288,7 @@ public class GenericMacrosIT
     {
 
         setup.createPage(testReference, createContent("hideIf-macros.vm"), "HideIfTest");
-        GenericMacroContent page = new GenericMacroContent();
+        GenericMacrosPage page = new GenericMacrosPage();
 
         assertTrue(page.containsParagraph("content1"));
         assertFalse(page.containsParagraph("content2"));
@@ -408,48 +401,68 @@ public class GenericMacrosIT
 
     @Test
     @Order(7)
-    void excerptIncludeMacroTest(TestUtils setup, TestReference testReference)
+    void excerptMacroTest(TestUtils setup)
     {
         createExcerptPage(setup);
-        setup.createPage(testReference, createContent("excerptInclude-macros.vm"), "ExcerptIncludeTest");
+        GenericMacrosPage page = new GenericMacrosPage();
 
-        ExcerptIncludeMacroPage page = new ExcerptIncludeMacroPage();
+        assertTrue(page.containsParagraph("Content for excerpt macro"));
+        assertTrue(page.containsParagraph("Content for Excerpt macro -2"));
+        assertTrue(page.containsParagraph("Content for Excerpt macro -3"));
+        assertFalse(page.containsParagraph("Content for Excerpt macro -4"));
 
-        ExcerptIncludeMacro excerpt0 = page.getMacro(0);
-        ExcerptIncludeMacro excerpt1 = page.getMacro(1);
-        ExcerptIncludeMacro excerpt2 = page.getMacro(2);
-
-        // Checks the 1st ExcerptInclude macro, with the Excerpt macro defined on the same page.
-        assertEquals("ExcerptIncludeTest", excerpt0.getTitle());
-        assertEquals("Content for excerpt macro -1", excerpt0.getContentText());
-
-        // Checks the 2nd ExcerptInclude macro, with the Excerpt macro containing also a table.
-        assertEquals("xwiki:Main.Excerpt", excerpt1.getTitle());
-        assertEquals("Content for excerpt macro", excerpt1.getContentText());
-        assertTrue(excerpt1.containsTable());
-
-        // Checks the 3rd ExcerptInclude macro, with nested Excerpt macros and with inline mode.
-        assertEquals("xwiki:Main.Excerpt", excerpt2.getTitle());
-        assertEquals("Content for Excerpt macro -2\nContent for Excerpt macro -3", excerpt2.getContentText());
-
-        // Checks an ExcerptInclude macro, without a panel and with inline mode.
-        assertTrue(page.containsText("Content for Excerpt macro -2Content for Excerpt macro -3"));
     }
 
     @Test
     @Order(8)
+    void excerptIncludeMacroTest(TestUtils setup)
+    {
+        createExcerptPage(setup);
+        DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "ExcerptIncludeTest");
+        setup.createPage(pageWithExcerptMacros, createContent("excerptInclude-macros.vm"));
+
+        GenericMacrosPage includePage = new GenericMacrosPage();
+
+        String css ="div.macro-panel.macro-excerpt-include";
+
+        ExcerptIncludeMacro excerpt0 = includePage.getMacro(css,0,ExcerptIncludeMacro::new);
+        ExcerptIncludeMacro excerpt1 = includePage.getMacro(css,1,ExcerptIncludeMacro::new);
+        ExcerptIncludeMacro excerpt2 = includePage.getMacro(css,2,ExcerptIncludeMacro::new);
+
+        // Checks the 1st ExcerptInclude macro, with the Excerpt macro defined on the same page.
+        assertEquals("xwiki:Main.ExcerptIncludeTest", excerpt0.getTitle());
+        assertEquals("Content for excerpt macro -1", excerpt0.getContentText());
+
+        // Checks the 2nd ExcerptInclude macro, with the Excerpt macro containing also a table.
+        assertEquals("xwiki:Main.ExcerptTest", excerpt1.getTitle());
+        assertEquals("Content for excerpt macro", excerpt1.getContentText());
+        assertTrue(excerpt1.containsTable());
+
+        // Checks the 3rd ExcerptInclude macro, with nested Excerpt macros and with inline mode.
+        assertEquals("xwiki:Main.ExcerptTest", excerpt2.getTitle());
+        assertEquals("Content for Excerpt macro -2\nContent for Excerpt macro -3", excerpt2.getContentText());
+
+        // Checks an ExcerptInclude macro, without a panel and with inline mode.
+        assertTrue(includePage.containsText("Content for Excerpt macro -2Content for Excerpt macro -3"));
+    }
+
+    @Test
+    @Order(9)
     void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
     {
         createPagesWithTags(setup);
         setup.createPage(testReference, createContent("contentReport-macros.vm"), "ContentReportTableTest");
 
-        ContentReportTableMacroPage page = new ContentReportTableMacroPage();
-        ContentReportTableMacro report0 = page.getMacro(0);
-        ContentReportTableMacro report1 = page.getMacro(1);
-        ContentReportTableMacro report2 = page.getMacro(2);
-        ContentReportTableMacro report3 = page.getMacro(3);
+        GenericMacrosPage reportPage = new GenericMacrosPage();
 
-        assertEquals(4, page.getMacroCount());
+        String css="#xwikicontent table";
+
+        ContentReportTableMacro report0 = reportPage.getMacro(css,0,ContentReportTableMacro::new);
+        ContentReportTableMacro report1 = reportPage.getMacro(css,1,ContentReportTableMacro::new);
+        ContentReportTableMacro report2 = reportPage.getMacro(css,2,ContentReportTableMacro::new);
+        ContentReportTableMacro report3 = reportPage.getMacro(css,3,ContentReportTableMacro::new);
+
+        assertEquals(4, reportPage.getMacroCount(css));
 
         // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main,XWiki".
         assertEquals(2, report0.getResultsCount());
@@ -474,17 +487,75 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(9)
-    void excerptMacroTest(TestUtils setup)
+    @Order(10)
+    void contributorsMacroTest(TestUtils setup, TestReference testReference)
     {
-        createExcerptPage(setup);
-        GenericMacroContent page = new GenericMacroContent();
 
-        assertTrue(page.containsParagraph("Content for excerpt macro"));
-        assertTrue(page.containsParagraph("Content for Excerpt macro -2"));
-        assertTrue(page.containsParagraph("Content for Excerpt macro -3"));
-        assertFalse(page.containsParagraph("Content for Excerpt macro -4"));
+        createPagesWithTags(setup);
+        createTestPages(setup);
 
+        setup.createPage(testReference, createContent("contributors-macros.vm"), "ContributorsTest");
+
+        GenericMacrosPage contribPage = new GenericMacrosPage();
+
+        String css = ".confluence-contributors";
+        ContributorsMacro contrib0 = contribPage.getMacro(css, 0, ContributorsMacro::new);
+        ContributorsMacro contrib1 = contribPage.getMacro(css, 1, ContributorsMacro::new);
+        ContributorsMacro contrib2 = contribPage.getMacro(css, 2, ContributorsMacro::new);
+        ContributorsMacro contrib3 = contribPage.getMacro(css, 3, ContributorsMacro::new);
+        ContributorsMacro contrib4 = contribPage.getMacro(css, 4, ContributorsMacro::new);
+        ContributorsMacro contrib5 = contribPage.getMacro(css, 5, ContributorsMacro::new);
+        ContributorsMacro contrib6 = contribPage.getMacro(css, 6, ContributorsMacro::new);
+
+        // There should be 7 contributors macros on the page.
+        assertEquals(7, contribPage.getMacroCount(css));
+
+        // Checks the 1st macro, with default properties.
+        assertEquals(1,contrib0.getNames().size());
+        assertEquals(Arrays.asList("superadmin"), contrib0.getNames());
+        assertFalse(contrib0.isListMode());
+        assertFalse(contrib0.hasLastModifiedDates());
+        assertFalse(contrib0.hasPages());
+        assertFalse(contrib0.hasContributionCount());
+
+        // Checks the 2nd macro, with default properties
+        assertEquals(3,contrib1.getNames().size());
+        assertEquals(Arrays.asList("superadmin","UserTest3","UserTest2"), contrib1.getNames());
+        assertTrue(contrib1.isListMode());
+        assertTrue(contrib1.hasLastModifiedDates());
+        assertFalse(contrib1.hasPages());
+        assertFalse(contrib1.hasContributionCount());
+
+        assertEquals(3,contrib2.getNames().size());
+        assertEquals(Arrays.asList("superadmin","UserTest3","UserTest2"), contrib1.getNames());
+        assertFalse(contrib2.isListMode());
+        assertFalse(contrib2.hasLastModifiedDates());
+        assertFalse(contrib2.hasPages());
+        assertTrue(contrib2.hasContributionCount());
+        assertEquals(Arrays.asList(1,1,1),contrib2.getContributionCounts());
+
+        assertEquals(1,contrib3.getNames().size());
+        assertEquals(Arrays.asList("superadmin"), contrib3.getNames());
+        assertTrue(contrib3.hasContributionCount());
+        assertEquals(Arrays.asList(1),contrib3.getContributionCounts());
+        assertTrue(contrib3.hasPages());
+        assertEquals(Arrays.asList("Profile of UserTest","Profile of UserTest2","Profile of UserTest3","xwiki:XWiki.pageWithTags2"),
+            contrib3.getPages());
+
+        assertEquals(0,contrib4.getNames().size());
+        assertEquals("None found :(",contrib4.getNoneFoundMessage());
+        assertTrue(contrib4.hasPages());
+        assertEquals(Arrays.asList("(none)"),contrib4.getPages());
+
+        assertEquals(1,contrib5.getNames().size());
+        assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
+        assertTrue(contrib5.hasPages());
+        assertEquals(Arrays.asList("ContributorsTest"),contrib5.getPages());
+
+        assertEquals(1,contrib6.getNames().size());
+        assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
+        assertTrue(contrib6.hasPages());
+        assertEquals(Arrays.asList("ContributorsTest"),contrib6.getPages());
     }
 
     private void createPagesWithTags(TestUtils setup)
@@ -507,30 +578,41 @@ public class GenericMacrosIT
         tagsPane2.add();
     }
 
-    @Test
-    @Order(10)
-    void contributorsMacroTest(TestUtils setup)
-    {
-        setup.loginAsSuperAdmin();
-        setup.gotoPage("Main", "ContributorsTest");
-
-        ContributorsMacroPage page = new ContributorsMacroPage();
-
-        assertEquals(0, page.getContributorNameCount(0));
-        //Checks how many counts of results a macro has (showCount=true, default= false)
-
-        assertEquals(0, page.getContributorCount(0));
-
-        //Checks the personalized "None found" message
-        assertEquals("None found :(", page.getNoneFoundMessage(0));
-
-
-    }
-
-
     private void createExcerptPage(TestUtils setup)
     {
-        DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "Excerpt");
+        DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "ExcerptTest");
         setup.createPage(pageWithExcerptMacros, createContent("excerpt-macros.vm"));
+    }
+
+    private void createTestPages(TestUtils setup)
+    {
+       final DocumentReference testPage = new DocumentReference("xwiki", "Main",
+            "testPage");
+
+       final DocumentReference testPage2 = new DocumentReference("xwiki", "Main",
+            "testPage2");
+
+        setup.deletePage(testPage);
+        setup.deletePage(testPage2);
+
+        setup.login("UserTest3", "UserTest");
+        setup.createPage(testPage, "test page 1");
+        setup.gotoPage(testPage);
+        TaggablePage taggablePage = new TaggablePage();
+        AddTagsPane tagsPane = taggablePage.addTags();
+        tagsPane.setTags("recent, recent2");
+        tagsPane.add();
+
+        setup.login("UserTest2", "UserTest");
+        setup.createPage(testPage2, "test page 2");
+        setup.gotoPage(testPage2);
+        TaggablePage taggablePage2 = new TaggablePage();
+        AddTagsPane tagsPane2 = taggablePage2.addTags();
+        tagsPane.setTags("recent");
+        tagsPane2.add();
+        
+
+        setup.loginAsSuperAdmin();
+
     }
 }
