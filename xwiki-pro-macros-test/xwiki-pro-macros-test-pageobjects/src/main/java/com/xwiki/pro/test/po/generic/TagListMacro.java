@@ -52,19 +52,16 @@ public class TagListMacro extends BaseElement
         return titles;
     }
 
-    public List<String> getTagNames() {
-        return tagList.findElements(By.cssSelector(".glossaryBinElement"))
-            .stream()
-            .map(WebElement::getText)
+    public List<String> getTagNames()
+    {
+        return tagList.findElements(By.cssSelector(".glossaryBinElement")).stream().map(WebElement::getText)
             .collect(Collectors.toList());
     }
 
-    public boolean hasLink(String tagName) {
+    public boolean hasLink(String tagName)
+    {
         String xpath = ".//li[contains(@class, 'glossaryBinElement')]/a[text()='" + tagName + "']";
-        return tagList.findElements(By.xpath(xpath))
-            .stream()
-            .map(WebElement::getTagName)
+        return tagList.findElements(By.xpath(xpath)).stream().map(WebElement::getTagName)
             .anyMatch(tag -> tag.equals("a"));
     }
-
 }

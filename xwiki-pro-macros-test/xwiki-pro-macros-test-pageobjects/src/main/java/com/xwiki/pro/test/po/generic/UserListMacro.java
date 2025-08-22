@@ -53,7 +53,9 @@ public class UserListMacro extends BaseElement
                 Function.identity()
             ));
     }
-    // Note: This only checks the class attribute. The actual fixed-layout functionality cannot be verified.
+    /**
+     * Note: This only checks the class attribute. The actual fixed-layout functionality cannot be verified.
+     */
     public boolean hasFixedLayout()
     {
         String classAttr = userList.getAttribute("class");
