@@ -20,28 +20,32 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.xwiki.test.ui.po.ViewPage;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Represents a generic base class for pages containing lists of macros.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-public class TeamMacroPage extends ViewPage
+public class GenericMacrosPage extends ViewPage
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
-
-    public int getTeamMacrosCount() {
-        return teamMacros.size();
+    public List<WebElement> getElements(String cssSelector)
+    {
+        return getDriver().findElements(By.cssSelector(cssSelector));
     }
 
-    public List<WebElement> getTeamMacroUsers(int i) {
-        return teamMacros.get(i).findElements(By.className("xwikiteam-user"));
+    public int getMacroCount(String cssSelector)
+    {
+        return getElements(cssSelector).size();
+    }
+
+    public <T> T getMacro(String cssSelector, int index, Function<WebElement, T> constructor)
+    {
+        return constructor.apply(getElements(cssSelector).get(index));
     }
 }
