@@ -19,7 +19,6 @@
  */
 package com.xwiki.pro.test.po.generic;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -46,13 +45,10 @@ public class UserListMacro extends BaseElement
 
     public Map<String, UserListItem> getUsers()
     {
-        return userList.findElements(By.cssSelector("tbody tr")).stream()
-            .map(UserListItem::new)
-            .collect(Collectors.toMap(
-                UserListItem::getUsername,
-                Function.identity()
-            ));
+        return userList.findElements(By.cssSelector("tbody tr")).stream().map(UserListItem::new)
+            .collect(Collectors.toMap(UserListItem::getUsername, Function.identity()));
     }
+
     /**
      * Note: This only checks the class attribute. The actual fixed-layout functionality cannot be verified.
      */
@@ -64,8 +60,6 @@ public class UserListMacro extends BaseElement
 
     public Set<String> getUsernames()
     {
-        return getUsers().values().stream()
-            .map(UserListItem::getUsername)
-            .collect(Collectors.toSet());
+        return getUsers().values().stream().map(UserListItem::getUsername).collect(Collectors.toSet());
     }
 }
