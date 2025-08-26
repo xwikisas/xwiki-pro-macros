@@ -19,14 +19,14 @@
 ## ---------------------------------------------------------------------------
 {{contributors/}}
 
-{{contributors include="authors,comments" reverse="true" limit="3" mode="list"  showLastTime="true"  noneFoundMessage="None found :(" global="true" /}}
+{{contributors include="authors" reverse="true" limit="3" mode="list"  showLastTime="true"  noneFoundMessage="None found :(" global="true" /}}
 
-{{contributors include="authors,comments" limit="3" mode="inline" showCount="true" global="true"/}}
+{{contributors include="authors" limit="3" mode="inline" showCount="true" global="true"/}}
 
-{{contributors include="authors,comments" spaces="XWiki" limit="1" showCount="true" showPages="true"/}}
+{{contributors include="authors" spaces="XWiki" limit="1" showCount="true" showPages="true"/}}
 
 {{contributors  spaces="NonExistingSpace"  noneFoundMessage="None found :(" showPages="true"/}}
 
-{{contributors include="authors,comments" scope="Descendants" showCount="false" global="true" showPages="true" /}}
+{{contributors include="authors" scope="Descendants" showCount="false" global="true" showPages="true" /}}
 
 {{contributors include="authors,comments" scope="Specified" showCount="false" global="true" showPages="true"/}}

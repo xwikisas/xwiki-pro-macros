@@ -111,4 +111,36 @@ public class TabGroupMacro extends BaseElement
 
         return visibleAndActive && correctText;
     }
+
+    public String getActiveTabId()
+    {
+        WebElement activeLi = tabGroup.findElement(By.cssSelector("ul.nav-tabs li.active a"));
+        String href = activeLi.getAttribute("href");
+        return href.substring(href.indexOf('#') + 1);
+    }
+
+    public int getEffectDuration(TabMacro tab)
+    {
+        String style = tab.getCssStyle();
+        if (style != null && style.contains("transition-duration")) {
+            String value = style.replaceAll(".*transition-duration:\\s*([0-9.]+)s.*", "$1");
+
+            return Integer.parseInt(value.split("\\.")[0]);
+        }
+        return 0;
+    }
+
+    public int getFinalNextAfter(TabMacro tab)
+    {
+        String attr = tab.getNextAfter();
+
+        if (attr != null && !attr.isEmpty() && !"0".equals(attr)) {
+            return Integer.parseInt(attr);
+        }
+        String groupAttr = tabGroup.getAttribute("data-next-after");
+        if (groupAttr != null && !groupAttr.isEmpty()) {
+            return Integer.parseInt(groupAttr);
+        }
+        return 0;
+    }
 }

@@ -52,13 +52,8 @@ public class TabMacro extends BaseElement
         return tab.getAttribute("data-next-after");
     }
 
-    public String getTextContent()
+    public boolean isContentDisplayed(String expectedText)
     {
-        return tab.getText();
-    }
-
-    public boolean isDisplayed()
-    {
-        return tab.isDisplayed();
+        return tab.isDisplayed() && tab.getText().equals(expectedText);
     }
 }

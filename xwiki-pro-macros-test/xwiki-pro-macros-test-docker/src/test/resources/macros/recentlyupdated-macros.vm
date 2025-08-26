@@ -17,21 +17,21 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{recently-updated labels="recent,MainRecent" width="250px" types="page,,attachment,comment"/}}
+{{recently-updated labels="recent" width="250px" spaces="Main" types="page,attachment,comment"/}}
 
-{{recently-updated width="150" labels="recent" spaces="@global" theme="concise" max="2" types="page"/}}
+{{recently-updated width="150" labels="recent,alpha,x" spaces="@global" theme="concise" max="2" types="page"/}}
 
 {{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" types="page" /}}
 
 {{recently-updated labels="recent" showProfilePic="true" types="page"/}}
 
-{{recently-updated labels="recent" excludedLabels="recent2" theme="social" showProfilePic="false" hideHeading="true"
+{{recently-updated labels="recent" excludedLabels="recent2" showProfilePic="false" hideHeading="true"
 types="page"/}}
 
-{{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" theme="sidebar" excludedSpaces="Main" types="page"/}}
+{{recently-updated labels="alpha" spaces="@global" excludedSpaces="Main" theme="social" showProfilePic="false" types="page"/}}
 
-{{recently-updated labels="recent" currentWiki="true" types="page"/}}
+{{recently-updated labels="recent" currentWiki="true" types="page" showProfilePic="true"/}}
 
-{{recently-updated labels="recent" spaces="@global" currentWiki="true" types="page"/}}
+{{recently-updated labels="recent" spaces="@global" theme="sidebar" currentWiki="true" types="page"/}}
 
-{{recently-updated labels="recent" excludedLabels="recent2" spaces="@global" types="page" author="XWiki.UserTest"/}}
+{{recently-updated labels="recent" spaces="@global" theme="social" types="page" author="XWiki.UserTest3"/}}

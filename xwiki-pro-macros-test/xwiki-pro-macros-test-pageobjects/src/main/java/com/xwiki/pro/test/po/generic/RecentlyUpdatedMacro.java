@@ -36,20 +36,11 @@ public class RecentlyUpdatedMacro extends BaseElement
         this.macro = macro;
     }
 
-    public int getItemCount()
+    public List<String> getItemTitles()
     {
         List<WebElement> resultItems = macro.findElements(By.cssSelector(".result-item"));
-
-        List<String> matchingTitles =
-            resultItems.stream().map(item -> item.findElement(By.cssSelector(".result-title a")))
-                .map(WebElement::getText).collect(Collectors.toList());
-
-        System.out.println("Found " + matchingTitles.size() + " matching result items:");
-        for (String title : matchingTitles) {
-            System.out.println(" - " + title);
-        }
-
-        return matchingTitles.size();
+        return resultItems.stream().map(item -> item.findElement(By.cssSelector(".result-title a")).getText().trim())
+            .collect(Collectors.toList());
     }
 
     public boolean hasShowMoreButton()
@@ -80,9 +71,21 @@ public class RecentlyUpdatedMacro extends BaseElement
 
     public String getAuthorName(int resultIndex)
     {
-        List<WebElement> results = macro.findElements(By.cssSelector(".result-item"));
-        WebElement authorElement = results.get(resultIndex).findElement(By.className("result-last-author-name"));
-        return authorElement.getText().trim();
+
+        List<WebElement> results = macro.findElements(By.cssSelector(".result-item, .result-container"));
+        WebElement result = results.get(resultIndex);
+
+        List<WebElement> authors = result.findElements(By.cssSelector(".result-last-author-name a"));
+        if (!authors.isEmpty()) {
+            return authors.get(0).getText();
+        }
+
+        List<WebElement> plain = result.findElements(By.cssSelector(".result-last-author-name"));
+        if (!plain.isEmpty()) {
+            return plain.get(0).getText();
+        }
+
+        return "";
     }
 
     public String getResultsTheme()

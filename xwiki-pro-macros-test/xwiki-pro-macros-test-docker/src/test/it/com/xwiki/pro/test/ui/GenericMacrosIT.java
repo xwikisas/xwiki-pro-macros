@@ -38,17 +38,19 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.ui.TestUtils;
+import org.xwiki.test.ui.po.CommentsTab;
 
 import com.xwiki.pro.test.po.generic.ContentReportTableMacro;
 import com.xwiki.pro.test.po.generic.ContributorsMacro;
-import com.xwiki.pro.test.po.generic.ContributorsMacroPage;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
 import com.xwiki.pro.test.po.generic.GenericMacrosPage;
 import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
+import com.xwiki.pro.test.po.generic.RecentlyUpdatedMacro;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.TabGroupMacro;
 import com.xwiki.pro.test.po.generic.TabMacro;
+import com.xwiki.pro.test.po.generic.TeamMacroPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -158,8 +160,7 @@ public class GenericMacrosIT
         registerMacros();
     }
 
-
-    /*@Test
+    @Test
     @Order(1)
     void teamMacroTest(TestUtils setup)
     {
@@ -181,18 +182,18 @@ public class GenericMacrosIT
         assertEquals(1, page.getTeamMacroUsers(1).size());
         // Third team macro should display 0 users - none exist with tag "nonExistentTag".
         assertEquals(0, page.getTeamMacroUsers(2).size());
-    }*/
-    
+    }
+
     @Test
-    @Order(1)
+    @Order(2)
     void expandMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("expand-macros.vm"), "ExpandTest");
         GenericMacrosPage expandPage = new GenericMacrosPage();
 
         String css = "details.confluence-expand-macro.panel.panel-default";
-        ExpandMacro expand0 = expandPage.getMacro(css,0,ExpandMacro::new);
-        ExpandMacro expand1 = expandPage.getMacro(css,1,ExpandMacro::new);
+        ExpandMacro expand0 = expandPage.getMacro(css, 0, ExpandMacro::new);
+        ExpandMacro expand1 = expandPage.getMacro(css, 1, ExpandMacro::new);
 
         assertEquals(2, expandPage.getMacroCount(css));
 
@@ -239,10 +240,9 @@ public class GenericMacrosIT
         assertFalse(expand1.isExpanded());
         assertNotEquals(expectedContent2, expand1.getTextContent());
     }
-    
 
     @Test
-    @Order(2)
+    @Order(3)
     void profilePictureMacroTest(TestUtils setup, TestReference testReference)
     {
 
@@ -251,8 +251,8 @@ public class GenericMacrosIT
 
         assertEquals(2, picturePage.getMacroCount(".xwikiteam"));
 
-        ProfilePictureMacro picture0 = picturePage.getMacro(".xwikiteam",0,ProfilePictureMacro::new);
-        ProfilePictureMacro picture1 = picturePage.getMacro(".xwikiteam",1,ProfilePictureMacro::new);
+        ProfilePictureMacro picture0 = picturePage.getMacro(".xwikiteam", 0, ProfilePictureMacro::new);
+        ProfilePictureMacro picture1 = picturePage.getMacro(".xwikiteam", 1, ProfilePictureMacro::new);
 
         // Checks the 1st profilePicture macro, with an actual profile image.
         assertEquals("UserTest", picture0.getUserTitle());
@@ -270,7 +270,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     void showIfMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("showIf-macros.vm"), "ShowIfTest");
@@ -283,7 +283,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     void hideIfMacroTest(TestUtils setup, TestReference testReference)
     {
 
@@ -297,7 +297,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void tabMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("tab-macros.vm"), "TabTest");
@@ -310,9 +310,8 @@ public class GenericMacrosIT
         assertTrue(tab0.getCssClass().contains("tabCssClass"));
         assertTrue(tab0.getCssStyle().contains("transition-duration: 2s"));
         assertEquals("2", tab0.getNextAfter());
-        assertTrue(tab0.getTextContent().contains("tab0-content"));
         assertTrue(tab0.isActive());
-        assertTrue(tab0.isDisplayed());
+        assertTrue(tab0.isContentDisplayed("tab0-content"));
 
         // Checks the tab_1 macro, with an added CSS values.
         assertFalse(tab1.isActive());
@@ -320,17 +319,16 @@ public class GenericMacrosIT
         assertTrue(tab1.getCssStyle().contains("color: red"));
         assertTrue(tab1.getCssStyle().contains("border: 1px dashed " + Color.fromString("#ccc").asRgb()));
         assertEquals("0", tab1.getNextAfter());
-        assertTrue(tab1.getTextContent().contains("tab1-content"));
-        assertTrue(tab1.isDisplayed());
+        assertTrue(tab1.isContentDisplayed("tab1-content"));
 
         // Checks the tab_2 macro, with and added FADE effect nextAfter="3".
         assertTrue(tab2.getCssClass().contains("fade"));
         assertEquals("3", tab2.getNextAfter());
-        assertFalse(tab2.isDisplayed());
+        assertFalse(tab2.isContentDisplayed("tab2-content"));
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void tabGroupMacroTest(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, createContent("tabGroup-macros.vm"), "TabGroupTest");
@@ -397,10 +395,54 @@ public class GenericMacrosIT
         assertTrue(tabGroup3.isTabContentDisplayed("tab_9", "tab1-content"));
         tabGroup3.clickTab("tab_8");
         assertTrue(tabGroup3.isTabContentDisplayed("tab_8", "tab0-content"));
+
+        // Waits until tab_6 is active.
+        setup.getDriver().waitUntilCondition(driver -> "tab_6".equals(tabGroup2.getActiveTabId()));
+        assertTrue(tabGroup2.isTabContentDisplayed("tab_6", "tab0-content"));
+
+        // Waits for 1 second until tab_7 is active.
+        setup.getDriver().waitUntilCondition(driver -> "tab_7".equals(tabGroup2.getActiveTabId()), 1000);
+        assertTrue(tabGroup2.isTabContentDisplayed("tab_7", "tab1-content"));
+
+        // Waits until tab_6 is active again (loopCards="true").
+        setup.getDriver().waitUntilCondition(driver -> "tab_6".equals(tabGroup2.getActiveTabId()), 1000);
+        assertTrue(tabGroup2.isTabContentDisplayed("tab_6", "tab0-content"));
+
+        TabMacro tab3 = new TabMacro("tab_3");
+        TabMacro tab4 = new TabMacro("tab_4");
+        TabMacro tab5 = new TabMacro("tab_5");
+
+        // Waits until tab_5 is active, it's the set default tab.
+        setup.getDriver().waitUntilCondition(driver -> "tab_5".equals(tabGroup1.getActiveTabId()));
+
+        // Waits until the content is active, added "+100" for safety.
+        setup.getDriver().waitUntilCondition(driver -> tab5.isContentDisplayed("tab2-content"),
+            (tabGroup1.getEffectDuration(tab5) * 1000)+100);
+
+        // Waits until tab_3 is active.
+        setup.getDriver().waitUntilCondition(driver -> "tab_3".equals(tabGroup1.getActiveTabId()),
+            (tabGroup1.getFinalNextAfter(tab5) * 1000));
+
+        setup.getDriver().waitUntilCondition(driver -> tab3.isContentDisplayed("tab0-content"),
+            (tabGroup1.getEffectDuration(tab3) * 1000));
+
+        // Waits until tab_4 is active.
+        setup.getDriver().waitUntilCondition(driver -> "tab_4".equals(tabGroup1.getActiveTabId()),
+            (tabGroup1.getFinalNextAfter(tab3) * 1000));
+
+        setup.getDriver().waitUntilCondition(driver -> tab4.isContentDisplayed("tab1-content"),
+            (tabGroup1.getEffectDuration(tab4) * 1000));
+
+        // Waits until tab_5 is active again (loopCards="true").
+        setup.getDriver().waitUntilCondition(driver -> "tab_5".equals(tabGroup1.getActiveTabId()),
+            (tabGroup1.getFinalNextAfter(tab4) * 1000));
+
+        setup.getDriver().waitUntilCondition(driver -> tab5.isContentDisplayed("tab2-content"),
+            (tabGroup1.getEffectDuration(tab5) * 1000) + 100);
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void excerptMacroTest(TestUtils setup)
     {
         createExcerptPage(setup);
@@ -410,11 +452,10 @@ public class GenericMacrosIT
         assertTrue(page.containsParagraph("Content for Excerpt macro -2"));
         assertTrue(page.containsParagraph("Content for Excerpt macro -3"));
         assertFalse(page.containsParagraph("Content for Excerpt macro -4"));
-
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void excerptIncludeMacroTest(TestUtils setup)
     {
         createExcerptPage(setup);
@@ -423,11 +464,11 @@ public class GenericMacrosIT
 
         GenericMacrosPage includePage = new GenericMacrosPage();
 
-        String css ="div.macro-panel.macro-excerpt-include";
+        String css = "div.macro-panel.macro-excerpt-include";
 
-        ExcerptIncludeMacro excerpt0 = includePage.getMacro(css,0,ExcerptIncludeMacro::new);
-        ExcerptIncludeMacro excerpt1 = includePage.getMacro(css,1,ExcerptIncludeMacro::new);
-        ExcerptIncludeMacro excerpt2 = includePage.getMacro(css,2,ExcerptIncludeMacro::new);
+        ExcerptIncludeMacro excerpt0 = includePage.getMacro(css, 0, ExcerptIncludeMacro::new);
+        ExcerptIncludeMacro excerpt1 = includePage.getMacro(css, 1, ExcerptIncludeMacro::new);
+        ExcerptIncludeMacro excerpt2 = includePage.getMacro(css, 2, ExcerptIncludeMacro::new);
 
         // Checks the 1st ExcerptInclude macro, with the Excerpt macro defined on the same page.
         assertEquals("xwiki:Main.ExcerptIncludeTest", excerpt0.getTitle());
@@ -447,7 +488,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
     {
         createPagesWithTags(setup);
@@ -455,22 +496,22 @@ public class GenericMacrosIT
 
         GenericMacrosPage reportPage = new GenericMacrosPage();
 
-        String css="#xwikicontent table";
+        String css = "#xwikicontent table";
 
-        ContentReportTableMacro report0 = reportPage.getMacro(css,0,ContentReportTableMacro::new);
-        ContentReportTableMacro report1 = reportPage.getMacro(css,1,ContentReportTableMacro::new);
-        ContentReportTableMacro report2 = reportPage.getMacro(css,2,ContentReportTableMacro::new);
-        ContentReportTableMacro report3 = reportPage.getMacro(css,3,ContentReportTableMacro::new);
+        ContentReportTableMacro report0 = reportPage.getMacro(css, 0, ContentReportTableMacro::new);
+        ContentReportTableMacro report1 = reportPage.getMacro(css, 1, ContentReportTableMacro::new);
+        ContentReportTableMacro report2 = reportPage.getMacro(css, 2, ContentReportTableMacro::new);
+        ContentReportTableMacro report3 = reportPage.getMacro(css, 3, ContentReportTableMacro::new);
 
         assertEquals(4, reportPage.getMacroCount(css));
 
-        // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main,XWiki".
+        // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main, XWiki".
         assertEquals(2, report0.getResultsCount());
         assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), report0.getTitles());
         assertEquals(Arrays.asList("superadmin", "superadmin"), report0.getCreators());
         assertEquals(2, report0.getModifiedDateCount());
 
-        // Checks the 2nd content-report-table macro, with the tags "alpha,x", the spaces "Main,XWiki" and max = 1.
+        // Checks the 2nd content-report-table macro, with the tags "alpha,x", the spaces "Main, XWiki" and max = 1.
         assertEquals(1, report1.getResultsCount());
         assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"), report1.getTitles());
         assertEquals(Arrays.asList("superadmin"), report1.getCreators());
@@ -487,7 +528,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     void contributorsMacroTest(TestUtils setup, TestReference testReference)
     {
 
@@ -495,6 +536,8 @@ public class GenericMacrosIT
         createTestPages(setup);
 
         setup.createPage(testReference, createContent("contributors-macros.vm"), "ContributorsTest");
+        CommentsTab commentsTab = setup.gotoPage(testReference).openCommentsDocExtraPane();
+        commentsTab.postComment("test comment", true);
 
         GenericMacrosPage contribPage = new GenericMacrosPage();
 
@@ -511,7 +554,7 @@ public class GenericMacrosIT
         assertEquals(7, contribPage.getMacroCount(css));
 
         // Checks the 1st macro, with default properties.
-        assertEquals(1,contrib0.getNames().size());
+        assertEquals(1, contrib0.getNames().size());
         assertEquals(Arrays.asList("superadmin"), contrib0.getNames());
         assertFalse(contrib0.isListMode());
         assertFalse(contrib0.hasLastModifiedDates());
@@ -519,43 +562,116 @@ public class GenericMacrosIT
         assertFalse(contrib0.hasContributionCount());
 
         // Checks the 2nd macro, with default properties
-        assertEquals(3,contrib1.getNames().size());
-        assertEquals(Arrays.asList("superadmin","UserTest3","UserTest2"), contrib1.getNames());
+        assertEquals(3, contrib1.getNames().size());
+        assertEquals(Arrays.asList("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
         assertTrue(contrib1.isListMode());
         assertTrue(contrib1.hasLastModifiedDates());
         assertFalse(contrib1.hasPages());
         assertFalse(contrib1.hasContributionCount());
 
-        assertEquals(3,contrib2.getNames().size());
-        assertEquals(Arrays.asList("superadmin","UserTest3","UserTest2"), contrib1.getNames());
+        assertEquals(3, contrib2.getNames().size());
+        assertEquals(Arrays.asList("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
         assertFalse(contrib2.isListMode());
         assertFalse(contrib2.hasLastModifiedDates());
         assertFalse(contrib2.hasPages());
         assertTrue(contrib2.hasContributionCount());
-        assertEquals(Arrays.asList(1,1,1),contrib2.getContributionCounts());
+        assertEquals(Arrays.asList(1, 1, 1), contrib2.getContributionCounts());
 
-        assertEquals(1,contrib3.getNames().size());
+        assertEquals(1, contrib3.getNames().size());
         assertEquals(Arrays.asList("superadmin"), contrib3.getNames());
         assertTrue(contrib3.hasContributionCount());
-        assertEquals(Arrays.asList(1),contrib3.getContributionCounts());
+        assertEquals(Arrays.asList(1), contrib3.getContributionCounts());
         assertTrue(contrib3.hasPages());
-        assertEquals(Arrays.asList("Profile of UserTest","Profile of UserTest2","Profile of UserTest3","xwiki:XWiki.pageWithTags2"),
-            contrib3.getPages());
+        assertEquals(Arrays.asList("Profile of UserTest", "Profile of UserTest2", "Profile of UserTest3",
+            "xwiki:XWiki.pageWithTags2"), contrib3.getPages());
 
-        assertEquals(0,contrib4.getNames().size());
-        assertEquals("None found :(",contrib4.getNoneFoundMessage());
+        assertEquals(0, contrib4.getNames().size());
+        assertEquals("None found :(", contrib4.getNoneFoundMessage());
         assertTrue(contrib4.hasPages());
-        assertEquals(Arrays.asList("(none)"),contrib4.getPages());
+        assertEquals(Arrays.asList("(none)"), contrib4.getPages());
 
-        assertEquals(1,contrib5.getNames().size());
+        assertEquals(1, contrib5.getNames().size());
         assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
         assertTrue(contrib5.hasPages());
-        assertEquals(Arrays.asList("ContributorsTest"),contrib5.getPages());
+        assertEquals(Arrays.asList("ContributorsTest"), contrib5.getPages());
 
-        assertEquals(1,contrib6.getNames().size());
+        assertEquals(1, contrib6.getNames().size());
         assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
         assertTrue(contrib6.hasPages());
-        assertEquals(Arrays.asList("ContributorsTest"),contrib6.getPages());
+        assertEquals(Arrays.asList("ContributorsTest"), contrib6.getPages());
+    }
+
+    @Test
+    @Order(12)
+    void recentlyUpdatedMacroTest(TestUtils setup, TestReference testReference)
+    {
+        createPagesWithTags(setup);
+        createTestPages(setup);
+
+        setup.createPage(testReference, createContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
+
+        GenericMacrosPage recentlyPage = new GenericMacrosPage();
+
+        String css = ".recently-updated-macro";
+        RecentlyUpdatedMacro recent0 = recentlyPage.getMacro(css, 0, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent1 = recentlyPage.getMacro(css, 1, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent2 = recentlyPage.getMacro(css, 2, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent3 = recentlyPage.getMacro(css, 3, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent4 = recentlyPage.getMacro(css, 4, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent5 = recentlyPage.getMacro(css, 5, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent6 = recentlyPage.getMacro(css, 6, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent7 = recentlyPage.getMacro(css, 7, RecentlyUpdatedMacro::new);
+        RecentlyUpdatedMacro recent8 = recentlyPage.getMacro(css, 8, RecentlyUpdatedMacro::new);
+
+        assertEquals(4, recent0.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2", "image1.png", "xwiki:Main.testPage2", "xwiki:Main.testPage"),
+            recent0.getItemTitles());
+        assertEquals("concise", recent0.getResultsTheme());
+        assertTrue(recent0.themeStructureIsCorrect("concise"));
+        assertEquals("250px", recent0.getMacroWidth());
+
+        assertEquals(2, recent1.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent1.getItemTitles());
+        assertTrue(recent1.hasShowMoreButton());
+        recent1.clickShowMore();
+        assertEquals(4, recent1.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage", "xwiki:XWiki.pageWithTags2",
+            "xwiki" + ":Main.pageWithTags"), recent1.getItemTitles());
+        assertEquals("concise", recent1.getResultsTheme());
+        assertTrue(recent1.themeStructureIsCorrect("concise"));
+        assertEquals("150", recent1.getMacroWidth());
+
+        assertEquals(1, recent2.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2"), recent2.getItemTitles());
+        assertEquals("100", recent2.getMacroWidth());
+
+        assertEquals(0, recent3.getItemTitles().size());
+
+        assertEquals(0, recent4.getItemTitles().size());
+        assertFalse(recent4.hasHeading());
+
+        assertEquals(1, recent5.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.pageWithTags"), recent5.getItemTitles());
+        assertEquals("social", recent5.getResultsTheme());
+        assertTrue(recent5.themeStructureIsCorrect("social"));
+        assertEquals("superadmin", recent5.getAuthorName(0));
+        assertFalse(recent5.hasAvatars());
+
+        assertEquals(2, recent6.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent6.getItemTitles());
+        assertTrue(recent6.hasAvatars());
+
+        assertEquals(2, recent7.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent7.getItemTitles());
+        assertEquals("sidebar", recent7.getResultsTheme());
+        assertTrue(recent7.themeStructureIsCorrect("sidebar"));
+
+        assertEquals(1, recent8.getItemTitles().size());
+        assertEquals(Arrays.asList("xwiki:Main.testPage"), recent8.getItemTitles());
+        assertEquals("social", recent8.getResultsTheme());
+        assertTrue(recent8.themeStructureIsCorrect("social"));
+        assertEquals("UserTest3", recent8.getAuthorName(0));
+        assertTrue(recent8.hasAvatars());
     }
 
     private void createPagesWithTags(TestUtils setup)
@@ -586,11 +702,9 @@ public class GenericMacrosIT
 
     private void createTestPages(TestUtils setup)
     {
-       final DocumentReference testPage = new DocumentReference("xwiki", "Main",
-            "testPage");
+        final DocumentReference testPage = new DocumentReference("xwiki", "Main", "testPage");
 
-       final DocumentReference testPage2 = new DocumentReference("xwiki", "Main",
-            "testPage2");
+        final DocumentReference testPage2 = new DocumentReference("xwiki", "Main", "testPage2");
 
         setup.deletePage(testPage);
         setup.deletePage(testPage2);
@@ -610,9 +724,15 @@ public class GenericMacrosIT
         AddTagsPane tagsPane2 = taggablePage2.addTags();
         tagsPane.setTags("recent");
         tagsPane2.add();
-        
+        CommentsTab commentsTab = setup.gotoPage("Main", "testPage2").openCommentsDocExtraPane();
+        commentsTab.postComment("test comment", true);
+        try {
+            setup.attachFile("Main", "testPage2", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
+                false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         setup.loginAsSuperAdmin();
-
     }
 }
