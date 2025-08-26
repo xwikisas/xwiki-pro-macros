@@ -234,21 +234,23 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     };
 
-    const pageObserver = new MutationObserver(function(mutationsList, observer) {
+    const checkModalAttachment = function(observer) {
       const selectElement = $('select[name="page"]');
       if (selectElement.length) {
         const modal = selectElement.closest(".macro-editor-modal")[0];
-        if (modal.style.display !== 'none') {
+        if (modal &amp;&amp; modal.style.display !== 'none') {
           observer.disconnect();
           styleObserver.observe(modal, { attributes: true, attributeFilter: ['style'] });
           $(selectElement).change(function() {
-            initializeAttachments($(this))
+            initializeAttachments($(this));
           });
-          initializeAttachments(selectElement)
+          initializeAttachments(selectElement);
         }
       }
-    });
+    };
 
+    const pageObserver = new MutationObserver(checkModalAttachment);
+    checkModalAttachment(pageObserver);
     pageObserver.observe(document.body, { childList: true, subtree: true });
 
     const getFileExtension = function(fileName) {
