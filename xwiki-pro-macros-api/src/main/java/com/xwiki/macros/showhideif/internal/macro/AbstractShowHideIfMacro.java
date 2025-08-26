@@ -182,6 +182,10 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
      */
     protected Optional<Block> maybeGetUnsupportedParameterErrorBlock(MacroTransformationContext context)
     {
+        // skip the parameters matching the name of the preserved unhandled parameters, to allow some parameters
+        // to be kept as unhandled. This is hardcoded because there is no way to know this dynamically outside the
+        // migration, so we only whitelist this prefix, as it's the most commonly used.
+        String unhandledParametersPrefix = "confluence_";
         List<String> parametersWhiteList = List.of("atlassian-macro-output-type");
         Map<String, String> allParameters = context.getCurrentMacroBlock().getParameters();
         Set<String> parameterNames = allParameters.keySet();
@@ -190,7 +194,8 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
             beanDescriptor.getProperties().stream().map(PropertyDescriptor::getId).collect(Collectors.toList());
         List<String> unsupportedParameters = new LinkedList<>();
         for (String parameterName : parameterNames) {
-            if (!beanPropertiesIds.contains(parameterName) && !parametersWhiteList.contains(parameterName)) {
+            if (!beanPropertiesIds.contains(parameterName) && !parametersWhiteList.contains(parameterName)
+                && !parameterName.startsWith(unhandledParametersPrefix)) {
                 unsupportedParameters.add(parameterName);
             }
         }
@@ -200,8 +205,9 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
                     // TODO XWikiSyntaxEscaper instead of RenderingScriptService
                     // after upgrading the parent of the app to >= 14.10.6
                     ((RenderingScriptService) renderingScriptService).escape(
-                        "Unsupported parameter for macro: " + String.join(", ", unsupportedParameters),
-                        context.getSyntax()) + " Due of this, the macro might have some unexpected results.", false));
+                        "Unsupported parameter(s) for macro " + context.getCurrentMacroBlock().getId() + ": "
+                        + String.join(", ", unsupportedParameters) + ".", context.getSyntax()) 
+                        + " Due to this, the macro might have unexpected results.", false));
         }
         return Optional.empty();
     }
