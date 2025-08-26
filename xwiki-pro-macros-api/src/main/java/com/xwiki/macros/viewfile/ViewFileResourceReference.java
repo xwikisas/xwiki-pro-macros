@@ -19,6 +19,17 @@
  */
 package com.xwiki.macros.viewfile;
 
+import org.xwiki.stability.Unstable;
+
+
+/**
+ * This class is needed to declare a valid {@link org.xwiki.properties.annotation.PropertyDisplayType} in the macros
+ * that need an attachment picker.
+ *
+ * @version $Id$
+ * @since 1.27.5
+ */
+@Unstable
 public interface ViewFileResourceReference
 {
 }
