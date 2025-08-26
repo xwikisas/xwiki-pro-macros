@@ -23,8 +23,8 @@ import org.xwiki.stability.Unstable;
 
 
 /**
- * This class is needed to declare a valid {@link org.xwiki.properties.annotation.PropertyDisplayType} in the macros
- * that need an attachment picker.
+ * This class is needed to declare a valid {@link org.xwiki.properties.annotation.PropertyDisplayType} to be able to
+ * call the JavaScript needed to populate the View files macro fields with the attachment picker.
  *
  * @version $Id$
  * @since 1.27.5
