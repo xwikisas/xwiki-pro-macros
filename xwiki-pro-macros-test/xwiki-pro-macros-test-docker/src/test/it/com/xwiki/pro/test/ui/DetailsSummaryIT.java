@@ -33,7 +33,10 @@ import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.UITest;
+import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
 import org.xwiki.test.ui.TestUtils;
+import org.xwiki.test.ui.po.ViewPage;
+import org.xwiki.test.ui.po.editor.WikiEditPage;
 
 import com.xwiki.pro.test.po.confluence.detailssummary.DetailsSummaryMacroViewPage;
 import com.xwiki.pro.test.po.utils.SolrTestUtils;
@@ -48,6 +51,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.27.2
  */
 @UITest(
+    servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
+    // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
+    // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
+    // host machine.
+    ServletEngine.JETTY_STANDALONE },
     properties = {
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin",
     },
@@ -70,7 +78,11 @@ public class DetailsSummaryIT
     void createPage(TestUtils setup, String tag, String pageName, String content)
     {
         DocumentReference documentReference = new DocumentReference("xwiki", "detailsSummary", pageName);
-        setup.createPage(documentReference, content);
+        // The content can be too big
+        ViewPage viewPage = setup.createPage(documentReference, "");
+        WikiEditPage wikiEditPage = viewPage.editWiki();
+        wikiEditPage.setContent(content);
+        wikiEditPage.clickSaveAndView();
         if (!tag.isEmpty()) {
             TaggablePage taggablePage = new TaggablePage();
             AddTagsPane tagsPane = taggablePage.addTags();
@@ -83,6 +95,7 @@ public class DetailsSummaryIT
     @Order(1)
     void detailsSummaryWithMultipleDetailsMacros(TestUtils setup) throws Exception
     {
+
         String detailsMacroContent = readTestResourceFile("details/multipleMacrosOnTheSamePage");
         createPage(setup, "test1", "details_with_multiple_calls", detailsMacroContent);
         // Wait for the solr indexing
@@ -92,7 +105,8 @@ public class DetailsSummaryIT
             buildMacroCall(Collections.singletonMap("cql", "\"space = " + "currentSpace ( )\""));
         createPage(setup, "", "detailsSummary", detailsSummaryCall);
         DetailsSummaryMacroViewPage detailsSummaryMacroViewPage = new DetailsSummaryMacroViewPage();
-        assertEquals(10, detailsSummaryMacroViewPage.entriesCount());
+        assertEquals(1, detailsSummaryMacroViewPage.entriesCount());
+        assertEquals(3, detailsSummaryMacroViewPage.columnCount());
     }
 
     private String buildMacroCall(Map<String, String> parameters)

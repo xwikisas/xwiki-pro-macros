@@ -17,43 +17,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.test.ui;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.xwiki.test.docker.junit5.UITest;
-import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
+package com.xwiki.macros.viewfile.macro;
 
 /**
- * All UI tests for the Pro Macros application.
+ * Enum for the display propert of {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.27
  */
-@UITest(
-    // The servlet needs to be explicitly specified in AllIT too because otherwise ServletEngine#JETTY_STANDALONE is
-    // used, leading to a configurations merge conflict.
-    servletEngine = ServletEngine.TOMCAT
-)
-class AllITs
+public enum ViewFileDisplay
 {
-    @Nested
-    @DisplayName("Tests for the generic Pro Macros.")
-    class NestedGenericMacrosIT extends GenericMacrosIT
+    /**
+     * Thumbnail.
+     */
+    thumbnail,
+
+    /**
+     * Button.
+     */
+    button,
+
+    /**
+     * Full.
+     */
+    full;
+
+    /**
+     * @param name the name of a display type.
+     * @return the display type corresponding to the name, or {@code null}.
+     */
+    public static ViewFileDisplay forName(String name)
     {
+        for (ViewFileDisplay type : values()) {
+            if (name.equalsIgnoreCase(type.toString())) {
+                return type;
+            }
+        }
+
+        return null;
     }
-
-    @Nested
-    @DisplayName("Tests for the ViewFile Macro")
-    class NestedViewFileIT extends ViewFileIT {
-
-    }
-
-    @Nested
-    @DisplayName("Tests for the DetailsSummary Macro")
-    class NestedDetailsSummaryIT extends DetailsSummaryIT
-    {
-    }
-
-
 }
