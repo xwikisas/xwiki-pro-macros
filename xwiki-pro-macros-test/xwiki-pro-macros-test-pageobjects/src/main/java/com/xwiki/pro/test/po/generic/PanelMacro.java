@@ -41,37 +41,6 @@ public class PanelMacro extends BaseElement
         this.panelBorder = panelBorder;
     }
 
-    private WebElement getTitleElement()
-    {
-        return panel.findElement(By.cssSelector(".macro-panel-title"));
-    }
-
-    private WebElement getContentElement()
-    {
-        return panel.findElement(By.cssSelector(".macro-panel-content"));
-    }
-
-    private WebElement getFooterElement()
-    {
-        return panel.findElement(By.cssSelector(".macro-panel-footer"));
-    }
-
-    private String getStyleAttribute(WebElement element, String attr)
-    {
-        String style = element.getAttribute("style");
-        if (style == null) {
-            return null;
-        }
-
-        for (String part : style.split(";")) {
-            String[] keyValue = part.split(":");
-            if (keyValue.length == 2 && keyValue[0].trim().equals(attr)) {
-                return keyValue[1].trim();
-            }
-        }
-        return null;
-    }
-
     // Container attributes.
     public String getWidth()
     {
@@ -144,5 +113,36 @@ public class PanelMacro extends BaseElement
     public String getCssClass()
     {
         return panel.getAttribute("class");
+    }
+
+    private WebElement getTitleElement()
+    {
+        return panel.findElement(By.cssSelector(".macro-panel-title"));
+    }
+
+    private WebElement getContentElement()
+    {
+        return panel.findElement(By.cssSelector(".macro-panel-content"));
+    }
+
+    private WebElement getFooterElement()
+    {
+        return panel.findElement(By.cssSelector(".macro-panel-footer"));
+    }
+
+    private String getStyleAttribute(WebElement element, String attr)
+    {
+        String style = element.getAttribute("style");
+        if (style == null) {
+            return null;
+        }
+
+        for (String part : style.split(";")) {
+            String[] keyValue = part.split(":");
+            if (keyValue[0].trim().equals(attr)) {
+                return keyValue[1].trim();
+            }
+        }
+        return null;
     }
 }
