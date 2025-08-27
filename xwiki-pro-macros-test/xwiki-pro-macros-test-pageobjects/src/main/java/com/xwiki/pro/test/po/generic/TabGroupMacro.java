@@ -26,6 +26,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Tab Group macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class TabGroupMacro extends BaseElement
 {
     private WebElement tabGroup;
@@ -59,7 +65,7 @@ public class TabGroupMacro extends BaseElement
         return tabList.equals(firstChild);
     }
 
-    public String getTabLocation()
+    public String getLocation()
     {
         String classes = tabGroup.getAttribute("class");
         if (classes.contains("tabs-below")) {
@@ -102,16 +108,6 @@ public class TabGroupMacro extends BaseElement
         return "true".equalsIgnoreCase(tabGroup.getAttribute("data-loop-cards"));
     }
 
-    public boolean isTabContentDisplayed(String tabId, String expectedText)
-    {
-        WebElement tab = tabGroup.findElement(By.cssSelector(".tab-pane#" + tabId));
-
-        boolean visibleAndActive = tab.isDisplayed() && tab.getAttribute("class").contains("active");
-        boolean correctText = tab.getText().equals(expectedText);
-
-        return visibleAndActive && correctText;
-    }
-
     public String getActiveTabId()
     {
         WebElement activeLi = tabGroup.findElement(By.cssSelector("ul.nav-tabs li.active a"));
@@ -119,28 +115,31 @@ public class TabGroupMacro extends BaseElement
         return href.substring(href.indexOf('#') + 1);
     }
 
-    public int getEffectDuration(TabMacro tab)
+    public int getEffectDuration()
     {
-        String style = tab.getCssStyle();
+        String style = tabGroup.getAttribute("style");
         if (style != null && style.contains("transition-duration")) {
             String value = style.replaceAll(".*transition-duration:\\s*([0-9.]+)s.*", "$1");
-
             return Integer.parseInt(value.split("\\.")[0]);
         }
         return 0;
     }
 
+    public int getFinalEffectDuration(TabMacro tab)
+    {
+        int tabDuration = tab.getEffectDuration();
+        if (tabDuration > 0) {
+            return tabDuration;
+        }
+        return getEffectDuration();
+    }
+
     public int getFinalNextAfter(TabMacro tab)
     {
-        String attr = tab.getNextAfter();
-
-        if (attr != null && !attr.isEmpty() && !"0".equals(attr)) {
-            return Integer.parseInt(attr);
+        int tabNext = tab.getNextAfter();
+        if (tabNext > 0) {
+            return tabNext;
         }
-        String groupAttr = tabGroup.getAttribute("data-next-after");
-        if (groupAttr != null && !groupAttr.isEmpty()) {
-            return Integer.parseInt(groupAttr);
-        }
-        return 0;
+        return getNextAfter();
     }
 }

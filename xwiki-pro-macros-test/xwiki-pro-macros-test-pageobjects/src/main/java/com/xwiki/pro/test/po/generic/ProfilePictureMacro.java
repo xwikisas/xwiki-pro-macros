@@ -23,6 +23,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Profile Picture macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class ProfilePictureMacro extends BaseElement
 {
     private final WebElement profilePicture;

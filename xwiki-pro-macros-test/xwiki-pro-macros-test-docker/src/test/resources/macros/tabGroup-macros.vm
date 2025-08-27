@@ -41,7 +41,7 @@ tab2-content
 {{/tab-group}}
 
 
-{{tab-group effectType="FADE" id="tabGroup_1" tabLocation="BOTTOM" height="100" loopCards="true" width="100"
+{{tab-group effectType="FADE" id="tabGroup_1" effectDuration="2" tabLocation="BOTTOM" height="100" loopCards="true" width="100"
 nextAfter="5"}}
 
 {{tab label="tab0" cssClass="tabCssClass" effectDuration="2" id="tab_3" nextAfter="2" }}

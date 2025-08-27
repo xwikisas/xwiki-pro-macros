@@ -29,6 +29,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Contributors macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class ContributorsMacro extends BaseElement
 {
     private final WebElement macro;
@@ -37,7 +43,6 @@ public class ContributorsMacro extends BaseElement
     {
         this.macro = macro;
     }
-
 
     public List<String> getNames()
     {
@@ -76,10 +81,8 @@ public class ContributorsMacro extends BaseElement
 
     public List<Integer> getContributionCounts()
     {
-        return macro.findElements(By.cssSelector(".contributor-contribution-count"))
-            .stream()
-            .map(el -> Integer.parseInt(el.getText()))
-            .collect(Collectors.toList());
+        return macro.findElements(By.cssSelector(".contributor-contribution-count")).stream()
+            .map(el -> Integer.parseInt(el.getText())).collect(Collectors.toList());
     }
 
     public boolean hasLastModifiedDates()
@@ -87,14 +90,11 @@ public class ContributorsMacro extends BaseElement
         return !macro.findElements(By.cssSelector(".contributor-last-contribution-date")).isEmpty();
     }
 
-    public String getNoneFoundMessage() {
-        return macro.findElements(By.tagName("p")).stream()
-            .map(WebElement::getText)
-            .filter(text -> !text.startsWith("Pages:"))
-            .findFirst()
-            .orElse("");
+    public String getNoneFoundMessage()
+    {
+        return macro.findElements(By.tagName("p")).stream().map(WebElement::getText)
+            .filter(text -> !text.startsWith("Pages:")).findFirst().orElse("");
     }
-
 
     public boolean hasPages()
     {
@@ -106,15 +106,15 @@ public class ContributorsMacro extends BaseElement
         return !getContributionCounts().isEmpty();
     }
 
-    public List<String> getPages() {
+    public List<String> getPages()
+    {
         if (!hasPages()) {
             return Collections.emptyList();
         }
 
-        WebElement paragraph = macro.findElements(By.tagName("p")).stream()
-            .filter(p -> p.getText().startsWith("Pages:"))
-            .findFirst()
-            .orElse(null);
+        WebElement paragraph =
+            macro.findElements(By.tagName("p")).stream().filter(p -> p.getText().startsWith("Pages:")).findFirst()
+                .orElse(null);
 
         if (paragraph == null) {
             return Collections.emptyList();

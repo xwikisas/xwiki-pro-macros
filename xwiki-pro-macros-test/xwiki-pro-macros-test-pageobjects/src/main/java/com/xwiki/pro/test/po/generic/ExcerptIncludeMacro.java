@@ -23,6 +23,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents an Excerpt Include macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class ExcerptIncludeMacro extends BaseElement
 {
     private final WebElement excerpt;

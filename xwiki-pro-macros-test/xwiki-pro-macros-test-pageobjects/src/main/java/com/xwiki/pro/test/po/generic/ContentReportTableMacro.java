@@ -26,6 +26,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Content Report Table macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class ContentReportTableMacro extends BaseElement
 {
     private final WebElement report;
@@ -35,35 +41,27 @@ public class ContentReportTableMacro extends BaseElement
         this.report = report;
     }
 
-    public int getResultsCount() {
+    public int getResultsCount()
+    {
         List<WebElement> rows = report.findElements(By.cssSelector("tbody tr"));
-        return (int) rows.stream()
-            .filter(r -> !r.findElements(By.tagName("td")).isEmpty())
-            .count();
+        return (int) rows.stream().filter(r -> !r.findElements(By.tagName("td")).isEmpty()).count();
     }
 
-
-    public List<String> getTitles() {
-        return report.findElements(By.cssSelector("tbody tr td:nth-child(1) a"))
-            .stream()
-            .map(WebElement::getText)
+    public List<String> getTitles()
+    {
+        return report.findElements(By.cssSelector("tbody tr td:nth-child(1) a")).stream().map(WebElement::getText)
             .collect(Collectors.toList());
     }
 
-    public List<String> getCreators() {
-        return report.findElements(By.cssSelector("tbody tr td:nth-child(2)"))
-            .stream()
-            .map(WebElement::getText)
+    public List<String> getCreators()
+    {
+        return report.findElements(By.cssSelector("tbody tr td:nth-child(2)")).stream().map(WebElement::getText)
             .collect(Collectors.toList());
     }
 
-    public int getModifiedDateCount() {
-        return (int) report.findElements(By.cssSelector("tbody tr td:nth-child(3)"))
-            .stream()
-            .map(WebElement::getText)
-            .filter(s -> !s.isEmpty() && !s.equals("Modified"))
-            .count();
+    public int getModifiedDateCount()
+    {
+        return (int) report.findElements(By.cssSelector("tbody tr td:nth-child(3)")).stream().map(WebElement::getText)
+            .filter(s -> !s.isEmpty() && !s.equals("Modified")).count();
     }
-
-
 }

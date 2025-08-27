@@ -23,6 +23,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Tab macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class TabMacro extends BaseElement
 {
     private WebElement tab;
@@ -47,13 +53,24 @@ public class TabMacro extends BaseElement
         return tab.getAttribute("style");
     }
 
-    public String getNextAfter()
+    public int getNextAfter()
     {
-        return tab.getAttribute("data-next-after");
+        String attr = tab.getAttribute("data-next-after");
+        return Integer.parseInt(attr);
     }
 
     public boolean isContentDisplayed(String expectedText)
     {
         return tab.isDisplayed() && tab.getText().equals(expectedText);
+    }
+
+    public int getEffectDuration()
+    {
+        String style = getCssStyle();
+        if (style != null && style.contains("transition-duration")) {
+            String value = style.replaceAll(".*transition-duration:\\s*([0-9.]+)s.*", "$1");
+            return Integer.parseInt(value.split("\\.")[0]);
+        }
+        return 0;
     }
 }

@@ -25,7 +25,7 @@
 
 {{contributors include="authors" spaces="XWiki" limit="1" showCount="true" showPages="true"/}}
 
-{{contributors  spaces="NonExistingSpace"  noneFoundMessage="None found :(" showPages="true"/}}
+{{contributors  spaces="NonExistingSpace" noneFoundMessage="None found :(" showPages="true"/}}
 
 {{contributors include="authors" scope="Descendants" showCount="false" global="true" showPages="true" /}}
 

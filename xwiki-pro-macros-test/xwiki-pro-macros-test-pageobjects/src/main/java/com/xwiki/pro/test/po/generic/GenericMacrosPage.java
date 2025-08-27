@@ -44,15 +44,25 @@ public class GenericMacrosPage extends ViewPage
         return getElements(cssSelector).size();
     }
 
+    /**
+     * Finds a macro element by CSS selector and index, then wraps it using the given constructor.
+     *
+     * @param cssSelector CSS selector to locate elements
+     * @param index position in the result list
+     * @param constructor function that converts the found WebElement into type T
+     * @param <T> return type (e.g. WebElement, TabMacro, etc.)
+     */
     public <T> T getMacro(String cssSelector, int index, Function<WebElement, T> constructor)
     {
         return constructor.apply(getElements(cssSelector).get(index));
     }
+
     public boolean containsParagraph(String paragraphText)
     {
         List<WebElement> paragraphs = getDriver().findElements(By.tagName("p"));
         return paragraphs.stream().filter(WebElement::isDisplayed).anyMatch(p -> p.getText().contains(paragraphText));
     }
+
     public boolean containsText(String text)
     {
         List<WebElement> all = getDriver().findElements(By.xpath("//*"));

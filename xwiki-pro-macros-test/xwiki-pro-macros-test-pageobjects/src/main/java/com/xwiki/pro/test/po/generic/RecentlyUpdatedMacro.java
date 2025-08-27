@@ -27,6 +27,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents a Recently Updated macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class RecentlyUpdatedMacro extends BaseElement
 {
     private final WebElement macro;
@@ -143,4 +149,3 @@ public class RecentlyUpdatedMacro extends BaseElement
         return style.substring(colon + 1, semicolon).trim();
     }
 }
-

@@ -26,6 +26,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.xwiki.test.ui.po.BaseElement;
 
+/**
+ * Represents an Expand macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
 public class ExpandMacro extends BaseElement
 {
     private final WebElement expand;
