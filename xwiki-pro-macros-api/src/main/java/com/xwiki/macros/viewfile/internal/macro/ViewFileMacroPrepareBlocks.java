@@ -19,6 +19,7 @@
  */
 package com.xwiki.macros.viewfile.internal.macro;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,9 @@ public class ViewFileMacroPrepareBlocks
 
     private static final LocalDocumentReference PDF_VIEWER_REFERENCE =
         new LocalDocumentReference(List.of("XWiki"), "PDFViewerMacro");
+
+    private static final LocalDocumentReference COLLABORA_REFERENCE =
+        new LocalDocumentReference(List.of("Collabora", "Code"), "Configuration");
 
     private static final String PDF = "pdf";
 
@@ -137,7 +141,7 @@ public class ViewFileMacroPrepareBlocks
             return prepareFullDisplay(parameters, context, attachmentReference.getName(), attachmentReference);
         }
 
-        return prepareThumbnailButton(parameters, context, attachmentReference.getName(), attachmentReference);
+        return prepareCompactDisplay(parameters, context, attachmentReference.getName(), attachmentReference);
     }
 
     /**
@@ -154,7 +158,7 @@ public class ViewFileMacroPrepareBlocks
         return List.of(new MacroBlock(ERROR_MACRO_ID, new HashMap<>(), message, context.isInline()));
     }
 
-    private List<Block> prepareThumbnailButton(ViewFileMacroParameters parameters, MacroTransformationContext context,
+    private List<Block> prepareCompactDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
         String fileName, AttachmentReference attachmentReference) throws Exception
     {
 
@@ -196,19 +200,23 @@ public class ViewFileMacroPrepareBlocks
                 "data-preview", Boolean.toString(hasPreview), "data-ref",
                 referenceSerializer.serialize(attachmentReference));
 
-        String url = contextProvider.get().getWiki().getURL(attachmentReference, contextProvider.get());
-
         Map<String, String> linkElementParameters = Map.of(DOWNLOAD, DOWNLOAD, CLASS, buttonClass, "title",
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.title"));
 
         List<Block> innerContainer = getFileDisplayBlocks(thumbnailStyle, inLineElement, attachmentReference);
-        Block collaboraBlock = viewFileExternalBlockManager.getCollaboraBlock();
         ResourceReference reference =
             new ResourceReference(referenceSerializer.serialize(attachmentReference), ResourceType.ATTACHMENT);
         Block linkBlock = new LinkBlock(innerContainer, reference, false, linkElementParameters);
+        List<Block> innerBlocks = new ArrayList<>();
+        innerBlocks.add(linkBlock);
+
+        // Check if Collabora is present.
+        if (isApplicationInstalled(COLLABORA_REFERENCE)) {
+            Block collaboraBlock = viewFileExternalBlockManager.getCollaboraBlock();
+            innerBlocks.add(collaboraBlock);
+        }
         Block wrapperBlock =
-            StaticBlockWrapperFactory.constructBlockWrapper(inLineElement, List.of(linkBlock, collaboraBlock),
-                rootElementParameters);
+            StaticBlockWrapperFactory.constructBlockWrapper(inLineElement, innerBlocks, rootElementParameters);
         return List.of(wrapperBlock);
     }
 
@@ -239,17 +247,17 @@ public class ViewFileMacroPrepareBlocks
     {
         if (inEditMode || isOversize || context.isInline()) {
             // If we are in edit, the file is too big to be displayed or the macro is inline we just show the thumbnail.
-            return prepareThumbnailButton(parameters, context, fileName, attachmentReference);
+            return prepareCompactDisplay(parameters, context, fileName, attachmentReference);
         }
         String fileExtension = getFileExtension(fileName);
 
         if (OFFICE_FILE_EXTENSIONS.contains(fileExtension)) {
             return prepareOfficeFile(fileExtension, parameters, attachmentReference, "");
-        } else if (fileExtension.equalsIgnoreCase(PDF) && isPDFViewerMacroInstalled()) {
+        } else if (fileExtension.equalsIgnoreCase(PDF) && isApplicationInstalled(PDF_VIEWER_REFERENCE)) {
             return preparePDF(fileName, parameters);
         }
         // Fallback if the file extension is not a known one.
-        return prepareThumbnailButton(parameters, context, fileName, attachmentReference);
+        return prepareCompactDisplay(parameters, context, fileName, attachmentReference);
     }
 
     private List<Block> preparePDF(String fileName, ViewFileMacroParameters parameters)
@@ -272,10 +280,10 @@ public class ViewFileMacroPrepareBlocks
         return List.of(groupBlock);
     }
 
-    private boolean isPDFViewerMacroInstalled() throws XWikiException
+    private boolean isApplicationInstalled(LocalDocumentReference localDocumentReference) throws XWikiException
     {
         XWikiContext context = contextProvider.get();
-        DocumentReference viewerWikiRef = new DocumentReference(PDF_VIEWER_REFERENCE, context.getWikiReference());
+        DocumentReference viewerWikiRef = new DocumentReference(localDocumentReference, context.getWikiReference());
         return context.getWiki().exists(viewerWikiRef, context);
     }
 
@@ -286,7 +294,7 @@ public class ViewFileMacroPrepareBlocks
 
     private boolean hasPreview(String fileExtension) throws XWikiException
     {
-        return ((fileExtension.equals(PDF) && isPDFViewerMacroInstalled())
+        return ((fileExtension.equals(PDF) && isApplicationInstalled(PDF_VIEWER_REFERENCE))
             || OFFICE_FILE_EXTENSIONS.contains(fileExtension) && !isOversize);
     }
 
