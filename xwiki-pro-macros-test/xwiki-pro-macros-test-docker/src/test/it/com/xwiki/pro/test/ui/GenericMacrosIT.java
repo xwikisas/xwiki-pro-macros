@@ -350,7 +350,6 @@ public class GenericMacrosIT
 
         assertEquals(3, tabGroup0.getNextAfter());
         assertFalse(tabGroup0.isLoopEnabled());
-        assertEquals(10,tabGroup0.getEffectDuration());
 
         // default="true".
         TabMacro tab0 = new TabMacro("tab_0");
@@ -368,7 +367,6 @@ public class GenericMacrosIT
 
         assertEquals(5, tabGroup1.getNextAfter());
         assertTrue(tabGroup1.isLoopEnabled());
-        assertEquals(2,tabGroup1.getEffectDuration());
 
         TabMacro tab3 = new TabMacro("tab_3");
         TabMacro tab4 = new TabMacro("tab_4");
@@ -379,28 +377,28 @@ public class GenericMacrosIT
 
         // Waits until the content is active. Added "+100" for safety.
         setup.getDriver().waitUntilCondition(driver -> tab5.isContentDisplayed("tab2-content"),
-            (tabGroup1.getFinalEffectDuration(tab5) * 1000) + 100);
+            (tab5.getEffectDuration() * 1000) + 100);
 
         // Waits until tab_3 is active.
         setup.getDriver().waitUntilCondition(driver -> "tab_3".equals(tabGroup1.getActiveTabId()),
             (tabGroup1.getFinalNextAfter(tab5) * 1000));
 
         setup.getDriver().waitUntilCondition(driver -> tab3.isContentDisplayed("tab0-content"),
-            (tabGroup1.getFinalEffectDuration(tab3) * 1000) + 100);
+            (tab3.getEffectDuration() * 1000) + 100);
 
         // Waits until tab_4 is active.
         setup.getDriver().waitUntilCondition(driver -> "tab_4".equals(tabGroup1.getActiveTabId()),
             (tabGroup1.getFinalNextAfter(tab3) * 1000));
 
         setup.getDriver().waitUntilCondition(driver -> tab4.isContentDisplayed("tab1-content"),
-            (tabGroup1.getFinalEffectDuration(tab4) * 1000) + 100);
+            (tab4.getEffectDuration() * 1000) + 100);
 
         // Waits until tab_5 is active again (loopCards="true").
         setup.getDriver().waitUntilCondition(driver -> "tab_5".equals(tabGroup1.getActiveTabId()),
             (tabGroup1.getFinalNextAfter(tab4) * 1000));
 
         setup.getDriver().waitUntilCondition(driver -> tab5.isContentDisplayed("tab2-content"),
-            (tabGroup1.getFinalEffectDuration(tab5) * 1000) + 100);
+            (tab5.getEffectDuration() * 1000) + 100);
 
         // Checks the tabGroup_2 macro, with 2 tabs, tabLocation="RIGHT", loopCards="true" and a set nextAfter.
         assertEquals(2, tabGroup2.getTabCount());

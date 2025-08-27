@@ -115,25 +115,6 @@ public class TabGroupMacro extends BaseElement
         return href.substring(href.indexOf('#') + 1);
     }
 
-    public int getEffectDuration()
-    {
-        String style = tabGroup.getAttribute("style");
-        if (style != null && style.contains("transition-duration")) {
-            String value = style.replaceAll(".*transition-duration:\\s*([0-9.]+)s.*", "$1");
-            return Integer.parseInt(value.split("\\.")[0]);
-        }
-        return 0;
-    }
-
-    public int getFinalEffectDuration(TabMacro tab)
-    {
-        int tabDuration = tab.getEffectDuration();
-        if (tabDuration > 0) {
-            return tabDuration;
-        }
-        return getEffectDuration();
-    }
-
     public int getFinalNextAfter(TabMacro tab)
     {
         int tabNext = tab.getNextAfter();
