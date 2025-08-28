@@ -164,7 +164,7 @@ public class GenericMacrosIT
         tagsPane2.add();
     }
 
-    private String createContent(String filename)
+    private String getMacroContent(String filename)
     {
         try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
             if (inputStream == null) {
@@ -187,7 +187,7 @@ public class GenericMacrosIT
         AddTagsPane tagsPane = taggablePage.addTags();
         tagsPane.setTags("testTag");
         tagsPane.add();
-        setup.createPage(testReference, createContent("team-macros.vm"), "TeamTest");
+        setup.createPage(testReference, getMacroContent("team-macros.vm"), "TeamTest");
         GenericMacrosPage teamPage = new GenericMacrosPage();
 
         TeamMacro team0 = teamPage.getMacro(".xwikiteam", 0, TeamMacro::new);
@@ -259,7 +259,7 @@ public class GenericMacrosIT
     @Order(2)
     void buttonMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("button-macros.vm"), "ButtonTest");
+        setup.createPage(testReference, getMacroContent("button-macros.vm"), "ButtonTest");
 
         ButtonMacro btn1 = new ButtonMacro("testbtn1");
         ButtonMacro btn2 = new ButtonMacro("testbtn2");
@@ -315,7 +315,7 @@ public class GenericMacrosIT
     @Order(3)
     void statusMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("status-macros.vm"), "StatusTest");
+        setup.createPage(testReference, getMacroContent("status-macros.vm"), "StatusTest");
 
         GenericMacrosPage statusPage = new GenericMacrosPage();
 
@@ -347,7 +347,7 @@ public class GenericMacrosIT
     void tagListMacroTest(TestUtils setup)
     {
         createPagesWithTags(setup);
-        setup.createPage(pageWithTagListMacros, createContent("taglist-macros.vm"));
+        setup.createPage(pageWithTagListMacros, getMacroContent("taglist-macros.vm"));
 
         GenericMacrosPage tagListPage = new GenericMacrosPage();
         TagListMacro tagList0 = tagListPage.getMacro(".glossaryListRoot", 0, TagListMacro::new);
@@ -394,7 +394,7 @@ public class GenericMacrosIT
     @Order(5)
     void userProfileMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("userprofile-macros.vm"), "UserProfileTest");
+        setup.createPage(testReference, getMacroContent("userprofile-macros.vm"), "UserProfileTest");
 
         GenericMacrosPage profilePage = new GenericMacrosPage();
 
@@ -446,7 +446,7 @@ public class GenericMacrosIT
     @Order(6)
     void userListMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("userlist-macros.vm"), "UserListTest");
+        setup.createPage(testReference, getMacroContent("userlist-macros.vm"), "UserListTest");
 
         GenericMacrosPage userListPage = new GenericMacrosPage();
 
@@ -510,7 +510,7 @@ public class GenericMacrosIT
     @Order(7)
     void panelMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("panel-macros.vm"), "PanelTest");
+        setup.createPage(testReference, getMacroContent("panel-macros.vm"), "PanelTest");
 
         PanelMacroPage page = new PanelMacroPage();
         PanelMacro panel0 = page.getPanel(0);
@@ -583,7 +583,7 @@ public class GenericMacrosIT
     @Order(8)
     void microsoftStreamMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("microsoftstream-macros.vm"), "MicrosoftStreamTest");
+        setup.createPage(testReference, getMacroContent("microsoftstream-macros.vm"), "MicrosoftStreamTest");
 
         GenericMacrosPage streamPage = new GenericMacrosPage();
 
