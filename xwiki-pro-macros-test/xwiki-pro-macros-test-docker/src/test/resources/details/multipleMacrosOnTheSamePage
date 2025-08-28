@@ -1,0 +1,13 @@
+{{confluence_details}}
+(% data-table-width="760" data-layout="default" ac:local-id="e92056ac-6d42-4370-aaf7-24011a7f7c5a" %)
+|=(((
+Location
+)))|(% style="background-color: #ffffff" %)(((
+Vogsphere
+)))
+|=(% style="background-color: #f4f5f7" %)(((
+**date**
+)))|(((
+{{date format="yyyy-MM-dd" value="2025-07-01"/}}
+)))
+{{/confluence_details}}

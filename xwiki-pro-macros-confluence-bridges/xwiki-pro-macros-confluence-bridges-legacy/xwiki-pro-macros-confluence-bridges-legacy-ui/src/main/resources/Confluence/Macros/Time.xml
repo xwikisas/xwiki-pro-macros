@@ -264,7 +264,7 @@
 ## We need to check if there is a valid license because the macro is registered even if the user doesn't have view right
 ## on the macro definition page. See XWIKI-14828: Rendering macros defined in wiki pages are available to users that
 ## don't have view right on those pages.
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #set ($datetime = $escapetool.xml($!wikimacro.parameters.datetime))
   {{html clean=false}}
     &lt;time datetime="$!datetime"&gt;$!datetime&lt;/time&gt;

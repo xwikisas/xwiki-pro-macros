@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.hslf.usermodel.HSLFSlide;
@@ -171,8 +171,9 @@ public class ThumbnailGenerator
         try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
              ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
-            OfficeManager manager =
-                ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts()).build();
+            // Set an execution timeout equivalent to 10 seconds.
+            OfficeManager manager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
+                .taskExecutionTimeout(10000L).build();
             manager.start();
             LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.PDF).execute();
             manager.stop();

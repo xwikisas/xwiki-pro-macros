@@ -6,6 +6,7 @@ com.xwiki.macros.internal.grouplist.GroupReferenceListConverter
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacro
 com.xwiki.macros.excerptinclude.internal.macro.ExcerptIncludeMacroRefactoring
 com.xwiki.macros.script.ExpandScriptService
+com.xwiki.macros.script.ProMacroLicensingScriptService
 com.xwiki.macros.script.TagListScriptService
 com.xwiki.macros.showhideif.macro.HideIfMacro
 com.xwiki.macros.showhideif.macro.ShowIfMacro
@@ -14,3 +15,7 @@ com.xwiki.macros.tab.internal.TabMacro
 com.xwiki.macros.viewfile.internal.macro.ViewFileMacro
 com.xwiki.macros.viewfile.internal.AttachmentModificationListener
 com.xwiki.macros.viewfile.internal.ThumbnailGenerator
+com.xwiki.macros.viewfile.internal.AttachmentSizeValidator
+com.xwiki.macros.viewfile.internal.macro.ViewFileResourceManager
+com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager
+com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks

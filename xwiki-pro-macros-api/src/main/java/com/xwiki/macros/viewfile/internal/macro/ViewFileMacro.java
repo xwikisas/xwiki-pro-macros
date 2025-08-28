@@ -20,24 +20,29 @@
 package com.xwiki.macros.viewfile.internal.macro;
 
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.script.ScriptContext;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.MacroExecutionException;
+import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.script.ScriptContextManager;
-import org.xwiki.template.Template;
-import org.xwiki.template.TemplateManager;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 
 import com.xwiki.macros.AbstractProMacro;
+import com.xwiki.macros.viewfile.internal.AttachmentSizeValidator;
 import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
@@ -53,17 +58,27 @@ import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
 {
     @Inject
-    private TemplateManager templateManager;
+    protected ContextualAuthorizationManager contextualAuthorization;
+
+    private boolean isOversize;
+
+    private String base64;
 
     @Inject
     private ScriptContextManager scriptContextManager;
 
     @Inject
+    @Named("current")
+    private AttachmentReferenceResolver<String> attachmentReferenceResolver;
+
+    @Inject
+    private AttachmentSizeValidator attachmentSizeValidator;
+
+    @Inject
     private ThumbnailGenerator thumbnailGenerator;
 
     @Inject
-    @Named("current")
-    private AttachmentReferenceResolver<String> attachmentReferenceResolver;
+    private ViewFileMacroPrepareBlocks viewFileMacroPrepareBlocks;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -74,32 +89,84 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     }
 
     @Override
+    public List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
+        MacroTransformationContext context) throws MacroExecutionException
+    {
+        try {
+            String fileName = resolveFileName(parameters);
+
+            if (StringUtils.isBlank(fileName)) {
+                return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.attachmentrequired");
+            }
+
+            AttachmentReference attachmentRef = createAttachmentReference(fileName);
+
+            if (!userCanView(attachmentRef)) {
+                return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.norights");
+            }
+
+            boolean oversize = attachmentSizeValidator.isAttachmentOversize(attachmentRef);
+            String base64Thumbnail = oversize ? null : generateThumbnailBase64(attachmentRef);
+
+            return List.of(StaticBlockWrapperFactory.constructBlockWrapper(context.isInline(),
+                viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, base64Thumbnail, oversize,
+                    inEditMode(context)), new HashMap<>()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean supportsInlineMode()
     {
         return true;
     }
 
-    @Override
-    protected List<Block> internalExecute(ViewFileMacroParameters parameters, String content,
-        MacroTransformationContext context) throws MacroExecutionException
+    private AttachmentReference createAttachmentReference(String fileName)
     {
-        byte[] thumbnailBytes =
-            thumbnailGenerator.getThumbnailData(attachmentReferenceResolver.resolve(parameters.getName()));
-        Template customTemplate = this.templateManager.getTemplate("viewfile/viewFileTemplate.vm");
-        ScriptContext scriptContext = scriptContextManager.getScriptContext();
+        return new AttachmentReference(attachmentReferenceResolver.resolve(fileName, EntityType.ATTACHMENT));
+    }
 
-        scriptContext.setAttribute("params", parameters, ScriptContext.ENGINE_SCOPE);
-        scriptContext.setAttribute("isInline", context.isInline(), ScriptContext.ENGINE_SCOPE);
-        String base64 = Base64.getEncoder().encodeToString(thumbnailBytes);
-        scriptContext.setAttribute("thumbnailBase64", base64, ScriptContext.ENGINE_SCOPE);
-        if (context.getTransformationContext().getTargetSyntax() != null) {
-            String targetSyntaxId = context.getTransformationContext().getTargetSyntax().getType().getId();
-            scriptContext.setAttribute("targetSyntaxId", targetSyntaxId, ScriptContext.ENGINE_SCOPE);
+    private boolean userCanView(AttachmentReference attachmentRef)
+    {
+        return contextualAuthorization.hasAccess(Right.VIEW, attachmentRef);
+    }
+
+    private String generateThumbnailBase64(AttachmentReference attachmentRef)
+    {
+        byte[] thumbnailData = thumbnailGenerator.getThumbnailData(attachmentRef);
+        return Base64.getEncoder().encodeToString(thumbnailData);
+    }
+
+    private String resolveFileName(ViewFileMacroParameters parameters)
+    {
+        if (StringUtils.isNotBlank(parameters.getName())) {
+            return parameters.getName();
         }
-        try {
-            return this.templateManager.execute(customTemplate).getChildren();
-        } catch (Exception e) {
-            throw new MacroExecutionException(ExceptionUtils.getRootCauseMessage(e));
+        return parameters.getAttFilename();
+    }
+
+    private boolean inEditMode(MacroTransformationContext context)
+    {
+        boolean editMode;
+        Syntax syntax = context.getTransformationContext().getTargetSyntax();
+        // TODO remove after upgrade to 17.0.0+ https://jira.xwiki.org/browse/XWIKI-22738
+        // Sadly in versions < 17.0.0 the syntax is not set in the context and to be able to handle different
+        // displays for view and edit mode we have to use the scriptContextManger who has a variable in the
+        // attributes that we can use to identify if we are in edit mode or not.
+        if (syntax == null) {
+            editMode = inEditModeFallBack();
+        } else {
+            SyntaxType targetSyntaxType = syntax.getType();
+            editMode = SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(
+                targetSyntaxType);
         }
+        return editMode;
+    }
+
+    private boolean inEditModeFallBack()
+    {
+        String syntax = (String) scriptContextManager.getScriptContext().getAttribute("syntaxType");
+        return (syntax != null) && (syntax.equals("annotatedhtml") || syntax.equals("annotatedxhtml"));
     }
 }

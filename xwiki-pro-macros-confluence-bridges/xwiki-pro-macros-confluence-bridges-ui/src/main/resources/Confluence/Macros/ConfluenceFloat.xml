@@ -422,7 +422,7 @@ Vel deserunt voluptas ut molestiae porro ut accusantium consequatur quo aspernat
   {{wikimacrocontent/}}
   {{/box}}
 #end
-#if ($services.licensing.licensor.hasLicensureForEntity($xcontext.macro.doc.documentReference))
+#if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))
   #executeMacro
 #else
   {{missingLicenseMessage extensionName="proMacros.extension.name"/}}

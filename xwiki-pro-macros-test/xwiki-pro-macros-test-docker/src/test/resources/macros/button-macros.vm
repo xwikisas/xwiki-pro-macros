@@ -1,0 +1,25 @@
+## ---------------------------------------------------------------------------
+## See the NOTICE file distributed with this work for additional
+## information regarding copyright ownership.
+##
+## This is free software; you can redistribute it and/or modify it
+## under the terms of the GNU Lesser General Public License as
+## published by the Free Software Foundation; either version 2.1 of
+## the License, or (at your option) any later version.
+##
+## This software is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+## Lesser General Public License for more details.
+##
+## You should have received a copy of the GNU Lesser General Public
+## License along with this software; if not, write to the Free
+## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+## ---------------------------------------------------------------------------
+{{button id="testbtn1" label="test1" url="https://example.org" color="#ff66ff" newTab="true" icon="check" width="100px"/}}
+
+{{button id="testbtn2" label="test2" url="https://example.org" newTab="false" type="DANGER" width="60%"/}}
+{{button id="testbtn3" label="test3" color="#ff66ff"  url="https://example.org" newTab="false" type="SUCCESS" icon="check"  width="80px"/}}
+{{button id="testbtn4" label="test4" url="https://example.org" newTab="false" type="WARNING" color="#ff66ff" width="80px"/}}
+{{button id="testbtn5" label="test5" url="https://example.org"/}}
