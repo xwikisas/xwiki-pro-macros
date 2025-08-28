@@ -51,9 +51,6 @@ public class ViewFileMacroParameters
     /**
      * @return the name of the attachment.
      */
-    /**
-     * @return the name of the attachment.
-     */
     public String getName()
     {
         return name;

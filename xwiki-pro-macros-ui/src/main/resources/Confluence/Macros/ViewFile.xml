@@ -234,7 +234,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     };
 
-    const checkModalAttachment = function(observer) {
+    const checkModalAttachment = function(mutationsList, observer) {
       const selectElement = $('select[name="page"]');
       if (selectElement.length) {
         const modal = selectElement.closest(".macro-editor-modal")[0];
@@ -250,8 +250,8 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
     };
 
     const pageObserver = new MutationObserver(checkModalAttachment);
-    checkModalAttachment(pageObserver);
     pageObserver.observe(document.body, { childList: true, subtree: true });
+    checkModalAttachment([], pageObserver);
 
     const getFileExtension = function(fileName) {
       return fileName.slice(fileName.lastIndexOf('.') + 1).toLowerCase();
