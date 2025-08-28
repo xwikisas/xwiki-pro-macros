@@ -17,43 +17,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.test.ui;
+package com.xwiki.pro.test.po.generic;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.xwiki.test.docker.junit5.UITest;
-import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
+import org.openqa.selenium.WebElement;
+import org.xwiki.test.ui.po.BaseElement;
 
 /**
- * All UI tests for the Pro Macros application.
+ * Represents a status macro and provides access to its attributes.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-@UITest(
-    // The servlet needs to be explicitly specified in AllIT too because otherwise ServletEngine#JETTY_STANDALONE is
-    // used, leading to a configurations merge conflict.
-    servletEngine = ServletEngine.TOMCAT
-)
-class AllITs
+public class StatusMacro extends BaseElement
 {
-    @Nested
-    @DisplayName("Tests for the generic Pro Macros.")
-    class NestedGenericMacrosIT extends GenericMacrosIT
+    private final WebElement status;
+
+    public StatusMacro(WebElement status)
     {
+        this.status = status;
     }
 
-    @Nested
-    @DisplayName("Tests for the ViewFile Macro")
-    class NestedViewFileIT extends ViewFileIT {
-
-    }
-
-    @Nested
-    @DisplayName("Tests for the DetailsSummary Macro")
-    class NestedDetailsSummaryIT extends DetailsSummaryIT
+    public String getTitle()
     {
+        return status.getAttribute("title");
     }
 
+    public boolean isSubtle()
+    {
+        return status.getAttribute("class").contains("subtle");
+    }
 
+    public boolean hasColor(String color)
+    {
+        String classAttr = status.getAttribute("class").toLowerCase();
+        return classAttr.contains((color + "Status").toLowerCase());
+    }
 }

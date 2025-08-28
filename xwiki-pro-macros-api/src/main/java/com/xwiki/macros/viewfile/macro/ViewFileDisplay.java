@@ -17,31 +17,43 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.test.po.generic;
-
-import java.util.List;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.xwiki.test.ui.po.ViewPage;
+package com.xwiki.macros.viewfile.macro;
 
 /**
- * Represents a page containing one or more Team macros.
+ * Enum for the display propert of {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.27
  */
-public class TeamMacroPage extends ViewPage
+public enum ViewFileDisplay
 {
-    @FindBy(css = ".xwikiteam")
-    private List<WebElement> teamMacros;
+    /**
+     * Thumbnail.
+     */
+    thumbnail,
 
-    public int getTeamMacrosCount() {
-        return teamMacros.size();
-    }
+    /**
+     * Button.
+     */
+    button,
 
-    public List<WebElement> getTeamMacroUsers(int i) {
-        return teamMacros.get(i).findElements(By.className("xwikiteam-user"));
+    /**
+     * Full.
+     */
+    full;
+
+    /**
+     * @param name the name of a display type.
+     * @return the display type corresponding to the name, or {@code null}.
+     */
+    public static ViewFileDisplay forName(String name)
+    {
+        for (ViewFileDisplay type : values()) {
+            if (name.equalsIgnoreCase(type.toString())) {
+                return type;
+            }
+        }
+
+        return null;
     }
 }

@@ -113,6 +113,13 @@
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-search-solr-query</artifactId>
+      <version>${platform.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-rendering-macro-velocity</artifactId>
       <version>${platform.version}</version>
       <scope>runtime</scope>
@@ -152,5 +159,12 @@
       <version>${platform.version}</version>
       <scope>runtime</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-rendering-macro-groovy</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+
   </dependencies>
 </project>

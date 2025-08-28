@@ -17,43 +17,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.pro.test.ui;
+package com.xwiki.pro.test.po.generic;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.xwiki.test.docker.junit5.UITest;
-import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
+import java.util.List;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.xwiki.test.ui.po.ViewPage;
 
 /**
- * All UI tests for the Pro Macros application.
+ * Represents a page containing one or more Panel macros.
  *
  * @version $Id$
- * @since 1.25.2
+ * @since 1.28
  */
-@UITest(
-    // The servlet needs to be explicitly specified in AllIT too because otherwise ServletEngine#JETTY_STANDALONE is
-    // used, leading to a configurations merge conflict.
-    servletEngine = ServletEngine.TOMCAT
-)
-class AllITs
+public class PanelMacroPage extends ViewPage
 {
-    @Nested
-    @DisplayName("Tests for the generic Pro Macros.")
-    class NestedGenericMacrosIT extends GenericMacrosIT
+    @FindBy(css = ".macro-panel")
+    private List<WebElement> panels;
+
+    @FindBy(css = ".macro-border")
+    private List<WebElement> panelBorderElements;
+
+    public int getPanelCount()
     {
+        return panels.size();
     }
 
-    @Nested
-    @DisplayName("Tests for the ViewFile Macro")
-    class NestedViewFileIT extends ViewFileIT {
-
-    }
-
-    @Nested
-    @DisplayName("Tests for the DetailsSummary Macro")
-    class NestedDetailsSummaryIT extends DetailsSummaryIT
+    public PanelMacro getPanel(int index)
     {
+        return new PanelMacro(panels.get(index), panelBorderElements.get(index));
     }
-
-
 }

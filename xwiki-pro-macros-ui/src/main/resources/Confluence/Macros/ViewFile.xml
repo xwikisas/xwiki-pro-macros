@@ -533,7 +533,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
 .viewFileThumbnailCard {
   width: 10rem !important;
   height: fit-content !important;
-  min-height: 10rem !important;
+  min-height: 10rem;
 }
 
 span.viewFileThumbnailCard {
