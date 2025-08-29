@@ -17,17 +17,31 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{expand title="ExpandTest1" expanded="true"}}
-test0
-test1
-image:example.jpg
+{{show-if displayType="DEFAULT" groups="XWiki.XWikiAllGroup"}}
 
-{{expand title="ExpandTest2"}}
-test0
-test1
+Content for testing the show-If macro
 
-{{/expand}}
+image:image1.png
 
-test2
+{{/show-if}}
 
-{{/expand}}
+{{show-if displayType="DEFAULT"}}
+
+Content for testing the show-If macro -2
+
+image:image1.png
+
+{{/show-if}}
+
+{{show-if displayType="NONE"}}
+
+Content for testing the show-If macro -3
+
+{{/show-if}}
+
+{{show-if authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
+users="XWiki.SuperAdmin"}}
+
+Content for testing the show-If macro -4
+
+{{/show-if}}
