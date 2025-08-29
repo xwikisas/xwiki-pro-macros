@@ -164,44 +164,11 @@ public class GenericMacrosIT
             throw new RuntimeException(e);
         }
         registerMacros();
-        createPagesWithTags(setup);
         createTestPages(setup);
+        createPagesWithTags(setup);
+        
     }
-
-    private void createPagesWithTags(TestUtils setup)
-    {
-        final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
-
-        final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
-        setup.createPage(pageWithTags, "Test content for tagging");
-        setup.gotoPage(pageWithTags);
-        TaggablePage taggablePage = new TaggablePage();
-        AddTagsPane tagsPane = taggablePage.addTags();
-        tagsPane.setTags("alpha, beta, gamma");
-        tagsPane.add();
-
-        setup.createPage(pageWithTags2, "Test content for tagging");
-        setup.gotoPage(pageWithTags2);
-        TaggablePage taggablePage2 = new TaggablePage();
-        AddTagsPane tagsPane2 = taggablePage2.addTags();
-        tagsPane2.setTags("z, x, y");
-        tagsPane2.add();
-    }
-
-    private String getMacroContent(String filename)
-    {
-        try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
-            if (inputStream == null) {
-                throw new RuntimeException("Failed to load " + filename + " from resources.");
-            }
-
-            return new BufferedReader(new InputStreamReader(inputStream)).lines()
-                .filter(line -> !line.trim().startsWith("##")).collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read macro file: " + filename, e);
-        }
-    }
-
+    
     @Test
     @Order(1)
     void teamMacroTest(TestUtils setup, TestReference testReference)
@@ -370,7 +337,7 @@ public class GenericMacrosIT
     @Order(4)
     void tagListMacroTest(TestUtils setup)
     {
-        createPagesWithTags(setup);
+
         setup.createPage(pageWithTagListMacros, getMacroContent("taglist-macros.vm"));
 
         GenericMacrosPage tagListPage = new GenericMacrosPage();
@@ -659,10 +626,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(2)
+    @Order(9)
     void expandMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("expand-macros.vm"), "ExpandTest");
+        setup.createPage(testReference, getMacroContent("expand-macros.vm"), "ExpandTest");
         GenericMacrosPage expandPage = new GenericMacrosPage();
 
         String css = "details.confluence-expand-macro.panel.panel-default";
@@ -716,10 +683,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(3)
+    @Order(10)
     void profilePictureMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("profilePicture-macros.vm"), "ProfilePictureTest");
+        setup.createPage(testReference, getMacroContent("profilePicture-macros.vm"), "ProfilePictureTest");
         GenericMacrosPage picturePage = new GenericMacrosPage();
 
         assertEquals(2, picturePage.getMacroCount(".xwikiteam"));
@@ -743,10 +710,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(4)
+    @Order(11)
     void showIfMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("showIf-macros.vm"), "ShowIfTest");
+        setup.createPage(testReference, getMacroContent("showIf-macros.vm"), "ShowIfTest");
         GenericMacrosPage page = new GenericMacrosPage();
 
         // displayType="DEFAULT" groups="XWiki.XWikiAllGroup".
@@ -761,10 +728,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(5)
+    @Order(12)
     void hideIfMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("hideIf-macros.vm"), "HideIfTest");
+        setup.createPage(testReference, getMacroContent("hideIf-macros.vm"), "HideIfTest");
         GenericMacrosPage page = new GenericMacrosPage();
 
         // displayType="DEFAULT" groups="XWiki.XWikiAllGroup" matchUsing="ALL".
@@ -779,10 +746,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(6)
+    @Order(13)
     void tabMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("tab-macros.vm"), "TabTest");
+        setup.createPage(testReference, getMacroContent("tab-macros.vm"), "TabTest");
 
         TabMacro tab0 = new TabMacro("tab_0");
         TabMacro tab1 = new TabMacro("tab_1");
@@ -810,10 +777,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(7)
+    @Order(14)
     void tabGroupMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("tabGroup-macros.vm"), "TabGroupTest");
+        setup.createPage(testReference, getMacroContent("tabGroup-macros.vm"), "TabGroupTest");
 
         TabGroupMacro tabGroup0 = new TabGroupMacro("tabGroup_0");
         TabGroupMacro tabGroup1 = new TabGroupMacro("tabGroup_1");
@@ -934,7 +901,7 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(8)
+    @Order(15)
     void excerptMacroTest(TestUtils setup)
     {
         createExcerptPage(setup);
@@ -952,12 +919,12 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(9)
+    @Order(16)
     void excerptIncludeMacroTest(TestUtils setup)
     {
         createExcerptPage(setup);
         DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "ExcerptIncludeTest");
-        setup.createPage(pageWithExcerptMacros, createContent("excerptInclude-macros.vm"));
+        setup.createPage(pageWithExcerptMacros, getMacroContent("excerptInclude-macros.vm"));
 
         GenericMacrosPage includePage = new GenericMacrosPage();
 
@@ -985,10 +952,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(10)
+    @Order(17)
     void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("contentReport-macros.vm"), "ContentReportTableTest");
+        setup.createPage(testReference, getMacroContent("contentReport-macros.vm"), "ContentReportTableTest");
 
         GenericMacrosPage reportPage = new GenericMacrosPage();
 
@@ -1025,10 +992,10 @@ public class GenericMacrosIT
     }
 
     @Test
-    @Order(11)
+    @Order(18)
     void contributorsMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("contributors-macros.vm"), "ContributorsTest");
+        setup.createPage(testReference, getMacroContent("contributors-macros.vm"), "ContributorsTest");
         CommentsTab commentsTab = setup.gotoPage(testReference).openCommentsDocExtraPane();
         commentsTab.postComment("test comment", true);
 
@@ -1097,13 +1064,14 @@ public class GenericMacrosIT
         assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
         assertTrue(contrib6.hasPages());
         assertEquals(Arrays.asList("ContributorsTest"), contrib6.getPages());
+
     }
 
     @Test
-    @Order(12)
+    @Order(19)
     void recentlyUpdatedMacroTest(TestUtils setup, TestReference testReference)
     {
-        setup.createPage(testReference, createContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
+        setup.createPage(testReference, getMacroContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
         GenericMacrosPage recentlyPage = new GenericMacrosPage();
 
         String css = ".recently-updated-macro";
@@ -1123,7 +1091,7 @@ public class GenericMacrosIT
 
         // Checks the 1st macro, with a personalized width, which shows pages, with attachments and comments, from the
         // space "Main" and with the tag "recent". The default theme is concise.
-        assertEquals(4, recent0.getItemTitles().size());
+        setup.getDriver().waitUntilCondition(driver -> recent0.getItemTitles().size() == 4);
         assertEquals(Arrays.asList("xwiki:Main.testPage2", "image1.png", "xwiki:Main.testPage2", "xwiki:Main.testPage"),
             recent0.getItemTitles());
         assertEquals("concise", recent0.getResultsTheme());
@@ -1134,12 +1102,11 @@ public class GenericMacrosIT
         // Checks the 2nd macro, with a personalized width, the theme concise, a max of 2 results, which shows pages,
         // from global space and with the tags "recent", "alpha" and "x".
         assertEquals(2, recent1.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent1.getItemTitles());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), recent1.getItemTitles());
         assertTrue(recent1.hasShowMoreButton());
         recent1.clickShowMore();
         setup.getDriver().waitUntilCondition(driver -> recent1.getItemTitles().size() == 4);
-        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage", "xwiki:XWiki.pageWithTags2",
-            "xwiki" + ":Main.pageWithTags"), recent1.getItemTitles());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2","xwiki:Main.pageWithTags", "xwiki:Main.testPage2", "xwiki:Main.testPage"), recent1.getItemTitles());
         assertEquals("concise", recent1.getResultsTheme());
         assertTrue(recent1.themeStructureIsCorrect("concise"));
         assertEquals("150", recent1.getMacroWidth());
@@ -1190,7 +1157,7 @@ public class GenericMacrosIT
         assertTrue(recent8.hasAvatars());
     }
 
-    private String createContent(String filename)
+    private String getMacroContent(String filename)
     {
         try (InputStream inputStream = getClass().getResourceAsStream("/macros/" + filename)) {
             if (inputStream == null) {
@@ -1227,7 +1194,7 @@ public class GenericMacrosIT
     private void createExcerptPage(TestUtils setup)
     {
         DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "ExcerptTest");
-        setup.createPage(pageWithExcerptMacros, createContent("excerpt-macros.vm"));
+        setup.createPage(pageWithExcerptMacros, getMacroContent("excerpt-macros.vm"));
     }
 
     private void createTestPages(TestUtils setup)
