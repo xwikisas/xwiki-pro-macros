@@ -28,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -268,20 +270,19 @@ public class ThumbnailGenerator
     private File getThumbnailPath(AttachmentReference attachmentReference)
     {
         File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
-        String hashString = attachmentReference.toString();
+        String encodedFileReference = URLEncoder.encode(attachmentReference.toString(), StandardCharsets.UTF_8);
         // Create directories if they don't exist.
         if (!tempDir.exists()) {
             tempDir.mkdirs();
         } else {
             // Check if the old directory format exists and delete it. To be removed in a few months.
-            tempDir.listFiles();
             for (File oldFolder : tempDir.listFiles()) {
                 if (oldFolder.isDirectory()) {
                     deleteOldFormat(oldFolder);
                 }
             }
         }
-        return new File(tempDir, hashString.hashCode() + JPG_EXTENSION);
+        return new File(tempDir, encodedFileReference + JPG_EXTENSION);
     }
 
     private void deleteOldFormat(File fileOrDir)
