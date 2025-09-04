@@ -40,6 +40,7 @@ import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.tag.test.po.AddTagsPane;
 import org.xwiki.tag.test.po.TaggablePage;
 import org.xwiki.test.docker.junit5.ExtensionOverride;
+import org.xwiki.test.docker.junit5.TestConfiguration;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
@@ -67,6 +68,7 @@ import com.xwiki.pro.test.po.generic.TeamMacro;
 import com.xwiki.pro.test.po.generic.UserListItem;
 import com.xwiki.pro.test.po.generic.UserListMacro;
 import com.xwiki.pro.test.po.generic.UserProfileMacro;
+import com.xwiki.pro.test.po.utils.SolrTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -118,7 +120,19 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
                 "features=org.bouncycastle:bcmail-jdk15on"
             }
         )
-    })
+    },
+     extraJARs = {
+        // It's currently not possible to install a JAR contributing a Hibernate mapping file as an Extension. Thus
+        // we need to provide the JAR inside WEB-INF/lib. See https://jira.xwiki.org/browse/XWIKI-8271
+        "org.xwiki.platform:xwiki-platform-notifications-filters-default",
+        // The macro service uses the extension index script service to get the list of uninstalled macros (from
+        // extensions) which expects an implementation of the extension index. The extension index script service is a
+        // core extension so we need to make the extension index also core.
+        "org.xwiki.platform:xwiki-platform-extension-index",
+        // Solr search is used to get suggestions for the link quick action.
+        "org.xwiki.platform:xwiki-platform-search-solr-query"
+    },
+    resolveExtraJARs = true)
 public class GenericMacrosIT
 {    
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
@@ -142,7 +156,7 @@ public class GenericMacrosIT
     }
 
     @BeforeAll
-    void setup(TestUtils setup)
+    void setup(TestUtils setup, TestConfiguration testConfiguration) throws Exception
     {
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
@@ -166,6 +180,9 @@ public class GenericMacrosIT
         registerMacros();
         createTestPages(setup);
         createPagesWithTags(setup);
+        
+        //new SolrTestUtils(setup, testConfiguration.getServletEngine()).waitEmptyQueue();
+        //waitForSolrIndexing(setup, testConfiguration);
         
     }
     
@@ -1069,9 +1086,11 @@ public class GenericMacrosIT
 
     @Test
     @Order(19)
-    void recentlyUpdatedMacroTest(TestUtils setup, TestReference testReference)
+    void recentlyUpdatedMacroTest(TestUtils setup, TestReference testReference,TestConfiguration testConfiguration)
     {
+
         setup.createPage(testReference, getMacroContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
+        
         GenericMacrosPage recentlyPage = new GenericMacrosPage();
 
         String css = ".recently-updated-macro";

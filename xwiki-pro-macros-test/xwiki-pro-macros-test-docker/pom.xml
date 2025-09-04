@@ -156,6 +156,12 @@
       <version>${platform.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <!-- Required for tests involving solr indexation (e.g., page/attachment search in link insertions). -->
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-search-test-utils</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <testSourceDirectory>src/test/it</testSourceDirectory>
