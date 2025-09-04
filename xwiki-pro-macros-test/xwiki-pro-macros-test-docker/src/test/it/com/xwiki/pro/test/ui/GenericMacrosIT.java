@@ -120,19 +120,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
                 "features=org.bouncycastle:bcmail-jdk15on"
             }
         )
-    },
-     extraJARs = {
-        // It's currently not possible to install a JAR contributing a Hibernate mapping file as an Extension. Thus
-        // we need to provide the JAR inside WEB-INF/lib. See https://jira.xwiki.org/browse/XWIKI-8271
-        "org.xwiki.platform:xwiki-platform-notifications-filters-default",
-        // The macro service uses the extension index script service to get the list of uninstalled macros (from
-        // extensions) which expects an implementation of the extension index. The extension index script service is a
-        // core extension so we need to make the extension index also core.
-        "org.xwiki.platform:xwiki-platform-extension-index",
-        // Solr search is used to get suggestions for the link quick action.
-        "org.xwiki.platform:xwiki-platform-search-solr-query"
-    },
-    resolveExtraJARs = true)
+    })
 public class GenericMacrosIT
 {    
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
@@ -156,7 +144,7 @@ public class GenericMacrosIT
     }
 
     @BeforeAll
-    void setup(TestUtils setup, TestConfiguration testConfiguration) throws Exception
+    void setup(TestUtils setup) throws Exception
     {
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
@@ -170,25 +158,19 @@ public class GenericMacrosIT
 
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "comment", true);
         setup.setGlobalRights("XWiki.XWikiAllGroup", "", "edit", true);
-      
-        try {
-            setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
-                false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        setup.attachFile("XWiki", "UserTest", "image1.png", getClass().getResourceAsStream("/macros/image1.png"),
+            false);
         registerMacros();
         createTestPages(setup);
         createPagesWithTags(setup);
-        
-        //new SolrTestUtils(setup, testConfiguration.getServletEngine()).waitEmptyQueue();
-        //waitForSolrIndexing(setup, testConfiguration);
-        
+
+        SolrTestUtils solrTestUtils = new SolrTestUtils(setup);
+        solrTestUtils.waitEmptyQueue();
     }
     
     @Test
     @Order(1)
-    void teamMacroTest(TestUtils setup, TestReference testReference)
+    void teamMacro(TestUtils setup, TestReference testReference)
     {
         setup.gotoPage("XWiki", "UserTest");
         TaggablePage taggablePage = new TaggablePage();
@@ -265,7 +247,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(2)
-    void buttonMacroTest(TestUtils setup, TestReference testReference)
+    void buttonMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("button-macros.vm"), "ButtonTest");
 
@@ -321,7 +303,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(3)
-    void statusMacroTest(TestUtils setup, TestReference testReference)
+    void statusMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("status-macros.vm"), "StatusTest");
 
@@ -352,7 +334,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(4)
-    void tagListMacroTest(TestUtils setup)
+    void tagListMacro(TestUtils setup)
     {
 
         setup.createPage(pageWithTagListMacros, getMacroContent("taglist-macros.vm"));
@@ -400,7 +382,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(5)
-    void userProfileMacroTest(TestUtils setup, TestReference testReference)
+    void userProfileMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("userprofile-macros.vm"), "UserProfileTest");
 
@@ -452,7 +434,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(6)
-    void userListMacroTest(TestUtils setup, TestReference testReference)
+    void userListMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("userlist-macros.vm"), "UserListTest");
 
@@ -516,7 +498,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(7)
-    void panelMacroTest(TestUtils setup, TestReference testReference)
+    void panelMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("panel-macros.vm"), "PanelTest");
 
@@ -589,7 +571,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(8)
-    void microsoftStreamMacroTest(TestUtils setup, TestReference testReference)
+    void microsoftStreamMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("microsoftstream-macros.vm"), "MicrosoftStreamTest");
 
@@ -644,7 +626,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(9)
-    void expandMacroTest(TestUtils setup, TestReference testReference)
+    void expandMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("expand-macros.vm"), "ExpandTest");
         GenericMacrosPage expandPage = new GenericMacrosPage();
@@ -701,7 +683,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(10)
-    void profilePictureMacroTest(TestUtils setup, TestReference testReference)
+    void profilePictureMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("profilePicture-macros.vm"), "ProfilePictureTest");
         GenericMacrosPage picturePage = new GenericMacrosPage();
@@ -728,7 +710,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(11)
-    void showIfMacroTest(TestUtils setup, TestReference testReference)
+    void showIfMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("showIf-macros.vm"), "ShowIfTest");
         GenericMacrosPage page = new GenericMacrosPage();
@@ -746,7 +728,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(12)
-    void hideIfMacroTest(TestUtils setup, TestReference testReference)
+    void hideIfMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("hideIf-macros.vm"), "HideIfTest");
         GenericMacrosPage page = new GenericMacrosPage();
@@ -764,7 +746,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(13)
-    void tabMacroTest(TestUtils setup, TestReference testReference)
+    void tabMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("tab-macros.vm"), "TabTest");
 
@@ -795,7 +777,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(14)
-    void tabGroupMacroTest(TestUtils setup, TestReference testReference)
+    void tabGroupMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("tabGroup-macros.vm"), "TabGroupTest");
 
@@ -919,7 +901,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(15)
-    void excerptMacroTest(TestUtils setup)
+    void excerptMacro(TestUtils setup)
     {
         createExcerptPage(setup);
         GenericMacrosPage page = new GenericMacrosPage();
@@ -937,7 +919,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(16)
-    void excerptIncludeMacroTest(TestUtils setup)
+    void excerptIncludeMacro(TestUtils setup)
     {
         createExcerptPage(setup);
         DocumentReference pageWithExcerptMacros = new DocumentReference("xwiki", "Main", "ExcerptIncludeTest");
@@ -970,7 +952,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(17)
-    void contentReportTableMacroTest(TestUtils setup, TestReference testReference)
+    void contentReportTableMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("contentReport-macros.vm"), "ContentReportTableTest");
 
@@ -1010,7 +992,7 @@ public class GenericMacrosIT
 
     @Test
     @Order(18)
-    void contributorsMacroTest(TestUtils setup, TestReference testReference)
+    void contributorsMacro(TestUtils setup, TestReference testReference)
     {
         setup.createPage(testReference, getMacroContent("contributors-macros.vm"), "ContributorsTest");
         CommentsTab commentsTab = setup.gotoPage(testReference).openCommentsDocExtraPane();
@@ -1086,9 +1068,9 @@ public class GenericMacrosIT
 
     @Test
     @Order(19)
-    void recentlyUpdatedMacroTest(TestUtils setup, TestReference testReference,TestConfiguration testConfiguration)
+    void recentlyUpdatedMacro(TestUtils setup, TestReference testReference,TestConfiguration testConfiguration)
     {
-
+       
         setup.createPage(testReference, getMacroContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
         
         GenericMacrosPage recentlyPage = new GenericMacrosPage();
