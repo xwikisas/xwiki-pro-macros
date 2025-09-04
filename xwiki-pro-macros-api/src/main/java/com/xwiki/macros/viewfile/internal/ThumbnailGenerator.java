@@ -268,12 +268,30 @@ public class ThumbnailGenerator
     private File getThumbnailPath(AttachmentReference attachmentReference)
     {
         File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
-        String hashString =
-            attachmentReference.getDocumentReference().toString() + attachmentReference.getName();
+        String hashString = attachmentReference.toString();
         // Create directories if they don't exist.
         if (!tempDir.exists()) {
             tempDir.mkdirs();
+        } else {
+            // Check if the old directory format exists and delete it. To be removed in a few months.
+            tempDir.listFiles();
+            for (File oldFolder : tempDir.listFiles()) {
+                if (oldFolder.isDirectory()) {
+                    deleteOldFormat(oldFolder);
+                }
+            }
         }
         return new File(tempDir, hashString.hashCode() + JPG_EXTENSION);
+    }
+
+    private void deleteOldFormat(File fileOrDir)
+    {
+        File[] children = fileOrDir.listFiles();
+        if (children != null) {
+            for (File child : children) {
+                child.delete();
+            }
+        }
+        fileOrDir.delete();
     }
 }
