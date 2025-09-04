@@ -17,17 +17,19 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{expand title="ExpandTest1" expanded="true"}}
-test0
-test1
-image:example.jpg
+{{hide-if displayType="DEFAULT" groups="XWiki.XWikiAllGroup" matchUsing="ALL"}}
+content1
+{{/hide-if}}
 
-{{expand title="ExpandTest2"}}
-test0
-test1
+{{hide-if displayType="DEFAULT"}}
+content2
+{{/hide-if}}
 
-{{/expand}}
+{{hide-if displayType="NONE"}}
+content3
+{{/hide-if}}
 
-test2
-
-{{/expand}}
+{{hide-if authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
+users="XWiki.SuperAdmin"}}
+content4
+{{/hide-if}}
