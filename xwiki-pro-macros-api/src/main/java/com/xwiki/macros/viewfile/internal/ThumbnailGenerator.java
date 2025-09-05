@@ -71,6 +71,11 @@ import net.coobird.thumbnailator.Thumbnails;
 @Singleton
 public class ThumbnailGenerator
 {
+    /**
+     * Path to the temporary folder where thumbnails are stored.
+     */
+    public static final String THUMBNAILS_PATH = "viewfilemacro/thumbnails/";
+
     private static final List<String> OFFICE_EXTENSIONS = List.of("odp", "doc", "docx", "odt", "xls", "xlsx", "ods");
 
     private static final String PPT_EXTENSION = "ppt";
@@ -78,8 +83,6 @@ public class ThumbnailGenerator
     private static final String PPTX_EXTENSION = "pptx";
 
     private static final List<String> PRESENTATION_EXTENSIONS = List.of(PPT_EXTENSION, PPTX_EXTENSION);
-
-    private static final String THUMBNAILS_PATH = "viewfilemacro/thumbnails/";
 
     private static final String JPG_EXTENSION = ".jpg";
 
@@ -274,25 +277,7 @@ public class ThumbnailGenerator
         // Create directories if they don't exist.
         if (!tempDir.exists()) {
             tempDir.mkdirs();
-        } else {
-            // Check if the old directory format exists and delete it. To be removed in a few months.
-            for (File oldFolder : tempDir.listFiles()) {
-                if (oldFolder.isDirectory()) {
-                    deleteOldFormat(oldFolder);
-                }
-            }
         }
         return new File(tempDir, encodedFileReference + JPG_EXTENSION);
-    }
-
-    private void deleteOldFormat(File fileOrDir)
-    {
-        File[] children = fileOrDir.listFiles();
-        if (children != null) {
-            for (File child : children) {
-                child.delete();
-            }
-        }
-        fileOrDir.delete();
     }
 }
