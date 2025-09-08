@@ -26,6 +26,7 @@ import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyId;
 import org.xwiki.properties.annotation.PropertyName;
 
+import com.xwiki.macros.viewfile.ViewFileResourceReference;
 
 /**
  * Parameter bean class for {@link com.xwiki.macros.viewfile.internal.macro.ViewFileMacro}.
@@ -50,9 +51,6 @@ public class ViewFileMacroParameters
     /**
      * @return the name of the attachment.
      */
-    /**
-     * @return the name of the attachment.
-     */
     public String getName()
     {
         return name;
@@ -63,6 +61,7 @@ public class ViewFileMacroParameters
      *
      * @param name the name of the attachment.
      */
+    @PropertyDisplayType(ViewFileResourceReference.class)
     @PropertyName("File name")
     public void setName(String name)
     {

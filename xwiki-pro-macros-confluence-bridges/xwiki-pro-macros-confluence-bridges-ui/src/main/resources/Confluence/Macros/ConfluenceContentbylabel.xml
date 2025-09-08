@@ -468,7 +468,7 @@ Result:
 
 #macro (contentbylabellink $d)
 &lt;a href="$escapetool.xml($d.getURL('view'))"&gt;##
-$escapetool.xml($d.getDisplayTitle())##
+$escapetool.xml($d.title)##
 &lt;/a&gt;##
 #end
 
