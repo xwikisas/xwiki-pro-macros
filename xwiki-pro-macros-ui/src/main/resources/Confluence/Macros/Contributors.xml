@@ -336,24 +336,7 @@ Result:
       <async_enabled>0</async_enabled>
     </property>
     <property>
-      <code>{{groovy output="false"}}
-  xcontext.put("sortContributions", (contributions, key, reverse, limit) -&gt; {
-    def c = new ArrayList(contributions)
-    Collections.sort(c, new Comparator&lt;HashMap&gt;() {
-      @Override
-      public int compare(HashMap&lt;String, Object&gt; v1, HashMap&lt;String, Object&gt; v2) {
-        return reverse ? v2.get(key).compareTo(v1.get(key)) : v1.get(key).compareTo(v2.get(key))
-      }
-    })
-    if (limit != null &amp;&amp; limit &gt; 0) {
-      return c.take(limit)
-    }
-
-    return c
-  })
-{{/groovy}}
-
-{{velocity output="false"}}
+      <code>{{velocity output="false"}}
 #macro (datemax $d1 $d2)
   #if ($d1.compareTo($d2))##
     $d1##
@@ -463,7 +446,11 @@ Result:
     #set($query = $services.query.xwql("select comment.author, max(comment.date), count(distinct comment) from Document doc, doc.object('XWiki.XWikiComments') comment where doc.fullName in (:d) group by comment.author"))
     #addContributions($query, $pages)
   #end
-  #set($contributions = $xcontext.get('sortContributions').doCall($contributors.values(), $order, $reverse, $numbertool.toNumber($limit).intValue()))
+  #set ($limit = $numbertool.toNumber($limit).intValue())
+  #if (!$limit)
+    #set ($limit = -1)
+  #end
+  #set ($contributions = $services.contributors.sortContributors($contributors.values(), $order, $reverse, $numbertool.toNumber($limit).intValue()))
 
 {{html clean=false}}
     &lt;div class="confluence-contributors"&gt;
