@@ -17,17 +17,20 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{expand title="ExpandTest1" expanded="true"}}
-test0
-test1
-image:example.jpg
+{{tab label="tab0" cssClass="tabCssClass" effectDuration="2" id="tab_0" nextAfter="2" default="true"}}
 
-{{expand title="ExpandTest2"}}
-test0
-test1
+tab0-content
 
-{{/expand}}
+{{/tab}}
 
-test2
+{{tab label="tab1" cssStyle="background-color: yellow; color: red ; border: 1px dashed #ccc" id="tab_1"}}
 
-{{/expand}}
+tab1-content
+
+{{/tab}}
+
+{{tab label="tab2" effectType="FADE" id="tab_2" nextAfter="3"}}
+
+tab2-content
+
+{{/tab}}
