@@ -450,7 +450,7 @@ Result:
   #if (!$limit)
     #set ($limit = -1)
   #end
-  #set($contributions = $services.contributors.sortContributors($contributors.values(), $order, $reverse, $numbertool.toNumber($limit).intValue()))
+  #set ($contributions = $services.contributors.sortContributors($contributors.values(), $order, $reverse, $numbertool.toNumber($limit).intValue()))
 
 {{html clean=false}}
     &lt;div class="confluence-contributors"&gt;
