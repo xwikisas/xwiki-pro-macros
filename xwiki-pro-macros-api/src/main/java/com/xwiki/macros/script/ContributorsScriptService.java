@@ -37,7 +37,7 @@ import org.xwiki.stability.Unstable;
  * Tools to manipulate the data needed for the contributors macro.
  *
  * @version $Id$
- * @since 1.27.3
+ * @since 1.27.4
  */
 @Component
 @Named("contributors")
