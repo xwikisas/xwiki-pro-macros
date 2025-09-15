@@ -28,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -69,6 +71,11 @@ import net.coobird.thumbnailator.Thumbnails;
 @Singleton
 public class ThumbnailGenerator
 {
+    /**
+     * Path to the temporary folder where thumbnails are stored.
+     */
+    public static final String THUMBNAILS_PATH = "viewfilemacro/thumbnails/";
+
     private static final List<String> OFFICE_EXTENSIONS = List.of("odp", "doc", "docx", "odt", "xls", "xlsx", "ods");
 
     private static final String PPT_EXTENSION = "ppt";
@@ -76,8 +83,6 @@ public class ThumbnailGenerator
     private static final String PPTX_EXTENSION = "pptx";
 
     private static final List<String> PRESENTATION_EXTENSIONS = List.of(PPT_EXTENSION, PPTX_EXTENSION);
-
-    private static final String THUMBNAILS_PATH = "viewfilemacro/thumbnails/%s";
 
     private static final String JPG_EXTENSION = ".jpg";
 
@@ -113,10 +118,7 @@ public class ThumbnailGenerator
     {
         try {
             if (isOfficeServerConnected()) {
-                File tempDir = new File(environment.getTemporaryDirectory(),
-                    String.format(THUMBNAILS_PATH, attachmentReference.getDocumentReference().toString()));
-
-                File thumbnail = new File(tempDir, attachmentReference.getName() + JPG_EXTENSION);
+                File thumbnail = getThumbnailPath(attachmentReference);
                 if (!thumbnail.exists()) {
                     return generateAndGetThumbnailBytes(attachmentReference);
                 } else {
@@ -190,13 +192,7 @@ public class ThumbnailGenerator
         // Select the first page (index starts at 0).
         BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 150);
         BufferedImage resized = Thumbnails.of(bim).size(150, 212).asBufferedImage();
-        File tempDir = new File(environment.getTemporaryDirectory(),
-            String.format(THUMBNAILS_PATH, attachmentReference.getDocumentReference().toString()));
-        // Create directories if they don't exist.
-        if (!tempDir.exists()) {
-            tempDir.mkdirs();
-        }
-        File thumbnailFile = new File(tempDir, attachmentReference.getName() + JPG_EXTENSION);
+        File thumbnailFile = getThumbnailPath(attachmentReference);
         ImageIO.write(resized, JPG, thumbnailFile);
         document.close();
         return Files.readAllBytes(thumbnailFile.toPath());
@@ -257,13 +253,7 @@ public class ThumbnailGenerator
     private byte[] getSlideBytes(AttachmentReference attachmentReference, BufferedImage img) throws IOException
     {
         BufferedImage resized = Thumbnails.of(img).size(150, 212).asBufferedImage();
-        File tempDir = new File(environment.getTemporaryDirectory(),
-            String.format(THUMBNAILS_PATH, attachmentReference.getDocumentReference().toString()));
-        if (!tempDir.exists()) {
-            tempDir.mkdirs();
-        }
-
-        File outputFile = new File(tempDir, attachmentReference.getName() + JPG_EXTENSION);
+        File outputFile = getThumbnailPath(attachmentReference);
         ImageIO.write(resized, JPG, outputFile);
 
         return Files.readAllBytes(outputFile.toPath());
@@ -278,5 +268,16 @@ public class ThumbnailGenerator
     {
         this.officeServer.refreshState();
         return this.officeServer.getState() == OfficeServer.ServerState.CONNECTED;
+    }
+
+    private File getThumbnailPath(AttachmentReference attachmentReference)
+    {
+        File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
+        String encodedFileReference = URLEncoder.encode(attachmentReference.toString(), StandardCharsets.UTF_8);
+        // Create directories if they don't exist.
+        if (!tempDir.exists()) {
+            tempDir.mkdirs();
+        }
+        return new File(tempDir, encodedFileReference + JPG_EXTENSION);
     }
 }
