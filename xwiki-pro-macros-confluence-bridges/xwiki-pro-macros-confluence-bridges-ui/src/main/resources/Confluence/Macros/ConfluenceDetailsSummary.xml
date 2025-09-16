@@ -319,6 +319,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
 
           #else
             #set ($d = $xwiki.getDocument($row.get(0)))
+            #set ($escapedReference = $services.rendering.escape($row.get(0), "xwiki/2.1"))
             #foreach ($cell in $row)
               #set ($title = $d.getTitle())
               #if (!$title)
@@ -330,7 +331,7 @@ Bridges are there for compatibility with content migrated from Confluence and t
               #if (!$title)
                 #set ($title = $cell)
               #end
-              | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$cell]]#{else}##
+              | ((( #if ($foreach.first)[[$services.rendering.escape($services.rendering.escape($title, $xwiki.currentContentSyntaxId), $xwiki.currentContentSyntaxId)&gt;&gt;$escapedReference]]#{else}##
               {{context document="$row.get(0)" restricted="true"}}##
                 $cell##
               {{/context}}
