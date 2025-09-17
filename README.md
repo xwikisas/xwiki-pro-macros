@@ -2,7 +2,7 @@
 
 Supercharge XWiki’s functionality with Pro macros. Compatible with Atlassian Confluence macros imported during migrations. Can be purchased individually or part of the XWiki Pro package. Try them free.
  
-* Project Lead: [Ludovic Dubost](https://github.com/ldubost)
+* Project Lead: [Farcasi Alexandru](https://github.com/Farcasut)
 * [Documentation](https://store.xwiki.com/xwiki/bin/view/Extension/ProMacros)
 * [Issue Tracker](https://github.com/xwikisas/xwiki-pro-macros/issues)
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists>), [IRC]( http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
