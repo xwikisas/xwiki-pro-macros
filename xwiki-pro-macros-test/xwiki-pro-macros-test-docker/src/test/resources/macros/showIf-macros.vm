@@ -40,8 +40,54 @@ Content for testing the show-If macro -3
 {{/show-if}}
 
 {{show-if authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
-users="XWiki.SuperAdmin"}}
+users="XWiki.superadmin"}}
 
 Content for testing the show-If macro -4
+
+{{/show-if}}
+
+{{show-if displayType="PRINTABLE"}}
+
+Content for testing the show-If macro -5
+
+{{/show-if}}
+
+
+{{show-if groups="XWiki.XWikiNonExistingGroup" }}
+
+Content for testing the show-If macro -6
+
+{{/show-if}}
+
+
+{{show-if groups="XWiki.XWikiNonExistingGroup" displayType="DEFAULT" matchUsing="ANY"}}
+
+Content for testing the show-If macro -7
+
+{{/show-if}}
+
+
+{{show-if groups="XWiki.XWikiNonExistingGroup" displayType="DEFAULT" matchUsing="ALL"}}
+
+Content for testing the show-If macro -8
+
+{{/show-if}}
+
+{{show-if authenticationType="AUTHENTICATED" matchUsing="ALL"
+users="XWiki.superadmin"}}
+
+Content for testing the show-If macro -9
+
+{{/show-if}}
+
+{{show-if groups="XWiki.XWikiAllGroup" matchUsing="ALL"}}
+
+Content for testing the show-If macro -10
+
+{{/show-if}}
+
+{{show-if groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ALL"}}
+
+Content for testing the show-If macro -11
 
 {{/show-if}}

@@ -43,13 +43,13 @@ public class ExcerptIncludeMacro extends BaseElement
         return excerpt.findElement(By.cssSelector(".macro-panel-title p")).getText();
     }
 
-    public String getContentText()
+    public String getContent()
     {
         return excerpt.findElement(By.cssSelector(".macro-panel-content")).getText().trim();
     }
 
-    public boolean containsTable()
+    public boolean isContentDisplayed()
     {
-        return !excerpt.findElement(By.cssSelector(".macro-panel-content")).findElements(By.tagName("table")).isEmpty();
+        return excerpt.findElement(By.cssSelector(".macro-panel-content")).isDisplayed();
     }
 }

@@ -43,7 +43,7 @@ public class ProfilePictureMacro extends BaseElement
         return profilePicture.findElement(By.cssSelector(".xwikiteam-user")).getAttribute("title");
     }
 
-    public boolean linkContainsUsername(String expectedUsername)
+    public boolean hasUserLink(String expectedUsername)
     {
         String href = profilePicture.findElement(By.cssSelector(".xwikiteam-user a")).getAttribute("href");
         return href != null && href.contains("/xwiki/bin/view/XWiki/" + expectedUsername);

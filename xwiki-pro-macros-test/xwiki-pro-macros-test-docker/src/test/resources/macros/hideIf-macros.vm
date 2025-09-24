@@ -30,6 +30,34 @@ content3
 {{/hide-if}}
 
 {{hide-if authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
-users="XWiki.SuperAdmin"}}
+users="XWiki.superadmin"}}
 content4
+{{/hide-if}}
+
+{{hide-if groups="XWiki.XWikiNonExistingGroup" matchUsing="ALL"}}
+content5
+{{/hide-if}}
+
+{{hide-if displayType="DEFAULT" groups="XWiki.XWikiNonExistingGroup" matchUsing="ANY"}}
+content6
+{{/hide-if}}
+
+{{hide-if displayType="PRINTABLE"}}
+content7
+{{/hide-if}}
+
+{{hide-if authenticationType="AUTHENTICATED"}}
+content8
+{{/hide-if}}
+
+{{hide-if groups="XWiki.XWikiAllGroup" matchUsing="ALL"}}
+content9
+{{/hide-if}}
+
+{{hide-if groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ALL"}}
+content10
+{{/hide-if}}
+
+{{hide-if groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ANY"}}
+content11
 {{/hide-if}}

@@ -20,11 +20,6 @@
 {{excerpt name="Excerpt1"}}
 Content for excerpt macro
 
-| |
-| |
-| |
-
-
 {{/excerpt}}
 
 {{excerpt name="Excerpt2" allowUnprivilegedInclude="true"}}

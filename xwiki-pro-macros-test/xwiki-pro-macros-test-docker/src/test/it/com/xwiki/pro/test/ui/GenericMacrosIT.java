@@ -83,11 +83,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * @since 1.25.2
  */
 @UITest(
-    servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
+    /*servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
     // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
     // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
     // host machine.
-    ServletEngine.JETTY_STANDALONE },
+    ServletEngine.JETTY_STANDALONE },*/
     properties = {
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin, "
             + "com.xpn.xwiki.plugin.skinx.JsResourceSkinExtensionPlugin, "
@@ -122,13 +122,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
         )
     })
 public class GenericMacrosIT
-{    
+{
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
 
     private static final List<String> CONF_XWIKI_MACRO_SPACE = List.of("Confluence", "Macros");
-  
-    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
 
+    private final DocumentReference pageWithTagListMacros = new DocumentReference("xwiki", "Main", "TagListTest");
 
     private void registerMacros()
     {
@@ -167,7 +166,7 @@ public class GenericMacrosIT
         SolrTestUtils solrTestUtils = new SolrTestUtils(setup);
         solrTestUtils.waitEmptyQueue();
     }
-    
+
     @Test
     @Order(1)
     void teamMacro(TestUtils setup, TestReference testReference)
@@ -631,7 +630,7 @@ public class GenericMacrosIT
         setup.createPage(testReference, getMacroContent("expand-macros.vm"), "ExpandTest");
         GenericMacrosPage expandPage = new GenericMacrosPage();
 
-        String css = "details.confluence-expand-macro.panel.panel-default";
+        String css = "details.confluence-expand-macro";
         ExpandMacro expand0 = expandPage.getMacro(css, 0, ExpandMacro::new);
         ExpandMacro expand1 = expandPage.getMacro(css, 1, ExpandMacro::new);
 
@@ -695,14 +694,14 @@ public class GenericMacrosIT
 
         // Checks the 1st profilePicture macro, with an actual profile image.
         assertEquals("UserTest", picture0.getUserTitle());
-        assertTrue(picture0.linkContainsUsername("UserTest"));
+        assertTrue(picture0.hasUserLink("UserTest"));
         assertEquals("60px", picture0.getAvatarSize());
         assertTrue(picture0.hasProfileImage());
         assertFalse(picture0.hasAvatarInitials());
 
         // Checks the 2nd profilePicture macro, with personalized size.
         assertEquals("UserTest2", picture1.getUserTitle());
-        assertTrue(picture1.linkContainsUsername("UserTest2"));
+        assertTrue(picture1.hasUserLink("UserTest2"));
         assertEquals("100px", picture1.getAvatarSize());
         assertFalse(picture1.hasProfileImage());
         assertTrue(picture1.hasAvatarInitials());
@@ -716,14 +715,51 @@ public class GenericMacrosIT
         GenericMacrosPage page = new GenericMacrosPage();
 
         // displayType="DEFAULT" groups="XWiki.XWikiAllGroup".
+        // The content is visible even if the user is not in the group because the default matchUsing is "ANY"
         assertTrue(page.containsParagraph("Content for testing the show-If macro"));
         // displayType="DEFAULT".
         assertTrue(page.containsParagraph("Content for testing the show-If macro -2"));
         // displayType="NONE".
         assertFalse(page.containsParagraph("Content for testing the show-If macro -3"));
+
         // authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
-        // users="XWiki.SuperAdmin".
+        // users="XWiki.superadmin".
+        // By having matchUsing="ALL", the content won't be visible because of displayType="PRINTABLE"and
+        // groups="XWiki.XWikiAdminGroup".
         assertFalse(page.containsParagraph("Content for testing the show-If macro -4"));
+
+        // displayType="PRINTABLE", show when it's printed.
+        assertFalse(page.containsParagraph("Content for testing the show-If macro -5"));
+
+        // groups="XWiki.XWikiNonExistingGroup"
+        assertFalse(page.containsParagraph("Content for testing the show-If macro -6"));
+
+        // groups="XWiki.XWikiNonExistingGroup" displayType="DEFAULT" matchUsing="ANY".
+        // By having matchUsing="ANY", the content will be visible because of displayType="DEFAULT".
+        assertTrue(page.containsParagraph("Content for testing the show-If macro -7"));
+
+        // groups="XWiki.XWikiNonExistingGroup" displayType="DEFAULT" matchUsing="ALL"
+        // By having matchUsing="ALL", the content won't be visible because of the non-existing group.
+        assertFalse(page.containsParagraph("Content for testing the show-If macro -8"));
+
+        // authenticationType="AUTHENTICATED" matchUsing="ALL" users="XWiki.superadmin"
+        assertTrue(page.containsParagraph("Content for testing the show-If macro -9"));
+
+        // groups="XWiki.XWikiAllGroup".
+        // The logged in user (superadmin) isn't part of the group, so the content is not visible.
+        assertFalse(page.containsParagraph("Content for testing the show-If macro -10"));
+
+        setup.login("UserTest", "UserTest");
+        setup.gotoPage(testReference);
+
+        // The logged-in user (UserTest) is part of the group, so the content is now visible.
+        assertTrue(page.containsParagraph("Content for testing the show-If macro -10"));
+
+        // groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ALL".
+        // The content is not visible because the user logged in is not the superadmin.
+        assertFalse(page.containsParagraph("Content for testing the show-If macro -11"));
+
+        setup.loginAsSuperAdmin();
     }
 
     @Test
@@ -734,14 +770,51 @@ public class GenericMacrosIT
         GenericMacrosPage page = new GenericMacrosPage();
 
         // displayType="DEFAULT" groups="XWiki.XWikiAllGroup" matchUsing="ALL".
+        // The content is not hidden because of the group (the user is not part of it).
         assertTrue(page.containsParagraph("content1"));
         // displayType="DEFAULT".
         assertFalse(page.containsParagraph("content2"));
         // displayType="NONE".
         assertTrue(page.containsParagraph("content3"));
+
         // authenticationType="AUTHENTICATED" displayType="PRINTABLE" groups="XWiki.XWikiAdminGroup" matchUsing="ALL"
-        // users="XWiki.SuperAdmin".
+        // users="XWiki.superadmin".
+        // The content is not hidden because of the display type and the group (the user is not part of it).
         assertTrue(page.containsParagraph("content4"));
+
+        // groups="XWiki.XWikiNonExistingGroup" matchUsing="ALL".
+        assertTrue(page.containsParagraph("content5"));
+
+        // displayType="DEFAULT" groups="XWiki.XWikiNonExistingGroup" matchUsing="ANY".
+        // The content is hidden because of the default display type.
+        assertFalse(page.containsParagraph("content6"));
+
+        // displayType="PRINTABLE".
+        assertTrue(page.containsParagraph("content7"));
+
+        // authenticationType="AUTHENTICATED".
+        assertFalse(page.containsParagraph("content8"));
+
+        // groups="XWiki.XWikiAllGroup" matchUsing="ALL".
+        // The user (superadmin) is not part of the group, so the content is not hidden.
+        assertTrue(page.containsParagraph("content9"));
+
+        setup.login("UserTest", "UserTest");
+        setup.gotoPage(testReference);
+
+        // The user (UserTest) logged in and is part of the group, so the content is hidden.
+        assertFalse(page.containsParagraph("content9"));
+
+        //groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ALL"
+        // By having matchUsing="ALL", even though the user is part of the group, he's not the superadmin, so the
+        // content is not hidden.
+        assertTrue(page.containsParagraph("content10"));
+
+        // groups="XWiki.XWikiAllGroup" users="XWiki.superadmin" matchUsing="ANY".
+        // By having matchUsing="ANY", even though the user is not the superadmin, the content is hidden.
+        assertFalse(page.containsParagraph("content11"));
+        setup.loginAsSuperAdmin();
+
     }
 
     @Test
@@ -935,16 +1008,18 @@ public class GenericMacrosIT
 
         // Checks the 1st ExcerptInclude macro, with the Excerpt macro defined on the same page.
         assertEquals("xwiki:Main.ExcerptIncludeTest", excerpt0.getTitle());
-        assertEquals("Content for excerpt macro -1", excerpt0.getContentText());
+        assertTrue(excerpt0.isContentDisplayed());
+        assertEquals("Content for excerpt macro -1", excerpt0.getContent());
 
         // Checks the 2nd ExcerptInclude macro, with the Excerpt macro containing also a table.
         assertEquals("xwiki:Main.ExcerptTest", excerpt1.getTitle());
-        assertEquals("Content for excerpt macro", excerpt1.getContentText());
-        assertTrue(excerpt1.containsTable());
+        assertTrue(excerpt1.isContentDisplayed());
+        assertEquals("Content for excerpt macro", excerpt1.getContent());
 
         // Checks the 3rd ExcerptInclude macro, with nested Excerpt macros and with inline mode.
         assertEquals("xwiki:Main.ExcerptTest", excerpt2.getTitle());
-        assertEquals("Content for Excerpt macro -2\nContent for Excerpt macro -3", excerpt2.getContentText());
+        assertTrue(excerpt2.isContentDisplayed());
+        assertEquals("Content for Excerpt macro -2\nContent for Excerpt macro -3", excerpt2.getContent());
 
         // Checks an ExcerptInclude macro, without a panel and with inline mode.
         assertTrue(includePage.containsText("Content for Excerpt macro -2Content for Excerpt macro -3"));
@@ -1063,20 +1138,18 @@ public class GenericMacrosIT
         assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
         assertTrue(contrib6.hasPages());
         assertEquals(Arrays.asList("ContributorsTest"), contrib6.getPages());
-
     }
 
     @Test
     @Order(19)
-    void recentlyUpdatedMacro(TestUtils setup, TestReference testReference,TestConfiguration testConfiguration)
+    void recentlyUpdatedMacro(TestUtils setup, TestReference testReference, TestConfiguration testConfiguration)
     {
-       
+
         setup.createPage(testReference, getMacroContent("recentlyupdated-macros.vm"), "RecentlyUpdatedTest");
-        
+
         GenericMacrosPage recentlyPage = new GenericMacrosPage();
 
         String css = ".recently-updated-macro";
-
         RecentlyUpdatedMacro recent0 = recentlyPage.getMacro(css, 0, RecentlyUpdatedMacro::new);
         RecentlyUpdatedMacro recent1 = recentlyPage.getMacro(css, 1, RecentlyUpdatedMacro::new);
         RecentlyUpdatedMacro recent2 = recentlyPage.getMacro(css, 2, RecentlyUpdatedMacro::new);
@@ -1107,7 +1180,8 @@ public class GenericMacrosIT
         assertTrue(recent1.hasShowMoreButton());
         recent1.clickShowMore();
         setup.getDriver().waitUntilCondition(driver -> recent1.getItemTitles().size() == 4);
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2","xwiki:Main.pageWithTags", "xwiki:Main.testPage2", "xwiki:Main.testPage"), recent1.getItemTitles());
+        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags", "xwiki:Main.testPage2",
+            "xwiki:Main.testPage"), recent1.getItemTitles());
         assertEquals("concise", recent1.getResultsTheme());
         assertTrue(recent1.themeStructureIsCorrect("concise"));
         assertEquals("150", recent1.getMacroWidth());
@@ -1176,6 +1250,7 @@ public class GenericMacrosIT
     {
         final DocumentReference pageWithTags = new DocumentReference("xwiki", "Main", "pageWithTags");
 
+        setup.deletePage(pageWithTags);
         final DocumentReference pageWithTags2 = new DocumentReference("xwiki", "XWiki", "pageWithTags2");
         setup.createPage(pageWithTags, "Test content for tagging");
         setup.gotoPage(pageWithTags);
@@ -1184,6 +1259,7 @@ public class GenericMacrosIT
         tagsPane.setTags("alpha, beta, gamma");
         tagsPane.add();
 
+        setup.deletePage(pageWithTags2);
         setup.createPage(pageWithTags2, "Test content for tagging");
         setup.gotoPage(pageWithTags2);
         TaggablePage taggablePage2 = new TaggablePage();

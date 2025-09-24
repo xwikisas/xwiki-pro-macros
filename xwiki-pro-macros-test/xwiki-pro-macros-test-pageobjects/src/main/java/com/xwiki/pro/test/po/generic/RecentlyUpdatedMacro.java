@@ -51,16 +51,12 @@ public class RecentlyUpdatedMacro extends BaseElement
 
     public boolean hasShowMoreButton()
     {
-        List<WebElement> buttons = macro.findElements(By.cssSelector("button.show-more"));
-        return !buttons.isEmpty() && buttons.get(0).isDisplayed();
+        return getShowMoreButton().isDisplayed();
     }
 
     public void clickShowMore()
     {
-        WebElement showMoreButton = macro.findElement(By.cssSelector("button.show-more"));
-        if (showMoreButton.isDisplayed() && showMoreButton.isEnabled()) {
-            showMoreButton.click();
-        }
+        getShowMoreButton().click();
     }
 
     public boolean hasHeading()
@@ -147,5 +143,10 @@ public class RecentlyUpdatedMacro extends BaseElement
         int colon = style.indexOf(":", pos);
         int semicolon = style.indexOf(";", colon);
         return style.substring(colon + 1, semicolon).trim();
+    }
+
+    private WebElement getShowMoreButton()
+    {
+        return macro.findElement(By.cssSelector("button.show-more"));
     }
 }
