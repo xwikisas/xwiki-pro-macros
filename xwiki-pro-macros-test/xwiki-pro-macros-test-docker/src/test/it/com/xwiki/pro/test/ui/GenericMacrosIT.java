@@ -23,8 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
@@ -43,26 +41,24 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.TestConfiguration;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
-import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.CommentsTab;
 
-
+import com.xwiki.pro.test.po.generic.ButtonMacro;
 import com.xwiki.pro.test.po.generic.ContentReportTableMacro;
 import com.xwiki.pro.test.po.generic.ContributorsMacro;
 import com.xwiki.pro.test.po.generic.ExcerptIncludeMacro;
 import com.xwiki.pro.test.po.generic.ExpandMacro;
-import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
-import com.xwiki.pro.test.po.generic.RecentlyUpdatedMacro;
-import com.xwiki.pro.test.po.generic.TabGroupMacro;
-import com.xwiki.pro.test.po.generic.TabMacro;
-import com.xwiki.pro.test.po.generic.ButtonMacro;
 import com.xwiki.pro.test.po.generic.GenericMacrosPage;
 import com.xwiki.pro.test.po.generic.MicrosoftStreamMacro;
 import com.xwiki.pro.test.po.generic.PanelMacro;
 import com.xwiki.pro.test.po.generic.PanelMacroPage;
+import com.xwiki.pro.test.po.generic.ProfilePictureMacro;
+import com.xwiki.pro.test.po.generic.RecentlyUpdatedMacro;
 import com.xwiki.pro.test.po.generic.RegisterMacro;
 import com.xwiki.pro.test.po.generic.StatusMacro;
+import com.xwiki.pro.test.po.generic.TabGroupMacro;
+import com.xwiki.pro.test.po.generic.TabMacro;
 import com.xwiki.pro.test.po.generic.TagListMacro;
 import com.xwiki.pro.test.po.generic.TeamMacro;
 import com.xwiki.pro.test.po.generic.UserListItem;
@@ -72,9 +68,9 @@ import com.xwiki.pro.test.po.utils.SolrTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * UI tests for the generic Pro Macros.
@@ -814,7 +810,6 @@ public class GenericMacrosIT
         // By having matchUsing="ANY", even though the user is not the superadmin, the content is hidden.
         assertFalse(page.containsParagraph("content11"));
         setup.loginAsSuperAdmin();
-
     }
 
     @Test
