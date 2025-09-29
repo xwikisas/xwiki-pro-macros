@@ -114,7 +114,7 @@ public class ContributorsMacro extends BaseElement
 
         List<String> result = new ArrayList<>();
         for (WebElement page : pages) {
-            List<WebElement> links = page.findElements(By.cssSelector(".contributor-page a"));
+            List<WebElement> links = page.findElements(By.cssSelector(".contributors-page a"));
             if (links.isEmpty()) {
                 String text = page.findElement(By.tagName("p")).getText().replaceFirst("^Pages:\\s*", "");
                 result.add(text);

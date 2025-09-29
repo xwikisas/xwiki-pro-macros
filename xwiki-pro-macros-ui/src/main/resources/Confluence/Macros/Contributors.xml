@@ -463,7 +463,7 @@ Result:
             #foreach ($page in $pages)
                #if (!$foreach.first), #end##
                #set($d = $xwiki.getDocument($page))
-               &lt;span class="contributor-page"&gt;
+               &lt;span class="contributors-page"&gt;
                &lt;a href="$escapetool.xml($d.getURL())"&gt;##
                #set($title = "$!d.getRenderedTitle($xwiki.currentContentSyntaxId)")
                #if ($title != "")
