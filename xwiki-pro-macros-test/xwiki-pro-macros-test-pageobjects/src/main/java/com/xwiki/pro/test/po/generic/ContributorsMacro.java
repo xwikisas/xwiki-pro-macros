@@ -20,7 +20,6 @@
 package com.xwiki.pro.test.po.generic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,7 +97,7 @@ public class ContributorsMacro extends BaseElement
 
     public boolean hasPages()
     {
-        return macro.getText().contains("Pages:");
+        return !macro.findElements(By.cssSelector(".contributors-page-list")).isEmpty();
     }
 
     public boolean hasContributionCount()
@@ -108,27 +107,23 @@ public class ContributorsMacro extends BaseElement
 
     public List<String> getPages()
     {
-        if (!hasPages()) {
+        List<WebElement> pages = macro.findElements(By.cssSelector(".contributors-page-list"));
+        if (pages.isEmpty()) {
             return Collections.emptyList();
         }
 
-        WebElement paragraph =
-            macro.findElements(By.tagName("p")).stream().filter(p -> p.getText().startsWith("Pages:")).findFirst()
-                .orElse(null);
-
-        if (paragraph == null) {
-            return Collections.emptyList();
-        }
-
-        List<WebElement> links = paragraph.findElements(By.tagName("a"));
-        if (!links.isEmpty()) {
-            List<String> result = new ArrayList<>();
-            for (WebElement link : links) {
-                result.add(link.getText());
+        List<String> result = new ArrayList<>();
+        for (WebElement page : pages) {
+            List<WebElement> links = page.findElements(By.cssSelector(".contributor-page a"));
+            if (links.isEmpty()) {
+                String text = page.findElement(By.tagName("p")).getText().replaceFirst("^Pages:\\s*", "");
+                result.add(text);
+            } else {
+                for (WebElement link : links) {
+                    result.add(link.getText());
+                }
             }
-            return result;
         }
-
-        return Arrays.asList(paragraph.getText().substring("Pages:".length()).trim());
+        return result;
     }
 }

@@ -455,6 +455,7 @@ Result:
 {{html clean=false}}
     &lt;div class="confluence-contributors"&gt;
       #if ($showPages)
+        &lt;div class="contributors-page-list"&gt;
         &lt;p&gt;$services.localization.render("confluencecontributors.pages")
           #if ($pages.isEmpty())
             $services.localization.render("confluencecontributors.nopages")
@@ -462,6 +463,7 @@ Result:
             #foreach ($page in $pages)
                #if (!$foreach.first), #end##
                #set($d = $xwiki.getDocument($page))
+               &lt;span class="contributor-page"&gt;
                &lt;a href="$escapetool.xml($d.getURL())"&gt;##
                #set($title = "$!d.getRenderedTitle($xwiki.currentContentSyntaxId)")
                #if ($title != "")
@@ -471,9 +473,11 @@ Result:
                #else
                  $escapetool.xml($page)##
                #end&lt;/a&gt;##
+            &lt;/span&gt;
             #end
           #end
         &lt;/p&gt;
+        &lt;/div&gt;
         #if(!$isList) - #end
       #end
       #if ($contributions.isEmpty())
