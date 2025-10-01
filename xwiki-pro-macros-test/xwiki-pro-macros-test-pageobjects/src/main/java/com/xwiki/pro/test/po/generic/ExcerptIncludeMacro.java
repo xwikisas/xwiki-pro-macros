@@ -45,7 +45,7 @@ public class ExcerptIncludeMacro extends BaseElement
 
     public String getContent()
     {
-        return excerpt.findElement(By.cssSelector(".macro-panel-content")).getText().trim();
+        return excerpt.findElement(By.cssSelector(".macro-panel-content")).getText();
     }
 
     public boolean isContentDisplayed()
