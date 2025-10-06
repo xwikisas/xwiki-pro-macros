@@ -345,8 +345,7 @@ Result:
   #end
 #end
 #macro (showContribution $contribution)
-  &lt;a class="contributor-name"
-        href="$escapetool.xml($xwiki.getURL($contribution['name']))"&gt;$xwiki.getUserName($contribution['name'],false)&lt;/a&gt;
+  &lt;a class="contributor-name" href="$escapetool.xml($xwiki.getURL($contribution['name']))"&gt;$xwiki.getUserName($contribution['name'],false)&lt;/a&gt;
   #if ($showCount)
     &lt;span class="contributor-contribution-count"&gt; $contribution['count'] &lt;/span&gt;
   #end
