@@ -80,11 +80,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.25.2
  */
 @UITest(
-    /*servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
+    servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
     // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
     // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
     // host machine.
-    ServletEngine.JETTY_STANDALONE },*/
+    ServletEngine.JETTY_STANDALONE },
     properties = {
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin, "
             + "com.xpn.xwiki.plugin.skinx.JsResourceSkinExtensionPlugin, "
