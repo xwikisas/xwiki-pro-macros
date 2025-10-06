@@ -73,21 +73,8 @@ public class RecentlyUpdatedMacro extends BaseElement
 
     public String getAuthorName(int resultIndex)
     {
-
         List<WebElement> results = macro.findElements(By.cssSelector(".result-item, .result-container"));
-        WebElement result = results.get(resultIndex);
-
-        List<WebElement> authors = result.findElements(By.cssSelector(".result-last-author-name a"));
-        if (!authors.isEmpty()) {
-            return authors.get(0).getText();
-        }
-
-        List<WebElement> plain = result.findElements(By.cssSelector(".result-last-author-name"));
-        if (!plain.isEmpty()) {
-            return plain.get(0).getText();
-        }
-
-        return "";
+        return results.get(resultIndex).findElement(By.cssSelector(".result-last-author-name")).getText();
     }
 
     public String getResultsTheme()
@@ -138,11 +125,7 @@ public class RecentlyUpdatedMacro extends BaseElement
 
     public String getMacroWidth()
     {
-        String style = macro.getAttribute("style");
-        int pos = style.indexOf("--width");
-        int colon = style.indexOf(":", pos);
-        int semicolon = style.indexOf(";", colon);
-        return style.substring(colon + 1, semicolon).trim();
+        return macro.getCssValue("--width");
     }
 
     private WebElement getShowMoreButton()

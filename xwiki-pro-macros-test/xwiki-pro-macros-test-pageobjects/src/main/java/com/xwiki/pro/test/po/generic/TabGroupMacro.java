@@ -34,7 +34,7 @@ import org.xwiki.test.ui.po.BaseElement;
  */
 public class TabGroupMacro extends BaseElement
 {
-    private WebElement tabGroup;
+    private final WebElement tabGroup;
 
     public TabGroupMacro(String id)
     {
@@ -43,19 +43,17 @@ public class TabGroupMacro extends BaseElement
 
     public int getTabCount()
     {
-        return tabGroup.findElements(By.cssSelector("ul.nav-tabs li a")).size();
+        return getTabLinks().size();
     }
 
     public List<String> getTabLabels()
     {
-        return tabGroup.findElements(By.cssSelector("ul.nav-tabs li a")).stream().map(WebElement::getText)
-            .collect(Collectors.toList());
+        return getTabLinks().stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public List<String> getTabIds()
     {
-        return tabGroup.findElements(By.cssSelector("ul.nav-tabs li a")).stream().map(e -> e.getAttribute("href"))
-            .map(href -> href.substring(href.indexOf('#') + 1)).collect(Collectors.toList());
+        return getTabLinks().stream().map(this::getTabId).collect(Collectors.toList());
     }
 
     public boolean isTabListFirst()
@@ -93,7 +91,8 @@ public class TabGroupMacro extends BaseElement
 
     public void clickTab(String tabId)
     {
-        WebElement tabLink = tabGroup.findElement(By.cssSelector("ul[role='tablist'] a[href='#" + tabId + "']"));
+        WebElement tabLink =
+            getTabLinks().stream().filter(link -> getTabId(link).equals(tabId)).findFirst().orElseThrow();
         tabLink.click();
     }
 
@@ -105,14 +104,13 @@ public class TabGroupMacro extends BaseElement
 
     public boolean isLoopEnabled()
     {
-        return "true".equalsIgnoreCase(tabGroup.getAttribute("data-loop-cards"));
+        return Boolean.parseBoolean(tabGroup.getAttribute("data-loop-cards"));
     }
 
     public String getActiveTabId()
     {
         WebElement activeLi = tabGroup.findElement(By.cssSelector("ul.nav-tabs li.active a"));
-        String href = activeLi.getAttribute("href");
-        return href.substring(href.indexOf('#') + 1);
+        return getTabId(activeLi);
     }
 
     public int getFinalNextAfter(TabMacro tab)
@@ -122,5 +120,21 @@ public class TabGroupMacro extends BaseElement
             return tabNext;
         }
         return getNextAfter();
+    }
+
+    private List<WebElement> getTabs()
+    {
+        return tabGroup.findElements(By.cssSelector("ul.nav-tabs li"));
+    }
+
+    private List<WebElement> getTabLinks()
+    {
+        return getTabs().stream().map(tab -> tab.findElement(By.tagName("a"))).collect(Collectors.toList());
+    }
+
+    private String getTabId(WebElement tabLink)
+    {
+        String href = tabLink.getAttribute("href");
+        return href.substring(href.indexOf('#') + 1);
     }
 }

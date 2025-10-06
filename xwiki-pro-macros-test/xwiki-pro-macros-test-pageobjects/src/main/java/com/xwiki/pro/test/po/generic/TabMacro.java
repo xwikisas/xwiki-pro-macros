@@ -31,7 +31,7 @@ import org.xwiki.test.ui.po.BaseElement;
  */
 public class TabMacro extends BaseElement
 {
-    private WebElement tab;
+    private final WebElement tab;
 
     public TabMacro(String id)
     {
@@ -66,10 +66,9 @@ public class TabMacro extends BaseElement
 
     public int getEffectDuration()
     {
-        String style = getCssStyle();
-        if (style != null && style.contains("transition-duration")) {
-            String value = style.replaceAll(".*transition-duration:\\s*([0-9.]+)s.*", "$1");
-            return Integer.parseInt(value.split("\\.")[0]);
+        String duration = tab.getCssValue("transition-duration");
+        if (duration != null) {
+            return (int) Float.parseFloat(duration.replace("s", ""));
         }
         return 0;
     }

@@ -73,11 +73,6 @@ public class ExpandMacro extends BaseElement
         return getImages().stream().anyMatch(img -> img.getAttribute("src").contains(partialSrc));
     }
 
-    public boolean isExpanded()
-    {
-        return expand.getAttribute("open") != null;
-    }
-
     public void toggle()
     {
         expand.findElement(By.tagName("summary")).click();
