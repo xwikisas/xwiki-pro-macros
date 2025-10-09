@@ -433,6 +433,7 @@ Hello
     <property>
       <code>{{velocity output="false"}}
 #macro (exportMode $escapedTitle)
+  ## Use a different structure when exporting to make sure that the pagedjs can properly parse the content.
 
   {{html clean="false" wiki="true"}}
   &lt;div class = "panel panel-default confluence-expand-macro"&gt;
