@@ -131,7 +131,12 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         XWikiContext xcontext = contextProvider.get();
         XWikiDocument document;
         try {
-            document = xcontext.getWiki().getDocument(reference, xcontext);
+            if (reference == null) {
+                document = xcontext.getDoc();
+                reference = document.getDocumentReference();
+            } else {
+                document = xcontext.getWiki().getDocument(reference, xcontext);
+            }
         } catch (XWikiException e) {
             throw new MacroExecutionException(String.format("Failed to get document for reference [%s]", reference), e);
         }
