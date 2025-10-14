@@ -127,52 +127,41 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     protected List<Block> internalExecute(ExcerptIncludeMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
     {
-        DocumentReference reference = parameters.getReference();
-        XWikiContext xcontext = contextProvider.get();
-        XWikiDocument document;
-        try {
-            if (reference == null) {
-                document = xcontext.getDoc();
-                reference = document.getDocumentReference();
-            } else {
-                document = xcontext.getWiki().getDocument(reference, xcontext);
-            }
-        } catch (XWikiException e) {
-            throw new MacroExecutionException(String.format("Failed to get document for reference [%s]", reference), e);
-        }
-
-        XDOM displayContent = null;
+        XWikiDocument document = getReferencedDocument(parameters);
 
         boolean inline = context.isInline() || parameters.isInline();
 
-        if (document.isNew()) {
-            displayContent = getErrorXDOM(
+        XDOM displayContent = document.isNew()
+            ? getErrorXDOM(
                 localizationManager.getTranslationPlain("rendering.macro.excerptinclude.referenceexcerptnotfound",
-                    reference), context);
-        } else {
-            displayContent = getExcerpt(parameters.getName(), document, context, inline);
-        }
+                document.getDocumentReference()), context)
+            : getExcerpt(parameters.getName(), document, context, inline);
 
         if (inline || parameters.isNopanel()) {
             return Collections.singletonList(displayContent);
         }
 
+        return renderPanel(document, displayContent, document.getDocumentReference());
+    }
+
+    private XWikiDocument getReferencedDocument(ExcerptIncludeMacroParameters parameters) throws MacroExecutionException
+    {
+        DocumentReference reference = parameters.getReference();
+        XWikiContext xcontext = contextProvider.get();
+        try {
+            return reference == null ? xcontext.getDoc() : xcontext.getWiki().getDocument(reference, xcontext);
+        } catch (XWikiException e) {
+            throw new MacroExecutionException(String.format("Failed to get document for reference [%s]", reference), e);
+        }
+    }
+
+    private List<Block> renderPanel(XWikiDocument document, XDOM displayContent, DocumentReference reference)
+    {
         Map<String, String> panelParameters = new HashMap<>(1);
         panelParameters.put("classes", "macro-excerpt-include");
         panelParameters.put("title", document.getTitle());
 
-        XWikiDocument docForRendering = new XWikiDocument(null);
-        String excerptContent;
-        try {
-            docForRendering.setContent(displayContent);
-            excerptContent = docForRendering.getContent();
-        } catch (XWikiException e) {
-            excerptContent = "{{error}}\n"
-                + localizationManager.getTranslationPlain("rendering.macro.excerptinclude.renderfailure")
-                + "\n{{/error}}";
-        }
-
-        MacroBlock panel = new MacroBlock("panel", panelParameters, excerptContent, false);
+        MacroBlock panel = new MacroBlock("panel", panelParameters, renderExcerptContent(displayContent), false);
         String source = this.entityReferenceSerializer.serialize(reference);
         MetaData extraMeta = new MetaData();
         extraMeta.addMetaData(MetaData.SOURCE, source);
@@ -184,6 +173,19 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         );
 
         return Collections.singletonList(metadataContent);
+    }
+
+    private String renderExcerptContent(XDOM displayContent)
+    {
+        try {
+            XWikiDocument docForRendering = new XWikiDocument(null);
+            docForRendering.setContent(displayContent);
+            return docForRendering.getContent();
+        } catch (XWikiException e) {
+            return "{{error}}\n"
+                + localizationManager.getTranslationPlain("rendering.macro.excerptinclude.renderfailure")
+                + "\n{{/error}}";
+        }
     }
 
     private XDOM getExcerpt(String name, XWikiDocument document, MacroTransformationContext context, boolean inline)
@@ -220,69 +222,83 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     private XDOM getExcerptFromXDOM(String name, XDOM xdom, XWikiDocument document,
         DocumentDisplayerParameters displayParameters, boolean inline) throws MacroExecutionException
     {
-        XWikiContext xcontext = contextProvider.get();
         List<Block> blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
 
-        XDOM displayContent = null;
         for (Block block : blocks) {
             MacroBlock macroBlock = (MacroBlock) block;
             String candidateName = macroBlock.getParameter("name");
             if (candidateName == null) {
                 candidateName = "";
             }
-            if ("excerpt".equals(macroBlock.getId()) && StringUtils.equals(candidateName, name)) {
-                String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
-                boolean allowUnprivileged = "1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged);
-                if (!allowUnprivileged) {
-                    checkAccess(document.getDocumentReference(), xcontext);
-                }
 
-                // Use a document clone that has only the excerpt macro as content, to be displayed.
-                XWikiDocument documentClone = document.clone();
-                try {
-                    macroBlock.setParameter("hidden", "false");
-                    if (inline && !macroBlock.isInline()) {
-                        macroBlock = new MacroBlock(macroBlock.getId(), macroBlock.getParameters(),
-                            macroBlock.getContent(), true);
-                    }
-                    documentClone.setContent(new XDOM(Collections.singletonList(macroBlock)));
-                } catch (XWikiException e) {
-                    throw new MacroExecutionException("Could not include the excerpt", e);
-                }
-                displayContent = contentDisplayer.display(documentClone, displayParameters);
-            } else {
-                // recurse into the macro content, but only if that content is of "WIKI" type
-                MacroId macroId = new MacroId(macroBlock.getId(), document.getSyntax());
-                try {
-                    ParameterizedType wikiContentType = new DefaultParameterizedType(null, List.class, Block.class);
-                    ContentDescriptor contentDescriptor = macroManager.getMacro(macroId).getDescriptor()
-                            .getContentDescriptor();
-                    if (contentDescriptor != null && wikiContentType.equals(contentDescriptor.getType())) {
-                        ComponentManager cm = cmProvider.get();
-                        Parser macroContentParser = cm.getInstance(Parser.class, document.getSyntax().toIdString());
-                        XDOM macroContent = macroContentParser.parse(new StringReader(macroBlock.getContent()));
-                        displayContent = getExcerptFromXDOM(name, macroContent, document, displayParameters, inline);
-                    }
-                } catch (MacroLookupException | NullPointerException e) {
-                    // someone used an unknown / unsupported macro: ignore
-                    logger.debug("No macro found for [{}]", macroId, e);
-                } catch (ComponentLookupException e) {
-                    // looks like a serious installation problem
-                    logger.warn("Failed to find required component to find excerpt in [{}]",
-                        document.getDocumentReference());
-                    logger.debug("It is missing because:", e);
-                } catch (ParseException e) {
-                    // this is likely nothing the current user can do something about
-                    logger.info("Failed to parse content of wiki macro [{}] in document [{}] to look for excerpt",
-                            macroBlock.getId(), document.getDocumentReference());
-                    logger.debug("Reason:", e);
-                }
-            }
+            XDOM displayContent = ("excerpt".equals(macroBlock.getId()) && StringUtils.equals(candidateName, name))
+                ? parseMatchingExcerpt(document, displayParameters, inline, macroBlock)
+                : findMatchingExcerpt(name, document, displayParameters, inline, macroBlock);
+
             if (displayContent != null) {
-                break;
+                return displayContent;
             }
         }
 
+        return null;
+    }
+
+    private XDOM findMatchingExcerpt(String name, XWikiDocument document,
+        DocumentDisplayerParameters displayParameters, boolean inline, MacroBlock macroBlock)
+        throws MacroExecutionException
+    {
+        // recurse into the macro content, but only if that content is of "WIKI" type
+        MacroId macroId = new MacroId(macroBlock.getId(), document.getSyntax());
+        try {
+            ParameterizedType wikiContentType = new DefaultParameterizedType(null, List.class, Block.class);
+            ContentDescriptor contentDescriptor = macroManager.getMacro(macroId).getDescriptor()
+                    .getContentDescriptor();
+            if (contentDescriptor != null && wikiContentType.equals(contentDescriptor.getType())) {
+                ComponentManager cm = cmProvider.get();
+                Parser macroContentParser = cm.getInstance(Parser.class, document.getSyntax().toIdString());
+                XDOM macroContent = macroContentParser.parse(new StringReader(macroBlock.getContent()));
+                return getExcerptFromXDOM(name, macroContent, document, displayParameters, inline);
+            }
+        } catch (MacroLookupException | NullPointerException e) {
+            // someone used an unknown / unsupported macro: ignore
+            logger.debug("No macro found for [{}]", macroId, e);
+        } catch (ComponentLookupException e) {
+            // looks like a serious installation problem
+            logger.warn("Failed to find required component to find excerpt in [{}]",
+                document.getDocumentReference());
+            logger.debug("It is missing because:", e);
+        } catch (ParseException e) {
+            // this is likely nothing the current user can do something about
+            logger.info("Failed to parse content of wiki macro [{}] in document [{}] to look for excerpt",
+                    macroBlock.getId(), document.getDocumentReference());
+            logger.debug("Reason:", e);
+        }
+        return null;
+    }
+
+    private XDOM parseMatchingExcerpt(XWikiDocument document, DocumentDisplayerParameters displayParameters,
+        boolean inline, MacroBlock macroBlock) throws MacroExecutionException
+    {
+        XDOM displayContent;
+        String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
+        boolean allowUnprivileged = "1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged);
+        if (!allowUnprivileged) {
+            checkAccess(document.getDocumentReference(), contextProvider.get());
+        }
+
+        // Use a document clone that has only the excerpt macro as content, to be displayed.
+        XWikiDocument documentClone = document.clone();
+        try {
+            MacroBlock mb = macroBlock;
+            mb.setParameter("hidden", "false");
+            if (inline && !mb.isInline()) {
+                mb = new MacroBlock(macroBlock.getId(), mb.getParameters(), mb.getContent(), true);
+            }
+            documentClone.setContent(new XDOM(Collections.singletonList(mb)));
+        } catch (XWikiException e) {
+            throw new MacroExecutionException("Could not include the excerpt", e);
+        }
+        displayContent = contentDisplayer.display(documentClone, displayParameters);
         return displayContent;
     }
 
