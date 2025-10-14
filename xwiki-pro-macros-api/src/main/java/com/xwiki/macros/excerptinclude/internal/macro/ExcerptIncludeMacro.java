@@ -150,7 +150,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 localizationManager.getTranslationPlain("rendering.macro.excerptinclude.referenceexcerptnotfound",
                     reference), context);
         } else {
-            displayContent = getExcerpt(parameters.getName(), document, reference, context, inline);
+            displayContent = getExcerpt(parameters.getName(), document, context, inline);
         }
 
         if (inline || parameters.isNopanel()) {
@@ -186,25 +186,24 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         return Collections.singletonList(metadataContent);
     }
 
-    private XDOM getExcerpt(String name, XWikiDocument document, DocumentReference reference,
-        MacroTransformationContext context, boolean inline) throws MacroExecutionException
+    private XDOM getExcerpt(String name, XWikiDocument document, MacroTransformationContext context, boolean inline)
+        throws MacroExecutionException
     {
         DocumentDisplayerParameters displayParameters = new DocumentDisplayerParameters();
         displayParameters.setContentTransformed(true);
         displayParameters.setExecutionContextIsolated(true);
         displayParameters.setTransformationContextIsolated(true);
-        XDOM displayContent = getExcerptFromXDOM(name, document.getXDOM(), document, reference, context,
-                displayParameters, inline);
+        XDOM displayContent = getExcerptFromXDOM(name, document.getXDOM(), document, displayParameters, inline);
 
         if (displayContent == null) {
             if (StringUtils.isEmpty(name)) {
                 // If there is no excerpt macro and a name was not provided, display the entire content.
-                checkAccess(reference, contextProvider.get());
+                checkAccess(document.getDocumentReference(), contextProvider.get());
                 displayContent = contentDisplayer.display(document, displayParameters);
             } else {
                 displayContent = getErrorXDOM(
                     localizationManager.getTranslationPlain("rendering.macro.excerptinclude.namedexcerptnotfound",
-                        name, reference), context);
+                        name, document.getDocumentReference()), context);
             }
         }
 
@@ -218,9 +217,8 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         return displayContent;
     }
 
-    private XDOM getExcerptFromXDOM(String name, XDOM xdom, XWikiDocument document, DocumentReference reference,
-            MacroTransformationContext context, DocumentDisplayerParameters displayParameters, boolean inline)
-        throws MacroExecutionException
+    private XDOM getExcerptFromXDOM(String name, XDOM xdom, XWikiDocument document,
+        DocumentDisplayerParameters displayParameters, boolean inline) throws MacroExecutionException
     {
         XWikiContext xcontext = contextProvider.get();
         List<Block> blocks = xdom.getBlocks(new ClassBlockMatcher(MacroBlock.class), Block.Axes.DESCENDANT);
@@ -236,7 +234,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                 String unprivileged = macroBlock.getParameter("allowUnprivilegedInclude");
                 boolean allowUnprivileged = "1".equals(unprivileged) || "true".equalsIgnoreCase(unprivileged);
                 if (!allowUnprivileged) {
-                    checkAccess(reference, xcontext);
+                    checkAccess(document.getDocumentReference(), xcontext);
                 }
 
                 // Use a document clone that has only the excerpt macro as content, to be displayed.
@@ -263,20 +261,20 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
                         ComponentManager cm = cmProvider.get();
                         Parser macroContentParser = cm.getInstance(Parser.class, document.getSyntax().toIdString());
                         XDOM macroContent = macroContentParser.parse(new StringReader(macroBlock.getContent()));
-                        displayContent = getExcerptFromXDOM(name, macroContent, document, reference, context,
-                                displayParameters, inline);
+                        displayContent = getExcerptFromXDOM(name, macroContent, document, displayParameters, inline);
                     }
                 } catch (MacroLookupException | NullPointerException e) {
                     // someone used an unknown / unsupported macro: ignore
                     logger.debug("No macro found for [{}]", macroId, e);
                 } catch (ComponentLookupException e) {
                     // looks like a serious installation problem
-                    logger.warn("Failed to find required component to find excerpt in [{}]", reference);
+                    logger.warn("Failed to find required component to find excerpt in [{}]",
+                        document.getDocumentReference());
                     logger.debug("It is missing because:", e);
                 } catch (ParseException e) {
                     // this is likely nothing the current user can do something about
                     logger.info("Failed to parse content of wiki macro [{}] in document [{}] to look for excerpt",
-                            macroBlock.getId(), reference);
+                            macroBlock.getId(), document.getDocumentReference());
                     logger.debug("Reason:", e);
                 }
             }
