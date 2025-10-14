@@ -432,55 +432,83 @@ Hello
     </property>
     <property>
       <code>{{velocity output="false"}}
-#macro (executeMacro)
-  ## To avoid an issue regarding {{wikimacroparameter}} and {{wikimacrocontent}} that fail to render when in
-  ## edit mode while inside a HTML macro, we need to manually write the HTML by using XWiki syntax. This way,
-  ## while the macro will always be expanded when in edit mode, the user will be able to modify the text inline.
-  #set ($targetSyntaxId = $wikimacro.context.transformationContext.targetSyntax.type.id)
-  #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
-  #if ($targetSyntaxId == 'annotatedhtml' || $targetSyntaxId == 'annotatedxhtml' ||
-    $request.outputSyntax == 'annotatedhtml')
-    (% class="confluence-expand-macro panel panel-default" %)
-    (((
-      (((
-        (% class="panel-title" %)
-        (((
-          (% class="glyphicon glyphicon-menu-down" aria-hidden="true" %)
-          ((()))
-          {{wikimacroparameter name='title' /}}
-        )))
-      )))
-      (% class="panel-body" %)
-      (((
-        {{wikimacrocontent /}}
-      )))
-    )))
-  #else
-  #set ($opened = $xcontext.action == 'edit' || $xcontext.action == 'export' || $wikimacro.parameters.expanded)
+#macro (exportMode $escapedTitle)
+  ## Use a different structure when exporting to make sure that the pagedjs can properly parse the content.
+
   {{html clean="false" wiki="true"}}
-  &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
-    &lt;summary&gt;
+  &lt;div class = "panel panel-default confluence-expand-macro"&gt;
+    &lt;div class&gt;
       &lt;span class="panel-title"&gt;
-        &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
-        #set ($title = $wikimacro.parameters.title)
-        #if ("$!title" == "")
-          #set ($title = $services.promacroexpand.getAutoTitle($wikimacro.content, $xwiki.currentContentSyntaxId))
-          #if ("$!title" == "")
-            #set ($title = $services.localization.render("rendering.macro.expand.defaultexpandtitle"))
-          #end
-        #end
+        &lt;span class="glyphicon glyphicon-menu-down" aria-hidden="true"&gt;&lt;/span&gt;
         &lt;span class="title-text"&gt;
-          $services.rendering.escape($escapetool.xml($title), $xwiki.currentContentSyntaxId)
+          $escapedTitle
         &lt;/span&gt;
       &lt;/span&gt;
-    &lt;/summary&gt;
+    &lt;div&gt;
     &lt;div class="panel-body"&gt;
 
       {{wikimacrocontent /}}
 
     &lt;/div&gt;
-  &lt;/details&gt;
+  &lt;/div&gt;
   {{/html}}
+
+#end
+
+#macro (executeMacro)
+
+  #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
+  #set ($title = $wikimacro.parameters.title)
+  #if ("$!title" == "")
+    #set ($title = $services.promacroexpand.getAutoTitle($wikimacro.content, $xwiki.currentContentSyntaxId))
+  #end
+  #if ("$!title" == "")
+    #set ($title = $services.localization.render("rendering.macro.expand.defaultexpandtitle"))
+  #end
+  #set ($escapedTitle = $services.rendering.escape($escapetool.xml($title), $xwiki.currentContentSyntaxId))
+  #if ($xcontext.action == 'export')
+    #exportMode($escapedTitle)
+  #else
+    ## To avoid an issue regarding {{wikimacroparameter}} and {{wikimacrocontent}} that fail to render when in
+    ## edit mode while inside a HTML macro, we need to manually write the HTML by using XWiki syntax. This way,
+    ## while the macro will always be expanded when in edit mode, the user will be able to modify the text inline.
+    #set ($targetSyntaxId = $wikimacro.context.transformationContext.targetSyntax.type.id)
+    #if ($targetSyntaxId == 'annotatedhtml' || $targetSyntaxId == 'annotatedxhtml' || $request.outputSyntax == 'annotatedhtml')
+      (% class="confluence-expand-macro panel panel-default" %)
+      (((
+        (((
+          (% class="panel-title" %)
+          (((
+            (% class="glyphicon glyphicon-menu-down" aria-hidden="true" %)
+            ((()))
+            {{wikimacroparameter name='title' /}}
+          )))
+        )))
+        (% class="panel-body" %)
+        (((
+          {{wikimacrocontent /}}
+        )))
+      )))
+    #else
+    #set ($opened = $xcontext.action == 'edit'|| $wikimacro.parameters.expanded)
+    {{html clean="false" wiki="true"}}
+    &lt;details class="confluence-expand-macro panel panel-default" #if ($opened)open#end&gt;
+      &lt;summary&gt;
+        &lt;span class="panel-title"&gt;
+          &lt;span class="glyphicon glyphicon-menu-right" aria-hidden="true"&gt;&lt;/span&gt;
+          &lt;span class="title-text"&gt;
+            $escapedTitle
+          &lt;/span&gt;
+        &lt;/span&gt;
+      &lt;/summary&gt;
+      &lt;div class="panel-body"&gt;
+
+        {{wikimacrocontent /}}
+
+      &lt;/div&gt;
+    &lt;/details&gt;
+    {{/html}}
+    #end
   #end
 #end
 {{/velocity}}

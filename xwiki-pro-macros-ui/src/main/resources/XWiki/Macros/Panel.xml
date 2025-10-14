@@ -571,6 +571,7 @@ This macro supports all Atlassian Confluence parameters as of version 7.9.</cont
         {{wikimacroparameter name="footer" /}}
       )))
     #end
+  )))
   #if ("$!classes" != '')
     )))
   #end
