@@ -41,9 +41,11 @@ import org.xwiki.display.internal.DocumentDisplayer;
 import org.xwiki.display.internal.DocumentDisplayerParameters;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.model.reference.DocumentReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.block.XDOM;
@@ -75,11 +77,14 @@ import com.xwiki.macros.excerptinclude.macro.ExcerptIncludeMacroParameters;
  * @since 1.14.5
  */
 @Component
-@Named("excerpt-include")
+@Named(ExcerptIncludeMacro.EXCERPT_INCLUDE)
 @Singleton
 @Unstable
 public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroParameters>
 {
+    static final String EXCERPT_INCLUDE = "excerpt-include";
+    private static final String NAME = "name";
+
     @Inject
     private ContextualLocalizationManager localizationManager;
 
@@ -105,6 +110,9 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
     @Inject
     private EntityReferenceSerializer<String> entityReferenceSerializer;
 
+    @Inject
+    private DocumentReferenceResolver<String> documentReferenceResolver;
+
     /**
      * Constructs an instance of ExcerptIncludeMacro. Initializes the macro descriptor with a specific name,
      * description, and parameter class type.
@@ -128,20 +136,68 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
         MacroTransformationContext context) throws MacroExecutionException
     {
         XWikiDocument document = getReferencedDocument(parameters);
+        DocumentReference documentReference = document.getDocumentReference();
+
+        if (recursionDetected(documentReference, parameters.getName(), context))  {
+            return Collections.singletonList(getErrorXDOM(
+                localizationManager.getTranslationPlain("rendering.macro.excerptinclude.recursiondetected",
+                    documentReference), context));
+        }
 
         boolean inline = context.isInline() || parameters.isInline();
 
         XDOM displayContent = document.isNew()
             ? getErrorXDOM(
                 localizationManager.getTranslationPlain("rendering.macro.excerptinclude.referenceexcerptnotfound",
-                document.getDocumentReference()), context)
+                documentReference), context)
             : getExcerpt(parameters.getName(), document, context, inline);
 
-        if (inline || parameters.isNopanel()) {
-            return Collections.singletonList(displayContent);
+        return (inline || parameters.isNopanel())
+            ? Collections.singletonList(displayContent)
+            : renderPanel(document, displayContent, documentReference);
+    }
+
+    private boolean recursionDetected(DocumentReference includedDoc, String name, MacroTransformationContext context)
+    {
+        // Inspired of org.xwiki.rendering.internal.macro.include.IncludeMacro#checkRecursion
+        MacroBlock currentMacroBlock = context.getCurrentMacroBlock();
+        return recursionDetected(includedDoc, name, currentMacroBlock.getParent());
+    }
+
+    private boolean recursionDetected(DocumentReference includedDoc, String name, Block parentBlock)
+    {
+        if (parentBlock == null) {
+            return false;
         }
 
-        return renderPanel(document, displayContent, document.getDocumentReference());
+        if (isSameIncludeExcerpt(includedDoc, name, parentBlock)) {
+            return true;
+        }
+
+        return recursionDetected(includedDoc, name, parentBlock.getParent());
+    }
+
+    private boolean isSameIncludeExcerpt(DocumentReference includedDoc, String name, Block parentBlock)
+    {
+        if (!(parentBlock instanceof MacroMarkerBlock)) {
+            return false;
+        }
+
+        MacroMarkerBlock parentMacro = (MacroMarkerBlock) parentBlock;
+        if (
+            EXCERPT_INCLUDE.equals(parentMacro.getId())
+                && StringUtils.defaultString(parentMacro.getParameter(NAME)).equals(name)
+        ) {
+            String serializedRef = parentMacro.getParameter("0");
+
+            DocumentReference ref = StringUtils.isEmpty(serializedRef)
+                ? contextProvider.get().getDoc().getDocumentReference()
+                : documentReferenceResolver.resolve(serializedRef);
+
+            return ref.equals(includedDoc);
+        }
+
+        return false;
     }
 
     private XWikiDocument getReferencedDocument(ExcerptIncludeMacroParameters parameters) throws MacroExecutionException
@@ -226,7 +282,7 @@ public class ExcerptIncludeMacro extends AbstractProMacro<ExcerptIncludeMacroPar
 
         for (Block block : blocks) {
             MacroBlock macroBlock = (MacroBlock) block;
-            String candidateName = macroBlock.getParameter("name");
+            String candidateName = macroBlock.getParameter(NAME);
             if (candidateName == null) {
                 candidateName = "";
             }

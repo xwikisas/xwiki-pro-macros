@@ -19,6 +19,7 @@
  */
 package com.xwiki.macros.excerptinclude.macro;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyId;
@@ -86,7 +87,7 @@ public class ExcerptIncludeMacroParameters
      */
     public String getName()
     {
-        return this.name;
+        return StringUtils.defaultString(this.name);
     }
 
     /**
