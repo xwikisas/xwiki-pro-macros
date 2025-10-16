@@ -80,11 +80,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.25.2
  */
 @UITest(
-    servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
+    /*servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
     // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
     // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
     // host machine.
-    ServletEngine.JETTY_STANDALONE },
+    ServletEngine.JETTY_STANDALONE },*/
     properties = {
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin, "
             + "com.xpn.xwiki.plugin.skinx.JsResourceSkinExtensionPlugin, "
@@ -1114,8 +1114,9 @@ public class GenericMacrosIT
         // Checks the 5th macro with spaces="NonExistingSpace", noneFoundMessage="None found :(" and showPages="true".
         assertEquals(0, contrib4.getNames().size());
         assertEquals("None found :(", contrib4.getNoneFoundMessage());
-        assertTrue(contrib4.hasPages());
-        assertEquals(Arrays.asList("(none)"), contrib4.getPages());
+        assertFalse(contrib4.hasPages());
+        // showPages="true", so a message appears even if there are no pages to be shown.
+        assertTrue(contrib4.hasNonePagesMessage());
 
         // Checks the 6th macro with scope="Descendants".
         assertEquals(1, contrib5.getNames().size());

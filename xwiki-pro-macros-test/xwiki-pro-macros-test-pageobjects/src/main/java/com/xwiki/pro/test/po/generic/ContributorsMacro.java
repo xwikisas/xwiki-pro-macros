@@ -46,30 +46,12 @@ public class ContributorsMacro extends BaseElement
     public List<String> getNames()
     {
         List<WebElement> nameLinks = macro.findElements(By.cssSelector(".contributor-name"));
-        List<WebElement> allLinks = macro.findElements(By.tagName("a"));
-
         List<String> result = new ArrayList<>();
 
         for (WebElement contributor : nameLinks) {
-            String text = contributor.getText();
-            if (!text.isEmpty()) {
-                result.add(text);
-                continue;
-            }
-            boolean nextIsTarget = false;
-            for (WebElement link : allLinks) {
-                if (nextIsTarget) {
-                    String nextText = link.getText();
-                    if (!nextText.isEmpty()) {
-                        result.add(nextText);
-                    }
-                    break;
-                }
-                if (link.equals(contributor)) {
-                    nextIsTarget = true;
-                }
-            }
+            result.add(contributor.getText());
         }
+
         return result;
     }
 
@@ -97,7 +79,7 @@ public class ContributorsMacro extends BaseElement
 
     public boolean hasPages()
     {
-        return !macro.findElements(By.cssSelector(".contributors-page-list")).isEmpty();
+        return !getPageLinks().isEmpty();
     }
 
     public boolean hasContributionCount()
@@ -107,23 +89,33 @@ public class ContributorsMacro extends BaseElement
 
     public List<String> getPages()
     {
-        List<WebElement> pages = macro.findElements(By.cssSelector(".contributors-page-list"));
-        if (pages.isEmpty()) {
+        List<WebElement> links = getPageLinks();
+        if (links.isEmpty()) {
             return Collections.emptyList();
         }
 
         List<String> result = new ArrayList<>();
-        for (WebElement page : pages) {
-            List<WebElement> links = page.findElements(By.cssSelector(".contributors-page a"));
-            if (links.isEmpty()) {
-                String text = page.findElement(By.tagName("p")).getText().replaceFirst("^Pages:\\s*", "");
-                result.add(text);
-            } else {
-                for (WebElement link : links) {
-                    result.add(link.getText());
-                }
-            }
+        for (WebElement link : links) {
+            result.add(link.getText());
         }
         return result;
+    }
+
+    public boolean hasNonePagesMessage()
+    {
+
+        List<WebElement> paragraphs = macro.findElements(By.cssSelector("p"));
+
+        for (WebElement p : paragraphs) {
+            if (p.getText().contains("(none)")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<WebElement> getPageLinks()
+    {
+        return macro.findElements(By.cssSelector(".contributors-page"));
     }
 }
