@@ -100,7 +100,7 @@ public class DetailsSummaryIT
         createPage(setup, "test1", "details_with_multiple_calls", detailsMacroContent);
         // Wait for the solr indexing
         SolrTestUtils solrTestUtils = new SolrTestUtils(setup);
-        solrTestUtils.waitEmpyQueue();
+        solrTestUtils.waitEmptyQueue();
         String detailsSummaryCall =
             buildMacroCall(Collections.singletonMap("cql", "\"space = " + "currentSpace ( )\""));
         createPage(setup, "", "detailsSummary", detailsSummaryCall);
