@@ -7,3 +7,5 @@ com.xwiki.macros.confluence.ConfluenceTocZoneMacro
 com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils
 com.xwiki.macros.confluence.FilterAttachmentsScriptService
 com.xwiki.macros.confluence.GliffyScriptService
+com.xwiki.macros.confluence.ConfluenceCommonScriptService
+com.xwiki.macros.confluence.cql.CQLUtils
