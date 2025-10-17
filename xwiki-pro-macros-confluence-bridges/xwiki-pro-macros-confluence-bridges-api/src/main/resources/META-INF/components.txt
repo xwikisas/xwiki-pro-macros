@@ -9,3 +9,4 @@ com.xwiki.macros.confluence.FilterAttachmentsScriptService
 com.xwiki.macros.confluence.GliffyScriptService
 com.xwiki.macros.confluence.ConfluenceCommonScriptService
 com.xwiki.macros.confluence.cql.CQLUtils
+com.xwiki.macros.confluence.detailssummary.internal.macro.DetailsSummaryMacro

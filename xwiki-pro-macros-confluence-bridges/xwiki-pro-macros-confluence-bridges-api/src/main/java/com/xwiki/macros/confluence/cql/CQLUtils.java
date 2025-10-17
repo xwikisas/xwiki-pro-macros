@@ -100,8 +100,7 @@ public class CQLUtils
         // INT_MAX causes huge performances issues, so we limit to 1000 arbitrarily by default.
         int limit = ((int) macroParameters.getOrDefault("max", 1000));
         String sortField = determinateSortField(macroParameters);
-        String sortDirection =
-            ((String) macroParameters.getOrDefault("reverse", "")).equalsIgnoreCase("true") ? "desc" : "asc";
+        String sortDirection = ((boolean) macroParameters.getOrDefault("reverse", false)) ? "desc" : "asc";
         List<SolrDocument> docs = new ArrayList<>();
         Set<String> alreadyFound = new HashSet<>();
         // Everything is prepared, and we attempt to execute the query.
