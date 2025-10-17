@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -126,14 +125,24 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
         List<Block> columns = new ArrayList<>();
+        // The first column will always be the document name, but it may be translated to a diffrent name.
+        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
+            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
+        columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
         if (!headings.isEmpty()) {
             for (String heading : headings) {
                 Block cell = new TableHeadCellBlock(parsePlainText(heading));
                 columns.add(cell);
             }
         }
-        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>() : headings.stream().map(String::toLowerCase)
-            .collect(Collectors.toList());
+        List<String> columnsLower = new ArrayList<>();
+        // Always add the name of the column that holds the document name.
+        columnsLower.add(titleColumnName.toLowerCase());
+        if (!headings.isEmpty()) {
+            for (String heading : headings) {
+                columnsLower.add(heading.toLowerCase());
+            }
+        }
 
         List<Block> tableRows = new ArrayList<>();
         for (SolrDocument document : documents) {
@@ -155,9 +164,9 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             });
         }
 
+        enhanceHeader(parameters, columns, columnsLower);
         // Before adding the header row sort the rows.
         confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
-        enhanceHeader(parameters, columns);
         tableRows.add(0, new TableRowBlock(columns));
         // If the table rows has only one row then it means that there were no details macro found, and we should add
         // a message to make this clear to the user.
@@ -166,30 +175,6 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
 
         return List.of(new TableBlock(tableRows));
-    }
-
-    private static MetaDataBlock setMetaDataBlock(List<Block> row, String fullName)
-    {
-        TableRowBlock tableRowBlock = new TableRowBlock(row);
-        MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
-        metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
-        metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
-        return metaDataBlock;
-    }
-
-    private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(
-        MacroTransformationContext context, MetaDataBlock metaDataBlock)
-    {
-        BlockAsyncRendererConfiguration configuration =
-            new BlockAsyncRendererConfiguration(null, metaDataBlock);
-        configuration.setInline(true);
-        configuration.setDefaultSyntax(context.getSyntax());
-        configuration.setTargetSyntax(context.getSyntax());
-        configuration.setResricted(true);
-        configuration.setTransformationId(context.getTransformationContext().getId());
-        configuration.setAsyncAllowed(false);
-        configuration.setCacheAllowed(false);
-        return configuration;
     }
 
     protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
@@ -201,6 +186,30 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         map.put("max", parameters.getMax());
         map.put("reverse", parameters.getReverse());
         return map;
+    }
+
+    private static MetaDataBlock setMetaDataBlock(List<Block> row, String fullName)
+    {
+        TableRowBlock tableRowBlock = new TableRowBlock(row);
+        MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
+        metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
+        metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
+        return metaDataBlock;
+    }
+
+    private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(MacroTransformationContext context,
+        MetaDataBlock metaDataBlock)
+    {
+        BlockAsyncRendererConfiguration configuration =
+            new BlockAsyncRendererConfiguration(null, metaDataBlock);
+        configuration.setInline(true);
+        configuration.setDefaultSyntax(context.getSyntax());
+        configuration.setTargetSyntax(context.getSyntax());
+        configuration.setResricted(true);
+        configuration.setTransformationId(context.getTransformationContext().getId());
+        configuration.setAsyncAllowed(false);
+        configuration.setCacheAllowed(false);
+        return configuration;
     }
 
     private List<Block> createTagsBlock(List<String> tagList)
@@ -261,26 +270,25 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         tableRows.add(row);
     }
 
-    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
+    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header, List<String> columnsLower)
     {
 
-        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
-            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
-        header.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
-
         if (parameters.showLastModified()) {
-            header.add(new TableHeadCellBlock(parsePlainText(
-                localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
 
         if (parameters.showPageLabels()) {
-            header.add(new TableHeadCellBlock(
-                parsePlainText(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
 
         if (parameters.showCreator()) {
-            header.add(new TableHeadCellBlock(parsePlainText(
-                localizationManager.getTranslationPlain("rendering" + ".macro.detailssummary.creator"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
     }
 
