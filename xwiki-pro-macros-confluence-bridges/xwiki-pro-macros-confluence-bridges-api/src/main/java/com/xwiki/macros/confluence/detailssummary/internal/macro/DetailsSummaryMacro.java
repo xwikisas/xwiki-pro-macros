@@ -32,32 +32,52 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.apache.solr.common.SolrDocument;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.job.JobException;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.localization.LocalizationManager;
+import org.xwiki.model.EntityType;
+import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.EntityReferenceResolver;
+import org.xwiki.rendering.RenderingException;
+import org.xwiki.rendering.async.internal.block.BlockAsyncRenderer;
+import org.xwiki.rendering.async.internal.block.BlockAsyncRendererConfiguration;
+import org.xwiki.rendering.async.internal.block.BlockAsyncRendererExecutor;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.block.WordBlock;
+import org.xwiki.rendering.block.XDOM;
+import org.xwiki.rendering.internal.transformation.RenderingContextStore;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 
+import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
-import com.xwiki.macros.confluence.ConfluenceDetailsScriptService;
 import com.xwiki.macros.confluence.cql.CQLUtils;
 import com.xwiki.macros.confluence.detailssummary.macro.DetailsSummaryMacroParameters;
 
+/**
+ * Details summary macro: Display a list of details macro as a table.
+ *
+ * @version $Id$
+ * @since 1.28.3
+ */
 @Component
 @Named("confluence_detailssummary")
 @Singleton
@@ -65,9 +85,11 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
 {
     @Inject
     private CQLUtils cqlUtils;
+    @Inject
+    private Provider<XWikiContext> contextProvider;
 
     @Inject
-    private ConfluenceDetailsScriptService confluenceDetailsScriptService;
+    private ConfluenceSummaryProcessor confluenceSummaryProcessor;
 
     @Inject
     private ContextualLocalizationManager localizationManager;
@@ -75,6 +97,18 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     @Inject
     private LocalizationManager localization;
 
+    @Inject
+    private ContextualAuthorizationManager contextualAuthorization;
+
+    @Inject
+    private EntityReferenceResolver<String> resolver;
+
+    @Inject
+    protected BlockAsyncRendererExecutor executor;
+
+    /**
+     * Create amd initialize the descriptor of the macro.
+     */
     public DetailsSummaryMacro()
     {
         super("Details Summary 2", "TODO FIX THIS", DetailsSummaryMacroParameters.class);
@@ -92,46 +126,87 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     {
 
         List<SolrDocument> documents = cqlUtils.buildAndExecute(buildQueryMap(parameters));
-        List<String> headings = confluenceDetailsScriptService.parseHeadings(parameters.getHeadings());
-        // We create the columns here and give the object as a parameter so we can collect the column names in case
-        // the user didn't provide them already.
-        List<Block> columns = headings.isEmpty() ? new ArrayList<>() :
-            headings.stream().map(heading -> new TableHeadCellBlock((List.of(new WordBlock(heading)))))
+        List<String> headings = confluenceSummaryProcessor.parseHeadings(parameters.getHeadings());
+        // We create the columns here and give the object as a parameter so we can collect the column names as we go in
+        // case the user didn't provide them already.
+        List<Block> columns = headings.isEmpty() ? new ArrayList<>()
+            : headings.stream().map(heading -> new TableHeadCellBlock((List.of(new WordBlock(heading)))))
                 .collect(Collectors.toList());
-        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>() :
-            headings.stream().map(String::toLowerCase).collect(Collectors.toList());
+        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>()
+            : headings.stream().map(String::toLowerCase).collect(Collectors.toList());
 
         List<Block> tableRows = new ArrayList<>();
-
         for (SolrDocument document : documents) {
             String fullName = document.get("wiki") + ":" + document.get("fullname");
+
+            if (!checkAccess(fullName)) {
+                continue;
+            }
+
+
             List<List<Block>> rows =
-                confluenceDetailsScriptService.getDetails(parameters.getId(), headings, columns, columnsLower, fullName,
-                    parameters.getSort(), parameters.getReverse());
+                confluenceSummaryProcessor.getDetails(parameters.getId(), headings, columns, columnsLower, fullName);
 
             // Wrap each block with a metadata to make sure that relative references are resolved correctly.
             rows.forEach((row) -> {
-
                 enhanceRow(parameters, document, row);
                 TableRowBlock tableRowBlock = new TableRowBlock(row);
                 MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
-
                 metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
                 metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
-                tableRows.add(metaDataBlock);
+                BlockAsyncRendererConfiguration configuration = new BlockAsyncRendererConfiguration(null,
+                    metaDataBlock);
+                configuration.setInline(true);
+                configuration.setDefaultSyntax(context.getSyntax());
+                configuration.setTargetSyntax(context.getSyntax());
+                configuration.setResricted(true);
+                configuration.setTransformationId(context.getTransformationContext().getId());
+                configuration.setAsyncAllowed(false);
+                configuration.setCacheAllowed(false);
+                try {
+                    tableRows.add(executor.execute(configuration));
+                } catch (JobException e) {
+                    throw new RuntimeException(e);
+                } catch (RenderingException e) {
+                    throw new RuntimeException(e);
+                }
             });
         }
-        // Before adding the header row sort the rows.
-        confluenceDetailsScriptService.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
+
         enhanceHeader(parameters, columns);
+
+        // Before adding the header row sort the rows.
+        confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
         tableRows.add(0, new TableRowBlock(columns));
         return List.of(new TableBlock(tableRows));
     }
 
-    private List<Block> getHeadingRow(List<String> headings)
+    private boolean checkAccess(String fullName) throws MacroExecutionException
     {
-        List<Block> headerRow = new ArrayList<>();
-        return List.of();
+        EntityReference reference = resolver.resolve(fullName, EntityType.DOCUMENT);
+        if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
+            return false;
+        }
+        return true;
+    }
+
+    private List<Block> createTagsBlock(List<String> tagList)
+    {
+        List<Block> tags = new ArrayList<>();
+        String baseRef = "Main.Tags";
+        for (int i = 0; i < tagList.size(); i++) {
+            String tag = tagList.get(i);
+            DocumentResourceReference reference = new DocumentResourceReference(baseRef);
+            reference.setQueryString(
+                String.format("do=viewTag&tag=%s", URLEncoder.encode(tag, StandardCharsets.UTF_8)));
+            tags.add(new LinkBlock(List.of(new WordBlock(tag)), reference, false));
+
+            // Add ", " after each tag except the last
+            if (i < tagList.size() - 1) {
+                tags.add(new WordBlock(", "));
+            }
+        }
+        return tags;
     }
 
     private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row)
@@ -143,22 +218,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
 
         if (parameters.showPageLabels()) {
-            List<Block> tags = new ArrayList<>();
-            String baseRef = "Main.Tags";
             List<String> tagList = (ArrayList<String>) document.get("property.XWiki.TagClass.tags_string");
-            for (int i = 0; i < tagList.size(); i++) {
-                String tag = tagList.get(i);
-                DocumentResourceReference reference = new DocumentResourceReference(baseRef);
-                reference.setQueryString(
-                    String.format("do=viewTag&tag=%s", URLEncoder.encode(tag, StandardCharsets.UTF_8)));
-                tags.add(new LinkBlock(List.of(new WordBlock(tag)), reference, false));
-
-                // Add ", " after each tag except the last
-                if (i < tagList.size() - 1) {
-                    tags.add(new WordBlock(", "));
-                }
-            }
-
+            List<Block> tags = createTagsBlock(tagList);
             row.add(new TableCellBlock(tags));
         }
 
@@ -177,12 +238,12 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
     }
 
-    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
+    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header, List<String> lowerColumns)
     {
 
-        String titleColumnName = parameters.getFirstcolumn().equals("") ?
-            localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn") :
-            parameters.getFirstcolumn();
+        String titleColumnName = parameters.getFirstcolumn().equals("")
+            ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
+            : parameters.getFirstcolumn();
         header.add(0, new TableHeadCellBlock(List.of(new WordBlock(titleColumnName))));
 
         if (parameters.showLastModified()) {

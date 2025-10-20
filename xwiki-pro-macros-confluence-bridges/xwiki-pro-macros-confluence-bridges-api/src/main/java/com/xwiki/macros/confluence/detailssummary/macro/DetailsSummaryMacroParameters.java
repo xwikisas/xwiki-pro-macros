@@ -20,12 +20,10 @@
 package com.xwiki.macros.confluence.detailssummary.macro;
 
 /**
- * Parameter bean class for the ViewFileMacro
- */
-
-/**
  * Parameter bean class for the DetailsSummaryMacro. This class holds all the parameters that can be configured for the
  * macro.
+ * @version $Id$
+ * @since 1.28.3
  */
 public class DetailsSummaryMacroParameters
 {

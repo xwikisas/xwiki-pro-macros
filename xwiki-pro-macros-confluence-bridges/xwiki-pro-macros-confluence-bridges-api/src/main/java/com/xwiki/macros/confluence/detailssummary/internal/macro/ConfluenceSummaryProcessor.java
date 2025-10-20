@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.confluence;
+package com.xwiki.macros.confluence.detailssummary.internal.macro;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,15 +63,15 @@ import static com.xwiki.macros.confluence.internal.XDOMUtils.getMacroXDOM;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
- * Confluence details script services. Mostly to implement the detailssummary macro.
+ * Processes the parameters of the details summary and retrieves  the details rows.
  *
  * @version $Id$
  * @since 1.19.0
  */
-@Component(roles = ConfluenceDetailsScriptService.class)
+@Component(roles = ConfluenceSummaryProcessor.class)
 @Singleton
 @Unstable
-public class ConfluenceDetailsScriptService
+public class ConfluenceSummaryProcessor
 {
     private static final BlockMatcher CELL_MATCHER = new ClassBlockMatcher(TableCellBlock.class);
 
@@ -105,13 +105,13 @@ public class ConfluenceDetailsScriptService
      * @param id the id of the details macros to consider
      * @param headings the headings confluence parameter
      * @param docFullName name of the document for which we want to find details macros
-     * @param sortBy the column to sort against
-     * @param reverseSort whether to reverse the sort
+     * @param columns list of columns or an empty list that will be filled as details are processed.
+     * @param columnsLower lowe case name version of @param columns
      * @return the rows to display in the detailssummary macro given the provided details id, the headings parameter and
      *     the results
      */
     public List<List<Block>> getDetails(String id, List<String> headings, List<Block> columns,
-        List<String> columnsLower, String docFullName, String sortBy, boolean reverseSort)
+        List<String> columnsLower, String docFullName)
     {
         XWikiContext context = contextProvider.get();
         EntityReference docRef = resolver.resolve(docFullName, EntityType.DOCUMENT);
@@ -136,8 +136,6 @@ public class ConfluenceDetailsScriptService
                 rows.add(row);
             }
         }
-        // TODO move it
-
         return rows;
     }
 
@@ -190,6 +188,14 @@ public class ConfluenceDetailsScriptService
         return headings;
     }
 
+    /**
+     * Will try to sort the rows of the table.
+     *
+     * @param sortBy name of the column to sort after
+     * @param reverseSort to reverse sort or not
+     * @param columnsLower lower name version of columns
+     * @param rows rows of the table
+     */
     public void maybeSort(String sortBy, boolean reverseSort, List<String> columnsLower, List<Block> rows)
     {
         boolean alreadyReversedIfNeeded = false;
@@ -241,7 +247,7 @@ public class ConfluenceDetailsScriptService
         return results;
     }
 
-    private String blockToString(Block block)
+    protected String blockToString(Block block)
     {
         DefaultWikiPrinter printer = new DefaultWikiPrinter();
         plainTextRenderer.render(block, printer);

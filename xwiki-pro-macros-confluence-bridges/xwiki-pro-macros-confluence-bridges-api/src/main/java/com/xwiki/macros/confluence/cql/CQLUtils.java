@@ -46,6 +46,12 @@ import org.xwiki.query.QueryManager;
 import com.google.gson.Gson;
 import com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils;
 
+/**
+ * Basic utility for executing and computing CQLs.
+ *
+ * @version $Id$
+ * @since 1.28.3
+ */
 @Component(roles = CQLUtils.class)
 @Singleton
 public class CQLUtils
@@ -54,8 +60,23 @@ public class CQLUtils
 
     private static final String DELIMITER = "\\s*,\\s*|\\s+";
 
+    private static final String LABELS = "labels";
+
+    private static final String OPERATOR = "operator";
+
+    private static final String TYPE = "type";
+
+    private static final String OPEN_BRACKET = "(";
+
+    private static final String CLOSE_BRACKET = ")";
+
+    private static final String SORT = "sort";
+
+    private static final String CQL = "cql";
+
     private final String[] solrSpecialChars =
-        { "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", "/", "\\", " " };
+        { "+", "-", "&&", "||", "!", OPEN_BRACKET, CLOSE_BRACKET, "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":",
+            "/", "\\", " " };
 
     private final String[] escapedSolrSpecialChars =
         { "\\+", "\\-", "\\&&", "\\||", "\\!", "\\(", "\\)", "\\{", "\\}", "\\[", "\\]", "\\^", "\\\"", "\\~", "\\*",
@@ -83,7 +104,7 @@ public class CQLUtils
     public List<SolrDocument> buildAndExecute(Map<String, Object> macroParameters)
     {
 
-        String cql = (String) macroParameters.getOrDefault("cql", "");
+        String cql = (String) macroParameters.getOrDefault(CQL, "");
         String fq = "";
         // If the CQL is not already present as a parameter we try to build it.
         if (StringUtils.isBlank(cql)) {
@@ -92,7 +113,7 @@ public class CQLUtils
         }
 
         // If no type is provided we use the default.
-        String type = ((String) macroParameters.getOrDefault("type", ""));
+        String type = ((String) macroParameters.getOrDefault(TYPE, ""));
         if (StringUtils.isBlank(type)) {
             fq = fq + " type:DOCUMENT";
         }
@@ -105,12 +126,12 @@ public class CQLUtils
         Set<String> alreadyFound = new HashSet<>();
         // Everything is prepared, and we attempt to execute the query.
         try {
-            Query query = queryManager.createQuery(cql, "cql");
+            Query query = queryManager.createQuery(cql, CQL);
             if (StringUtils.isNotBlank(fq)) {
                 query.bindValue("fq", fq.trim());
             }
             query.setLimit(limit);
-            query.bindValue("sort", String.format("%s %s", sortField, sortDirection));
+            query.bindValue(SORT, String.format("%s %s", sortField, sortDirection));
             QueryResponse queryResponse = (QueryResponse) query.execute().get(0);
             SolrDocumentList documents = queryResponse.getResults();
             for (SolrDocument document : documents) {
@@ -165,26 +186,27 @@ public class CQLUtils
     public String buildQuery(Map<String, Object> parameters)
     {
         StringBuilder cql = new StringBuilder();
-        String operator = ((String) parameters.getOrDefault("operator", "")).equalsIgnoreCase("and") ? " AND " : " OR ";
-        String labels = (String) (parameters.containsKey("labels") ? parameters.getOrDefault("labels", "") :
-            parameters.getOrDefault("label", ""));
+        String operator = ((String) parameters.getOrDefault(OPERATOR, "")).equalsIgnoreCase("and") ? " AND "
+            : " OR ";
+        String labels = (String) (parameters.containsKey(LABELS) ? parameters.getOrDefault(LABELS, "")
+            : parameters.getOrDefault("label", ""));
         if (StringUtils.isNotBlank(labels)) {
             String[] labelList = labels.split(DELIMITER);
-            String joinedLabels =
-                Arrays.stream(labelList).map(l -> "label = " + JSON_SERIALZIERR.toJson(l) ).collect(Collectors.joining(operator));
-            cql.append("(").append(joinedLabels).append(")");
+            String joinedLabels = Arrays.stream(labelList).map(l -> "label = " + JSON_SERIALZIERR.toJson(l))
+                .collect(Collectors.joining(operator));
+            cql.append(OPEN_BRACKET).append(joinedLabels).append(CLOSE_BRACKET);
         }
-        String type = ((String) parameters.getOrDefault("type", ""));
+        String type = ((String) parameters.getOrDefault(TYPE, ""));
         if (StringUtils.isNotBlank(type)) {
             // We serialize the object directly.
-            cql.append(" AND type = ").append(JSON_SERIALZIERR.toJson(parameters.get("type")));
+            cql.append(" AND type = ").append(JSON_SERIALZIERR.toJson(parameters.get(TYPE)));
         }
         return cql.toString();
     }
 
     private String determinateSortField(Map<String, Object> parameters)
     {
-        switch (((String) parameters.getOrDefault("sort", ""))) {
+        switch (((String) parameters.getOrDefault(SORT, ""))) {
             case "modified":
                 return "date";
             case "creation":
