@@ -97,8 +97,6 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     @Inject
     private LocalizationManager localization;
 
-    @Inject
-    private ContextualAuthorizationManager contextualAuthorization;
 
     @Inject
     private EntityReferenceResolver<String> resolver;
@@ -139,9 +137,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         for (SolrDocument document : documents) {
             String fullName = document.get("wiki") + ":" + document.get("fullname");
 
-            if (!checkAccess(fullName)) {
-                continue;
-            }
+
 
 
             List<List<Block>> rows =
@@ -172,22 +168,11 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
                 }
             });
         }
-
-        enhanceHeader(parameters, columns);
-
         // Before adding the header row sort the rows.
         confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
+        enhanceHeader(parameters, columns);
         tableRows.add(0, new TableRowBlock(columns));
         return List.of(new TableBlock(tableRows));
-    }
-
-    private boolean checkAccess(String fullName) throws MacroExecutionException
-    {
-        EntityReference reference = resolver.resolve(fullName, EntityType.DOCUMENT);
-        if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
-            return false;
-        }
-        return true;
     }
 
     private List<Block> createTagsBlock(List<String> tagList)
@@ -238,7 +223,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
     }
 
-    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header, List<String> lowerColumns)
+    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
     {
 
         String titleColumnName = parameters.getFirstcolumn().equals("")

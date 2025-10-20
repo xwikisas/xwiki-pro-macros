@@ -53,6 +53,8 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.renderer.BlockRenderer;
 import org.xwiki.rendering.renderer.printer.DefaultWikiPrinter;
 import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.security.authorization.ContextualAuthorizationManager;
+import org.xwiki.security.authorization.Right;
 import org.xwiki.stability.Unstable;
 
 import com.xpn.xwiki.XWikiContext;
@@ -80,6 +82,10 @@ public class ConfluenceSummaryProcessor
     private static final ClassBlockMatcher MACRO_MATCHER = new ClassBlockMatcher(MacroBlock.class);
 
     private static final String ID = "id";
+
+
+    @Inject
+    private ContextualAuthorizationManager contextualAuthorization;
 
     @Inject
     private Provider<XWikiContext> contextProvider;
@@ -115,6 +121,11 @@ public class ConfluenceSummaryProcessor
     {
         XWikiContext context = contextProvider.get();
         EntityReference docRef = resolver.resolve(docFullName, EntityType.DOCUMENT);
+        if (!checkAccess(docRef)) {
+            return List.of();
+        }
+
+
         XWikiDocument doc;
         try {
             doc = context.getWiki().getDocument(docRef, context);
@@ -317,5 +328,14 @@ public class ConfluenceSummaryProcessor
             r.set(index, cells.get(1));
         }
         return r;
+    }
+
+    private boolean checkAccess(EntityReference reference)
+    {
+        if (!this.contextualAuthorization.hasAccess(Right.VIEW, reference)) {
+            logger.warn("Tried to get [{}], but the user doesn't have view rights", reference);
+            return false;
+        }
+        return true;
     }
 }
