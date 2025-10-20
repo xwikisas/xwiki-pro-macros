@@ -72,4 +72,13 @@ public class TabMacro extends BaseElement
         }
         return 0;
     }
+
+    /*
+        This method is used when the Tab macro is inside a TabGroup macro.
+     */
+    public static String getId(WebElement tabLink)
+    {
+        String href = tabLink.getAttribute("href");
+        return href.substring(href.indexOf('#') + 1);
+    }
 }

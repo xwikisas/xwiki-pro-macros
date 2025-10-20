@@ -113,6 +113,9 @@ public class TabGroupMacro extends BaseElement
         return getTabId(activeLi);
     }
 
+    /*
+        This method compares the tabGroup's and the tab's value of NextAfter.
+     */
     public int getFinalNextAfter(TabMacro tab)
     {
         int tabNext = tab.getNextAfter();
@@ -134,7 +137,6 @@ public class TabGroupMacro extends BaseElement
 
     private String getTabId(WebElement tabLink)
     {
-        String href = tabLink.getAttribute("href");
-        return href.substring(href.indexOf('#') + 1);
+        return TabMacro.getId(tabLink);
     }
 }
