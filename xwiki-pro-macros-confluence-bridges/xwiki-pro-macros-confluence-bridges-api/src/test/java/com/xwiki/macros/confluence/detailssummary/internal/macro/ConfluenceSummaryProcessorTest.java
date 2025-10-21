@@ -22,13 +22,11 @@ package com.xwiki.macros.confluence.detailssummary.internal.macro;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.xwiki.component.util.ReflectionUtils;
 import org.xwiki.model.EntityType;
@@ -47,12 +45,12 @@ import org.xwiki.test.junit5.mockito.MockComponent;
 
 import com.xpn.xwiki.XWikiContext;
 
-import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -66,8 +64,10 @@ public class ConfluenceSummaryProcessorTest
 
     @MockComponent
     private Provider<XWikiContext> contextProvider;
+
     @MockComponent
     private Logger logger;
+
     @MockComponent
     @Named("plain/1.0")
     private BlockRenderer plainTextRenderer;
@@ -137,20 +137,15 @@ public class ConfluenceSummaryProcessorTest
     }
 
     @Test
-    void makeSureThatWeTakeRightIntoAccount() {
-
-
+    void makeSureThatWeTakeRightIntoAccount()
+    {
 
         EntityReference entityReference = mock(EntityReference.class);
-
         ReflectionUtils.setFieldValue(this.confluenceSummaryProcessor, "logger", this.logger);
         when(contextProvider.get()).thenReturn(new XWikiContext());
         when(resolver.resolve("docTest", EntityType.DOCUMENT)).thenReturn(entityReference);
         when(contextualAuthorization.hasAccess(Right.VIEW, entityReference)).thenReturn(false);
-        assertEquals(List.of(), confluenceSummaryProcessor.getDetails("", List.of() , List.of(),
-            List.of(), "docTest"));
-        verify(logger).warn(
-            "Tried to get [{}], but the user doesn't have view rights", entityReference);
+        assertEquals(List.of(), confluenceSummaryProcessor.getDetails("", List.of(), List.of(), List.of(), "docTest"));
+        verify(logger).warn("Tried to get [{}], but the user doesn't have view rights", entityReference);
     }
-
 }

@@ -238,12 +238,12 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
 
         if (parameters.showPageLabels()) {
             header.add(new TableHeadCellBlock(List.of(
-                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator")))));
+                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags")))));
         }
 
         if (parameters.showCreator()) {
             header.add(new TableHeadCellBlock(List.of(
-                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags")))));
+                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator")))));
         }
     }
 
