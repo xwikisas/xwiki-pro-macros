@@ -36,24 +36,35 @@ public class TabGroupMacro extends BaseElement
 {
     private final WebElement tabGroup;
 
-    public TabGroupMacro(String id)
+    private final List<String> tabs;
+
+    public TabGroupMacro(String id, List<String> tabs)
     {
         this.tabGroup = getDriver().findElement(By.id(id));
+        this.tabs = tabs;
+    }
+
+    public TabMacro getTab(String id)
+    {
+        if (!tabs.contains(id)) {
+            throw new IllegalArgumentException("No tab found with id: " + id);
+        }
+        return new TabMacro(id);
     }
 
     public int getTabCount()
     {
-        return getTabLinks().size();
+        return getNavTabLinks().size();
     }
 
     public List<String> getTabLabels()
     {
-        return getTabLinks().stream().map(WebElement::getText).collect(Collectors.toList());
+        return getNavTabLinks().stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
     public List<String> getTabIds()
     {
-        return getTabLinks().stream().map(this::getTabId).collect(Collectors.toList());
+        return getNavTabLinks().stream().map(this::getTabId).collect(Collectors.toList());
     }
 
     public boolean isTabListFirst()
@@ -92,7 +103,7 @@ public class TabGroupMacro extends BaseElement
     public void clickTab(String tabId)
     {
         WebElement tabLink =
-            getTabLinks().stream().filter(link -> getTabId(link).equals(tabId)).findFirst().orElseThrow();
+            getNavTabLinks().stream().filter(link -> getTabId(link).equals(tabId)).findFirst().orElseThrow();
         tabLink.click();
     }
 
@@ -125,18 +136,19 @@ public class TabGroupMacro extends BaseElement
         return getNextAfter();
     }
 
-    private List<WebElement> getTabs()
+    private List<WebElement> getNavTabs()
     {
         return tabGroup.findElements(By.cssSelector("ul.nav-tabs li"));
     }
 
-    private List<WebElement> getTabLinks()
+    private List<WebElement> getNavTabLinks()
     {
-        return getTabs().stream().map(tab -> tab.findElement(By.tagName("a"))).collect(Collectors.toList());
+        return getNavTabs().stream().map(tab -> tab.findElement(By.tagName("a"))).collect(Collectors.toList());
     }
 
     private String getTabId(WebElement tabLink)
     {
-        return TabMacro.getId(tabLink);
+        String href = tabLink.getAttribute("href");
+        return href.substring(href.indexOf('#') + 1);
     }
 }
