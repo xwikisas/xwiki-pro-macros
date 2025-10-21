@@ -136,10 +136,6 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         List<Block> tableRows = new ArrayList<>();
         for (SolrDocument document : documents) {
             String fullName = document.get("wiki") + ":" + document.get("fullname");
-
-
-
-
             List<List<Block>> rows =
                 confluenceSummaryProcessor.getDetails(parameters.getId(), headings, columns, columnsLower, fullName);
 
