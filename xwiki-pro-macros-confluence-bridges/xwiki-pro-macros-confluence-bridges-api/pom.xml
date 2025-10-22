@@ -64,6 +64,11 @@
       <version>${commons.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-rendering-wikimacro-api</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
   </dependencies>
   <build>
    <plugins>
