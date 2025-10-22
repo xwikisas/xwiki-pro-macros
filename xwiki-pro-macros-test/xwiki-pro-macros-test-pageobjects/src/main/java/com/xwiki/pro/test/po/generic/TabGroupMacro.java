@@ -36,20 +36,19 @@ public class TabGroupMacro extends BaseElement
 {
     private final WebElement tabGroup;
 
-    private final List<String> tabs;
+    private final List<TabMacro> tabs;
 
-    public TabGroupMacro(String id, List<String> tabs)
+    public TabGroupMacro(String id)
     {
         this.tabGroup = getDriver().findElement(By.id(id));
-        this.tabs = tabs;
+        List<String> ids = getTabIds();
+        this.tabs = ids.stream().map(TabMacro::new).collect(Collectors.toList());
     }
 
     public TabMacro getTab(String id)
     {
-        if (!tabs.contains(id)) {
-            throw new IllegalArgumentException("No tab found with id: " + id);
-        }
-        return new TabMacro(id);
+        return tabs.stream().filter(tab -> tab.getId().equals(id)).findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("No tab found with id: " + id));
     }
 
     public int getTabCount()

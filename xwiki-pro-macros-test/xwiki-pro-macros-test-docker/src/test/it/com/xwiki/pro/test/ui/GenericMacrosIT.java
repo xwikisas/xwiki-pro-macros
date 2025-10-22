@@ -844,10 +844,10 @@ public class GenericMacrosIT
     {
         setup.createPage(testReference, getMacroContent("tabGroup-macros.vm"), "TabGroupTest");
 
-        TabGroupMacro tabGroup0 = new TabGroupMacro("tabGroup_0",Arrays.asList("tab_0","tab_1","tab_2"));
-        TabGroupMacro tabGroup1 = new TabGroupMacro("tabGroup_1", Arrays.asList("tab_3", "tab_4", "tab_5"));
-        TabGroupMacro tabGroup2 = new TabGroupMacro("tabGroup_2",Arrays.asList("tab_6", "tab_7"));
-        TabGroupMacro tabGroup3 = new TabGroupMacro("tabGroup_3", Arrays.asList("tab_8", "tab_9"));
+        TabGroupMacro tabGroup0 = new TabGroupMacro("tabGroup_0");
+        TabGroupMacro tabGroup1 = new TabGroupMacro("tabGroup_1");
+        TabGroupMacro tabGroup2 = new TabGroupMacro("tabGroup_2");
+        TabGroupMacro tabGroup3 = new TabGroupMacro("tabGroup_3");
 
         List<String> expectedLabels1 = Arrays.asList("tab0", "tab1", "tab2");
         List<String> expectedLabels2 = Arrays.asList("tab0", "tab1");
@@ -857,6 +857,9 @@ public class GenericMacrosIT
         assertEquals(3, tabGroup0.getTabCount());
         assertEquals(expectedLabels1, tabGroup0.getTabLabels());
         assertEquals(Arrays.asList("tab_0", "tab_1", "tab_2"), tabGroup0.getTabIds());
+        TabMacro tab0 = tabGroup0.getTab("tab_0");
+        // default="true".
+        assertTrue(tab0.isContentDisplayed("tab0-content"));
 
         assertEquals("TOP", tabGroup0.getLocation());
         assertTrue(tabGroup0.isTabListFirst());
@@ -866,10 +869,6 @@ public class GenericMacrosIT
 
         assertEquals(3, tabGroup0.getNextAfter());
         assertFalse(tabGroup0.isLoopEnabled());
-
-        // default="true".
-        TabMacro tab0 = tabGroup0.getTab("tab_0");
-        assertTrue(tab0.isContentDisplayed("tab0-content"));
 
         // Checks the tabGroup_1 macro, with 3 tabs, tabLocation="BOTTOM", fade effect, effectDuration, a
         // personalized height and width, loopCards ="true" and a set nextAfter.

@@ -38,6 +38,14 @@ public class TabMacro extends BaseElement
         this.tab = getDriver().findElement(By.id(id));
     }
 
+    /*
+        This method is used when the Tab macro is inside a TabGroup macro
+     */
+    public String getId()
+    {
+        return tab.getAttribute("id");
+    }
+
     public boolean isActive()
     {
         return tab.getAttribute("class").contains("active");
