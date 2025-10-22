@@ -17,17 +17,21 @@
 ## Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 ## 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 ## ---------------------------------------------------------------------------
-{{expand title="ExpandTest1" expanded="true"}}
-test0
-test1
-image:example.jpg
+{{excerpt name="Excerpt1"}}
+Content for excerpt macro
 
-{{expand title="ExpandTest2"}}
-test0
-test1
+{{/excerpt}}
 
-{{/expand}}
+{{excerpt name="Excerpt2" allowUnprivilegedInclude="true"}}
+Content for Excerpt macro -2
 
-test2
+{{excerpt name="Excerpt3"}}
+Content for Excerpt macro -3
+{{/excerpt}}
 
-{{/expand}}
+
+{{/excerpt}}
+
+{{excerpt hidden="true" name="Excerpt4"}}
+Content for Excerpt macro -4
+{{/excerpt}}
