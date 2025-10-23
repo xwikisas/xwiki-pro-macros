@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -133,6 +134,12 @@ public class ThumbnailGenerator
                 ExceptionUtils.getRootCauseMessage(e));
             return new byte[0];
         }
+    }
+
+    public String generateThumbnailBase64(AttachmentReference attachmentRef) throws InterruptedException
+    {
+        byte[] thumbnailData = getThumbnailData(attachmentRef);
+        return Base64.getEncoder().encodeToString(thumbnailData);
     }
 
     private byte[] generateAndGetThumbnailBytes(AttachmentReference attachmentReference) throws Exception

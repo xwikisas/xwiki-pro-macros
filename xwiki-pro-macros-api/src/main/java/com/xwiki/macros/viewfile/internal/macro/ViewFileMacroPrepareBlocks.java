@@ -43,14 +43,19 @@ import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.ImageBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
+import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
+import com.xwiki.macros.viewfile.internal.AttachmentSizeValidator;
+import com.xwiki.macros.viewfile.internal.macro.async.MacroAsyncManager;
 import com.xwiki.macros.viewfile.macro.ViewFileDisplay;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
@@ -101,8 +106,6 @@ public class ViewFileMacroPrepareBlocks
 
     private boolean inEditMode;
 
-    private String base64;
-
     @Inject
     private ViewFileExternalBlockManager viewFileExternalBlockManager;
 
@@ -118,6 +121,15 @@ public class ViewFileMacroPrepareBlocks
     @Inject
     private EntityReferenceSerializer<String> referenceSerializer;
 
+    @Inject
+    private AttachmentSizeValidator attachmentSizeValidator;
+
+    @Inject
+    private ThumbnailGenerator thumbnailGenerator;
+
+    @Inject
+    private MacroAsyncManager asyncManager;
+
     /**
      * Prepares the blocks of the view file macro.
      *
@@ -125,16 +137,13 @@ public class ViewFileMacroPrepareBlocks
      * @param context transformation context of the macro
      * @param inEditMode true if the macro is in edit mode, false otherwise
      * @param attachmentReference reference of the file that should be displayed
-     * @param base64 representation of the preview if it exists.
-     * @param isOversize if the file is too big and should not be displayed in full view.
      * @return a list of blocks that will render the macro.
      */
     public List<Block> prepareBlocks(ViewFileMacroParameters parameters, MacroTransformationContext context,
-        AttachmentReference attachmentReference, String base64, boolean isOversize, boolean inEditMode) throws Exception
+        AttachmentReference attachmentReference, boolean inEditMode) throws Exception
     {
         viewFileResourceManager.injectBaseResources();
-        this.isOversize = isOversize;
-        this.base64 = base64;
+        this.isOversize = attachmentSizeValidator.isAttachmentOversize(attachmentReference);
         this.inEditMode = inEditMode;
 
         if (parameters.getDisplay() == ViewFileDisplay.full) {
@@ -161,7 +170,6 @@ public class ViewFileMacroPrepareBlocks
     private List<Block> prepareCompactDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
         String fileName, AttachmentReference attachmentReference) throws Exception
     {
-
         String fileExtension = getFileExtension(fileName);
         applyPresentationResourcesIfNeeded(fileExtension);
 
@@ -169,7 +177,7 @@ public class ViewFileMacroPrepareBlocks
         boolean forceCardView = shouldForceCardView(parameters.getDisplay(), context.isInline());
         boolean inLineElement = inEditMode || context.isInline();
         // False == card, true == Button
-        boolean thumbnailStyle = false;
+        boolean thumbnailStyle;
 
         String style = "";
         StringBuilder stringBuilder = new StringBuilder();
@@ -220,26 +228,19 @@ public class ViewFileMacroPrepareBlocks
         return List.of(wrapperBlock);
     }
 
-    private Block getImageThumbnail(boolean isSpan)
+    /*
+        TODO: Add the thumbnail asynchronously
+        Should create a different class to handle the  block creation of thumbnail and full view
+        for thumbnail: - async rendering of the image - create a placeholder inside the thumbnail view with the
+        standard image
+        for full - async execution of the office/pdf macro
+    */
+    private Block getImageThumbnail(boolean isSpan, AttachmentReference attachmentReference) throws Exception
     {
+        String thumbnail = asyncManager.getThumbnailAsyncBlock(attachmentReference, isSpan);
+        Block thumbnailBlock = new RawBlock(thumbnail, Syntax.XHTML_1_0);
 
-        String imageAltTranslation =
-            contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.image.alt");
-        String overlayTextTranslation =
-            contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.overlay");
-        String imageBase64 = "data:image/jpeg;base64," + base64;
-        ResourceReference reference = new ResourceReference(imageBase64, ResourceType.DATA);
-        Block imageBlock =
-            new ImageBlock(reference, false, Map.of(CLASS, "viewfile-thumbnail-image", "alt", imageAltTranslation));
-        Block overlayText =
-            new FormatBlock(List.of(new WordBlock(overlayTextTranslation)), Format.NONE, Map.of(CLASS, "overlay-text"));
-
-        Block overlay =
-            StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(overlayText), Map.of(CLASS, "overlay"));
-
-        Block imageContainer = StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(imageBlock, overlay),
-            Map.of(CLASS, "image-container"));
-        return imageContainer;
+        return new FormatBlock(List.of(thumbnailBlock), Format.NONE, Map.of(CLASS, "overlay-text-test"));
     }
 
     private List<Block> prepareFullDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
@@ -323,8 +324,8 @@ public class ViewFileMacroPrepareBlocks
         throws Exception
 
     {
-        if (base64 != null && (!base64.isEmpty() && !thumbnailStyle)) {
-            return getImageThumbnail(isSpan);
+        if (!isOversize && !thumbnailStyle) {
+            return getImageThumbnail(isSpan, attachmentReference);
         }
         // Generic thumbnail.
         return viewFileExternalBlockManager.getMimeTypeBlock(attachmentReference, thumbnailStyle || isSpan);
