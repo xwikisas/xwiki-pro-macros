@@ -110,7 +110,7 @@ public class ViewFileMacroParameters
      */
     public String getWidth()
     {
-        return width;
+        return width != null ? width : "";
     }
 
     /**
@@ -128,7 +128,7 @@ public class ViewFileMacroParameters
      */
     public String getHeight()
     {
-        return height;
+        return height != null ? height : "";
     }
 
     /**

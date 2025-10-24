@@ -19,7 +19,6 @@
  */
 package com.xwiki.macros.viewfile.internal.macro;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,7 +42,6 @@ import org.xwiki.security.authorization.Right;
 
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.viewfile.internal.AttachmentSizeValidator;
-import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
 /**
@@ -60,10 +58,6 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     @Inject
     protected ContextualAuthorizationManager contextualAuthorization;
 
-    private boolean isOversize;
-
-    private String base64;
-
     @Inject
     private ScriptContextManager scriptContextManager;
 
@@ -73,9 +67,6 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
 
     @Inject
     private AttachmentSizeValidator attachmentSizeValidator;
-
-    @Inject
-    private ThumbnailGenerator thumbnailGenerator;
 
     @Inject
     private ViewFileMacroPrepareBlocks viewFileMacroPrepareBlocks;
@@ -94,22 +85,17 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     {
         try {
             String fileName = resolveFileName(parameters);
-
             if (StringUtils.isBlank(fileName)) {
                 return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.attachmentrequired");
             }
 
-            AttachmentReference attachmentRef = createAttachmentReference(fileName);
-
-            if (!userCanView(attachmentRef)) {
+            AttachmentReference attachmentRef = attachmentReferenceResolver.resolve(fileName, EntityType.ATTACHMENT);
+            if (!contextualAuthorization.hasAccess(Right.VIEW, attachmentRef)) {
                 return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.norights");
             }
-
             boolean oversize = attachmentSizeValidator.isAttachmentOversize(attachmentRef);
-            String base64Thumbnail = oversize ? null : generateThumbnailBase64(attachmentRef);
-
             return List.of(StaticBlockWrapperFactory.constructBlockWrapper(context.isInline(),
-                viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, base64Thumbnail, oversize,
+                viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, oversize,
                     inEditMode(context)), new HashMap<>()));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -120,22 +106,6 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     public boolean supportsInlineMode()
     {
         return true;
-    }
-
-    private AttachmentReference createAttachmentReference(String fileName)
-    {
-        return new AttachmentReference(attachmentReferenceResolver.resolve(fileName, EntityType.ATTACHMENT));
-    }
-
-    private boolean userCanView(AttachmentReference attachmentRef)
-    {
-        return contextualAuthorization.hasAccess(Right.VIEW, attachmentRef);
-    }
-
-    private String generateThumbnailBase64(AttachmentReference attachmentRef)
-    {
-        byte[] thumbnailData = thumbnailGenerator.getThumbnailData(attachmentRef);
-        return Base64.getEncoder().encodeToString(thumbnailData);
     }
 
     private String resolveFileName(ViewFileMacroParameters parameters)
