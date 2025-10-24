@@ -41,6 +41,7 @@ import org.xwiki.security.authorization.ContextualAuthorizationManager;
 import org.xwiki.security.authorization.Right;
 
 import com.xwiki.macros.AbstractProMacro;
+import com.xwiki.macros.viewfile.internal.AttachmentSizeValidator;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
 /**
@@ -65,6 +66,9 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     private AttachmentReferenceResolver<String> attachmentReferenceResolver;
 
     @Inject
+    private AttachmentSizeValidator attachmentSizeValidator;
+
+    @Inject
     private ViewFileMacroPrepareBlocks viewFileMacroPrepareBlocks;
 
     /**
@@ -85,14 +89,14 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
                 return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.attachmentrequired");
             }
 
-            AttachmentReference attachmentRef = createAttachmentReference(fileName);
-            if (!userCanView(attachmentRef)) {
+            AttachmentReference attachmentRef = attachmentReferenceResolver.resolve(fileName, EntityType.ATTACHMENT);
+            if (!contextualAuthorization.hasAccess(Right.VIEW, attachmentRef)) {
                 return viewFileMacroPrepareBlocks.errorMessage(context, "rendering.macro.viewFile.norights");
             }
-
+            boolean oversize = attachmentSizeValidator.isAttachmentOversize(attachmentRef);
             return List.of(StaticBlockWrapperFactory.constructBlockWrapper(context.isInline(),
-                viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, inEditMode(context)),
-                new HashMap<>()));
+                viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, oversize,
+                    inEditMode(context)), new HashMap<>()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -102,16 +106,6 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
     public boolean supportsInlineMode()
     {
         return true;
-    }
-
-    private AttachmentReference createAttachmentReference(String fileName)
-    {
-        return new AttachmentReference(attachmentReferenceResolver.resolve(fileName, EntityType.ATTACHMENT));
-    }
-
-    private boolean userCanView(AttachmentReference attachmentRef)
-    {
-        return contextualAuthorization.hasAccess(Right.VIEW, attachmentRef);
     }
 
     private String resolveFileName(ViewFileMacroParameters parameters)

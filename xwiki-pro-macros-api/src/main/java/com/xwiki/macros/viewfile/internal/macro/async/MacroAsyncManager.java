@@ -19,17 +19,17 @@
  */
 package com.xwiki.macros.viewfile.internal.macro.async;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.manager.ComponentManager;
-import org.xwiki.job.JobException;
 import org.xwiki.model.reference.AttachmentReference;
-import org.xwiki.rendering.RenderingException;
 import org.xwiki.rendering.async.internal.AsyncRendererConfiguration;
 import org.xwiki.rendering.async.internal.AsyncRendererExecutor;
 import org.xwiki.rendering.async.internal.AsyncRendererExecutorResponse;
@@ -37,7 +37,15 @@ import org.xwiki.rendering.async.internal.AsyncRendererResult;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xpn.xwiki.internal.context.XWikiContextContextStore;
+import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
+import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
 
+/**
+ * Handles the async rendering of the {@link ViewFileMacro} display blocks.
+ *
+ * @version $Id$
+ * @since 1.29.0
+ */
 @Component(roles = MacroAsyncManager.class)
 @Singleton
 public class MacroAsyncManager
@@ -48,36 +56,58 @@ public class MacroAsyncManager
     @Inject
     private AsyncRendererExecutor asyncRendererExecutor;
 
-    public String getThumbnailAsyncBlock(AttachmentReference attachmentReference, boolean isSpan)
-        throws ComponentLookupException, JobException, RenderingException
+    @Inject
+    private Logger logger;
+
+    /**
+     * Execute the async renderer corresponding to the given parameters and return a placeholder if the execution is not
+     * finished.
+     *
+     * @param attachmentReference the reference of the attachment used in the async rendering execution
+     * @param isInline if the context should be set in line or not
+     * @param parameters additional parameters needed in the execution
+     * @param element the placeholder block element type
+     * @param hint the hint for the {@link AbstractViewFileAsyncRenderer} implementation to be used
+     * @return return a placeholder if the execution is not finished
+     */
+    public String getViewFileAsyncBlock(AttachmentReference attachmentReference, boolean isInline,
+        Map<String, String> parameters, String element, String hint)
     {
-        AsyncRendererConfiguration configuration = new AsyncRendererConfiguration();
-        configuration.setPlaceHolderForced(true);
-        ViewFileAsyncThumbnailRenderer asyncRenderer = getAsyncRenderer(configuration, attachmentReference, isSpan,
-            ViewFileAsyncThumbnailRenderer.HINT);
-        AsyncRendererExecutorResponse response = asyncRendererExecutor.render(asyncRenderer, configuration);
-        AsyncRendererResult result = response.getStatus().getResult();
-        if (result != null && !configuration.isPlaceHolderForced()) {
-            return result.getResult();
-        } else {
-            return String.format("<span class=\"xwiki-async\" data-xwiki-async-id=\"%s\" "
-                    + "data-xwiki-async-client-id=\"%s\"></span>", response.getJobIdHTTPPath(),
-                response.getAsyncClientId());
+        try {
+            AsyncRendererConfiguration configuration = new AsyncRendererConfiguration();
+            configuration.setPlaceHolderForced(true);
+            MacroTransformationContext context = new MacroTransformationContext();
+            context.setInline(isInline);
+
+            AbstractViewFileAsyncRenderer asyncRenderer =
+                getAsyncRenderer(configuration, attachmentReference, parameters, hint, context);
+            AsyncRendererExecutorResponse response = asyncRendererExecutor.render(asyncRenderer, configuration);
+            AsyncRendererResult result = response.getStatus().getResult();
+
+            if (result != null && !configuration.isPlaceHolderForced()) {
+                return result.getResult();
+            } else {
+                return String.format(
+                    "<%s class=\"xwiki-async\" data-xwiki-async-id=\"%s\" data-xwiki-async-client-id=\"%s\"></%s>",
+                    element, response.getJobIdHTTPPath(), response.getAsyncClientId(), element);
+            }
+        } catch (Exception e) {
+            logger.error("There was an error while attempting to execute the async renderer.", e);
+            throw new RuntimeException("Failed to execute the async renderer. Please check the logs for more info.");
         }
     }
 
-    private ViewFileAsyncThumbnailRenderer getAsyncRenderer(AsyncRendererConfiguration configuration,
-        AttachmentReference attachmentReference, boolean isSpan, String hint) throws ComponentLookupException
+    private AbstractViewFileAsyncRenderer getAsyncRenderer(AsyncRendererConfiguration configuration,
+        AttachmentReference attachmentReference, Map<String, String> parameters, String hint,
+        MacroTransformationContext context) throws ComponentLookupException
     {
-        ViewFileAsyncThumbnailRenderer asyncRenderer =
-            componentManager.getInstance(ViewFileAsyncThumbnailRenderer.class);
-        // Pass some properties that might be of interest the executed async block.
+        AbstractViewFileAsyncRenderer asyncRenderer =
+            componentManager.getInstance(AbstractViewFileAsyncRenderer.class, hint);
+        // Pass some properties that might be of interest for the executed async block.
         configuration.setContextEntries(Set.of(XWikiContextContextStore.PROP_USER, XWikiContextContextStore.PROP_WIKI,
             XWikiContextContextStore.PROP_ACTION, XWikiContextContextStore.PROP_LOCALE,
-            XWikiContextContextStore.PREFIX_PROP_DOCUMENT));
-
-        MacroTransformationContext context = new MacroTransformationContext();
-        asyncRenderer.initialize(context, attachmentReference, isSpan);
+            XWikiContextContextStore.PREFIX_PROP_DOCUMENT, XWikiContextContextStore.PREFIX_PROP_REQUEST));
+        asyncRenderer.initialize(context, attachmentReference, parameters);
         return asyncRenderer;
     }
 }

@@ -19,23 +19,21 @@
  */
 package com.xwiki.macros.viewfile.internal.macro.async;
 
-import java.util.Collections;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.xwiki.component.annotation.Component;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.rendering.RenderingException;
-import org.xwiki.rendering.async.internal.block.AbstractBlockAsyncRenderer;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.ImageBlock;
-import org.xwiki.rendering.block.MacroBlock;
-import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.reference.ResourceReference;
@@ -45,10 +43,23 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xwiki.macros.viewfile.internal.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.internal.macro.StaticBlockWrapperFactory;
+import com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager;
+import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
+import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
 
-@Component(roles = ViewFileAsyncThumbnailRenderer.class)
-public class ViewFileAsyncThumbnailRenderer extends AbstractBlockAsyncRenderer
+/**
+ * Async renderer for generating the thumbnail display {@link Block} for {@link ViewFileMacro}.
+ *
+ * @version $Id$
+ * @since 1.29.0
+ */
+@Component(roles = AbstractViewFileAsyncRenderer.class)
+@Named(ViewFileAsyncThumbnailRenderer.HINT)
+public class ViewFileAsyncThumbnailRenderer extends AbstractViewFileAsyncRenderer
 {
+    /**
+     * Component hint.
+     */
     public static final String HINT = "thumbnail";
 
     private static final String CLASS = "class";
@@ -59,9 +70,10 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractBlockAsyncRenderer
     @Inject
     private ThumbnailGenerator thumbnailGenerator;
 
-    private AttachmentReference attachmentReference;
+    @Inject
+    private ViewFileExternalBlockManager viewFileExternalBlockManager;
 
-    private MacroTransformationContext transformationContext;
+    private AttachmentReference attachmentReference;
 
     private boolean isInline;
 
@@ -69,11 +81,11 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractBlockAsyncRenderer
 
     private List<String> id;
 
+    @Override
     public void initialize(MacroTransformationContext context, AttachmentReference attachmentReference,
-        boolean isInline)
+        Map<String, String> parameters)
     {
-        this.isInline = isInline;
-        this.transformationContext = context;
+        this.isInline = context.isInline();
         this.targetSyntax = context.getTransformationContext().getTargetSyntax();
         this.attachmentReference = attachmentReference;
         id =
@@ -114,28 +126,30 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractBlockAsyncRenderer
     protected Block execute(boolean async, boolean cached) throws RenderingException
     {
         try {
-            List<Block> result = List.of(getImageThumbnail(isInline, attachmentReference));
-            MacroBlock currentMacro = transformationContext.getCurrentMacroBlock();
-            if (currentMacro != null) {
-                result = Collections.singletonList(
-                    new MacroMarkerBlock(
-                        currentMacro.getId(),
-                        currentMacro.getParameters(),
-                        currentMacro.getContent(),
-                        result,
-                        currentMacro.isInline()
-                    )
-                );
-            }
+            List<Block> result = List.of(getImageThumbnail(attachmentReference));
             return new CompositeBlock(result);
         } catch (Exception e) {
             throw new RenderingException("Failed to render asynchronously the work items displayer [{}].", e);
         }
     }
 
-    private Block getImageThumbnail(boolean isSpan, AttachmentReference attachmentReference) throws Exception
+    private Block getImageThumbnail(AttachmentReference attachmentReference) throws Exception
     {
-        String base64 = thumbnailGenerator.generateThumbnailBase64(attachmentReference);
+        String base64 = generateThumbnailBase64(attachmentReference);
+        if (base64.isEmpty()) {
+            return viewFileExternalBlockManager.getMimeTypeBlock(attachmentReference, isInline);
+        }
+        return getThumbnailBlock(base64);
+    }
+
+    private String generateThumbnailBase64(AttachmentReference attachmentRef)
+    {
+        byte[] thumbnailData = thumbnailGenerator.getThumbnailData(attachmentRef);
+        return Base64.getEncoder().encodeToString(thumbnailData);
+    }
+
+    private Block getThumbnailBlock(String base64)
+    {
         String imageAltTranslation =
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.image.alt");
         String overlayTextTranslation =
@@ -146,11 +160,9 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractBlockAsyncRenderer
             new ImageBlock(reference, false, Map.of(CLASS, "viewfile-thumbnail-image", "alt", imageAltTranslation));
         Block overlayText =
             new FormatBlock(List.of(new WordBlock(overlayTextTranslation)), Format.NONE, Map.of(CLASS, "overlay-text"));
-
         Block overlay =
-            StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(overlayText), Map.of(CLASS, "overlay"));
-
-        return StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(imageBlock, overlay),
+            StaticBlockWrapperFactory.constructBlockWrapper(isInline, List.of(overlayText), Map.of(CLASS, "overlay"));
+        return StaticBlockWrapperFactory.constructBlockWrapper(isInline, List.of(imageBlock, overlay),
             Map.of(CLASS, "image-container"));
     }
 }
