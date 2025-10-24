@@ -32,6 +32,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -39,8 +41,6 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.hslf.usermodel.HSLFSlide;
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
@@ -156,45 +156,73 @@ public class ThumbnailGenerator
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
-        return generateThumbnail(new ByteArrayInputStream(is.readAllBytes()), attachmentReference);
+        return generateThumbnail(is.readAllBytes(), attachmentReference);
     }
 
     private byte[] getOfficeThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
-        ByteArrayInputStream bais = getPDFContent(attachmentReference);
+        byte[] bais = getPDFContent(attachmentReference);
         return generateThumbnail(bais, attachmentReference);
     }
 
-    private ByteArrayInputStream getPDFContent(AttachmentReference attachmentReference) throws Exception
+    private byte[] getPDFContent(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
-        try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream())
+        try (InputStream is = document.getAttachment(attachmentReference.getName())
+            .getContentInputStream(wikiContext); ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
             // Set an execution timeout equivalent to 10 seconds.
             OfficeManager manager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
                 .taskExecutionTimeout(10000L).build();
             manager.start();
-            LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.PDF).execute();
+            LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.JPEG).execute();
             manager.stop();
-            return new ByteArrayInputStream(baos.toByteArray());
+            return baos.toByteArray();
         }
     }
+//    first time old: 1:14
+//    second time: 0:21
+//
+//    new: first time: 1:04
+//    second time: 0:21
 
-    private byte[] generateThumbnail(ByteArrayInputStream inputStream, AttachmentReference attachmentReference)
-        throws Exception
+    private BufferedImage getBufferedImage(byte[] result) throws IOException
     {
-        // Load the PDF document.
-        PDDocument document = PDDocument.load(inputStream);
-        PDFRenderer pdfRenderer = new PDFRenderer(document);
-        // Select the first page (index starts at 0).
-        BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 150);
-        BufferedImage resized = Thumbnails.of(bim).size(150, 212).asBufferedImage();
+        BufferedImage firstPage;
+
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(result)) {
+            if (isZip(result)) {
+                try (ZipInputStream zis = new ZipInputStream(bis)) {
+                    ZipEntry entry = zis.getNextEntry();
+                    if (entry != null) {
+                        firstPage = ImageIO.read(zis);
+                    } else {
+                        throw new IOException("No images found in LibreOffice export ZIP");
+                    }
+                }
+            } else {
+                firstPage = ImageIO.read(bis);
+            }
+        }
+        return firstPage;
+    }
+
+    private boolean isZip(byte[] data)
+    {
+        return data.length >= 4 && data[0] == 0x50 && data[1] == 0x4B;
+    }
+
+    private byte[] generateThumbnail(byte[] inputStream, AttachmentReference attachmentReference) throws Exception
+    {
+        BufferedImage firstPage = getBufferedImage(inputStream);
+
+        // Resize to thumbnail
+        BufferedImage resized = Thumbnails.of(firstPage).size(150, 212).asBufferedImage();
         File thumbnailFile = getThumbnailPath(attachmentReference);
         ImageIO.write(resized, JPG, thumbnailFile);
-        document.close();
+        // Load the PDF document.
         return Files.readAllBytes(thumbnailFile.toPath());
     }
 
