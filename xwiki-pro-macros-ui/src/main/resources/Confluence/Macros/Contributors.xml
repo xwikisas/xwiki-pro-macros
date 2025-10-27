@@ -462,7 +462,7 @@ Result:
             #foreach ($page in $pages)
                #if (!$foreach.first), #end##
                #set($d = $xwiki.getDocument($page))
-               &lt;a href="$escapetool.xml($d.getURL())"&gt;##
+               &lt;a class="contributors-page" href="$escapetool.xml($d.getURL())"&gt;##
                #set($title = "$!d.getRenderedTitle($xwiki.currentContentSyntaxId)")
                #if ($title != "")
                  $escapetool.xml($title)##
@@ -488,7 +488,7 @@ Result:
         &lt;/ul&gt;
       #else
         #foreach($contribution in $contributions)
-          #if(!$foreach.first), #end
+          #if(!$foreach.first),#end
           #showContribution($contribution)
         #end
       #end
