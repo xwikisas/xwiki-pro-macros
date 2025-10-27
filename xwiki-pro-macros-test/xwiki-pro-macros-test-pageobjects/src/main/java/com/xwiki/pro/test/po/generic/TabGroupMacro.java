@@ -45,7 +45,7 @@ public class TabGroupMacro extends BaseElement
         this.tabs = ids.stream().map(TabMacro::new).collect(Collectors.toList());
     }
 
-    public TabMacro getTab(String id)
+    public TabMacro getTabMacro(String id)
     {
         return tabs.stream().filter(tab -> tab.getId().equals(id)).findFirst()
             .orElseThrow(() -> new IllegalArgumentException("No tab found with id: " + id));

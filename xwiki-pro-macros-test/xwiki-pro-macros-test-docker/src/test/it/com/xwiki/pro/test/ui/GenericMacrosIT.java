@@ -857,7 +857,7 @@ public class GenericMacrosIT
         assertEquals(3, tabGroup0.getTabCount());
         assertEquals(expectedLabels1, tabGroup0.getTabLabels());
         assertEquals(Arrays.asList("tab_0", "tab_1", "tab_2"), tabGroup0.getTabIds());
-        TabMacro tab0 = tabGroup0.getTab("tab_0");
+        TabMacro tab0 = tabGroup0.getTabMacro("tab_0");
         // default="true".
         assertTrue(tab0.isContentDisplayed("tab0-content"));
 
@@ -883,9 +883,9 @@ public class GenericMacrosIT
         assertEquals(5, tabGroup1.getNextAfter());
         assertTrue(tabGroup1.isLoopEnabled());
 
-        TabMacro tab3 = tabGroup1.getTab("tab_3");
-        TabMacro tab4 = tabGroup1.getTab("tab_4");
-        TabMacro tab5 = tabGroup1.getTab("tab_5");
+        TabMacro tab3 = tabGroup1.getTabMacro("tab_3");
+        TabMacro tab4 = tabGroup1.getTabMacro("tab_4");
+        TabMacro tab5 = tabGroup1.getTabMacro("tab_5");
 
         // Waits until tab_5 is active, it's the set default tab.
         setup.getDriver().waitUntilCondition(driver -> "tab_5".equals(tabGroup1.getActiveTabId()));
@@ -926,8 +926,8 @@ public class GenericMacrosIT
         assertEquals(1, tabGroup2.getNextAfter());
         assertTrue(tabGroup2.isLoopEnabled());
 
-        TabMacro tab6 = tabGroup2.getTab("tab_6");
-        TabMacro tab7 = tabGroup2.getTab("tab_7");
+        TabMacro tab6 = tabGroup2.getTabMacro("tab_6");
+        TabMacro tab7 = tabGroup2.getTabMacro("tab_7");
 
         // Waits until tab_6 is active.
         setup.getDriver().waitUntilCondition(driver -> "tab_6".equals(tabGroup2.getActiveTabId()));
@@ -952,8 +952,8 @@ public class GenericMacrosIT
         assertEquals(0, tabGroup3.getNextAfter());
         assertFalse(tabGroup3.isLoopEnabled());
 
-        TabMacro tab8 = tabGroup3.getTab("tab_8");
-        TabMacro tab9 = tabGroup3.getTab("tab_9");
+        TabMacro tab8 = tabGroup3.getTabMacro("tab_8");
+        TabMacro tab9 = tabGroup3.getTabMacro("tab_9");
 
         // Checks the active tab.
         assertTrue(tab9.isContentDisplayed("tab1-content"));
