@@ -69,6 +69,44 @@
       <artifactId>xwiki-platform-rendering-wikimacro-api</artifactId>
       <version>${platform.version}</version>
     </dependency>
+    <!-- Integration Tests -->
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-test</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-xwiki21</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.rendering</groupId>
+      <artifactId>xwiki-rendering-syntax-event</artifactId>
+      <version>${rendering.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- This shuts some logs up -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-url-scheme-standard</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Runtime dependency normally provided by the Servlet Container -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Runtime dependency normally provided by the Servlet Container -->
+    <dependency>
+      <groupId>org.mortbay.jasper</groupId>
+      <artifactId>apache-el</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
    <plugins>
@@ -77,6 +115,15 @@
        <artifactId>maven-checkstyle-plugin</artifactId>
        <configuration>
          <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+       </configuration>
+     </plugin>
+     <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-surefire-plugin</artifactId>
+       <configuration>
+         <includes>
+           <include>**/IntegrationTests.java</include>
+         </includes>
        </configuration>
      </plugin>
     </plugins>

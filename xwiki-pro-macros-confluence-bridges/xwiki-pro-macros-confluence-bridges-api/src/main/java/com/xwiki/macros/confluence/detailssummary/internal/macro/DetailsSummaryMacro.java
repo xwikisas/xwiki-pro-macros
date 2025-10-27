@@ -40,32 +40,23 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.job.JobException;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.localization.LocalizationManager;
-import org.xwiki.model.EntityType;
-import org.xwiki.model.reference.EntityReference;
 import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.rendering.RenderingException;
-import org.xwiki.rendering.async.internal.block.BlockAsyncRenderer;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererConfiguration;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererExecutor;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
-import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
 import org.xwiki.rendering.block.WordBlock;
-import org.xwiki.rendering.block.XDOM;
-import org.xwiki.rendering.internal.transformation.RenderingContextStore;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
-import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.security.authorization.ContextualAuthorizationManager;
-import org.xwiki.security.authorization.Right;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
@@ -79,12 +70,21 @@ import com.xwiki.macros.confluence.detailssummary.macro.DetailsSummaryMacroParam
  * @since 1.28.3
  */
 @Component
-@Named("confluence_detailssummary")
+@Named(DetailsSummaryMacro.MACRO_HINT)
 @Singleton
 public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroParameters>
 {
+    /**
+     * THe name of the macro.
+     */
+    public static final String MACRO_HINT = "confluence_detailssummary";
+
+    @Inject
+    protected BlockAsyncRendererExecutor executor;
+
     @Inject
     private CQLUtils cqlUtils;
+
     @Inject
     private Provider<XWikiContext> contextProvider;
 
@@ -97,12 +97,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     @Inject
     private LocalizationManager localization;
 
-
     @Inject
     private EntityReferenceResolver<String> resolver;
-
-    @Inject
-    protected BlockAsyncRendererExecutor executor;
 
     /**
      * Create amd initialize the descriptor of the macro.
@@ -120,18 +116,17 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
 
     @Override
     protected List<Block> internalExecute(DetailsSummaryMacroParameters parameters, String content,
-        MacroTransformationContext context) throws MacroExecutionException
+        MacroTransformationContext context)
     {
 
         List<SolrDocument> documents = cqlUtils.buildAndExecute(buildQueryMap(parameters));
         List<String> headings = confluenceSummaryProcessor.parseHeadings(parameters.getHeadings());
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
-        List<Block> columns = headings.isEmpty() ? new ArrayList<>()
-            : headings.stream().map(heading -> new TableHeadCellBlock((List.of(new WordBlock(heading)))))
-                .collect(Collectors.toList());
-        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>()
-            : headings.stream().map(String::toLowerCase).collect(Collectors.toList());
+        List<Block> columns = headings.isEmpty() ? new ArrayList<>() : headings.stream()
+            .map(heading -> new TableHeadCellBlock((List.of(new WordBlock(heading))))).collect(Collectors.toList());
+        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>() : headings.stream().map(String::toLowerCase)
+            .collect(Collectors.toList());
 
         List<Block> tableRows = new ArrayList<>();
         for (SolrDocument document : documents) {
@@ -146,8 +141,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
                 MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
                 metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
                 metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
-                BlockAsyncRendererConfiguration configuration = new BlockAsyncRendererConfiguration(null,
-                    metaDataBlock);
+                BlockAsyncRendererConfiguration configuration =
+                    new BlockAsyncRendererConfiguration(null, metaDataBlock);
                 configuration.setInline(true);
                 configuration.setDefaultSyntax(context.getSyntax());
                 configuration.setTargetSyntax(context.getSyntax());
@@ -164,11 +159,29 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
                 }
             });
         }
+
         // Before adding the header row sort the rows.
         confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
         enhanceHeader(parameters, columns);
         tableRows.add(0, new TableRowBlock(columns));
+        // If the table rows has only one row then it means that there were no details macro found, and we should add
+        // a message to make this clear to the user.
+        if (tableRows.size() == 1) {
+            rowsNotFound(tableRows);
+        }
+
         return List.of(new TableBlock(tableRows));
+    }
+
+    protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("label", parameters.getLabel());
+        map.put("cql", parameters.getCql());
+        map.put("operator", parameters.getOperator());
+        map.put("max", parameters.getMax());
+        map.put("reverse", parameters.getReverse());
+        return map;
     }
 
     private List<Block> createTagsBlock(List<String> tagList)
@@ -219,12 +232,18 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
     }
 
+    private void rowsNotFound(List<Block> tableRows)
+    {
+        String message = localizationManager.getTranslationPlain("rendering.macro.detailssummary.noresults");
+        Block row = new TableRowBlock(List.of(new TableCellBlock(List.of(new WordBlock(message)))));
+        tableRows.add(row);
+    }
+
     private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
     {
 
-        String titleColumnName = parameters.getFirstcolumn().equals("")
-            ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
-            : parameters.getFirstcolumn();
+        String titleColumnName = parameters.getFirstcolumn().equals("") ? localizationManager.getTranslationPlain(
+            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
         header.add(0, new TableHeadCellBlock(List.of(new WordBlock(titleColumnName))));
 
         if (parameters.showLastModified()) {
@@ -241,16 +260,5 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             header.add(new TableHeadCellBlock(List.of(
                 new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator")))));
         }
-    }
-
-    private Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
-    {
-        Map<String, Object> map = new HashMap<>();
-        map.put("label", parameters.getLabel());
-        map.put("cql", parameters.getCql());
-        map.put("operator", parameters.getOperator());
-        map.put("max", parameters.getMax());
-        map.put("reverse", parameters.getReverse());
-        return map;
     }
 }
