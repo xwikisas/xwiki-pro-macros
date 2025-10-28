@@ -19,10 +19,9 @@
  */
 package com.xwiki.macros.confluence.detailssummary.internal.macro;
 
+import java.io.StringReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,32 +35,31 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.apache.solr.common.SolrDocument;
+import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.job.JobException;
 import org.xwiki.localization.ContextualLocalizationManager;
-import org.xwiki.localization.LocalizationManager;
-import org.xwiki.model.reference.EntityReferenceResolver;
-import org.xwiki.rendering.RenderingException;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererConfiguration;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererExecutor;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
+import org.xwiki.rendering.block.SpaceBlock;
 import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.MetaData;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
+import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xwiki.macros.AbstractProMacro;
-import com.xwiki.macros.confluence.cql.CQLUtils;
 import com.xwiki.macros.confluence.detailssummary.macro.DetailsSummaryMacroParameters;
+import com.xwiki.macros.confluence.internal.cql.CQLUtils;
 
 /**
  * Details summary macro: Display a list of details macro as a table.
@@ -83,6 +81,10 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     protected BlockAsyncRendererExecutor executor;
 
     @Inject
+    @Named("plain/1.0")
+    private Parser plainParser;
+
+    @Inject
     private CQLUtils cqlUtils;
 
     @Inject
@@ -95,17 +97,17 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private ContextualLocalizationManager localizationManager;
 
     @Inject
-    private LocalizationManager localization;
-
-    @Inject
-    private EntityReferenceResolver<String> resolver;
+    private Logger logger;
 
     /**
      * Create amd initialize the descriptor of the macro.
      */
     public DetailsSummaryMacro()
     {
-        super("Details Summary 2", "TODO FIX THIS", DetailsSummaryMacroParameters.class);
+
+        super("Confluence bridge for Details Summary", "Confluence bridge for the Details Summary "
+                + "(Page Properties Report) macro to display properties attached to a page using the Details macro.",
+            DetailsSummaryMacroParameters.class);
     }
 
     @Override
@@ -123,8 +125,13 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         List<String> headings = confluenceSummaryProcessor.parseHeadings(parameters.getHeadings());
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
-        List<Block> columns = headings.isEmpty() ? new ArrayList<>() : headings.stream()
-            .map(heading -> new TableHeadCellBlock((List.of(new WordBlock(heading))))).collect(Collectors.toList());
+        List<Block> columns = new ArrayList<>();
+        if (!headings.isEmpty()) {
+            for (String heading : headings) {
+                Block cell = new TableHeadCellBlock(parsePlainText(heading));
+                columns.add(cell);
+            }
+        }
         List<String> columnsLower = headings.isEmpty() ? new ArrayList<>() : headings.stream().map(String::toLowerCase)
             .collect(Collectors.toList());
 
@@ -152,10 +159,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
                 configuration.setCacheAllowed(false);
                 try {
                     tableRows.add(executor.execute(configuration));
-                } catch (JobException e) {
-                    throw new RuntimeException(e);
-                } catch (RenderingException e) {
-                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    logger.warn("Failed to render the row with the permissions of the author.", e);
                 }
             });
         }
@@ -188,16 +193,18 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     {
         List<Block> tags = new ArrayList<>();
         String baseRef = "Main.Tags";
+        List<Block> separatorAsBlocks = parsePlainText(", ");
         for (int i = 0; i < tagList.size(); i++) {
             String tag = tagList.get(i);
             DocumentResourceReference reference = new DocumentResourceReference(baseRef);
             reference.setQueryString(
                 String.format("do=viewTag&tag=%s", URLEncoder.encode(tag, StandardCharsets.UTF_8)));
-            tags.add(new LinkBlock(List.of(new WordBlock(tag)), reference, false));
+            List<Block> tagAsBlocks = parsePlainText(tag);
+            tags.add(new LinkBlock(tagAsBlocks, reference, false));
 
             // Add ", " after each tag except the last
             if (i < tagList.size() - 1) {
-                tags.add(new WordBlock(", "));
+                tags.addAll(separatorAsBlocks);
             }
         }
         return tags;
@@ -207,8 +214,9 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     {
         if (parameters.showLastModified()) {
             Date date = (Date) document.get("date");
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            row.add(new TableCellBlock(List.of(new WordBlock(dateFormat.format(date)))));
+            XWikiContext context = contextProvider.get();
+            String formattedDate = context.getWiki().formatDate(date, null, context);
+            row.add(new TableCellBlock(parsePlainText(formattedDate)));
         }
 
         if (parameters.showPageLabels()) {
@@ -222,43 +230,54 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             String author = ((String) document.get("creator"));
             Block block;
             if (author.equals("XWiki.superadmin")) {
-                block = new WordBlock(author);
+                block = new TableCellBlock(parsePlainText(author));
             } else {
                 ResourceReference userRef = new ResourceReference(author, ResourceType.DOCUMENT);
-                block = new LinkBlock(List.of(), userRef, false);
+                block = new TableCellBlock(List.of(new LinkBlock(List.of(), userRef, false)));
             }
 
-            row.add(new TableCellBlock(List.of(block)));
+            row.add(block);
         }
     }
 
     private void rowsNotFound(List<Block> tableRows)
     {
         String message = localizationManager.getTranslationPlain("rendering.macro.detailssummary.noresults");
-        Block row = new TableRowBlock(List.of(new TableCellBlock(List.of(new WordBlock(message)))));
+        Block row = new TableRowBlock(List.of(new TableCellBlock(parsePlainText(message))));
         tableRows.add(row);
     }
 
     private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
     {
 
-        String titleColumnName = parameters.getFirstcolumn().equals("") ? localizationManager.getTranslationPlain(
+        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
             "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
-        header.add(0, new TableHeadCellBlock(List.of(new WordBlock(titleColumnName))));
+        header.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
 
         if (parameters.showLastModified()) {
-            header.add(new TableHeadCellBlock(List.of(new WordBlock(
-                localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified")))));
+            header.add(new TableHeadCellBlock(parsePlainText(
+                localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified"))));
         }
 
         if (parameters.showPageLabels()) {
-            header.add(new TableHeadCellBlock(List.of(
-                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags")))));
+            header.add(new TableHeadCellBlock(
+                parsePlainText(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags"))));
         }
 
         if (parameters.showCreator()) {
-            header.add(new TableHeadCellBlock(List.of(
-                new WordBlock(localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator")))));
+            header.add(new TableHeadCellBlock(parsePlainText(
+                localizationManager.getTranslationPlain("rendering" + ".macro.detailssummary.creator"))));
+        }
+    }
+
+    private List<Block> parsePlainText(String text)
+    {
+        try {
+            // Since this is parsed from plain text everything is wrapped in a Paragraph, but this is not needed and
+            return plainParser.parse(new StringReader(text)).getChildren().get(0).getChildren();
+        } catch (ParseException e) {
+            logger.error("Failed to parse plain text: [{}]", text, e);
+            return List.of(new SpaceBlock());
         }
     }
 }

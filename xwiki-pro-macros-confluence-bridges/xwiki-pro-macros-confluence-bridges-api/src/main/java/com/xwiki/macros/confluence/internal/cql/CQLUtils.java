@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.confluence.cql;
+package com.xwiki.macros.confluence.internal.cql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +56,14 @@ import com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils;
 @Singleton
 public class CQLUtils
 {
+    /**
+     * By default, solr limits to 10 results, which doesn't correspond to the behavior of Confluence. INT_MAX causes
+     * huge performances issues, so we limit to 1000 arbitrarily by default.
+     */
+    public static final int DEFAULT_MAX = 1000;
+
+    private static final String CQL = "cql";
+
     private static final Gson JSON_SERIALZIERR = new Gson();
 
     private static final String DELIMITER = "\\s*,\\s*|\\s+";
@@ -71,8 +79,6 @@ public class CQLUtils
     private static final String CLOSE_BRACKET = ")";
 
     private static final String SORT = "sort";
-
-    private static final String CQL = "cql";
 
     private final String[] solrSpecialChars =
         { "+", "-", "&&", "||", "!", OPEN_BRACKET, CLOSE_BRACKET, "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":",
@@ -95,8 +101,8 @@ public class CQLUtils
     private Logger logger;
 
     /**
-     * Executes a CQL if is present inside the parameters, otherwise attempts to build a CQL from the parameters and
-     * execute it.
+     * Execute the cql parameter if provided, otherwise attempt to build a CQL query from the parameters and execute
+     * it.
      *
      * @param macroParameters parameters of the macro.
      * @return list of SolrDocuments matching the CQL.
@@ -117,10 +123,8 @@ public class CQLUtils
         if (StringUtils.isBlank(type)) {
             fq = fq + " type:DOCUMENT";
         }
-        // By default, solr limits to 10 results, which doesn't correspond to the behavior of Confluence.
-        // INT_MAX causes huge performances issues, so we limit to 1000 arbitrarily by default.
-        int limit = ((int) macroParameters.getOrDefault("max", 1000));
-        String sortField = determinateSortField(macroParameters);
+        int limit = ((int) macroParameters.getOrDefault("max", DEFAULT_MAX));
+        String sortField = determineSortField(macroParameters);
         String sortDirection = ((boolean) macroParameters.getOrDefault("reverse", false)) ? "desc" : "asc";
         List<SolrDocument> docs = new ArrayList<>();
         Set<String> alreadyFound = new HashSet<>();
@@ -149,9 +153,9 @@ public class CQLUtils
     }
 
     /**
-     * Builds a solr facet filter using the spaces provided.
+     * Build a Solr facet filter using the provided spaces.
      *
-     * @param spaces list of comma separated spaces.
+     * @param spaces list of comma separated spaces
      * @return a facet filter made from the @param spaces.
      */
     public String builderFilter(String spaces)
@@ -186,10 +190,9 @@ public class CQLUtils
     public String buildQuery(Map<String, Object> parameters)
     {
         StringBuilder cql = new StringBuilder();
-        String operator = ((String) parameters.getOrDefault(OPERATOR, "")).equalsIgnoreCase("and") ? " AND "
-            : " OR ";
+        String operator = ((String) parameters.getOrDefault(OPERATOR, "")).equalsIgnoreCase("and") ? " AND " : " OR ";
         String labels = (String) (parameters.containsKey(LABELS) ? parameters.getOrDefault(LABELS, "")
-            : parameters.getOrDefault("label", ""));
+                                                                 : parameters.getOrDefault("label", ""));
         if (StringUtils.isNotBlank(labels)) {
             String[] labelList = labels.split(DELIMITER);
             String joinedLabels = Arrays.stream(labelList).map(l -> "label = " + JSON_SERIALZIERR.toJson(l))
@@ -204,7 +207,7 @@ public class CQLUtils
         return cql.toString();
     }
 
-    private String determinateSortField(Map<String, Object> parameters)
+    private String determineSortField(Map<String, Object> parameters)
     {
         switch (((String) parameters.getOrDefault(SORT, ""))) {
             case "modified":

@@ -19,6 +19,9 @@
  */
 package com.xwiki.macros.confluence.detailssummary.macro;
 
+
+import static com.xwiki.macros.confluence.internal.cql.CQLUtils.DEFAULT_MAX;
+
 /**
  * Parameter bean class for the DetailsSummaryMacro. This class holds all the parameters that can be configured for the
  * macro.
@@ -45,16 +48,14 @@ public class DetailsSummaryMacroParameters
 
     private String operator = "OR";
 
-    private int max = 1000;
+    private int max = DEFAULT_MAX;
 
     private String sort = "";
 
     private boolean reverse;
 
     /**
-     * Returns the unique identifier for the macro instance.
-     *
-     * @return the id
+     * @return the unique identifier for the macro instance.
      */
     public String getId()
     {
@@ -62,8 +63,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the unique identifier for the macro instance.
-     *
      * @param id the id to set
      */
     public void setId(String id)
@@ -72,9 +71,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the headings to display in the macro output.
-     *
-     * @return the headings
+     * @return the headings to display in the macro output.
      */
     public String getHeadings()
     {
@@ -82,8 +79,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the headings to display in the macro output.
-     *
      * @param headings the headings to set
      */
     public void setHeadings(String headings)
@@ -92,9 +87,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the Confluence Query Language (CQL) query string used to filter content.
-     *
-     * @return the CQL query
+     * @return the Confluence Query Language (CQL) query string used to filter content.
      */
     public String getCql()
     {
@@ -102,9 +95,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the Confluence Query Language (CQL) query string used to filter content.
-     *
-     * @param cql the CQL query to set
+     * @param cql the Confluence Query Language (CQL) query string used to filter content.
      */
     public void setCql(String cql)
     {
@@ -112,9 +103,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the label to filter pages or content by.
-     *
-     * @return the label
+     * @return the label to filter pages or content by.
      */
     public String getLabel()
     {
@@ -122,9 +111,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the label to filter pages or content by.
-     *
-     * @param label the label to set
+     * @param label the label to filter pages or content by.
      */
     public void setLabel(String label)
     {
@@ -132,9 +119,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the name of the first column to display in the output.
-     *
-     * @return the first column
+     * @return the name of the first column to display in the output.
      */
     public String getFirstcolumn()
     {
@@ -142,9 +127,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the name of the first column to display in the output.
-     *
-     * @param firstcolumn the first column to set
+     * @param firstcolumn the name of the first column to display in the output.
      */
     public void setFirstcolumn(String firstcolumn)
     {
@@ -152,8 +135,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Indicates whether the last modified date should be displayed.
-     *
      * @return true if last modified date should be shown, false otherwise
      */
     public boolean showLastModified()
@@ -162,8 +143,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets whether the last modified date should be displayed.
-     *
      * @param showLastModified true to show last modified date, false otherwise
      */
     public void setShowLastModified(boolean showLastModified)
@@ -172,8 +151,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Indicates whether page labels should be displayed.
-     *
      * @return true if page labels should be shown, false otherwise
      */
     public boolean showPageLabels()
@@ -182,8 +159,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets whether page labels should be displayed.
-     *
      * @param showPageLabels true to show page labels, false otherwise
      */
     public void setShowPageLabels(boolean showPageLabels)
@@ -192,8 +167,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Indicates whether the creator of the page should be displayed.
-     *
      * @return true if creator should be shown, false otherwise
      */
     public boolean showCreator()
@@ -202,8 +175,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets whether the creator of the page should be displayed.
-     *
      * @param showCreator true to show creator, false otherwise
      */
     public void setShowCreator(boolean showCreator)
@@ -212,9 +183,7 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the operator used in filtering (e.g., AND, OR).
-     *
-     * @return the operator
+     * @return the operator used in filtering (e.g., AND, OR).
      */
     public String getOperator()
     {
@@ -222,8 +191,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the operator used in filtering (e.g., AND, OR).
-     *
      * @param operator the operator to set
      */
     public void setOperator(String operator)
@@ -232,8 +199,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the maximum number of results to display.
-     *
      * @return the max number of results
      */
     public int getMax()
@@ -242,8 +207,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the maximum number of results to display.
-     *
      * @param max the max number of results
      */
     public void setMax(int max)
@@ -252,8 +215,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Returns the field by which results should be sorted.
-     *
      * @return the sort field
      */
     public String getSort()
@@ -262,8 +223,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets the field by which results should be sorted.
-     *
      * @param sort the sort field to set
      */
     public void setSort(String sort)
@@ -272,8 +231,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Indicates whether the sorting of the {@link #sort} field should be reversed.
-     *
      * @return true if reverse sort, false otherwise
      */
     public boolean getReverse()
@@ -282,8 +239,6 @@ public class DetailsSummaryMacroParameters
     }
 
     /**
-     * Sets whether the sorting of the {@link #sort} field should be reversed.
-     *
      * @param reverseSort true to reverse sort, false otherwise
      */
     public void setReverse(boolean reverseSort)

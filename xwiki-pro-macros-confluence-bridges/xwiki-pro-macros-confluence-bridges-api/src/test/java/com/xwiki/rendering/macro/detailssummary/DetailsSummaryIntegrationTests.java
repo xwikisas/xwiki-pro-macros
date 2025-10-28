@@ -22,6 +22,8 @@ package com.xwiki.rendering.macro.detailssummary;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.List;
 import javax.inject.Provider;
 
 import org.apache.solr.common.SolrDocument;
+import org.mockito.stubbing.Answer;
 import org.xwiki.component.util.DefaultParameterizedType;
 import org.xwiki.localization.ContextualLocalizationManager;
 import org.xwiki.model.EntityType;
@@ -44,6 +47,7 @@ import org.xwiki.rendering.macro.wikibridge.WikiMacroFactory;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.test.integration.RenderingTestSuite;
 import org.xwiki.rendering.test.integration.junit5.RenderingTests;
+import org.xwiki.search.solr.Solr;
 import org.xwiki.security.authorization.AuthorizationManager;
 import org.xwiki.security.authorization.ContextualAuthorizationManager;
 import org.xwiki.security.authorization.Right;
@@ -56,7 +60,8 @@ import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
-import com.xwiki.macros.confluence.cql.CQLUtils;
+import com.xwiki.licensing.LicensedExtensionManager;
+import com.xwiki.macros.confluence.internal.cql.CQLUtils;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -71,7 +76,7 @@ import static org.mockito.Mockito.when;
  */
 @RenderingTestSuite.Scope(value = "macros.detailssummary")
 
-public class IntegrationTests implements RenderingTests
+public class DetailsSummaryIntegrationTests implements RenderingTests
 {
     private XWikiContext xcontext;
 
@@ -85,7 +90,6 @@ public class IntegrationTests implements RenderingTests
     public void initialize(MockitoComponentManager componentManager) throws Exception
     {
         componentManager.registerComponent(TestEnvironment.class);
-
         componentManager.registerMockComponent(TemplateManager.class);
         componentManager.registerMockComponent(ModelBridge.class);
         componentManager.registerMockComponent(QueryManager.class);
@@ -95,7 +99,10 @@ public class IntegrationTests implements RenderingTests
         componentManager.registerMockComponent(WikiMacroFactory.class);
 
         // Don't need the LicensingScheduler in the test
+        componentManager.registerMockComponent(LicensedExtensionManager.class);
         componentManager.registerMockComponent(EventListener.class, "LicensingSchedulerListener");
+        // Don't need the actual solr
+        componentManager.registerMockComponent(Solr.class, "embedded");
         // Mock the translation and register them
         ContextualLocalizationManager localizationManager =
             componentManager.registerMockComponent(ContextualLocalizationManager.class);
@@ -113,6 +120,13 @@ public class IntegrationTests implements RenderingTests
             new DefaultParameterizedType(null, Provider.class, XWikiContext.class));
         // We want a deep mock so we can mock call chains.
         this.xcontext = mock(XWikiContext.class, RETURNS_DEEP_STUBS);
+        // Since there is no real xwiki instance behind the test we fabricate the response with an actual date
+        // formatter.
+        when(xcontext.getWiki().formatDate(any(), any(), any())).thenAnswer((Answer<String>) invocation -> {
+            Date firstArg = invocation.getArgument(0);
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            return dateFormat.format(firstArg);
+        });
         DocumentReference documentReference = new DocumentReference("wiki", "space", "page");
         XWikiDocument document = new XWikiDocument(documentReference);
         xcontext.setDoc(document);
@@ -148,10 +162,9 @@ public class IntegrationTests implements RenderingTests
             List.of(multimpleDetailsCallsOnTheSamePage));
         // When we have the multi2 label we aggregate data from multiple documents.
         SolrDocument missingColumns =
-            mockFullDoc(componentManager, "macros/detailssummary/content/missingcolumns", "manga-missing",
-                "Toriko", 2119889257L, List.of("multiple"), true);
-        when(cqlUtils.buildAndExecute(
-            argThat(map -> map != null && map.get("label").equals("multi2")))).thenReturn(
+            mockFullDoc(componentManager, "macros/detailssummary/content/missingcolumns", "manga-missing", "Toriko",
+                2119889257L, List.of("multiple"), true);
+        when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("multi2")))).thenReturn(
             List.of(normalDocumentWithViewRights, multimpleDetailsCallsOnTheSamePage, missingColumns));
     }
 
@@ -202,7 +215,7 @@ public class IntegrationTests implements RenderingTests
             return new XDOM(List.of());
         }
 
-        InputStream inputStream = IntegrationTests.class.getClassLoader().getResourceAsStream(fileName);
+        InputStream inputStream = DetailsSummaryIntegrationTests.class.getClassLoader().getResourceAsStream(fileName);
         XDOM xdom = parser.parse(new StringReader(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8)));
         return xdom;
     }

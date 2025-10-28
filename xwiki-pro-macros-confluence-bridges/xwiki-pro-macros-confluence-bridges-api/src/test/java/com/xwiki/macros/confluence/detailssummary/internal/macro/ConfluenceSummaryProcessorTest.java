@@ -137,7 +137,7 @@ public class ConfluenceSummaryProcessorTest
     }
 
     @Test
-    void makeSureThatWeTakeRightIntoAccount()
+    void makeSureThatWeCheckRights()
     {
 
         EntityReference entityReference = mock(EntityReference.class);

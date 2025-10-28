@@ -42,9 +42,9 @@ import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.SpaceBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.BlockMatcher;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
@@ -82,7 +82,6 @@ public class ConfluenceSummaryProcessor
     private static final ClassBlockMatcher MACRO_MATCHER = new ClassBlockMatcher(MacroBlock.class);
 
     private static final String ID = "id";
-
 
     @Inject
     private ContextualAuthorizationManager contextualAuthorization;
@@ -124,7 +123,6 @@ public class ConfluenceSummaryProcessor
         if (!checkAccess(docRef)) {
             return List.of();
         }
-
 
         XWikiDocument doc;
         try {
@@ -235,6 +233,15 @@ public class ConfluenceSummaryProcessor
         }
     }
 
+    protected String blockToString(Block block)
+    {
+        DefaultWikiPrinter printer = new DefaultWikiPrinter();
+        plainTextRenderer.render(block, printer);
+        String blockString = printer.toString().trim();
+        printer.clear();
+        return blockString;
+    }
+
     private List<XDOM> findDetailsMacros(XDOM xdom, String syntaxId, String id)
     {
         List<XDOM> results = new ArrayList<>(1);
@@ -256,15 +263,6 @@ public class ConfluenceSummaryProcessor
             }
         }
         return results;
-    }
-
-    protected String blockToString(Block block)
-    {
-        DefaultWikiPrinter printer = new DefaultWikiPrinter();
-        plainTextRenderer.render(block, printer);
-        String blockString = printer.toString().trim();
-        printer.clear();
-        return blockString;
     }
 
     private List<TableRowBlock> findRows(XDOM xdom, Syntax syntax)
@@ -323,7 +321,7 @@ public class ConfluenceSummaryProcessor
                 columnsLower.add(keyLower);
             }
             while (index >= r.size()) {
-                r.add(new TableCellBlock(List.of(new WordBlock(""))));
+                r.add(new TableCellBlock(List.of(new SpaceBlock())));
             }
             r.set(index, cells.get(1));
         }

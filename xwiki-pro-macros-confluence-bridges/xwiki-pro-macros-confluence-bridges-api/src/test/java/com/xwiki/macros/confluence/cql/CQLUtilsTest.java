@@ -32,6 +32,7 @@ import org.xwiki.test.junit5.mockito.InjectMockComponents;
 import org.xwiki.test.junit5.mockito.MockComponent;
 
 import com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils;
+import com.xwiki.macros.confluence.internal.cql.CQLUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
