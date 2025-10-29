@@ -180,6 +180,17 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         return List.of(new TableBlock(tableRows));
     }
 
+    protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("label", parameters.getLabel());
+        map.put("cql", parameters.getCql());
+        map.put("operator", parameters.getOperator());
+        map.put("max", parameters.getMax());
+        map.put("reverse", parameters.getReverse());
+        return map;
+    }
+
     private static MetaDataBlock setMetaDataBlock(List<Block> row, String fullName)
     {
         TableRowBlock tableRowBlock = new TableRowBlock(row);
@@ -192,8 +203,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(MacroTransformationContext context,
         MetaDataBlock metaDataBlock)
     {
-        BlockAsyncRendererConfiguration configuration =
-            new BlockAsyncRendererConfiguration(null, metaDataBlock);
+        BlockAsyncRendererConfiguration configuration = new BlockAsyncRendererConfiguration(null, metaDataBlock);
         configuration.setInline(true);
         configuration.setDefaultSyntax(context.getSyntax());
         configuration.setTargetSyntax(context.getSyntax());
@@ -202,17 +212,6 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         configuration.setAsyncAllowed(false);
         configuration.setCacheAllowed(false);
         return configuration;
-    }
-
-    protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
-    {
-        Map<String, Object> map = new HashMap<>();
-        map.put("label", parameters.getLabel());
-        map.put("cql", parameters.getCql());
-        map.put("operator", parameters.getOperator());
-        map.put("max", parameters.getMax());
-        map.put("reverse", parameters.getReverse());
-        return map;
     }
 
     private List<Block> createTagsBlock(List<String> tagList)
@@ -239,6 +238,13 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row,
         int baseLength)
     {
+
+        if (row.size() < baseLength) {
+            for (int i = 0; i < baseLength - row.size(); i++) {
+                row.add(new TableCellBlock(List.of(new SpaceBlock())));
+            }
+        }
+
         if (parameters.showLastModified()) {
             Date date = (Date) document.get("date");
             XWikiContext context = contextProvider.get();
