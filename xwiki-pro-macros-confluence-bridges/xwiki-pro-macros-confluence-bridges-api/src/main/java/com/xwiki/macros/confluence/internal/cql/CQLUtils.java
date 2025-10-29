@@ -50,7 +50,7 @@ import com.xwiki.macros.confluence.internal.ConfluenceSpaceUtils;
  * Basic utility for executing and computing CQLs.
  *
  * @version $Id$
- * @since 1.28.3
+ * @since 1.29.0
  */
 @Component(roles = CQLUtils.class)
 @Singleton

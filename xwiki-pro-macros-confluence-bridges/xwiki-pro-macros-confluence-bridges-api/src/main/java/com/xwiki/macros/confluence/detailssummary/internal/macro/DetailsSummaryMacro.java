@@ -65,7 +65,7 @@ import com.xwiki.macros.confluence.internal.cql.CQLUtils;
  * Details summary macro: Display a list of details macro as a table.
  *
  * @version $Id$
- * @since 1.28.3
+ * @since 1.29.0
  */
 @Component
 @Named(DetailsSummaryMacro.MACRO_HINT)

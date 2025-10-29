@@ -26,7 +26,7 @@ import static com.xwiki.macros.confluence.internal.cql.CQLUtils.DEFAULT_MAX;
  * Parameter bean class for the DetailsSummaryMacro. This class holds all the parameters that can be configured for the
  * macro.
  * @version $Id$
- * @since 1.28.3
+ * @since 1.29.0
  */
 public class DetailsSummaryMacroParameters
 {

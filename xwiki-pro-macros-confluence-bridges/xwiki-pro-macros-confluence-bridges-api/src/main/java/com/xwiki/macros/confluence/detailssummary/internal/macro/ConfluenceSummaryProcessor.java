@@ -68,7 +68,7 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
  * Processes the parameters of the details summary and retrieves  the details rows.
  *
  * @version $Id$
- * @since 1.19.0
+ * @since 1.29.0
  */
 @Component(roles = ConfluenceSummaryProcessor.class)
 @Singleton
