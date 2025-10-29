@@ -100,7 +100,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private Logger logger;
 
     /**
-     * Create amd initialize the descriptor of the macro.
+     * Create and initialize the descriptor of the macro.
      */
     public DetailsSummaryMacro()
     {
@@ -144,19 +144,9 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             // Wrap each block with a metadata to make sure that relative references are resolved correctly.
             rows.forEach((row) -> {
                 enhanceRow(parameters, document, row);
-                TableRowBlock tableRowBlock = new TableRowBlock(row);
-                MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
-                metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
-                metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
+                MetaDataBlock metaDataBlock = setMetaDataBlock(row, fullName);
                 BlockAsyncRendererConfiguration configuration =
-                    new BlockAsyncRendererConfiguration(null, metaDataBlock);
-                configuration.setInline(true);
-                configuration.setDefaultSyntax(context.getSyntax());
-                configuration.setTargetSyntax(context.getSyntax());
-                configuration.setResricted(true);
-                configuration.setTransformationId(context.getTransformationContext().getId());
-                configuration.setAsyncAllowed(false);
-                configuration.setCacheAllowed(false);
+                    getBlockAsyncRendererConfiguration(context, metaDataBlock);
                 try {
                     tableRows.add(executor.execute(configuration));
                 } catch (Exception e) {
@@ -176,6 +166,30 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
 
         return List.of(new TableBlock(tableRows));
+    }
+
+    private static MetaDataBlock setMetaDataBlock(List<Block> row, String fullName)
+    {
+        TableRowBlock tableRowBlock = new TableRowBlock(row);
+        MetaDataBlock metaDataBlock = new MetaDataBlock(List.of(tableRowBlock));
+        metaDataBlock.getMetaData().addMetaData(MetaData.SOURCE, fullName);
+        metaDataBlock.getMetaData().addMetaData(MetaData.BASE, fullName);
+        return metaDataBlock;
+    }
+
+    private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(
+        MacroTransformationContext context, MetaDataBlock metaDataBlock)
+    {
+        BlockAsyncRendererConfiguration configuration =
+            new BlockAsyncRendererConfiguration(null, metaDataBlock);
+        configuration.setInline(true);
+        configuration.setDefaultSyntax(context.getSyntax());
+        configuration.setTargetSyntax(context.getSyntax());
+        configuration.setResricted(true);
+        configuration.setTransformationId(context.getTransformationContext().getId());
+        configuration.setAsyncAllowed(false);
+        configuration.setCacheAllowed(false);
+        return configuration;
     }
 
     protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
@@ -274,6 +288,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     {
         try {
             // Since this is parsed from plain text everything is wrapped in a Paragraph, but this is not needed and
+            // cand break the UI.
             return plainParser.parse(new StringReader(text)).getChildren().get(0).getChildren();
         } catch (ParseException e) {
             logger.error("Failed to parse plain text: [{}]", text, e);

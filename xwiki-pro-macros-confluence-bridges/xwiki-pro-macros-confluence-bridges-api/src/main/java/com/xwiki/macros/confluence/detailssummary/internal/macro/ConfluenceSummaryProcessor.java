@@ -83,6 +83,9 @@ public class ConfluenceSummaryProcessor
 
     private static final String ID = "id";
 
+    private static final DefaultWikiPrinter PRINTER = new DefaultWikiPrinter();
+
+
     @Inject
     private ContextualAuthorizationManager contextualAuthorization;
 
@@ -235,10 +238,9 @@ public class ConfluenceSummaryProcessor
 
     protected String blockToString(Block block)
     {
-        DefaultWikiPrinter printer = new DefaultWikiPrinter();
-        plainTextRenderer.render(block, printer);
-        String blockString = printer.toString().trim();
-        printer.clear();
+        plainTextRenderer.render(block, PRINTER);
+        String blockString = PRINTER.toString().trim();
+        PRINTER.clear();
         return blockString;
     }
 
