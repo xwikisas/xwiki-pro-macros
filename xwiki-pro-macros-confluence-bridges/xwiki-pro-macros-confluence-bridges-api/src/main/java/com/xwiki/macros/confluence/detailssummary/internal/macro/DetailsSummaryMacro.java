@@ -126,14 +126,24 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
         List<Block> columns = new ArrayList<>();
+        // The first column will always be the document name, but it may be translated to a diffrent name.
+        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
+            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
+        columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
         if (!headings.isEmpty()) {
             for (String heading : headings) {
                 Block cell = new TableHeadCellBlock(parsePlainText(heading));
                 columns.add(cell);
             }
         }
-        List<String> columnsLower = headings.isEmpty() ? new ArrayList<>() : headings.stream().map(String::toLowerCase)
-            .collect(Collectors.toList());
+        List<String> columnsLower = new ArrayList<>();
+        // Always add the name of the column that holds the document name.
+        columnsLower.add(titleColumnName.toLowerCase());
+        if (!headings.isEmpty()) {
+            for (String heading : headings) {
+                columnsLower.add(heading.toLowerCase());
+            }
+        }
 
         List<Block> tableRows = new ArrayList<>();
         List<RowContext> rawRows = new ArrayList<>();
@@ -147,7 +157,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
 
         // Wrap each block with a metadata to make sure that relative references are resolved correctly.
         rawRows.forEach((rowContext) -> {
-            enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size() + 1);
+            enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size());
             MetaDataBlock metaDataBlock = setMetaDataBlock(rowContext.getRow(), rowContext.getFullName());
             BlockAsyncRendererConfiguration configuration = getBlockAsyncRendererConfiguration(context, metaDataBlock);
             try {
@@ -157,9 +167,9 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             }
         });
 
+        enhanceHeader(parameters, columns, columnsLower);
         // Before adding the header row sort the rows.
         confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
-        enhanceHeader(parameters, columns);
         tableRows.add(0, new TableRowBlock(columns));
         // If the table rows has only one row then it means that there were no details macro found, and we should add
         // a message to make this clear to the user.
@@ -179,8 +189,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         return metaDataBlock;
     }
 
-    private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(
-        MacroTransformationContext context, MetaDataBlock metaDataBlock)
+    private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(MacroTransformationContext context,
+        MetaDataBlock metaDataBlock)
     {
         BlockAsyncRendererConfiguration configuration =
             new BlockAsyncRendererConfiguration(null, metaDataBlock);
@@ -229,13 +239,6 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row,
         int baseLength)
     {
-
-        if (row.size() < baseLength) {
-            for (int i = 0; i < baseLength - row.size(); i++) {
-                row.add(new TableCellBlock(List.of()));
-            }
-        }
-
         if (parameters.showLastModified()) {
             Date date = (Date) document.get("date");
             XWikiContext context = contextProvider.get();
@@ -271,26 +274,25 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         tableRows.add(row);
     }
 
-    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header)
+    private void enhanceHeader(DetailsSummaryMacroParameters parameters, List<Block> header, List<String> columnsLower)
     {
 
-        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
-            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
-        header.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
-
         if (parameters.showLastModified()) {
-            header.add(new TableHeadCellBlock(parsePlainText(
-                localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.lastModified");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
 
         if (parameters.showPageLabels()) {
-            header.add(new TableHeadCellBlock(
-                parsePlainText(localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.tags");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
 
         if (parameters.showCreator()) {
-            header.add(new TableHeadCellBlock(parsePlainText(
-                localizationManager.getTranslationPlain("rendering" + ".macro.detailssummary.creator"))));
+            String translation = localizationManager.getTranslationPlain("rendering.macro.detailssummary.creator");
+            header.add(new TableHeadCellBlock(parsePlainText(translation)));
+            columnsLower.add(translation.toLowerCase());
         }
     }
 
