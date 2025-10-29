@@ -275,6 +275,7 @@ rendering.macro.excerpt-include.parameter.inline.description=Use the macro in in
 rendering.macro.excerpt-include.description=Includes excerpts from other documents into the current page. The included pages need to contain the simple `excerpt` macro.
 rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
 rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
+rendering.macro.excerptinclude.recursiondetected=Recursion detected. Please check the excerpt-include macro parameters so it does not try to include itself.
 
 ##Hide if macro
 rendering.macro.hide-if.name=Hide if
