@@ -142,8 +142,14 @@ public class ConfluenceSummaryProcessor
         for (XDOM detailMacro : details) {
             List<Block> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
             if (row != null) {
+
                 ResourceReference resourceReference = new ResourceReference(docFullName, ResourceType.DOCUMENT);
-                row.set(0, new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false))));
+                Block block = new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false)));
+                if (row.size() != 0) {
+                    row.set(0, block);
+                } else {
+                    row.add(block);
+                }
                 rows.add(row);
             }
         }
