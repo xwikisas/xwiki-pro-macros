@@ -85,7 +85,6 @@ public class ConfluenceSummaryProcessor
 
     private static final DefaultWikiPrinter PRINTER = new DefaultWikiPrinter();
 
-
     @Inject
     private ContextualAuthorizationManager contextualAuthorization;
 
@@ -144,7 +143,7 @@ public class ConfluenceSummaryProcessor
             List<Block> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
             if (row != null) {
                 ResourceReference resourceReference = new ResourceReference(docFullName, ResourceType.DOCUMENT);
-                row.add(0, new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false))));
+                row.set(0, new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false))));
                 rows.add(row);
             }
         }
@@ -217,8 +216,13 @@ public class ConfluenceSummaryProcessor
                 alreadyReversedIfNeeded = true;
                 rows.sort((l1, l2) -> {
 
-                    String v1 = (i + 1 < l1.getChildren().size()) ? blockToString(l1.getChildren().get(i + 1)) : "";
-                    String v2 = (i + 1 < l2.getChildren().size()) ? blockToString(l2.getChildren().get(i + 1)) : "";
+                    // Structure of a row:
+                    // Metadata Block -> TableRow -> Cells
+                    List<Block> l1Children = l1.getChildren().get(0).getChildren();
+                    List<Block> l2Children = l2.getChildren().get(0).getChildren();
+
+                    String v1 = (i < l1Children.size()) ? blockToString(l1Children.get(i)) : "";
+                    String v2 = (i < l2Children.size()) ? blockToString(l2Children.get(i)) : "";
 
                     // FIXME: technically requires parsing the XWiki syntax
                     int r = Objects.compare(v1, v2, Comparator.comparing(String::toString));
