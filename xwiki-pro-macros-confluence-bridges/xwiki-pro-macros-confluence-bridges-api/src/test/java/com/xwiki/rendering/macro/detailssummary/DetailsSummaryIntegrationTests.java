@@ -103,7 +103,7 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
         componentManager.registerMockComponent(EventListener.class, "LicensingSchedulerListener");
         // Don't need the actual solr
         componentManager.registerMockComponent(Solr.class, "embedded");
-        // Mock the translation and register them
+        // Mock the translations and register them
         ContextualLocalizationManager localizationManager =
             componentManager.registerMockComponent(ContextualLocalizationManager.class);
         mockTranslations(localizationManager);
@@ -114,7 +114,6 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
         this.authorizationManager = componentManager.registerMockComponent(ContextualAuthorizationManager.class);
         // Get the xwiki syntax parser
         this.parser = componentManager.getInstance(Parser.class, "xwiki/2.1");
-
         // XWiki Context Mock
         Provider<XWikiContext> mockXWikiContextProvider = componentManager.registerMockComponent(
             new DefaultParameterizedType(null, Provider.class, XWikiContext.class));
@@ -136,14 +135,12 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
         when(wikiDescriptorManager.getCurrentWikiId()).thenReturn("wiki");
         // Mock de CQLQuery
         CQLUtils cqlUtils = componentManager.registerMockComponent(CQLUtils.class);
-
         // When there are no labels, just return an empty list of documents.
         when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("")))).thenReturn(
             List.of());
         // When we have the norights label we create a list with a document that has no viewing rights
         SolrDocument noViewingRightsSolrDoc =
             mockFullDoc(componentManager, "", "test", "afarcasi", 1009889257L, List.of("1", "2"), false);
-
         when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("norights")))).thenReturn(
             List.of(noViewingRightsSolrDoc));
         // When we have the normal label we create a list with documents that we have viewing rights over.
@@ -172,7 +169,6 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
         String documentName, String author, long date, List<String> tags, boolean canView) throws Exception
     {
         SolrDocument solrDocument = new SolrDocument();
-
         String docFullname = String.format("wiki:%s", documentName);
         solrDocument.put("wiki", "wiki");
         solrDocument.put("fullname", documentName);
@@ -186,10 +182,8 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
         tagList.addAll(tags);
         solrDocument.put("property.XWiki.TagClass.tags_string", tagList);
         mockReference("Main.Tags", "Main", "Tags");
-
         // Mock the document reference
         EntityReference entityReference = mockReference(docFullname, "test", documentName);
-
         when(authorizationManager.hasAccess(Right.VIEW, entityReference)).thenReturn(canView);
         // Deep stubs so we can mock method chains
         XWikiDocument mockedDoc = mock(XWikiDocument.class, RETURNS_DEEP_STUBS);
