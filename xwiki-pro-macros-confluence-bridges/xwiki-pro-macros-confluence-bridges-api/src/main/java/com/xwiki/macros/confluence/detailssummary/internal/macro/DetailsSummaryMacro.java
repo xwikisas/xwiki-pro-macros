@@ -136,24 +136,26 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             .collect(Collectors.toList());
 
         List<Block> tableRows = new ArrayList<>();
+        List<RowContext> rawRows = new ArrayList<>();
         for (SolrDocument document : documents) {
             String fullName = document.get("wiki") + ":" + document.get("fullname");
             List<List<Block>> rows =
                 confluenceSummaryProcessor.getDetails(parameters.getId(), headings, columns, columnsLower, fullName);
 
-            // Wrap each block with a metadata to make sure that relative references are resolved correctly.
-            rows.forEach((row) -> {
-                enhanceRow(parameters, document, row);
-                MetaDataBlock metaDataBlock = setMetaDataBlock(row, fullName);
-                BlockAsyncRendererConfiguration configuration =
-                    getBlockAsyncRendererConfiguration(context, metaDataBlock);
-                try {
-                    tableRows.add(executor.execute(configuration));
-                } catch (Exception e) {
-                    logger.warn("Failed to render the row with the permissions of the author.", e);
-                }
-            });
+            rows.forEach(row -> rawRows.add(new RowContext(document, fullName, row)));
         }
+
+        // Wrap each block with a metadata to make sure that relative references are resolved correctly.
+        rawRows.forEach((rowContext) -> {
+            enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size() + 1);
+            MetaDataBlock metaDataBlock = setMetaDataBlock(rowContext.getRow(), rowContext.getFullName());
+            BlockAsyncRendererConfiguration configuration = getBlockAsyncRendererConfiguration(context, metaDataBlock);
+            try {
+                tableRows.add(executor.execute(configuration));
+            } catch (Exception e) {
+                logger.warn("Failed to render the row with the permissions of the author.", e);
+            }
+        });
 
         // Before adding the header row sort the rows.
         confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
@@ -224,8 +226,16 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         return tags;
     }
 
-    private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row)
+    private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row,
+        int baseLength)
     {
+
+        if (row.size() < baseLength) {
+            for (int i = 0; i < baseLength - row.size(); i++) {
+                row.add(new TableCellBlock(List.of()));
+            }
+        }
+
         if (parameters.showLastModified()) {
             Date date = (Date) document.get("date");
             XWikiContext context = contextProvider.get();
