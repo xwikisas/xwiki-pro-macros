@@ -21,6 +21,7 @@ package com.xwiki.macros.viewfile.internal;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -39,18 +40,24 @@ import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import javax.swing.ImageIcon;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.hslf.usermodel.HSLFSlide;
 import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import org.jodconverter.core.document.DefaultDocumentFormatRegistry;
+import org.jodconverter.core.office.OfficeException;
 import org.jodconverter.core.office.OfficeManager;
 import org.jodconverter.local.LocalConverter;
 import org.jodconverter.local.office.ExternalOfficeManager;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.component.phase.Initializable;
+import org.xwiki.component.phase.InitializationException;
 import org.xwiki.environment.Environment;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.officeimporter.server.OfficeServer;
@@ -69,7 +76,7 @@ import net.coobird.thumbnailator.Thumbnails;
  */
 @Component(roles = ThumbnailGenerator.class)
 @Singleton
-public class ThumbnailGenerator
+public class ThumbnailGenerator implements Initializable
 {
     /**
      * Path to the temporary folder where thumbnails are stored.
@@ -106,6 +113,8 @@ public class ThumbnailGenerator
     @Inject
     private OfficeServer officeServer;
 
+    private OfficeManager officeManager;
+
     /**
      * Checks if a thumbnail already exists for the given attachment reference, and if not, attempts to create a
      * thumbnail image and returns the byte array for it.
@@ -135,6 +144,27 @@ public class ThumbnailGenerator
         }
     }
 
+    @Override
+    public void initialize() throws InitializationException
+    {
+        // Set an execution timeout equivalent to 10 seconds.
+        officeManager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
+            .taskExecutionTimeout(10000L).build();
+        try {
+            officeManager.start();
+        } catch (OfficeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private OfficeManager getOfficeManager() throws InitializationException
+    {
+        if (officeManager == null || !officeManager.isRunning()) {
+            initialize();
+        }
+        return officeManager;
+    }
+
     private byte[] generateAndGetThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
         String extension = getExtension(attachmentReference.getName());
@@ -156,68 +186,36 @@ public class ThumbnailGenerator
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
-        return generateThumbnail(is.readAllBytes(), attachmentReference);
+        // Load the PDF document.
+        PDDocument pdDoc = PDDocument.load(is);
+        PDFRenderer pdfRenderer = new PDFRenderer(pdDoc);
+        // Select the first page (index starts at 0).
+        return generateThumbnail(pdfRenderer.renderImageWithDPI(0, 150), attachmentReference);
+
     }
 
     private byte[] getOfficeThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
-        byte[] bais = getPDFContent(attachmentReference);
-        return generateThumbnail(bais, attachmentReference);
+        byte[] bais = getJPEGContent(attachmentReference);
+        return generateThumbnail(getBufferedImage(bais), attachmentReference);
     }
 
-    private byte[] getPDFContent(AttachmentReference attachmentReference) throws Exception
+    private byte[] getJPEGContent(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
-        try (InputStream is = document.getAttachment(attachmentReference.getName())
-            .getContentInputStream(wikiContext); ByteArrayOutputStream baos = new ByteArrayOutputStream())
+        try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream())
         {
-            // Set an execution timeout equivalent to 10 seconds.
-            OfficeManager manager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
-                .taskExecutionTimeout(10000L).build();
-            manager.start();
+            OfficeManager manager = getOfficeManager();
             LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.JPEG).execute();
-            manager.stop();
             return baos.toByteArray();
         }
     }
-//    first time old: 1:14
-//    second time: 0:21
-//
-//    new: first time: 1:04
-//    second time: 0:21
 
-    private BufferedImage getBufferedImage(byte[] result) throws IOException
+    private byte[] generateThumbnail(BufferedImage firstPage, AttachmentReference attachmentReference) throws Exception
     {
-        BufferedImage firstPage;
-
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(result)) {
-            if (isZip(result)) {
-                try (ZipInputStream zis = new ZipInputStream(bis)) {
-                    ZipEntry entry = zis.getNextEntry();
-                    if (entry != null) {
-                        firstPage = ImageIO.read(zis);
-                    } else {
-                        throw new IOException("No images found in LibreOffice export ZIP");
-                    }
-                }
-            } else {
-                firstPage = ImageIO.read(bis);
-            }
-        }
-        return firstPage;
-    }
-
-    private boolean isZip(byte[] data)
-    {
-        return data.length >= 4 && data[0] == 0x50 && data[1] == 0x4B;
-    }
-
-    private byte[] generateThumbnail(byte[] inputStream, AttachmentReference attachmentReference) throws Exception
-    {
-        BufferedImage firstPage = getBufferedImage(inputStream);
-
         // Resize to thumbnail
         BufferedImage resized = Thumbnails.of(firstPage).size(150, 212).asBufferedImage();
         File thumbnailFile = getThumbnailPath(attachmentReference);
@@ -226,6 +224,39 @@ public class ThumbnailGenerator
         return Files.readAllBytes(thumbnailFile.toPath());
     }
 
+    private BufferedImage getBufferedImage(byte[] result) throws IOException
+    {
+        byte[] imageBytes;
+
+        if (isZip(result)) {
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(result);
+                 ZipInputStream zis = new ZipInputStream(bis)) {
+                ZipEntry entry = zis.getNextEntry();
+                if (entry == null) {
+                    throw new IOException("No image entries found in ZIP result");
+                }
+                // Read first image entry bytes
+                imageBytes = zis.readAllBytes();
+            }
+        } else {
+            imageBytes = result;
+        }
+
+        Image image = new ImageIcon(imageBytes).getImage();
+
+        BufferedImage buffered = new BufferedImage(
+            image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = buffered.createGraphics();
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+
+        return buffered;
+    }
+
+    private boolean isZip(byte[] data)
+    {
+        return data.length >= 4 && data[0] == 0x50 && data[1] == 0x4B;
+    }
     private byte[] getPresentationThumbnailBytes(AttachmentReference attachmentReference, String extension)
         throws Exception
     {
