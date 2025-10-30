@@ -40,10 +40,10 @@ import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
-import com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.internal.macro.StaticBlockWrapperFactory;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
+import com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGenerator;
 import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
 
 /**
@@ -134,25 +134,20 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractViewFileAsyncRendere
 
     private Block getImageThumbnail(AttachmentReference attachmentReference) throws Exception
     {
-        String base64 = generateThumbnailBase64(attachmentReference);
-        if (base64.isEmpty()) {
+        String thumbnailUrl = thumbnailGenerator.getThumbnailUrl(attachmentReference);
+        if (thumbnailUrl.isEmpty()) {
             return viewFileExternalBlockManager.getMimeTypeBlock(attachmentReference, isInline);
         }
-        return getThumbnailBlock(base64);
+        return getThumbnailBlock(thumbnailUrl);
     }
 
-    private String generateThumbnailBase64(AttachmentReference attachmentRef)
-    {
-        return thumbnailGenerator.getThumbnailData(attachmentRef);
-    }
-
-    private Block getThumbnailBlock(String base64)
+    private Block getThumbnailBlock(String thumbnailUrl)
     {
         String imageAltTranslation =
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.image.alt");
         String overlayTextTranslation =
             contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.overlay");
-        ResourceReference reference = new ResourceReference(base64, ResourceType.URL);
+        ResourceReference reference = new ResourceReference(thumbnailUrl, ResourceType.URL);
         Block imageBlock =
             new ImageBlock(reference, false, Map.of(CLASS, "viewfile-thumbnail-image", "alt", imageAltTranslation));
         Block overlayText =
