@@ -27,8 +27,6 @@ import com.xpn.xwiki.web.XWikiRequest;
 /**
  * Mock request for the async renderer used to safely retrieve the {@link HttpSession}. Can be removed after the parent
  * version is >= 17.4.1.
- *  TODO: discuss if this is the best implementation to bypass the NullPointerException thrown in
- *  DefaultTemporaryAttachmentSessionsManager.
  *
  * @version $Id$
  * @since 1.29.0

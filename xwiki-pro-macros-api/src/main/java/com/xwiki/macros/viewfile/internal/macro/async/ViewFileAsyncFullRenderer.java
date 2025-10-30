@@ -191,18 +191,14 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         MacroBlock officeMacroBlock = new MacroBlock(OFFICE_HINT,
             Collections.singletonMap("reference", referenceSerializer.serialize(attachmentReference)), "", false);
         transformationContext.setCurrentMacroBlock(officeMacroBlock);
-        /*
-            TODO: Discuss if it is the best solution:
-             The office macro checks if a file is already saved in the cache, using the
-             DefaultTemporaryAttachmentSessionsManager which checks inside the session. In the thread, we are missing
-              a session/SessionManager as there is no request. We can wrap the original thread request and session to
-               avoid a NullPointerException in DefaultTemporaryAttachmentSessionsManager:
-               https://github.com/xwiki/xwiki-platform/blob/xwiki-platform-14.10/xwiki-platform-core
-               /xwiki-platform-store/xwiki-platform-store-filesystem-oldcore/src/main/java/org/xwiki/store/filesystem
-               /internal/DefaultTemporaryAttachmentSessionsManager.java#L77-L78
-        */
+        // The office macro checks if a file is already saved in the cache, using the
+        // DefaultTemporaryAttachmentSessionsManager which checks inside the session. In the thread, we are missing
+        // a session/SessionManager as there is no request, so we wrap the original thread request and session to
+        // avoid a NullPointerException in DefaultTemporaryAttachmentSessionsManager. To be removed once XWiki parent
+        // version is >= 17.4.1.
         this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session));
         List<Block> officeMacroResult = displayerMacro.execute(macroParameters, "", transformationContext);
+        this.wikiContextProvider.get().setRequest(wikiRequest);
 
         String processedWidth = processDimensionsUnit(this.width, DEFAULT_WIDTH, true);
         String processedHeight = processDimensionsUnit(this.height, DEFAULT_HEIGHT + PX, true);

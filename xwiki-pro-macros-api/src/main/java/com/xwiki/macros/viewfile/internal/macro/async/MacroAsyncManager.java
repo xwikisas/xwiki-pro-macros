@@ -84,7 +84,7 @@ public class MacroAsyncManager
             AsyncRendererExecutorResponse response = asyncRendererExecutor.render(asyncRenderer, configuration);
             AsyncRendererResult result = response.getStatus().getResult();
 
-            if (result != null && !configuration.isPlaceHolderForced()) {
+            if (result != null) {
                 return result.getResult();
             } else {
                 return String.format(

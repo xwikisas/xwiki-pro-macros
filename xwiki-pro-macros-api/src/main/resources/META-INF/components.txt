@@ -14,8 +14,9 @@ com.xwiki.macros.showhideif.macro.ShowIfMacro
 com.xwiki.macros.tab.internal.TabGroupMacro
 com.xwiki.macros.tab.internal.TabMacro
 com.xwiki.macros.viewfile.internal.macro.ViewFileMacro
-com.xwiki.macros.viewfile.internal.AttachmentModificationListener
-com.xwiki.macros.viewfile.internal.ThumbnailGenerator
+com.xwiki.macros.viewfile.internal.thumbnail.AttachmentModificationListener
+com.xwiki.macros.viewfile.internal.thumbnail.TemporaryFileManager
+com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGenerator
 com.xwiki.macros.viewfile.internal.AttachmentSizeValidator
 com.xwiki.macros.viewfile.internal.macro.ViewFileResourceManager
 com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager
