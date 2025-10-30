@@ -316,7 +316,6 @@ Bridges are there for compatibility with content migrated from Confluence and t
             #if ($showLastModified)|=$services.localization.render('rendering.macro.detailssummary.lastModified')#end##
             #if ($showCreator)|=$services.localization.render('rendering.macro.detailssummary.creator')#end##
             #if ($showPageLabels)|=$services.localization.render('rendering.macro.detailssummary.tags')#end##
-
           #else
             #set ($d = $xwiki.getDocument($row.get(0)))
             #set ($escapedReference = $services.rendering.escape($row.get(0), "xwiki/2.1"))

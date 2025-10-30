@@ -46,7 +46,7 @@ public class SolrTestUtils
         initService();
     }
 
-    public void waitEmpyQueue() throws Exception
+    public void waitEmptyQueue() throws Exception
     {
         while (getSolrQueueSize() > 0) {
             Thread.sleep(100);
