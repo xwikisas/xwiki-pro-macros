@@ -1,0 +1,10 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Test the macro with a custom name for the first column.
+.#-----------------------------------------------------
+{{confluence_detailssummary firstcolumn="Custom Name" /}}
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<table><tr><th scope="col">Custom Name</th></tr><tr><td>No rows found</td></tr></table>

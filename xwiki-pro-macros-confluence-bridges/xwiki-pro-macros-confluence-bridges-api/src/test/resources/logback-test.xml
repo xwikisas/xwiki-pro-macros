@@ -1,0 +1,10 @@
+<configuration>
+
+
+  <logger name="org.xwiki.observation.internal.DefaultObservationManager" level="ERROR"/>
+  <logger name="com.xwiki.macro.confluence.display.internal.macro.ConfluenceSummaryProcessor" level="ERROR"/>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

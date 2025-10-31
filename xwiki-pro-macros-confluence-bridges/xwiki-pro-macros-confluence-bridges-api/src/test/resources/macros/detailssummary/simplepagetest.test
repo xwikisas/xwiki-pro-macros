@@ -1,0 +1,13 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Test the macro with a single detail found.
+.#-----------------------------------------------------
+{{confluence_detailssummary label="normal"/}}
+
+{{confluence_detailssummary label="normal" showCreator="true" showLastModified="true" showPageLabels="true"/}}
+
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<table><tr><th scope="col">Document</th><th scope="col">Title</th><th scope="col">Author</th><th scope="col">Released in years</th><th scope="col">Kind</th><th scope="col">Genre</th></tr><tr><td><span class="wikiinternallink"><a href="wiki:test2"><span class="wikigeneratedlinkcontent">test2</span></a></span></td><td>The Hitchhiker's Guide to the Galaxy</td><td>Douglas Adams</td><td>1979–1992</td><td>Trilogy in five books</td><td>Science fiction</td></tr></table><table><tr><th scope="col">Document</th><th scope="col">Title</th><th scope="col">Author</th><th scope="col">Released in years</th><th scope="col">Kind</th><th scope="col">Genre</th><th scope="col">lastModified</th><th scope="col">tags</th><th scope="col">author</th></tr><tr><td><span class="wikiinternallink"><a href="wiki:test2"><span class="wikigeneratedlinkcontent">test2</span></a></span></td><td>The Hitchhiker's Guide to the Galaxy</td><td>Douglas Adams</td><td>1979–1992</td><td>Trilogy in five books</td><td>Science fiction</td><td>12/01/1970</td><td><span class="wikiinternallink"><a href="Main.Tags">test2</a></span>, <span class="wikiinternallink"><a href="Main.Tags">normal</a></span></td><td><span class="wikiinternallink"><a href="XWiki.Jane Doe"><span class="wikigeneratedlinkcontent">Jane Doe</span></a></span></td></tr></table>
