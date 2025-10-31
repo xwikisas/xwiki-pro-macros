@@ -43,7 +43,7 @@ import org.xwiki.rendering.transformation.MacroTransformationContext;
 import com.xwiki.macros.viewfile.internal.macro.StaticBlockWrapperFactory;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
-import com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGenerator;
+import com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGeneratorManager;
 import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
 
 /**
@@ -67,7 +67,7 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractViewFileAsyncRendere
     private ContextualLocalizationManager contextLocalization;
 
     @Inject
-    private ThumbnailGenerator thumbnailGenerator;
+    private ThumbnailGeneratorManager thumbnailGeneratorManager;
 
     @Inject
     private ViewFileExternalBlockManager viewFileExternalBlockManager;
@@ -134,7 +134,7 @@ public class ViewFileAsyncThumbnailRenderer extends AbstractViewFileAsyncRendere
 
     private Block getImageThumbnail(AttachmentReference attachmentReference) throws Exception
     {
-        String thumbnailUrl = thumbnailGenerator.getThumbnailUrl(attachmentReference);
+        String thumbnailUrl = thumbnailGeneratorManager.getThumbnailUrl(attachmentReference);
         if (thumbnailUrl.isEmpty()) {
             return viewFileExternalBlockManager.getMimeTypeBlock(attachmentReference, isInline);
         }
