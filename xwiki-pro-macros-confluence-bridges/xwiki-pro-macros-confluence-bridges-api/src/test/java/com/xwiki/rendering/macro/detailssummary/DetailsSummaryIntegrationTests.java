@@ -163,6 +163,19 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
                 2119889257L, List.of("multiple"), true);
         when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("multi2")))).thenReturn(
             List.of(normalDocumentWithViewRights, multimpleDetailsCallsOnTheSamePage, missingColumns));
+
+
+
+        SolrDocument sortableColumns =
+            mockFullDoc(componentManager, "macros/detailssummary/content/sortableColumns", "sortableColumns", "Yoda",
+                3119889257L, List.of("sortable"), true
+            );
+
+        when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("sort1")))).thenReturn(
+            List.of(sortableColumns));
+
+        when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("sort2")))).thenReturn(
+            List.of(sortableColumns, multimpleDetailsCallsOnTheSamePage, missingColumns, normalDocumentWithViewRights));
     }
 
     private SolrDocument mockFullDoc(MockitoComponentManager componentManager, String contentFileName,
