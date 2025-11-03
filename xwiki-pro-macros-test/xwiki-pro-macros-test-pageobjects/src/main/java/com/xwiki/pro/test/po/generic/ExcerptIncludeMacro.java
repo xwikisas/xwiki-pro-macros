@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,24 +16,40 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package com.xwiki.pro.test.po.generic;
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.xwiki.pro</groupId>
-    <artifactId>xwiki-pro-macros-test</artifactId>
-    <version>1.28.5-SNAPSHOT</version>
-  </parent>
-  <artifactId>xwiki-pro-macros-test-pageobjects</artifactId>
-  <name>Pro Macros - Tests - Page Objects</name>
-  <description>Pro Macros - Tests - Page Objects</description>
-  <packaging>jar</packaging>
-  <dependencies>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-test-ui</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
-  </dependencies>
-</project>
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.xwiki.test.ui.po.BaseElement;
+
+/**
+ * Represents an Excerpt Include macro and provides access to its attributes.
+ *
+ * @version $Id$
+ * @since 1.28
+ */
+public class ExcerptIncludeMacro extends BaseElement
+{
+    private final WebElement excerpt;
+
+    public ExcerptIncludeMacro(WebElement excerpt)
+    {
+        this.excerpt = excerpt;
+    }
+
+    public String getTitle()
+    {
+        return excerpt.findElement(By.cssSelector(".macro-panel-title p")).getText();
+    }
+
+    public String getContent()
+    {
+        return excerpt.findElement(By.cssSelector(".macro-panel-content")).getText();
+    }
+
+    public boolean isContentDisplayed()
+    {
+        return excerpt.findElement(By.cssSelector(".macro-panel-content")).isDisplayed();
+    }
+}
