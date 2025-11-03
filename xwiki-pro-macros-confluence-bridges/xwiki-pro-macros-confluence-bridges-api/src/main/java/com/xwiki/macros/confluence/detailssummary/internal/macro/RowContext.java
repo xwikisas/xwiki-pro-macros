@@ -25,7 +25,7 @@ import org.apache.solr.common.SolrDocument;
 import org.xwiki.rendering.block.Block;
 
 /**
- * Represents the contextual information for a single table row for the details summary macro.
+ * Represents the contextual information for a single table row of the details summary macro.
  *
  * @version $Id$
  * @since 1.29.0
