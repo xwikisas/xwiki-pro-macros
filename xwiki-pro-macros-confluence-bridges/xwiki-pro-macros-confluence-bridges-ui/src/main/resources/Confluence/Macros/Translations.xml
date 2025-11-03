@@ -84,6 +84,37 @@ rendering.macro.detailssummary.lastModified=Last modified
 rendering.macro.detailssummary.creator=Creator
 rendering.macro.detailssummary.tags=Tags
 rendering.macro.detailssummary.noresults=No results.
+rendering.macro.confluence_detailssummary.name=Confluence bridge for Details Summary
+rendering.macro.confluence_detailssummary.description=Confluence bridge for the Details Summary (Page Properties Report) macro to display properties attached to a page using the Details macro.
+rendering.macro.confluence_detailssummary.parameter.label.name=Labels
+rendering.macro.confluence_detailssummary.parameter.label.description=A list of tags to use, separated by a comma or a space. This value is ignored if the cql parameter is set. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.
+rendering.macro.confluence_detailssummary.parameter.firstcolumn.name=First Column
+rendering.macro.confluence_detailssummary.parameter.firstcolumn.description=A custom title for the document name column.
+rendering.macro.confluence_detailssummary.parameter.showLastModified.name=Show Last Modified
+rendering.macro.confluence_detailssummary.parameter.showLastModified.description=Show the last modified time of the page.
+rendering.macro.confluence_detailssummary.parameter.showPageLabels.name=Show Page Labels
+rendering.macro.confluence_detailssummary.parameter.showPageLabels.description=Show the tags of listed documents.
+rendering.macro.confluence_detailssummary.parameter.showCreator.name=Show Creator
+rendering.macro.confluence_detailssummary.parameter.showCreator.description=Show the initial author of the listed documents.
+rendering.macro.confluence_detailssummary.parameter.operator.name=Operator
+rendering.macro.confluence_detailssummary.parameter.operator.description=Whether all the tags should match (AND), or any (OR). This value is ignored if the cql parameter is set. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.
+rendering.macro.confluence_detailssummary.parameter.max.name=Max
+rendering.macro.confluence_detailssummary.parameter.max.description=Maximum number of results. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.
+rendering.macro.confluence_detailssummary.parameter.sort.name=Sort
+rendering.macro.confluence_detailssummary.parameter.sort.description=What to sort on. The only supported values are "modified", "creation" and "title" for now. Ignored if an order by clause is present in the cql parameter. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.
+rendering.macro.confluence_detailssummary.parameter.reverse.name=Reverse
+rendering.macro.confluence_detailssummary.parameter.reverse.description=Whether to reverse the sort. Note: this parameter doesn't exist in Confluence, it's an XWiki addition.
+rendering.macro.confluence_detailssummary.parameter.sortBy.name=Sort By
+rendering.macro.confluence_detailssummary.parameter.sortBy.description=What to sort on.
+rendering.macro.confluence_detailssummary.parameter.reverseSort.name=Reverse Sort
+rendering.macro.confluence_detailssummary.parameter.reverseSort.description=Whether to reverse the sort.
+
+rendering.macro.confluence_detailssummary.parameter.cql.name=CQL
+rendering.macro.confluence_detailssummary.parameter.cql.description=A query written in the Confluence Query Language (CQL) syntax defining the list of documents to show.
+rendering.macro.confluence_detailssummary.parameter.headings.name=Headings
+rendering.macro.confluence_detailssummary.parameter.headings.description=Which column of the page properties to show. By default, all columns are shown. Columns with comma in their names require being quoted.
+rendering.macro.confluence_detailssummary.parameter.id.name=ID
+rendering.macro.confluence_detailssummary.parameter.id.description=The group of properties to show. If empty, will show page properties without identifiers.
 
 # Children macro
 rendering.macro.confluence_children.name=Confluence bridge for Children
