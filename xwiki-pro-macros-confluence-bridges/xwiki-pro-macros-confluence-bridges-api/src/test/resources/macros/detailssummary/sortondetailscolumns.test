@@ -1,0 +1,13 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Test the macro with a custom name for the first column.
+.#-----------------------------------------------------
+{{confluence_detailssummary label="sort1" sort="title"/}}
+
+{{confluence_detailssummary label="sort1" sort="title" reverse=true/}}
+
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<table><tr><th scope="col">Document</th><th scope="col">Title</th><th scope="col">Author</th><th scope="col">Start Year</th><th scope="col">End Year</th><th scope="col">Kind</th><th scope="col">Genre</th></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>1</td><td>1</td><td>1997</td><td>0</td><td>1</td><td>1,2,3</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>2</td><td>2</td><td>2009</td><td>2021</td><td>1</td><td>4,3,5</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>3</td><td>3</td><td>2003</td><td>2006</td><td>1</td><td>6,7,8</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>4</td><td>4</td><td>2001</td><td>2010</td><td>1</td><td>1,2,9,5</td></tr></table><table><tr><th scope="col">Document</th><th scope="col">Title</th><th scope="col">Author</th><th scope="col">Start Year</th><th scope="col">End Year</th><th scope="col">Kind</th><th scope="col">Genre</th></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>4</td><td>4</td><td>2001</td><td>2010</td><td>1</td><td>1,2,9,5</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>3</td><td>3</td><td>2003</td><td>2006</td><td>1</td><td>6,7,8</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>2</td><td>2</td><td>2009</td><td>2021</td><td>1</td><td>4,3,5</td></tr><tr><td><span class="wikiinternallink"><a href="wiki:sortableColumns"><span class="wikigeneratedlinkcontent">sortableColumns</span></a></span></td><td>1</td><td>1</td><td>1997</td><td>0</td><td>1</td><td>1,2,3</td></tr></table>

@@ -125,9 +125,10 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
         List<Block> columns = new ArrayList<>();
-        // The first column will always be the document name, but it may be translated to a diffrent name.
-        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
-            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
+        // The first column will always be the document name, but it may be translated to a different name.
+        String titleColumnName = parameters.getFirstcolumn().isEmpty()
+                                 ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
+                                 : parameters.getFirstcolumn();
         columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
         if (!headings.isEmpty()) {
             for (String heading : headings) {
@@ -159,12 +160,18 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size());
             MetaDataBlock metaDataBlock = setMetaDataBlock(rowContext.getRow(), rowContext.getFullName());
             BlockAsyncRendererConfiguration configuration = getBlockAsyncRendererConfiguration(context, metaDataBlock);
-            try {
-                tableRows.add(executor.execute(configuration));
-            } catch (Exception e) {
-                logger.warn("Failed to render the row with the permissions of the author.", e);
-            }
-        });
+            rows.forEach((row) -> {
+                enhanceRow(parameters, document, row);
+                MetaDataBlock metaDataBlock = setMetaDataBlock(row, fullName);
+                BlockAsyncRendererConfiguration configuration =
+                    getBlockAsyncRendererConfiguration(context, metaDataBlock);
+                try {
+                    tableRows.add(executor.execute(configuration));
+                } catch (Exception e) {
+                    logger.warn("Failed to render the row with the permissions of the author.", e);
+                }
+            });
+        }
 
         enhanceHeader(parameters, columns, columnsLower);
         // Before adding the header row sort the rows.
