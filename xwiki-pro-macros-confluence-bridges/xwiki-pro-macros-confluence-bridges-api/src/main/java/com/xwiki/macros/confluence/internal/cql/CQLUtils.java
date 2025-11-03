@@ -64,7 +64,7 @@ public class CQLUtils
 
     private static final String CQL = "cql";
 
-    private static final Gson JSON_SERIALZIERR = new Gson();
+    private static final Gson STRING_ESCAPER = new Gson();
 
     private static final String DELIMITER = "\\s*,\\s*|\\s+";
 
@@ -195,14 +195,14 @@ public class CQLUtils
                                                                  : parameters.getOrDefault("label", ""));
         if (StringUtils.isNotBlank(labels)) {
             String[] labelList = labels.split(DELIMITER);
-            String joinedLabels = Arrays.stream(labelList).map(l -> "label = " + JSON_SERIALZIERR.toJson(l))
+            String joinedLabels = Arrays.stream(labelList).map(l -> "label = " + STRING_ESCAPER.toJson(l))
                 .collect(Collectors.joining(operator));
             cql.append(OPEN_BRACKET).append(joinedLabels).append(CLOSE_BRACKET);
         }
         String type = ((String) parameters.getOrDefault(TYPE, ""));
         if (StringUtils.isNotBlank(type)) {
             // We serialize the object directly.
-            cql.append(" AND type = ").append(JSON_SERIALZIERR.toJson(parameters.get(TYPE)));
+            cql.append(" AND type = ").append(STRING_ESCAPER.toJson(parameters.get(TYPE)));
         }
         return cql.toString();
     }
