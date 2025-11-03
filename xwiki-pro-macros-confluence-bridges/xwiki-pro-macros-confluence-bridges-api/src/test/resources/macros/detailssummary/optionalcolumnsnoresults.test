@@ -1,0 +1,10 @@
+.runTransformations
+.#-----------------------------------------------------
+.input|xwiki/2.1
+.# Enable all the optional columns without any rows returned.
+.#-----------------------------------------------------
+{{confluence_detailssummary showCreator="true" showLastModified="true" showPageLabels="true"/}}
+.#-----------------------------------------------------
+.expect|xhtml/1.0
+.#-----------------------------------------------------
+<table><tr><th scope="col">Document</th><th scope="col">lastModified</th><th scope="col">tags</th><th scope="col">author</th></tr><tr><td>No rows found</td></tr></table>
