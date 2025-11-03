@@ -141,7 +141,9 @@ public class ConfluenceSummaryProcessor
         List<List<Block>> rows = new ArrayList<>();
         for (XDOM detailMacro : details) {
             List<Block> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
-            if (row != null) {
+            // If the row is empty, it means that either the user provided a list of headers and none were found
+            // in the details macro, or the details macro is empty, and we skip it.
+            if (!row.isEmpty()) {
                 ResourceReference resourceReference = new ResourceReference(docFullName, ResourceType.DOCUMENT);
                 row.set(0, new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false))));
                 rows.add(row);
