@@ -125,9 +125,10 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
         List<Block> columns = new ArrayList<>();
-        // The first column will always be the document name, but it may be translated to a diffrent name.
-        String titleColumnName = parameters.getFirstcolumn().isEmpty() ? localizationManager.getTranslationPlain(
-            "rendering.macro.detailssummary.firstcolumn") : parameters.getFirstcolumn();
+        // The first column will always be the document name, but it may be translated to a different name.
+        String titleColumnName = parameters.getFirstcolumn().isEmpty()
+                                 ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
+                                 : parameters.getFirstcolumn();
         columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
         if (!headings.isEmpty()) {
             for (String heading : headings) {

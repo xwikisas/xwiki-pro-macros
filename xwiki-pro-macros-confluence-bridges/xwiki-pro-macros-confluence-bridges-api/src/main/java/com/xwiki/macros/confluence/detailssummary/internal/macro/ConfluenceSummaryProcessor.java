@@ -143,10 +143,13 @@ public class ConfluenceSummaryProcessor
             List<Block> row = getRow(detailMacro, headings, columns, columnsLower, doc.getSyntax());
             // If the row is empty, it means that either the user provided a list of headers and none were found
             // in the details macro, or the details macro is empty, and we skip it.
+            ResourceReference resourceReference = new ResourceReference(docFullName, ResourceType.DOCUMENT);
+            Block documentBlock = new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false)));
             if (!row.isEmpty()) {
-                ResourceReference resourceReference = new ResourceReference(docFullName, ResourceType.DOCUMENT);
-                row.set(0, new TableCellBlock(List.of(new LinkBlock(List.of(), resourceReference, false))));
+                row.set(0, documentBlock);
                 rows.add(row);
+            } else {
+                row.add(documentBlock);
             }
         }
         return rows;
