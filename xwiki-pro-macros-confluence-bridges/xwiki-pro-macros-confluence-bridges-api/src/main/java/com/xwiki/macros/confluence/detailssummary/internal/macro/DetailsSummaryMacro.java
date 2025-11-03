@@ -160,18 +160,12 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size());
             MetaDataBlock metaDataBlock = setMetaDataBlock(rowContext.getRow(), rowContext.getFullName());
             BlockAsyncRendererConfiguration configuration = getBlockAsyncRendererConfiguration(context, metaDataBlock);
-            rows.forEach((row) -> {
-                enhanceRow(parameters, document, row);
-                MetaDataBlock metaDataBlock = setMetaDataBlock(row, fullName);
-                BlockAsyncRendererConfiguration configuration =
-                    getBlockAsyncRendererConfiguration(context, metaDataBlock);
-                try {
-                    tableRows.add(executor.execute(configuration));
-                } catch (Exception e) {
-                    logger.warn("Failed to render the row with the permissions of the author.", e);
-                }
-            });
-        }
+            try {
+                tableRows.add(executor.execute(configuration));
+            } catch (Exception e) {
+                logger.warn("Failed to render the row with the permissions of the author.", e);
+            }
+        });
 
         enhanceHeader(parameters, columns, columnsLower);
         // Before adding the header row sort the rows.
