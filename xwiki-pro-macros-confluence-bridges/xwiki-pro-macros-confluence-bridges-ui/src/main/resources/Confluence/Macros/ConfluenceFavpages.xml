@@ -44,8 +44,6 @@ This macro takes no parameters.
 
 = Example Usage =
 
-Display the children of the current page:
-
 {{code}}
 {{confluence_favpages/}}
 {{/code}}
