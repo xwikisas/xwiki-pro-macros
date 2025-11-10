@@ -44,8 +44,6 @@ This macro takes no parameters.
 
 = Example Usage =
 
-Display the children of the current page:
-
 {{code}}
 {{confluence_favpages/}}
 {{/code}}
@@ -267,7 +265,18 @@ Display the children of the current page:
     </property>
     <property>
       <code>{{velocity}}
-$xwiki.getDocument("Favorites.Code.FavoritesPanel").get("content")
+#set ($favPanel = $xwiki.getDocument("Favorites.Code.FavoritesPanel"))
+#if ($favPanel.isNew())
+
+    {{warning}}
+        $services.localization.render('rendering.macro.confluence_favpages.installfavoritesapp')
+    {{/warning}}
+
+#else
+
+    $favPanel.get("content")
+
+#end
 {{/velocity}}</code>
     </property>
     <property>

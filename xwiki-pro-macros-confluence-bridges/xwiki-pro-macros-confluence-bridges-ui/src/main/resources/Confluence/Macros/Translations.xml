@@ -122,7 +122,10 @@ rendering.macro.confluence_children.description=Confluence bridge for the Childr
 rendering.macro.confluence_children.parameter.page.name=Page
 rendering.macro.confluence_children.parameter.page.description=The reference of the page whose children will be displayed.
 rendering.macro.confluence_children.parameter.first.name=Number of children
-rendering.macro.confluence_children.parameter.first.description=The number of children that will be displayed initially</content>
+rendering.macro.confluence_children.parameter.first.description=The number of children that will be displayed initially
+
+## Favpages macro
+rendering.macro.confluence_favpages.installfavoritesapp=The favpages macro requires the Favorites Application, which is not installed. Please ask an administrator to install it.</content>
   <object>
     <name>Confluence.Macros.Translations</name>
     <number>0</number>
