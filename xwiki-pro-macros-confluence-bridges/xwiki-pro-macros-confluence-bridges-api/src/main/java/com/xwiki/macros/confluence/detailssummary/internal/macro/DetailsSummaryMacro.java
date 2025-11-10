@@ -155,8 +155,8 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
             rows.forEach(row -> rawRows.add(new RowContext(document, fullName, row)));
         }
 
-        // We have to go over the rows again after all the documents have been processed to make sure that we know all the
-        // columns, so we don't have misaligned columns in the table.
+        // We have to go over the rows again after all the documents have been processed to make sure that we know all
+        // the columns, so we don't have misaligned columns in the table.
         rawRows.forEach((rowContext) -> {
             // Wrap each block with a metadata to make sure that relative references are resolved correctly.
             enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size());
