@@ -146,24 +146,28 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         }
 
         List<Block> tableRows = new ArrayList<>();
+        List<RowContext> rawRows = new ArrayList<>();
         for (SolrDocument document : documents) {
             String fullName = document.get("wiki") + ":" + document.get("fullname");
             List<List<Block>> rows =
                 confluenceSummaryProcessor.getDetails(parameters.getId(), headings, columns, columnsLower, fullName);
 
-            // Wrap each block with a metadata to make sure that relative references are resolved correctly.
-            rows.forEach((row) -> {
-                enhanceRow(parameters, document, row);
-                MetaDataBlock metaDataBlock = setMetaDataBlock(row, fullName);
-                BlockAsyncRendererConfiguration configuration =
-                    getBlockAsyncRendererConfiguration(context, metaDataBlock);
-                try {
-                    tableRows.add(executor.execute(configuration));
-                } catch (Exception e) {
-                    logger.warn("Failed to render the row with the permissions of the author.", e);
-                }
-            });
+            rows.forEach(row -> rawRows.add(new RowContext(document, fullName, row)));
         }
+
+        // We have to go over the rows again after all the documents have been processed to make sure that we know all the
+        // columns, so we don't have misaligned columns in the table.
+        rawRows.forEach((rowContext) -> {
+            // Wrap each block with a metadata to make sure that relative references are resolved correctly.
+            enhanceRow(parameters, rowContext.getDocument(), rowContext.getRow(), columnsLower.size());
+            MetaDataBlock metaDataBlock = setMetaDataBlock(rowContext.getRow(), rowContext.getFullName());
+            BlockAsyncRendererConfiguration configuration = getBlockAsyncRendererConfiguration(context, metaDataBlock);
+            try {
+                tableRows.add(executor.execute(configuration));
+            } catch (Exception e) {
+                logger.warn("Failed to render the row with the permissions of the author.", e);
+            }
+        });
 
         enhanceHeader(parameters, columns, columnsLower);
         // Before adding the header row sort the rows.
@@ -201,8 +205,7 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     private BlockAsyncRendererConfiguration getBlockAsyncRendererConfiguration(MacroTransformationContext context,
         MetaDataBlock metaDataBlock)
     {
-        BlockAsyncRendererConfiguration configuration =
-            new BlockAsyncRendererConfiguration(null, metaDataBlock);
+        BlockAsyncRendererConfiguration configuration = new BlockAsyncRendererConfiguration(null, metaDataBlock);
         configuration.setInline(true);
         configuration.setDefaultSyntax(context.getSyntax());
         configuration.setTargetSyntax(context.getSyntax());
@@ -234,8 +237,16 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         return tags;
     }
 
-    private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row)
+    private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row,
+        int baseLength)
     {
+
+        if (row.size() < baseLength) {
+            for (int i = 0; i < baseLength - row.size(); i++) {
+                row.add(new TableCellBlock(List.of(new SpaceBlock())));
+            }
+        }
+
         if (parameters.showLastModified()) {
             Date date = (Date) document.get("date");
             XWikiContext context = contextProvider.get();
