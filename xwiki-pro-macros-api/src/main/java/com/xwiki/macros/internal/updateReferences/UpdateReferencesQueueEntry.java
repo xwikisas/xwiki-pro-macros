@@ -26,6 +26,7 @@ import org.xwiki.model.reference.DocumentReference;
 
 /**
  * Update References Queue Entry.
+ *
  * @version $Id$
  * @since 1.29
  */
@@ -34,18 +35,18 @@ public class UpdateReferencesQueueEntry
     /**
      * Reference to the page before rename operation.
      */
-     private final DocumentReference originalDocRef;
+    private final DocumentReference originalDocRef;
 
     /**
      * Reference to the page after rename operation.
      */
-     private final DocumentReference currentDocRef;
+    private final DocumentReference currentDocRef;
 
     /**
      * A map containing the macros whose parameters may reference other documents. The key is the macro name, and the
      * value is the list of parameter names that should be interpreted as document references and updated accordingly.
      */
-     private final Map<String, List<String>> macrosToUpdate;
+    private final Map<String, List<String>> macrosToUpdate;
 
     /**
      * Constructor.
