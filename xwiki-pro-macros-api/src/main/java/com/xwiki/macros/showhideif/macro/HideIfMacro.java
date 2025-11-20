@@ -30,8 +30,6 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.macro.MacroExecutionException;
-import org.xwiki.rendering.syntax.Syntax;
-import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xwiki.macros.showhideif.internal.macro.AbstractShowHideIfMacro;
@@ -65,9 +63,7 @@ public class HideIfMacro extends AbstractShowHideIfMacro
         MacroTransformationContext context)
         throws MacroExecutionException
     {
-        Syntax syntax = context.getTransformationContext().getTargetSyntax();
-        SyntaxType targetSyntaxType = syntax == null ? null : syntax.getType();
-        if (SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(targetSyntaxType)) {
+        if (isEditMode(context)) {
             List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
             return Collections.singletonList(new MetaDataBlock(children, this.getNonGeneratedContentMetaData()));
         } else {

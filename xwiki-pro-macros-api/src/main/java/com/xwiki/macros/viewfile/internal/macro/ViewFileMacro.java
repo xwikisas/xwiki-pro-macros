@@ -33,10 +33,7 @@ import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.AttachmentReferenceResolver;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.macro.MacroExecutionException;
-import org.xwiki.rendering.syntax.Syntax;
-import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.script.ScriptContextManager;
 import org.xwiki.security.authorization.ContextualAuthorizationManager;
 import org.xwiki.security.authorization.Right;
 
@@ -57,9 +54,6 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
 {
     @Inject
     protected ContextualAuthorizationManager contextualAuthorization;
-
-    @Inject
-    private ScriptContextManager scriptContextManager;
 
     @Inject
     @Named("current")
@@ -96,7 +90,7 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
             boolean oversize = attachmentSizeValidator.isAttachmentOversize(attachmentRef);
             return List.of(StaticBlockWrapperFactory.constructBlockWrapper(context.isInline(),
                 viewFileMacroPrepareBlocks.prepareBlocks(parameters, context, attachmentRef, oversize,
-                    inEditMode(context)), new HashMap<>()));
+                    isEditMode(context)), new HashMap<>()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -114,29 +108,5 @@ public class ViewFileMacro extends AbstractProMacro<ViewFileMacroParameters>
             return parameters.getName();
         }
         return parameters.getAttFilename();
-    }
-
-    private boolean inEditMode(MacroTransformationContext context)
-    {
-        boolean editMode;
-        Syntax syntax = context.getTransformationContext().getTargetSyntax();
-        // TODO remove after upgrade to 17.0.0+ https://jira.xwiki.org/browse/XWIKI-22738
-        // Sadly in versions < 17.0.0 the syntax is not set in the context and to be able to handle different
-        // displays for view and edit mode we have to use the scriptContextManger who has a variable in the
-        // attributes that we can use to identify if we are in edit mode or not.
-        if (syntax == null) {
-            editMode = inEditModeFallBack();
-        } else {
-            SyntaxType targetSyntaxType = syntax.getType();
-            editMode = SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(
-                targetSyntaxType);
-        }
-        return editMode;
-    }
-
-    private boolean inEditModeFallBack()
-    {
-        String syntax = (String) scriptContextManager.getScriptContext().getAttribute("syntaxType");
-        return (syntax != null) && (syntax.equals("annotatedhtml") || syntax.equals("annotatedxhtml"));
     }
 }
