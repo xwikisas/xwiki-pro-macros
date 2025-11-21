@@ -23,7 +23,6 @@ import java.awt.Image;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
@@ -34,18 +33,9 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.swing.ImageIcon;
 
-import org.jodconverter.core.document.DefaultDocumentFormatRegistry;
-import org.jodconverter.core.office.OfficeException;
-import org.jodconverter.core.office.OfficeManager;
-import org.jodconverter.local.LocalConverter;
-import org.jodconverter.local.office.ExternalOfficeManager;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.phase.Initializable;
-import org.xwiki.component.phase.InitializationException;
 import org.xwiki.model.reference.AttachmentReference;
-import org.xwiki.officeimporter.server.OfficeServer;
-import org.xwiki.officeimporter.server.OfficeServerConfiguration;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.doc.XWikiDocument;
@@ -61,46 +51,23 @@ import com.xwiki.macros.viewfile.thumbnail.generators.ThumbnailGenerator;
 @Component
 @Singleton
 @Named(OfficeThumbnailGenerator.HINT)
-public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerator implements Initializable
+public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerator
 {
     /**
      * Component hint.
      */
     public static final String HINT = "office";
 
-    /**
-     * The office server configuration.
-     */
     @Inject
-    private OfficeServerConfiguration officeServerConfig;
-
-    @Inject
-    private OfficeServer officeServer;
-
-    private OfficeManager officeManager;
+    private OfficeManagerWrapper officeFactory;
 
     @Inject
     private Logger logger;
 
     @Override
-    public void initialize() throws InitializationException
-    {
-        if (isOfficeServerConnected()) {
-            // Set an execution timeout equivalent to 10 seconds.
-            officeManager = ExternalOfficeManager.builder().portNumbers(officeServerConfig.getServerPorts())
-                .taskExecutionTimeout(10000L).build();
-            try {
-                officeManager.start();
-            } catch (OfficeException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Override
     public String generateThumbnail(AttachmentReference attachmentReference) throws Exception
     {
-        if (isOfficeServerConnected()) {
+        if (officeFactory.isOfficeServerConnected()) {
             byte[] bais = getJPEGContent(attachmentReference);
             return saveThumbnail(getBufferedImage(bais), attachmentReference);
         } else {
@@ -110,31 +77,14 @@ public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerato
         }
     }
 
-    private OfficeManager getOfficeManager() throws InitializationException
-    {
-        if (officeManager == null || !officeManager.isRunning()) {
-            initialize();
-        }
-        return officeManager;
-    }
-
-    private boolean isOfficeServerConnected()
-    {
-        this.officeServer.refreshState();
-        return this.officeServer.getState() == OfficeServer.ServerState.CONNECTED;
-    }
-
     private byte[] getJPEGContent(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document =
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
-        try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream())
+        try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext))
         {
-            OfficeManager manager = getOfficeManager();
-            LocalConverter.make(manager).convert(is).to(baos).as(DefaultDocumentFormatRegistry.JPEG).execute();
-            return baos.toByteArray();
+            return officeFactory.getImageBytes(is);
         }
     }
 
