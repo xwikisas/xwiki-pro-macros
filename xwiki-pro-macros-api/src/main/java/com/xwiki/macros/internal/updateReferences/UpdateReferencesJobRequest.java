@@ -19,60 +19,54 @@
  */
 package com.xwiki.macros.internal.updateReferences;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
+import org.xwiki.job.AbstractRequest;
 import org.xwiki.model.reference.DocumentReference;
 
 /**
- * Update References Queue Entry.
+ * Update References Job Request.
  *
  * @version $Id$
  * @since 1.29
  */
-public class UpdateReferencesQueueEntry
+public class UpdateReferencesJobRequest extends AbstractRequest
 {
     /**
      * Reference to the page before rename operation.
      */
-    private final DocumentReference originalDocRef;
+    private final DocumentReference currentDocRef;
 
     /**
      * Reference to the page after rename operation.
      */
-    private final DocumentReference currentDocRef;
+    private final DocumentReference targetDocRef;
 
     /**
-     * A map containing the macros whose parameters may reference other documents. The key is the macro name, and the
-     * value is the list of parameter names that should be interpreted as document references and updated accordingly.
+     * A Set containing the macros id's of whose parameters may reference other documents.
      */
-    private final Map<String, List<String>> macrosToUpdate;
+    private final Set<String> macrosToUpdate;
 
     /**
      * Constructor.
      *
-     * @param originalDocRef document reference before rename
-     * @param currentDocRef document reference after rename
+     * @param currentDocRef document reference before rename
+     * @param targetDocRef document reference after rename
      * @param macrosToUpdate the macros to update Map
      */
-    public UpdateReferencesQueueEntry(DocumentReference originalDocRef, DocumentReference currentDocRef,
-        Map<String, List<String>> macrosToUpdate)
+    public UpdateReferencesJobRequest(DocumentReference currentDocRef, DocumentReference targetDocRef,
+        Set<String> macrosToUpdate)
     {
-        this.originalDocRef = originalDocRef;
         this.currentDocRef = currentDocRef;
+        this.targetDocRef = targetDocRef;
         this.macrosToUpdate = macrosToUpdate;
+
+        setId("update-references/"
+            + (currentDocRef != null ? currentDocRef.toString() : "unknown"));
     }
 
     /**
      * @return the reference to the document before the rename
-     */
-    public DocumentReference getOriginalDocRef()
-    {
-        return originalDocRef;
-    }
-
-    /**
-     * @return the reference to the document after the rename
      */
     public DocumentReference getCurrentDocRef()
     {
@@ -80,9 +74,17 @@ public class UpdateReferencesQueueEntry
     }
 
     /**
-     * @return the map of macros and their parameter names
+     * @return the reference to the document after the rename
      */
-    public Map<String, List<String>> getMacrosToUpdate()
+    public DocumentReference getTargetDocRef()
+    {
+        return targetDocRef;
+    }
+
+    /**
+     * @return the set of macros where references should be updated
+     */
+    public Set<String> getMacrosToUpdate()
     {
         return macrosToUpdate;
     }

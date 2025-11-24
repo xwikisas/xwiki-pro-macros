@@ -70,7 +70,7 @@ public class LinkRegistry
             EntityReference entityReference =
                 new EntityReference(reference.getName(), reference.getType(), reference.getParent());
             String serializedEntity = entitySerializer.serialize(entityReference);
-            //First we check if the solar document already contains this link so we don't store duplicates.
+            // First we check if the Solr document already contains this link so we don't store duplicates.
             boolean alreadyExists =
                 solrDocument.get(FieldUtils.LINKS) != null && solrDocument.get(FieldUtils.LINKS).getValues()
                     .contains(serializedEntity);

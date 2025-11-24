@@ -29,9 +29,10 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.xwiki.bridge.event.DocumentCreatedEvent;
 import org.xwiki.component.annotation.Component;
-import org.xwiki.component.phase.Disposable;
 import org.xwiki.job.Job;
 import org.xwiki.job.JobContext;
+import org.xwiki.job.JobException;
+import org.xwiki.job.JobExecutor;
 import org.xwiki.job.event.JobStartedEvent;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.observation.AbstractEventListener;
@@ -41,8 +42,9 @@ import org.xwiki.observation.event.Event;
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
-import com.xwiki.macros.internal.updateReferences.UpdateReferencesQueueEntry;
-import com.xwiki.macros.internal.updateReferences.UpdateReferencesRunnable;
+import com.xwiki.macros.internal.updateReferences.UpdateReferencesJobRequest;
+
+import static com.xwiki.macros.internal.updateReferences.UpdateReferencesJob.UPDATE_REFERENCES_JOB;
 
 /**
  * Listens to rename of pages. Also, for pages that contains macros with references it will start a thread for updating
@@ -54,19 +56,19 @@ import com.xwiki.macros.internal.updateReferences.UpdateReferencesRunnable;
 @Component
 @Named(PageRenameMacroParametersUpdateListener.ROLE_HINT)
 @Singleton
-public class PageRenameMacroParametersUpdateListener extends AbstractEventListener implements Disposable
+public class PageRenameMacroParametersUpdateListener extends AbstractEventListener
 {
-    protected static final String ROLE_HINT = "PageRenameMacroParametersUpdateListener";
-
-    private static final Map<String, List<String>> MACROS_TO_UPDATE = Map.of(
+    /**
+     * Map that defines which macro names should be inspected when searching for references inside macro parameters. The
+     * key represents the macro name, while the value is the list of parameter names that may contain document or
+     * attachment references and therefore need to be checked during refactoring operations.
+     */
+    public static final Map<String, List<String>> MACROS_TO_SEARCH = Map.of(
         "button", List.of("url"),
         "confluence_pagetree", List.of("root")
-        );
+    );
 
-    /**
-     * Thread that will handle updating the reference of a macro parameter after a page rename.
-     */
-    public Thread referencesMacroThread;
+    protected static final String ROLE_HINT = "PageRenameMacroParametersUpdateListener";
 
     @Inject
     protected JobContext jobContext;
@@ -75,7 +77,7 @@ public class PageRenameMacroParametersUpdateListener extends AbstractEventListen
     protected ObservationContext observationContext;
 
     @Inject
-    private UpdateReferencesRunnable referencesMacroRunnable;
+    private JobExecutor jobExecutor;
 
     @Inject
     private Logger logger;
@@ -91,10 +93,6 @@ public class PageRenameMacroParametersUpdateListener extends AbstractEventListen
     @Override
     public void onEvent(Event event, Object source, Object data)
     {
-        if (this.referencesMacroThread == null) {
-            startThreads();
-        }
-
         if (observationContext.isIn(new JobStartedEvent("refactoring/rename"))) {
             Job job = jobContext.getCurrentJob();
             DocumentReference destinationRef = job.getRequest().getProperty("destination");
@@ -113,52 +111,23 @@ public class PageRenameMacroParametersUpdateListener extends AbstractEventListen
         }
     }
 
-    @Override
-    public void dispose()
-    {
-        try {
-            stopThread(this.referencesMacroThread, this.referencesMacroRunnable);
-        } catch (InterruptedException e) {
-            logger.warn("References backlinks update thread interrupted", e);
-        }
-    }
-
     private void startUpdatingReferences(XWikiContext context, XWikiDocument currentDoc,
         DocumentReference originalDocRef)
     {
-        UpdateReferencesQueueEntry updateReferencesQueueEntry = new UpdateReferencesQueueEntry(
+        UpdateReferencesJobRequest updateReferencesJobRequest = new UpdateReferencesJobRequest(
             originalDocRef,
             currentDoc.getDocumentReference(),
-            MACROS_TO_UPDATE
+            MACROS_TO_SEARCH.keySet()
         );
 
         try {
-            // Restrain the number of documents added to queue to only those that have backlinks. We need to take
-            // backlinks from the original document because at this step they are not loaded to the new document.
             if (!context.getWiki().getDocument(originalDocRef, context).getBackLinkedReferences(context).isEmpty()) {
-                this.referencesMacroRunnable.addToQueue(updateReferencesQueueEntry);
+                jobExecutor.execute(UPDATE_REFERENCES_JOB, updateReferencesJobRequest);
             }
         } catch (XWikiException e) {
-            logger.warn("Error when getting backlinks of renamed document");
-        }
-    }
-
-    private synchronized void startThreads()
-    {
-        if (this.referencesMacroThread == null) {
-            Thread referencesThread = new Thread(this.referencesMacroRunnable);
-            referencesThread.setName("Update Button Links Thread");
-            referencesThread.setDaemon(true);
-            referencesThread.start();
-        }
-    }
-
-    private void stopThread(Thread referencesThread, UpdateReferencesRunnable referenceRunnable)
-        throws InterruptedException
-    {
-        if (referencesThread != null) {
-            referenceRunnable.addToQueue(UpdateReferencesRunnable.STOP_RUNNABLE_ENTRY);
-            referencesThread.join();
+            logger.warn("Error when getting backlinks of renamed document", e);
+        } catch (JobException e) {
+            throw new RuntimeException(e);
         }
     }
 }
