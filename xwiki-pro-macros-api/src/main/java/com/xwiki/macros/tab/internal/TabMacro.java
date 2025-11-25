@@ -38,8 +38,6 @@ import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.parser.Parser;
-import org.xwiki.rendering.syntax.Syntax;
-import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.skinx.SkinExtension;
 import org.xwiki.text.StringUtils;
@@ -104,9 +102,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
         MacroTransformationContext context) throws MacroExecutionException
     {
         // Don't show tab in edit mode.
-        Syntax syntax = context.getTransformationContext().getTargetSyntax();
-        SyntaxType targetSyntaxType = syntax == null ? null : syntax.getType();
-        if (SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(targetSyntaxType)) {
+        if (isEditMode(context)) {
             // Handle edit mode
             ssrx.use("css/tabmacro.css");
             List<Block> tabLabelBlock;

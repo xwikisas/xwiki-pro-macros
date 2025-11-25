@@ -36,7 +36,10 @@ import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.ContentDescriptor;
+import org.xwiki.rendering.syntax.Syntax;
+import org.xwiki.rendering.syntax.SyntaxType;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.script.ScriptContextManager;
 import org.xwiki.stability.Unstable;
 import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
@@ -67,6 +70,9 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 
     @Inject
     private WikiDescriptorManager wikiDescriptorManager;
+
+    @Inject
+    private ScriptContextManager scriptContextManager;
 
     /**
      * Creates a new macro instance.
@@ -133,5 +139,29 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     public WikiDescriptorManager getWikiDescriptorManager()
     {
         return this.wikiDescriptorManager;
+    }
+
+    protected boolean isEditMode(MacroTransformationContext context)
+    {
+        boolean editMode;
+        Syntax syntax = context.getTransformationContext().getTargetSyntax();
+        // TODO remove after upgrade to 17.0.0+ https://jira.xwiki.org/browse/XWIKI-22738
+        // Sadly in versions < 17.0.0 the syntax is not set in the context and to be able to handle different
+        // displays for view and edit mode we have to use the scriptContextManger who has a variable in the
+        // attributes that we can use to identify if we are in edit mode or not.
+        if (syntax == null) {
+            editMode = inEditModeFallBack();
+        } else {
+            SyntaxType targetSyntaxType = syntax.getType();
+            editMode = SyntaxType.ANNOTATED_HTML.equals(targetSyntaxType) || SyntaxType.ANNOTATED_XHTML.equals(
+                targetSyntaxType);
+        }
+        return editMode;
+    }
+
+    private boolean inEditModeFallBack()
+    {
+        String syntax = (String) scriptContextManager.getScriptContext().getAttribute("syntaxType");
+        return (syntax != null) && (syntax.equals("annotatedhtml") || syntax.equals("annotatedxhtml"));
     }
 }
