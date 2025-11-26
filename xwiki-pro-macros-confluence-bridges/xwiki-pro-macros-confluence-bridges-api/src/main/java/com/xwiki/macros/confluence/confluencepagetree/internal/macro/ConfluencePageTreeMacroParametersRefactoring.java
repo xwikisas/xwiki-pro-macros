@@ -19,7 +19,7 @@
  */
 package com.xwiki.macros.confluence.confluencepagetree.internal.macro;
 
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,10 +41,9 @@ import org.xwiki.model.reference.SpaceReferenceResolver;
 import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
+import org.xwiki.text.StringUtils;
 
-import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
-import com.xpn.xwiki.XWikiException;
 import com.xwiki.macros.internal.updateReferences.AbstractReferenceUpdateMacroRefactoring;
 
 /**
@@ -90,28 +89,17 @@ public class ConfluencePageTreeMacroParametersRefactoring extends AbstractRefere
     {
         String rootValue = macroBlock.getParameter(ROOT_PARAMETER);
 
-        XWikiContext xContext = contextProvider.get();
-        XWiki xWiki = xContext.getWiki();
+        Set<ResourceReference> resourceReferences = new HashSet<>();
 
-        try {
-            DocumentReference docRef = documentReferenceResolver.resolve(rootValue);
+        resourceReferences.add(new DocumentResourceReference(rootValue));
 
-            if (xWiki.exists(docRef, xContext)) {
-                return Collections.singleton(new DocumentResourceReference(rootValue));
-            }
-
+        if (!StringUtils.endsWith(rootValue, String.format(".%s", WEB_HOME))) {
             SpaceReference spaceRef = spaceReferenceResolver.resolve(rootValue);
-            docRef = new DocumentReference(WEB_HOME, spaceRef);
-
-            if (xWiki.exists(docRef, xContext)) {
-                return Collections.singleton(
-                    new DocumentResourceReference(entityReferenceSerializer.serialize(docRef)));
-            }
-        } catch (XWikiException e) {
-            throw new RuntimeException(e);
+            DocumentReference docRef = new DocumentReference(WEB_HOME, spaceRef);
+            resourceReferences.add(new DocumentResourceReference(entityReferenceSerializer.serialize(docRef)));
         }
 
-        return Collections.emptySet();
+        return resourceReferences;
     }
 
     @Override
@@ -119,32 +107,36 @@ public class ConfluencePageTreeMacroParametersRefactoring extends AbstractRefere
         DocumentReference currentDocumentReference, T sourceReference, T targetReference)
     {
         List<String> parametersToUpdate = getParametersToUpdate();
-        if (!parametersToUpdate.isEmpty()) {
-            MacroBlock newMacroBlock = (MacroBlock) macroBlock.clone();
 
-            for (String parameterToUpdate : parametersToUpdate) {
-                String stringMacroReference = macroBlock.getParameter(parameterToUpdate);
-                EntityReference macroReference =
-                    this.macroEntityReferenceResolver.resolve(stringMacroReference, EntityType.DOCUMENT, macroBlock,
-                        sourceReference);
-
-                boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
-
-                String sourceReferenceParentStringReference =
-                    entityReferenceSerializer.serialize(sourceReference.getParent());
-
-                EntityReference sourceReferenceParentReference =
-                    macroEntityReferenceResolver.resolve(sourceReferenceParentStringReference, EntityType.DOCUMENT,
-                        macroBlock, sourceReference);
-
-                if (macroReference.equals(sourceReference) || macroReference.equals(sourceReferenceParentReference)) {
-                    newMacroBlock.setParameter(parameterToUpdate,
-                        serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
-                }
-            }
-            return Optional.of(newMacroBlock);
+        if (parametersToUpdate.isEmpty()) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        boolean isModified = false;
+        MacroBlock newMacroBlock = (MacroBlock) macroBlock.clone();
+
+        for (String parameterToUpdate : parametersToUpdate) {
+            String stringMacroReference = macroBlock.getParameter(parameterToUpdate);
+            EntityReference macroReference =
+                this.macroEntityReferenceResolver.resolve(stringMacroReference, EntityType.DOCUMENT, macroBlock,
+                    sourceReference);
+
+            boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
+
+            String sourceReferenceParentStringReference =
+                entityReferenceSerializer.serialize(sourceReference.getParent());
+
+            EntityReference sourceReferenceParentReference =
+                macroEntityReferenceResolver.resolve(sourceReferenceParentStringReference, EntityType.DOCUMENT,
+                    macroBlock, sourceReference);
+
+            if (macroReference.equals(sourceReference) || macroReference.equals(sourceReferenceParentReference)) {
+                newMacroBlock.setParameter(parameterToUpdate,
+                    serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
+                isModified = true;
+            }
+        }
+
+        return isModified ? Optional.of(newMacroBlock) : Optional.empty();
     }
 }

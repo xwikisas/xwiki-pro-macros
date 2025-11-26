@@ -90,31 +90,34 @@ public abstract class AbstractReferenceUpdateMacroRefactoring implements MacroRe
         DocumentReference currentDocumentReference, T sourceReference, T targetReference)
     {
         List<String> parametersToUpdate = getParametersToUpdate();
-        if (!parametersToUpdate.isEmpty()) {
-            MacroBlock newMacroBlock = (MacroBlock) macroBlock.clone();
 
-            for (String parameterToUpdate : parametersToUpdate) {
-                String stringMacroReference = macroBlock.getParameter(parameterToUpdate);
-                EntityReference macroReference =
-                    this.macroEntityReferenceResolver.resolve(stringMacroReference, EntityType.DOCUMENT, macroBlock,
-                        sourceReference);
-
-                boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
-
-                if (macroReference.equals(sourceReference)) {
-                    newMacroBlock.setParameter(parameterToUpdate,
-                        serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
-                }
-            }
-            return Optional.of(newMacroBlock);
+        if (parametersToUpdate.isEmpty()) {
+            return Optional.empty();
         }
 
-        return Optional.empty();
+        boolean isModified = false;
+        MacroBlock newMacroBlock = (MacroBlock) macroBlock.clone();
+
+        for (String parameterToUpdate : parametersToUpdate) {
+            String stringMacroReference = macroBlock.getParameter(parameterToUpdate);
+            EntityReference macroReference =
+                this.macroEntityReferenceResolver.resolve(stringMacroReference, EntityType.DOCUMENT, macroBlock,
+                    sourceReference);
+
+            boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
+
+            if (macroReference.equals(sourceReference)) {
+                newMacroBlock.setParameter(parameterToUpdate,
+                    serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
+                isModified = true;
+            }
+        }
+
+        return isModified ? Optional.of(newMacroBlock) : Optional.empty();
     }
 
     /**
-     * Serializes a target reference either as a relative or absolute reference,
-     * depending on the provided flag.
+     * Serializes a target reference either as a relative or absolute reference, depending on the provided flag.
      *
      * @param newTargetReference the reference to serialize
      * @param currentReference the current entity used as the serialization base

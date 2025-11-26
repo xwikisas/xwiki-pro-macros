@@ -374,7 +374,8 @@ $services.localization.render('rendering.macro.button.description')
       "
       class="btn $escapetool.xml($macro.additionalClass)"
       #if ($disabled)
-        title="$services.localization.render('rendering.macro.button.parameter.url.invalidUrl')" disabled
+        title="$escapetool.xml($services.localization.render('rendering.macro.button.parameter.url.invalidUrl'))"
+        disabled
       #end
       &gt;
       $!services.icon.renderHTML($!icon)

@@ -41,16 +41,6 @@
       <artifactId>application-licensing-licensor-api</artifactId>
       <version>${licensing.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-observation-api</artifactId>
-      <version>${commons.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-search-solr-api</artifactId>
-      <version>${platform.version}</version>
-    </dependency>
     <!-- Dependencies needed by the User List and User Profile macros -->
     <dependency>
       <groupId>org.xwiki.commons</groupId>
