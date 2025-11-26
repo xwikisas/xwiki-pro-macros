@@ -21,6 +21,7 @@ package com.xwiki.macros.confluence.confluencepagetree.internal.macro;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -29,16 +30,17 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
+import org.xwiki.model.EntityType;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.DocumentReferenceResolver;
+import org.xwiki.model.reference.EntityReference;
+import org.xwiki.model.reference.EntityReferenceResolver;
 import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.model.reference.SpaceReference;
 import org.xwiki.model.reference.SpaceReferenceResolver;
-import org.xwiki.query.QueryManager;
 import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
-import org.xwiki.rendering.macro.MacroRefactoringException;
 
 import com.xpn.xwiki.XWiki;
 import com.xpn.xwiki.XWikiContext;
@@ -71,10 +73,11 @@ public class ConfluencePageTreeMacroParametersRefactoring extends AbstractRefere
     private EntityReferenceSerializer<String> entityReferenceSerializer;
 
     @Inject
-    private Provider<XWikiContext> contextProvider;
+    @Named("macro")
+    private EntityReferenceResolver<String> macroEntityReferenceResolver;
 
     @Inject
-    private QueryManager queryManager;
+    private Provider<XWikiContext> contextProvider;
 
     @Override
     public List<String> getParametersToUpdate()
@@ -83,7 +86,7 @@ public class ConfluencePageTreeMacroParametersRefactoring extends AbstractRefere
     }
 
     @Override
-    public Set<ResourceReference> extractReferences(MacroBlock macroBlock) throws MacroRefactoringException
+    public Set<ResourceReference> extractReferences(MacroBlock macroBlock)
     {
         String rootValue = macroBlock.getParameter(ROOT_PARAMETER);
 
@@ -109,5 +112,39 @@ public class ConfluencePageTreeMacroParametersRefactoring extends AbstractRefere
         }
 
         return Collections.emptySet();
+    }
+
+    @Override
+    public <T extends EntityReference> Optional<MacroBlock> refactorMacroBlock(MacroBlock macroBlock,
+        DocumentReference currentDocumentReference, T sourceReference, T targetReference)
+    {
+        List<String> parametersToUpdate = getParametersToUpdate();
+        if (!parametersToUpdate.isEmpty()) {
+            MacroBlock newMacroBlock = (MacroBlock) macroBlock.clone();
+
+            for (String parameterToUpdate : parametersToUpdate) {
+                String stringMacroReference = macroBlock.getParameter(parameterToUpdate);
+                EntityReference macroReference =
+                    this.macroEntityReferenceResolver.resolve(stringMacroReference, EntityType.DOCUMENT, macroBlock,
+                        sourceReference);
+
+                boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
+
+                String sourceReferenceParentStringReference =
+                    entityReferenceSerializer.serialize(sourceReference.getParent());
+
+                EntityReference sourceReferenceParentReference =
+                    macroEntityReferenceResolver.resolve(sourceReferenceParentStringReference, EntityType.DOCUMENT,
+                        macroBlock, sourceReference);
+
+                if (macroReference.equals(sourceReference) || macroReference.equals(sourceReferenceParentReference)) {
+                    newMacroBlock.setParameter(parameterToUpdate,
+                        serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
+                }
+            }
+            return Optional.of(newMacroBlock);
+        }
+
+        return Optional.empty();
     }
 }

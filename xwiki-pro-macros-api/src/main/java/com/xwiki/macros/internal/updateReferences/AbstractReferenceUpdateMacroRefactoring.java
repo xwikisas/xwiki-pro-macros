@@ -66,18 +66,27 @@ public abstract class AbstractReferenceUpdateMacroRefactoring implements MacroRe
         DocumentReference sourceReference, DocumentReference targetReference, boolean relative)
         throws MacroRefactoringException
     {
-        return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
+        return refactorMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
     }
 
     @Override
     public Optional<MacroBlock> replaceReference(MacroBlock macroBlock, DocumentReference currentDocumentReference,
         AttachmentReference sourceReference, AttachmentReference targetReference, boolean relative)
-        throws MacroRefactoringException
     {
-        return getMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
+        return refactorMacroBlock(macroBlock, currentDocumentReference, sourceReference, targetReference);
     }
 
-    private <T extends EntityReference> Optional<MacroBlock> getMacroBlock(MacroBlock macroBlock,
+    /**
+     * Refactors a macro block by updating its parameters when they match a given source reference.
+     *
+     * @param <T> the type of entity reference
+     * @param macroBlock the original macro block
+     * @param currentDocumentReference the reference of the document where the macro resides
+     * @param sourceReference the reference to be replaced
+     * @param targetReference the reference that replaces the source
+     * @return an optional containing the updated macro block, or empty if no parameter needed refactoring
+     */
+    public <T extends EntityReference> Optional<MacroBlock> refactorMacroBlock(MacroBlock macroBlock,
         DocumentReference currentDocumentReference, T sourceReference, T targetReference)
     {
         List<String> parametersToUpdate = getParametersToUpdate();
@@ -92,14 +101,7 @@ public abstract class AbstractReferenceUpdateMacroRefactoring implements MacroRe
 
                 boolean resolvedRelative = !isReferenceAbsolute(stringMacroReference, macroReference);
 
-                String sourceReferenceParentStringReference =
-                    compactEntityReferenceSerializer.serialize(sourceReference.getParent());
-
-                EntityReference sourceReferenceParentReference =
-                    macroEntityReferenceResolver.resolve(sourceReferenceParentStringReference, EntityType.DOCUMENT,
-                        macroBlock, sourceReference);
-
-                if (macroReference.equals(sourceReference) || macroReference.equals(sourceReferenceParentReference)) {
+                if (macroReference.equals(sourceReference)) {
                     newMacroBlock.setParameter(parameterToUpdate,
                         serializeTargetReference(targetReference, currentDocumentReference, resolvedRelative));
                 }
@@ -110,7 +112,16 @@ public abstract class AbstractReferenceUpdateMacroRefactoring implements MacroRe
         return Optional.empty();
     }
 
-    private String serializeTargetReference(EntityReference newTargetReference, EntityReference currentReference,
+    /**
+     * Serializes a target reference either as a relative or absolute reference,
+     * depending on the provided flag.
+     *
+     * @param newTargetReference the reference to serialize
+     * @param currentReference the current entity used as the serialization base
+     * @param relative whether to serialize the reference in relative form
+     * @return the serialized reference string
+     */
+    public String serializeTargetReference(EntityReference newTargetReference, EntityReference currentReference,
         boolean relative)
     {
         return relative
@@ -119,7 +130,15 @@ public abstract class AbstractReferenceUpdateMacroRefactoring implements MacroRe
             currentReference.extractReference(EntityType.WIKI));
     }
 
-    private boolean isReferenceAbsolute(String referenceRepresentation, EntityReference absoluteEntityReference)
+    /**
+     * Determines whether the given reference representation is absolute by comparing it
+     * with the fully serialized form of the resolved reference.
+     *
+     * @param referenceRepresentation the raw reference string found in the macro
+     * @param absoluteEntityReference the resolved reference used for comparison
+     * @return true if the reference string represents an absolute reference, false otherwise
+     */
+    public boolean isReferenceAbsolute(String referenceRepresentation, EntityReference absoluteEntityReference)
     {
         return this.compactWikiEntityReferenceSerializer.serialize(absoluteEntityReference,
             absoluteEntityReference.extractReference(EntityType.WIKI)).equals(referenceRepresentation);

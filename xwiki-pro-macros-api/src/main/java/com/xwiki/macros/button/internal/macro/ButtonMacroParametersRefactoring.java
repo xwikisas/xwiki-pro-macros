@@ -30,7 +30,6 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.listener.reference.DocumentResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceReference;
-import org.xwiki.rendering.macro.MacroRefactoringException;
 
 import com.xwiki.macros.internal.updateReferences.AbstractReferenceUpdateMacroRefactoring;
 
@@ -48,7 +47,7 @@ public class ButtonMacroParametersRefactoring extends AbstractReferenceUpdateMac
     private static final String URL_PARAMETER = "url";
 
     @Override
-    public Set<ResourceReference> extractReferences(MacroBlock macroBlock) throws MacroRefactoringException
+    public Set<ResourceReference> extractReferences(MacroBlock macroBlock)
     {
         ResourceReference resourceReference = new DocumentResourceReference(macroBlock.getParameter(URL_PARAMETER));
         return Collections.singleton(resourceReference);
