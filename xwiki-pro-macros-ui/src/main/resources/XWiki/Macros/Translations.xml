@@ -45,7 +45,6 @@ rendering.macro.button.parameter.label.name=Label
 rendering.macro.button.parameter.label.description=The label of the button.
 rendering.macro.button.parameter.url.name=URL
 rendering.macro.button.parameter.url.description=A link or a page reference.
-rendering.macro.button.parameter.url.invalidUrl=The reference is invalid. The page may have been moved or has a broken link.
 rendering.macro.button.parameter.color.name=Color
 rendering.macro.button.parameter.color.description=The color of the button.
 rendering.macro.button.parameter.width.name=Width
