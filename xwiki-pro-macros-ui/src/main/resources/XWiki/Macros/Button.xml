@@ -329,12 +329,9 @@ $services.localization.render('rendering.macro.button.description')
   #set ($macro.id = $wikimacro.parameters.id)
   #set ($macro.classParam = $wikimacro.parameters.get('class'))
   #set ($macro.type = $wikimacro.parameters.type)
-  #set ($disabled = false)
   ## Resolve the url as a Wiki Document if it exists, else assume it is an external link
   #if ($xwiki.exists($url))
     #set ($url = $xwiki.getDocument($url).getURL())
-  #else
-    #set ($disabled = true)
   #end
   ## The color will be a java.awt.Color object
   ## Transform it into an array of Integers for better malleability: [x, y, z]
@@ -372,12 +369,7 @@ $services.localization.render('rendering.macro.button.description')
         #end
         width: $!width;
       "
-      class="btn $escapetool.xml($macro.additionalClass)"
-      #if ($disabled)
-        title="$escapetool.xml($services.localization.render('rendering.macro.button.parameter.url.invalidUrl'))"
-        disabled
-      #end
-      &gt;
+      class="btn $escapetool.xml($macro.additionalClass)"&gt;
       $!services.icon.renderHTML($!icon)
       $label
     &lt;/button&gt;
