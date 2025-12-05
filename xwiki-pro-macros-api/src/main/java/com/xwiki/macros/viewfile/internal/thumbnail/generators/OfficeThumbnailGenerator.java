@@ -59,7 +59,7 @@ public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerato
     public static final String HINT = "office";
 
     @Inject
-    private OfficeManagerWrapper officeFactory;
+    private OfficeThumbnailGeneratorUtils officeUtils;
 
     @Inject
     private Logger logger;
@@ -67,7 +67,7 @@ public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerato
     @Override
     public String generateThumbnail(AttachmentReference attachmentReference) throws Exception
     {
-        if (officeFactory.isOfficeServerConnected()) {
+        if (officeUtils.isOfficeServerConnected()) {
             byte[] bais = getJPEGContent(attachmentReference);
             return saveThumbnail(getBufferedImage(bais), attachmentReference);
         } else {
@@ -84,7 +84,7 @@ public class OfficeThumbnailGenerator extends AbstractOfficePdfThumbnailGenerato
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         try (InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext))
         {
-            return officeFactory.getImageBytes(is);
+            return officeUtils.getImageBytes(is);
         }
     }
 

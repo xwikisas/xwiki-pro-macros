@@ -36,15 +36,15 @@ import org.xwiki.officeimporter.server.OfficeServerConfiguration;
 import org.xwiki.stability.Unstable;
 
 /**
- * Simple class used to wrap office objects to help with testing.
+ * Office thumbnail generator utility methods.
  *
  * @version $Id$
  * @since 1.29.0
  */
-@Component(roles = OfficeManagerWrapper.class)
+@Component(roles = OfficeThumbnailGeneratorUtils.class)
 @Singleton
 @Unstable
-public class OfficeManagerWrapper
+public class OfficeThumbnailGeneratorUtils
 {
     /**
      * The office server configuration.

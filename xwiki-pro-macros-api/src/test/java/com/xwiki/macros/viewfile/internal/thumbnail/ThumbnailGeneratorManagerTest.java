@@ -70,7 +70,7 @@ public class ThumbnailGeneratorManagerTest
     private AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
 
     @Test
-    void GetThumbnailUrlFound()
+    void getThumbnailUrlFound()
         throws IOException, SerializeResourceReferenceException, UnsupportedResourceReferenceException
     {
         when(temporaryFileManager.thumbnailFileExists(attachmentReference)).thenReturn(true);
@@ -79,7 +79,7 @@ public class ThumbnailGeneratorManagerTest
     }
 
     @Test
-    void GetThumbnailUrlFoundError()
+    void getThumbnailUrlFoundError()
         throws IOException, SerializeResourceReferenceException, UnsupportedResourceReferenceException
     {
         when(temporaryFileManager.thumbnailFileExists(attachmentReference)).thenReturn(true);
@@ -91,7 +91,7 @@ public class ThumbnailGeneratorManagerTest
     }
 
     @Test
-    void GetThumbnailUrlNotFound() throws Exception
+    void getThumbnailUrlNotFound() throws Exception
     {
         when(temporaryFileManager.thumbnailFileExists(attachmentReference)).thenReturn(false);
         when(componentManager.getInstance(ThumbnailGenerator.class, OfficeThumbnailGenerator.HINT)).thenReturn(

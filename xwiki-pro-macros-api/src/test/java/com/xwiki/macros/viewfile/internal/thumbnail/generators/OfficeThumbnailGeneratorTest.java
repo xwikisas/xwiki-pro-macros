@@ -81,7 +81,7 @@ public class OfficeThumbnailGeneratorTest
     private TemporaryFileManager temporaryFileManager;
 
     @MockComponent
-    private OfficeManagerWrapper officeManagerWrapper;
+    private OfficeThumbnailGeneratorUtils officeThumbnailGeneratorUtils;
 
     @Mock
     private XWiki wiki;
@@ -98,8 +98,7 @@ public class OfficeThumbnailGeneratorTest
 
     @BeforeEach
     void setUp()
-        throws XWikiException, SerializeResourceReferenceException, IOException, UnsupportedResourceReferenceException,
-        InitializationException
+        throws XWikiException, SerializeResourceReferenceException, IOException, UnsupportedResourceReferenceException
     {
         when(wikiContextProvider.get()).thenReturn(wikiContext);
         when(wikiContext.getWiki()).thenReturn(wiki);
@@ -112,7 +111,7 @@ public class OfficeThumbnailGeneratorTest
     @Test
     void generateThumbnailOfficeNotConnected() throws Exception
     {
-        when(officeManagerWrapper.isOfficeServerConnected()).thenReturn(false);
+        when(officeThumbnailGeneratorUtils.isOfficeServerConnected()).thenReturn(false);
         assertEquals("", officeThumbnailGenerator.generateThumbnail(attachmentReference));
         assertEquals("Unable to generate thumbnail for office file [Attachment testWiki:testSpace.testPage@test.docx]"
             + ". Office server is not connected.", logCapture.getMessage(0));
@@ -121,10 +120,10 @@ public class OfficeThumbnailGeneratorTest
     @Test
     void generateThumbnailOffice() throws Exception
     {
-        when(officeManagerWrapper.isOfficeServerConnected()).thenReturn(true);
+        when(officeThumbnailGeneratorUtils.isOfficeServerConnected()).thenReturn(true);
         InputStream is = new ByteArrayInputStream("test".getBytes());
         when(attachment.getContentInputStream(wikiContext)).thenReturn(is);
-        when(officeManagerWrapper.getImageBytes(is)).thenReturn(createTestPng());
+        when(officeThumbnailGeneratorUtils.getImageBytes(is)).thenReturn(createTestPng());
         assertEquals("content", officeThumbnailGenerator.generateThumbnail(attachmentReference));
     }
 
