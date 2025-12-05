@@ -153,107 +153,73 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
   margin-bottom: 20px;
 }
 
-.macro-section, .macro-layout-section {
+.macro-section, .macro-layout-section, .macro-layout-section &gt; .xwiki-metadata-container.cke_widget_editable {
   display: flex;
   flex-direction: row;
   word-break: break-word;
 }
-
-.macro-layout-section.single .macro-layout-cell {
+.macro-layout-section > .xwiki-metadata-container.cke_widget_editable {
   flex-basis: 100%;
 }
-.macro-layout-section.two_equal .macro-layout-cell {
-  flex-basis: 50%;
-}
-.macro-layout-section.three_equal .macro-layout-cell {
-  flex-basis: 33.33%;
-}
-.macro-layout-section.two_right_sidebar {
-  .macro-layout-cell {
-    flex-basis: 33.33%;
-  }
-  .macro-layout-cell:first-child {
-    flex-basis: 66.66%;
-  }
-}
-.macro-layout-section.two_left_sidebar {
-  .macro-layout-cell {
-    flex-basis: 66.66%;
-  }
-  .macro-layout-cell:first-child {
-    flex-basis: 33.33%;
-  }
-}
-.macro-layout-section.three_with_sidebars {
-  .macro-layout-cell {
-    flex-basis: 25%;
-  }
-  .macro-layout-cell:nth-child(2) {
-    flex-basis: 50%;
-  }
-}
-.macro-layout-section {
-  margin-bottom: 20px;
-}
 
-.macro-layout-section.single .macro-layout-cell {
+.macro-layout-section.single .macro-layout-cell, .macro-layout-section.single .cke_widget_wrapper:has(.macro-layout-cell) {
   flex-basis: 100%;
 }
-.macro-layout-section.two_equal .macro-layout-cell {
+.macro-layout-section.two_equal .macro-layout-cell, .macro-layout-section.two_equal .cke_widget_wrapper:has(.macro-layout-cell) {
   flex-basis: 50%;
 }
-.macro-layout-section.three_equal .macro-layout-cell {
+.macro-layout-section.three_equal .macro-layout-cell, .macro-layout-section.three_equal .cke_widget_wrapper:has(.macro-layout-cell) {
   flex-basis: 33.33%;
 }
 
-.macro-layout-section.four_equal .macro-layout-cell {
+.macro-layout-section.four_equal .macro-layout-cell, .macro-layout-section.four_equal .cke_widget_wrapper:has(.macro-layout-cell) {
   flex-basis: 25%;
 }
 
-.macro-layout-section.five_equal .macro-layout-cell {
+.macro-layout-section.five_equal .macro-layout-cell, .macro-layout-section.five_equal .cke_widget_wrapper:has(.macro-layout-cell) {
   flex-basis: 20%;
 }
 
 .macro-layout-section.two_right_sidebar {
-  .macro-layout-cell {
+  .macro-layout-cell, .cke_widget_wrapper:has(.macro-layout-cell) {
     flex-basis: 33.33%;
   }
-  .macro-layout-cell:first-child {
+  .macro-layout-cell:first-child, .cke_widget_wrapper:has(.macro-layout-cell):first-child {
     flex-basis: 66.66%;
   }
 }
 .macro-layout-section.two_left_sidebar {
-  .macro-layout-cell {
+  .macro-layout-cell, .cke_widget_wrapper:has(.macro-layout-cell) {
     flex-basis: 66.66%;
   }
-  .macro-layout-cell:first-child {
+  .macro-layout-cell:first-child, .cke_widget_wrapper:has(.macro-layout-cell):first-child {
     flex-basis: 33.33%;
   }
 }
 
 .macro-layout-section.three_with_sidebars {
-  .macro-layout-cell {
+  .macro-layout-cell, .cke_widget_wrapper:has(.macro-layout-cell) {
     flex-basis: 25%;
   }
-  .macro-layout-cell:nth-child(2) {
+  .macro-layout-cell:nth-child(2), .cke_widget_wrapper:has(.macro-layout-cell):nth-child(2) {
     flex-basis: 50%;
   }
 }
 
 .macro-layout-section.three_right_sidebars {
-  .macro-layout-cell {
+  .macro-layout-cell, .cke_widget_wrapper:has(.macro-layout-cell) {
     flex-basis: 25%;
   }
-  .macro-layout-cell:nth-child(3) {
+  .macro-layout-cell:nth-child(3), .cke_widget_wrapper:has(.macro-layout-cell):nth-child(3) {
     flex-basis: 50%;
   }
 }
 
 .macro-layout-section.three_left_sidebars {
-  .macro-layout-cell {
+  .macro-layout-cell, .cke_widget_wrapper:has(.macro-layout-cell) {
     flex-basis: 25%;
   }
-  .macro-layout-cell:nth-child(1) {
+  .macro-layout-cell:nth-child(1), .cke_widget_wrapper:has(.macro-layout-cell):nth-child(1) {
     flex-basis: 50%;
   }
 }
