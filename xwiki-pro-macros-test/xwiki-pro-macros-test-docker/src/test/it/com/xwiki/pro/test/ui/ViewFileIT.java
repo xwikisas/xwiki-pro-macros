@@ -41,7 +41,7 @@ import com.xwiki.pro.test.po.confluence.viewfile.ViewFileViewPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@UITest(office = true, servletEngine = ServletEngine.TOMCAT, servletEngineTag = "8", forbiddenEngines = {
+@UITest(office = true, servletEngine = ServletEngine.TOMCAT, forbiddenEngines = {
     // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
     // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
     // host machine.
@@ -85,7 +85,7 @@ public class ViewFileIT
         // it inline.
         createPage(setup, "{{view-file name=\"test.pdf\"/}} {{view-file att--filename=\"test.xls\"/}}", "inlineCalls");
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
-        assertEquals(2, viewFileViewPage.getInlineViewFilesCount());
+        assertEquals(viewFileViewPage.getInlineViewFilesCount(), 2);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ViewFileIT
         // it as a block.
         createPage(setup, "{{view-file name=\"test.pdf\"/}}", "blockCalls");
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
-        assertEquals(1, viewFileViewPage.getBlockViewFiles());
+        assertEquals(viewFileViewPage.getBlockViewFiles(), 1);
     }
 
     @Test
@@ -107,9 +107,9 @@ public class ViewFileIT
         uploadFile("Test.ppt", testConfiguration);
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         // Is displayed
-        assertEquals(1, viewFileViewPage.getBlockViewFiles());
+        assertEquals(viewFileViewPage.getBlockViewFiles(), 1);
         // Check that the mime type was identified.
-        assertTrue(viewFileViewPage.isGenericThumbnail());
+        assertEquals(viewFileViewPage.getViewFileThumbnailType(), "generic");
     }
 
     @Test
@@ -124,9 +124,9 @@ public class ViewFileIT
         currentPage.reloadPage();
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         // Is displayed
-        assertEquals(1, viewFileViewPage.getBlockViewFiles());
+        assertEquals(viewFileViewPage.getBlockViewFiles(), 1);
         // Check that the mime type was identified.
-        assertTrue(viewFileViewPage.isPreviewThumbnail());
+        assertEquals(viewFileViewPage.getViewFileThumbnailType(), "preview");
     }
 
     @Test
@@ -134,12 +134,8 @@ public class ViewFileIT
     void testFullView(TestUtils setup, TestConfiguration testConfiguration)
     {
         ViewPage currentPage =
-            createPage(setup, "{{view-file display=\"full\" name=\"TestPDF.pdf\"/}}", "fullViewPage");
-        // We use a PDF file instead of an Office document for this test because only the newer LibreOffice versions
-        // are available on the official stable download location. Newer LibreOffice builds cannot be executed in the
-        // test Docker environment, as it is missing libraries. The PDF view uses the same view-file async full
-        // display, so it can reliably test the feature. This can be replaced once XWiki parent version is >= 16.6.
-        uploadFile("TestPDF.pdf", testConfiguration);
+            createPage(setup, "{{view-file display=\"full\" name=\"Test.ppt\"/}}", "actualAttachment2");
+        uploadFile("Test.ppt", testConfiguration);
         currentPage.reloadPage();
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
