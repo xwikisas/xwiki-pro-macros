@@ -172,10 +172,9 @@ public class ViewFileMacroPrepareBlocks
         applyPresentationResourcesIfNeeded(fileExtension);
 
         boolean hasPreview = hasPreview(fileExtension);
-        boolean forceCardView = shouldForceCardView(parameters.getDisplay(), context.isInline());
+        ViewFileDisplay displayType = parameters.getDisplay();
+        boolean forceCardView = shouldForceCardView(displayType, context.isInline());
         boolean inLineElement = inEditMode || context.isInline();
-        // False == card, true == Button
-        boolean thumbnailStyle;
 
         String style = "";
         StringBuilder stringBuilder = new StringBuilder();
@@ -190,14 +189,12 @@ public class ViewFileMacroPrepareBlocks
 
         if (stringBuilder.length() > 0) {
             style = stringBuilder.toString();
-            thumbnailStyle = false;
         } else if (forceCardView && inEditMode) {
             style = "width: min-content; min-height: min-content;";
-            thumbnailStyle = false;
-        } else {
-            thumbnailStyle = !forceCardView;
         }
 
+        // False == card, true == Button
+        boolean thumbnailStyle = ViewFileDisplay.button == displayType;
         String thumbnailType = thumbnailStyle ? "Button" : "Card";
         String buttonClass = thumbnailStyle ? "button button-primary" : "";
 
