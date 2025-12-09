@@ -34,7 +34,6 @@
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <xwiki.jacoco.instructionRatio>0.13</xwiki.jacoco.instructionRatio>
   </properties>
   <dependencies>
     <dependency>
@@ -123,12 +122,6 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.commons</groupId>
-      <artifactId>xwiki-commons-tool-test-component</artifactId>
-      <version>${commons.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>

@@ -17,11 +17,7 @@ com.xwiki.macros.tab.internal.TabMacro
 com.xwiki.macros.viewfile.internal.macro.ViewFileMacro
 com.xwiki.macros.viewfile.internal.thumbnail.AttachmentModificationListener
 com.xwiki.macros.viewfile.internal.thumbnail.TemporaryFileManager
-com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGeneratorManager
-com.xwiki.macros.viewfile.internal.thumbnail.generators.OfficeThumbnailGenerator
-com.xwiki.macros.viewfile.internal.thumbnail.generators.PdfThumbnailGenerator
-com.xwiki.macros.viewfile.internal.thumbnail.generators.PresentationThumbnailGenerator
-com.xwiki.macros.viewfile.internal.thumbnail.generators.OfficeThumbnailGeneratorUtils
+com.xwiki.macros.viewfile.internal.thumbnail.ThumbnailGenerator
 com.xwiki.macros.viewfile.internal.AttachmentSizeValidator
 com.xwiki.macros.viewfile.internal.macro.ViewFileResourceManager
 com.xwiki.macros.viewfile.internal.macro.ViewFileExternalBlockManager
