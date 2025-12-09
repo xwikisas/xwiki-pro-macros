@@ -17,7 +17,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile.internal.thumbnail;
+package com.xwiki.macros.viewfile.internal;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -25,7 +25,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -46,6 +51,7 @@ import org.jodconverter.local.LocalConverter;
 import org.jodconverter.local.office.ExternalOfficeManager;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.environment.Environment;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.officeimporter.server.OfficeServer;
 import org.xwiki.officeimporter.server.OfficeServerConfiguration;
@@ -65,6 +71,11 @@ import net.coobird.thumbnailator.Thumbnails;
 @Singleton
 public class ThumbnailGenerator
 {
+    /**
+     * Path to the temporary folder where thumbnails are stored.
+     */
+    public static final String THUMBNAILS_PATH = "viewfilemacro/thumbnails/";
+
     private static final List<String> OFFICE_EXTENSIONS = List.of("odp", "doc", "docx", "odt", "xls", "xlsx", "ods");
 
     private static final String PPT_EXTENSION = "ppt";
@@ -73,12 +84,15 @@ public class ThumbnailGenerator
 
     private static final List<String> PRESENTATION_EXTENSIONS = List.of(PPT_EXTENSION, PPTX_EXTENSION);
 
-    private static final String JPG = "jpg";
+    private static final String JPG_EXTENSION = ".jpg";
 
-    private static final String EMPTY_STRING = "";
+    private static final String JPG = "jpg";
 
     @Inject
     private Logger logger;
+
+    @Inject
+    private Environment environment;
 
     @Inject
     private Provider<XWikiContext> wikiContextProvider;
@@ -92,53 +106,51 @@ public class ThumbnailGenerator
     @Inject
     private OfficeServer officeServer;
 
-    @Inject
-    private TemporaryFileManager temporaryFileManager;
-
     /**
      * Checks if a thumbnail already exists for the given attachment reference, and if not, attempts to create a
-     * thumbnail image and returns the path to it.
+     * thumbnail image and returns the byte array for it.
      *
      * @param attachmentReference the reference of the file for which a thumbnail is requested.
-     * @return the url to the thumbnail as a {@link String} if the image was found or successfully created, or an empty
-     *     String if an error occurs or if the file extension is not supported.
+     * @return the thumbnail content as a byte array if the image was found or successfully created, or an empty byte
+     *     array if an error occurs or if the file extension is not supported.
      */
-    public String getThumbnailUrl(AttachmentReference attachmentReference)
+    public byte[] getThumbnailData(AttachmentReference attachmentReference)
     {
         try {
             if (isOfficeServerConnected()) {
-                if (!temporaryFileManager.thumbnailFileExists(attachmentReference)) {
-                    return generateAndGetThumbnailUrlPath(attachmentReference);
+                File thumbnail = getThumbnailPath(attachmentReference);
+                if (!thumbnail.exists()) {
+                    return generateAndGetThumbnailBytes(attachmentReference);
                 } else {
-                    return temporaryFileManager.getThumbnailURL(attachmentReference);
+                    return Files.readAllBytes(thumbnail.toPath());
                 }
             } else {
-                logger.warn("Unable to generate thumbnail. Office server is not connected.");
-                return EMPTY_STRING;
+                logger.warn("Unable to generate thumbnail byte data. Office server is not connected.");
+                return new byte[0];
             }
         } catch (Exception e) {
-            logger.error("There was an error while attempting to get the thumbnail URL. Root cause is: [{}]",
+            logger.error("There was an error while attempting to get the thumbnail byte data. Root cause is: [{}]",
                 ExceptionUtils.getRootCauseMessage(e));
-            return EMPTY_STRING;
+            return new byte[0];
         }
     }
 
-    private String generateAndGetThumbnailUrlPath(AttachmentReference attachmentReference) throws Exception
+    private byte[] generateAndGetThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
         String extension = getExtension(attachmentReference.getName());
         if (OFFICE_EXTENSIONS.contains(extension)) {
-            return getOfficeThumbnailUrlPath(attachmentReference);
+            return getOfficeThumbnailBytes(attachmentReference);
         } else if (PRESENTATION_EXTENSIONS.contains(extension)) {
-            return getPresentationThumbnailUrlPath(attachmentReference, extension);
+            return getPresentationThumbnailBytes(attachmentReference, extension);
         } else if (extension.equals("pdf")) {
-            return getPDFThumbnailUrlPath(attachmentReference);
+            return getPDFThumbnailBytes(attachmentReference);
         } else {
             logger.warn("Extension type not supported.");
-            return EMPTY_STRING;
+            return new byte[0];
         }
     }
 
-    private String getPDFThumbnailUrlPath(AttachmentReference attachmentReference) throws Exception
+    private byte[] getPDFThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
         XWikiDocument document =
@@ -147,7 +159,7 @@ public class ThumbnailGenerator
         return generateThumbnail(new ByteArrayInputStream(is.readAllBytes()), attachmentReference);
     }
 
-    private String getOfficeThumbnailUrlPath(AttachmentReference attachmentReference) throws Exception
+    private byte[] getOfficeThumbnailBytes(AttachmentReference attachmentReference) throws Exception
     {
         ByteArrayInputStream bais = getPDFContent(attachmentReference);
         return generateThumbnail(bais, attachmentReference);
@@ -171,7 +183,7 @@ public class ThumbnailGenerator
         }
     }
 
-    private String generateThumbnail(ByteArrayInputStream inputStream, AttachmentReference attachmentReference)
+    private byte[] generateThumbnail(ByteArrayInputStream inputStream, AttachmentReference attachmentReference)
         throws Exception
     {
         // Load the PDF document.
@@ -180,15 +192,13 @@ public class ThumbnailGenerator
         // Select the first page (index starts at 0).
         BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 150);
         BufferedImage resized = Thumbnails.of(bim).size(150, 212).asBufferedImage();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(resized, JPG, baos);
+        File thumbnailFile = getThumbnailPath(attachmentReference);
+        ImageIO.write(resized, JPG, thumbnailFile);
         document.close();
-        try (InputStream is = new ByteArrayInputStream(baos.toByteArray())) {
-            return this.temporaryFileManager.createThumbnail(attachmentReference, is);
-        }
+        return Files.readAllBytes(thumbnailFile.toPath());
     }
 
-    private String getPresentationThumbnailUrlPath(AttachmentReference attachmentReference, String extension)
+    private byte[] getPresentationThumbnailBytes(AttachmentReference attachmentReference, String extension)
         throws Exception
     {
         XWikiContext wikiContext = wikiContextProvider.get();
@@ -201,18 +211,18 @@ public class ThumbnailGenerator
             switch (extension) {
                 case PPT_EXTENSION:
                     HSLFSlideShow ppt = new HSLFSlideShow(is);
-                    return getSlideThumbnailURL(ppt, attachmentReference);
+                    return getSlideThumbnail(ppt, attachmentReference);
                 case PPTX_EXTENSION:
                     XMLSlideShow pptx = new XMLSlideShow(is);
-                    return getSlideThumbnailURL(pptx, attachmentReference);
+                    return getSlideThumbnail(pptx, attachmentReference);
                 default:
                     logger.warn("Failed to identify the presentation file extension.");
-                    return EMPTY_STRING;
+                    return new byte[0];
             }
         }
     }
 
-    private String getSlideThumbnailURL(HSLFSlideShow ppt, AttachmentReference attachmentReference) throws Exception
+    private byte[] getSlideThumbnail(HSLFSlideShow ppt, AttachmentReference attachmentReference) throws IOException
     {
         HSLFSlide slide = ppt.getSlides().get(0);
         int width = ppt.getPageSize().width;
@@ -223,10 +233,10 @@ public class ThumbnailGenerator
         graphics.fill(new Rectangle2D.Float(0, 0, width, height));
         slide.draw(graphics);
 
-        return createSlideThumbnail(attachmentReference, img);
+        return getSlideBytes(attachmentReference, img);
     }
 
-    private String getSlideThumbnailURL(XMLSlideShow ppt, AttachmentReference attachmentReference) throws Exception
+    private byte[] getSlideThumbnail(XMLSlideShow ppt, AttachmentReference attachmentReference) throws IOException
     {
         XSLFSlide slide = ppt.getSlides().get(0);
         int width = ppt.getPageSize().width;
@@ -237,17 +247,16 @@ public class ThumbnailGenerator
         graphics.fill(new Rectangle2D.Float(0, 0, width, height));
         slide.draw(graphics);
 
-        return createSlideThumbnail(attachmentReference, img);
+        return getSlideBytes(attachmentReference, img);
     }
 
-    private String createSlideThumbnail(AttachmentReference attachmentReference, BufferedImage img) throws Exception
+    private byte[] getSlideBytes(AttachmentReference attachmentReference, BufferedImage img) throws IOException
     {
         BufferedImage resized = Thumbnails.of(img).size(150, 212).asBufferedImage();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(resized, JPG, baos);
-        try (InputStream is = new ByteArrayInputStream(baos.toByteArray())) {
-            return this.temporaryFileManager.createThumbnail(attachmentReference, is);
-        }
+        File outputFile = getThumbnailPath(attachmentReference);
+        ImageIO.write(resized, JPG, outputFile);
+
+        return Files.readAllBytes(outputFile.toPath());
     }
 
     private String getExtension(String fileName)
@@ -259,5 +268,16 @@ public class ThumbnailGenerator
     {
         this.officeServer.refreshState();
         return this.officeServer.getState() == OfficeServer.ServerState.CONNECTED;
+    }
+
+    private File getThumbnailPath(AttachmentReference attachmentReference)
+    {
+        File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
+        String encodedFileReference = URLEncoder.encode(attachmentReference.toString(), StandardCharsets.UTF_8);
+        // Create directories if they don't exist.
+        if (!tempDir.exists()) {
+            tempDir.mkdirs();
+        }
+        return new File(tempDir, encodedFileReference + JPG_EXTENSION);
     }
 }

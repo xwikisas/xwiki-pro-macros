@@ -33,7 +33,7 @@ import org.xwiki.rendering.listener.Format;
  * @version $Id$
  * @since 1.27.3
  */
-public final class StaticBlockWrapperFactory
+final class StaticBlockWrapperFactory
 {
     private StaticBlockWrapperFactory()
     {
@@ -47,7 +47,7 @@ public final class StaticBlockWrapperFactory
      * @param parameters parameters of the block
      * @return a new block.
      */
-    public static Block constructBlockWrapper(boolean isInline, List<Block> content, Map<String, String> parameters)
+    static Block constructBlockWrapper(boolean isInline, List<Block> content, Map<String, String> parameters)
     {
         if (isInline) {
             // This creates a span. I don't know if there is a better way to create one.

@@ -20,6 +20,7 @@
 package com.xwiki.macros.viewfile.internal.macro;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,21 +39,18 @@ import org.xwiki.model.reference.EntityReferenceSerializer;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.FormatBlock;
+import org.xwiki.rendering.block.GroupBlock;
+import org.xwiki.rendering.block.ImageBlock;
 import org.xwiki.rendering.block.LinkBlock;
 import org.xwiki.rendering.block.MacroBlock;
-import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
-import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
-import com.xwiki.macros.viewfile.internal.macro.async.MacroAsyncManager;
-import com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncFullRenderer;
-import com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncThumbnailRenderer;
 import com.xwiki.macros.viewfile.macro.ViewFileDisplay;
 import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 
@@ -66,32 +64,16 @@ import com.xwiki.macros.viewfile.macro.ViewFileMacroParameters;
 @Singleton
 public class ViewFileMacroPrepareBlocks
 {
-    /**
-     * Class static value.
-     */
-    public static final String CLASS = "class";
-
-    /**
-     * Style static value.
-     */
-    public static final String STYLE = "style";
-
     private static final String PPT = "ppt";
 
     private static final String PPTX = "pptx";
 
     private static final String ODP = "odp";
 
-    /**
-     * Set of all supported office file extensions.
-     */
-    public static final Set<String> OFFICE_FILE_EXTENSIONS =
+    private static final Set<String> OFFICE_FILE_EXTENSIONS =
         Set.of(PPT, PPTX, ODP, "doc", "docx", "odt", "xls", "xlsx", "ods");
 
-    /**
-     * Set of all supported presentation file extensions.
-     */
-    public static final Set<String> PRESENTATION_FILE_EXTENSIONS = Set.of(PPT, PPTX, ODP);
+    private static final Set<String> PRESENTATION_FILE_EXTENSIONS = Set.of(PPT, PPTX, ODP);
 
     private static final LocalDocumentReference PDF_VIEWER_REFERENCE =
         new LocalDocumentReference(List.of("XWiki"), "PDFViewerMacro");
@@ -101,13 +83,25 @@ public class ViewFileMacroPrepareBlocks
 
     private static final String PDF = "pdf";
 
+    private static final String PX = "px";
+
+    private static final String CLASS = "class";
+
+    private static final String STYLE = "style";
+
     private static final String DOWNLOAD = "download";
+
+    private static final String DEFAULT_WIDTH = "100%";
+
+    private static final String DEFAULT_HEIGHT = "1000";
 
     private static final String ERROR_MACRO_ID = "error";
 
     private boolean isOversize;
 
     private boolean inEditMode;
+
+    private String base64;
 
     @Inject
     private ViewFileExternalBlockManager viewFileExternalBlockManager;
@@ -124,9 +118,6 @@ public class ViewFileMacroPrepareBlocks
     @Inject
     private EntityReferenceSerializer<String> referenceSerializer;
 
-    @Inject
-    private MacroAsyncManager asyncManager;
-
     /**
      * Prepares the blocks of the view file macro.
      *
@@ -134,14 +125,16 @@ public class ViewFileMacroPrepareBlocks
      * @param context transformation context of the macro
      * @param inEditMode true if the macro is in edit mode, false otherwise
      * @param attachmentReference reference of the file that should be displayed
+     * @param base64 representation of the preview if it exists.
      * @param isOversize if the file is too big and should not be displayed in full view.
      * @return a list of blocks that will render the macro.
      */
     public List<Block> prepareBlocks(ViewFileMacroParameters parameters, MacroTransformationContext context,
-        AttachmentReference attachmentReference, boolean isOversize, boolean inEditMode) throws Exception
+        AttachmentReference attachmentReference, String base64, boolean isOversize, boolean inEditMode) throws Exception
     {
         viewFileResourceManager.injectBaseResources();
         this.isOversize = isOversize;
+        this.base64 = base64;
         this.inEditMode = inEditMode;
 
         if (parameters.getDisplay() == ViewFileDisplay.full) {
@@ -168,6 +161,7 @@ public class ViewFileMacroPrepareBlocks
     private List<Block> prepareCompactDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
         String fileName, AttachmentReference attachmentReference) throws Exception
     {
+
         String fileExtension = getFileExtension(fileName);
         applyPresentationResourcesIfNeeded(fileExtension);
 
@@ -175,7 +169,7 @@ public class ViewFileMacroPrepareBlocks
         boolean forceCardView = shouldForceCardView(parameters.getDisplay(), context.isInline());
         boolean inLineElement = inEditMode || context.isInline();
         // False == card, true == Button
-        boolean thumbnailStyle;
+        boolean thumbnailStyle = false;
 
         String style = "";
         StringBuilder stringBuilder = new StringBuilder();
@@ -222,15 +216,30 @@ public class ViewFileMacroPrepareBlocks
             innerBlocks.add(collaboraBlock);
         }
         Block wrapperBlock =
-            StaticBlockWrapperFactory.constructBlockWrapper(context.isInline(), innerBlocks, rootElementParameters);
+            StaticBlockWrapperFactory.constructBlockWrapper(inLineElement, innerBlocks, rootElementParameters);
         return List.of(wrapperBlock);
     }
 
-    private Block getImageThumbnail(AttachmentReference attachmentReference, boolean isSpan) throws Exception
+    private Block getImageThumbnail(boolean isSpan)
     {
-        String asyncBlock = asyncManager.getViewFileAsyncBlock(attachmentReference, isSpan, Map.of(), "span",
-            ViewFileAsyncThumbnailRenderer.HINT);
-        return new RawBlock(asyncBlock, Syntax.XHTML_1_0);
+
+        String imageAltTranslation =
+            contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.image.alt");
+        String overlayTextTranslation =
+            contextLocalization.getTranslationPlain("rendering.macro.viewFile.thumbnail.button.overlay");
+        String imageBase64 = "data:image/jpeg;base64," + base64;
+        ResourceReference reference = new ResourceReference(imageBase64, ResourceType.DATA);
+        Block imageBlock =
+            new ImageBlock(reference, false, Map.of(CLASS, "viewfile-thumbnail-image", "alt", imageAltTranslation));
+        Block overlayText =
+            new FormatBlock(List.of(new WordBlock(overlayTextTranslation)), Format.NONE, Map.of(CLASS, "overlay-text"));
+
+        Block overlay =
+            StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(overlayText), Map.of(CLASS, "overlay"));
+
+        Block imageContainer = StaticBlockWrapperFactory.constructBlockWrapper(isSpan, List.of(imageBlock, overlay),
+            Map.of(CLASS, "image-container"));
+        return imageContainer;
     }
 
     private List<Block> prepareFullDisplay(ViewFileMacroParameters parameters, MacroTransformationContext context,
@@ -242,18 +251,33 @@ public class ViewFileMacroPrepareBlocks
         }
         String fileExtension = getFileExtension(fileName);
 
-        if (OFFICE_FILE_EXTENSIONS.contains(fileExtension) || (fileExtension.equalsIgnoreCase(PDF)
-            && isApplicationInstalled(PDF_VIEWER_REFERENCE)))
-        {
-            Map<String, String> renderParameters =
-                Map.of("width", parameters.getWidth(), "height", parameters.getHeight(), "fileExtension",
-                    fileExtension);
-            String asyncBlock = asyncManager.getViewFileAsyncBlock(attachmentReference, false, renderParameters, "div",
-                ViewFileAsyncFullRenderer.HINT);
-            return List.of(new RawBlock(asyncBlock, Syntax.XHTML_1_0));
+        if (OFFICE_FILE_EXTENSIONS.contains(fileExtension)) {
+            return prepareOfficeFile(fileExtension, parameters, attachmentReference, "");
+        } else if (fileExtension.equalsIgnoreCase(PDF) && isApplicationInstalled(PDF_VIEWER_REFERENCE)) {
+            return preparePDF(fileName, parameters);
         }
         // Fallback if the file extension is not a known one.
         return prepareCompactDisplay(parameters, context, fileName, attachmentReference);
+    }
+
+    private List<Block> preparePDF(String fileName, ViewFileMacroParameters parameters)
+    {
+        String width = processDimensionsUnit(parameters.getWidth(), DEFAULT_WIDTH, false);
+        String height = processDimensionsUnit(parameters.getHeight(), DEFAULT_HEIGHT, false);
+        return List.of(new MacroBlock("pdfviewer", Map.of("file", fileName, "height", height, "width", width), false));
+    }
+
+    private List<Block> prepareOfficeFile(String fileExtension, ViewFileMacroParameters parameters,
+        AttachmentReference attachmentReference, String content)
+    {
+        String width = processDimensionsUnit(parameters.getWidth(), DEFAULT_WIDTH, true);
+        String height = processDimensionsUnit(parameters.getHeight(), DEFAULT_HEIGHT + PX, true);
+        Block officeMacroBlock = new MacroBlock("office",
+            Collections.singletonMap("reference", referenceSerializer.serialize(attachmentReference)), content, false);
+        String style = String.format("width:%s; height:%s; overflow:auto", width, height);
+        String elementClass = "viewFileFull " + (PRESENTATION_FILE_EXTENSIONS.contains(fileExtension) ? "box" : "");
+        Block groupBlock = new GroupBlock(List.of(officeMacroBlock), Map.of(CLASS, elementClass, STYLE, style));
+        return List.of(groupBlock);
     }
 
     private boolean isApplicationInstalled(LocalDocumentReference localDocumentReference) throws XWikiException
@@ -299,10 +323,27 @@ public class ViewFileMacroPrepareBlocks
         throws Exception
 
     {
-        if (!isOversize && !thumbnailStyle) {
-            return getImageThumbnail(attachmentReference, isSpan);
+        if (base64 != null && (!base64.isEmpty() && !thumbnailStyle)) {
+            return getImageThumbnail(isSpan);
         }
         // Generic thumbnail.
         return viewFileExternalBlockManager.getMimeTypeBlock(attachmentReference, thumbnailStyle || isSpan);
+    }
+
+    /**
+     * Sadly, the office and pdfviewer are not using compatible units, and we have to make sure that we properly process
+     * them.
+     */
+    private String processDimensionsUnit(String value, String defaultValue, boolean addUnit)
+    {
+        if (StringUtils.isNotBlank(value)) {
+            if (addUnit) {
+                boolean hasUnit = value.endsWith("%") || value.endsWith(PX);
+                return hasUnit ? value : value + PX;
+            } else {
+                return value.endsWith(PX) ? StringUtils.removeEnd(value, PX) : value;
+            }
+        }
+        return defaultValue;
     }
 }

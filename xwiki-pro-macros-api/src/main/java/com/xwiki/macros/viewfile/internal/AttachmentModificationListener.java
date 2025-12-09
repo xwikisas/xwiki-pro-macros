@@ -17,10 +17,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.xwiki.macros.viewfile.internal.thumbnail;
+package com.xwiki.macros.viewfile.internal;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,6 +42,8 @@ import com.xpn.xwiki.internal.event.AbstractAttachmentEvent;
 import com.xpn.xwiki.internal.event.AttachmentDeletedEvent;
 import com.xpn.xwiki.internal.event.AttachmentUpdatedEvent;
 
+import static com.xwiki.macros.viewfile.internal.ThumbnailGenerator.THUMBNAILS_PATH;
+
 /**
  * Listens to attachments delete and update events and attempt to remove the existing thumbnails if they exist.
  *
@@ -57,11 +60,6 @@ public class AttachmentModificationListener extends AbstractEventListener implem
      */
     public static final String HINT = "ViewFileMacroAttachmentEventListener";
 
-    /**
-     * Path to the temporary folder where thumbnails are stored.
-     */
-    public static final String OLD_THUMBNAILS_PATH = "viewfilemacro/";
-
     @Inject
     private Logger logger;
 
@@ -70,9 +68,6 @@ public class AttachmentModificationListener extends AbstractEventListener implem
 
     @Inject
     private AttachmentReferenceResolver<String> attachmentResolver;
-
-    @Inject
-    private TemporaryFileManager temporaryFileManager;
 
     /**
      * Creates an event-listener filtering for AttachmentDeletedEvent and AttachmentUpdatedEvent.
@@ -101,29 +96,32 @@ public class AttachmentModificationListener extends AbstractEventListener implem
 
     private void removeThumbnail(String attachmentName, XWikiDocument document)
     {
+        File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
         AttachmentReference attachmentReference =
             attachmentResolver.resolve(attachmentName, document.getDocumentReference());
-        try {
-            File thumbnail = temporaryFileManager.getThumbnailFile(attachmentReference);
-            if (thumbnail.exists()) {
-                if (thumbnail.delete()) {
-                    logger.info("Successfully removed thumbnail at location: [{}]", thumbnail.getPath());
-                } else {
-                    logger.warn("Failed to remove thumbnail at location: [{}]", thumbnail.getPath());
-                }
+        String encodedFileReference = URLEncoder.encode(attachmentReference.toString(), StandardCharsets.UTF_8);
+
+        File thumbnail = new File(tempDir, encodedFileReference + ".jpg");
+        if (thumbnail.exists()) {
+            if (thumbnail.delete()) {
+                logger.info("Successfully removed thumbnail at location: [{}]", thumbnail.getPath());
+            } else {
+                logger.warn("Failed to remove thumbnail at location: [{}]", thumbnail.getPath());
             }
-        } catch (IOException e) {
-            logger.error("Failed to remove thumbnail at attachment modification.", e);
         }
     }
 
     private void deleteOldFormat()
     {
-        File tempDir = new File(environment.getTemporaryDirectory(), OLD_THUMBNAILS_PATH);
+        File tempDir = new File(environment.getTemporaryDirectory(), THUMBNAILS_PATH);
         // Create directories if they don't exist.
         if (tempDir.exists()) {
             // Check if the old directory format exists and delete it. To be removed in a few months.
-            fileDelete(tempDir);
+            for (File oldFolder : tempDir.listFiles()) {
+                if (oldFolder.isDirectory()) {
+                    fileDelete(oldFolder);
+                }
+            }
         }
     }
 
