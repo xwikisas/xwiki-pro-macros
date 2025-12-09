@@ -53,19 +53,23 @@ public class ViewFileViewPage extends ViewPage
      *
      * @return
      */
-    public String getViewFileThumbnailType()
+    public boolean isPreviewThumbnail()
+    {
+        getDriver().waitUntilElementIsVisible(By.cssSelector(".viewfile-thumbnail-image"));
+        List<WebElement> thumbnails = getDriver().findElements(By.cssSelector(".viewfile-thumbnail-image"));
+        return thumbnails.size() == 1;
+    }
+
+    public boolean isGenericThumbnail()
     {
         List<WebElement> thumbnails = getDriver().findElements(By.cssSelector(".viewfile-thumbnail-image"));
-
-        if (thumbnails.size() == 1) {
-            return "preview";
-        }
-        return "generic";
+        return thumbnails.size() != 1;
     }
 
     public boolean hasLoadedInFullViewMode()
     {
-        List<WebElement> fullView = getDriver().findElements(By.cssSelector(".viewFileFull"));
+        getDriver().waitUntilElementIsVisible(By.cssSelector(".pdfviewer"),100);
+        List<WebElement> fullView = getDriver().findElements(By.cssSelector(".pdfviewer"));
         return fullView.size() > 0;
     }
 }
