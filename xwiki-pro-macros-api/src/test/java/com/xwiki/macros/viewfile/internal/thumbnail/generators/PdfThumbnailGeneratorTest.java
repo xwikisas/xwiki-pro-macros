@@ -29,12 +29,9 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
-import org.xwiki.test.LogLevel;
-import org.xwiki.test.junit5.LogCaptureExtension;
 import org.xwiki.test.junit5.mockito.ComponentTest;
 import org.xwiki.test.junit5.mockito.InjectMockComponents;
 import org.xwiki.test.junit5.mockito.MockComponent;
@@ -56,7 +53,7 @@ import static org.mockito.Mockito.when;
  * @version $Id$
  */
 @ComponentTest
-public class PdfThumbnailGeneratorTest
+class PdfThumbnailGeneratorTest
 {
     private static final String FILENAME = "test.pdf";
 
@@ -65,9 +62,6 @@ public class PdfThumbnailGeneratorTest
 
     @MockComponent
     private Provider<XWikiContext> wikiContextProvider;
-
-    @RegisterExtension
-    private LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.WARN);
 
     @MockComponent
     private XWikiContext wikiContext;
@@ -115,6 +109,5 @@ public class PdfThumbnailGeneratorTest
         when(document.getAttachment(FILENAME)).thenReturn(attachment);
         when(attachment.getContentInputStream(wikiContext)).thenReturn(new ByteArrayInputStream(pdfBytes));
         assertEquals("content", pdfThumbnailGenerator.generateThumbnail(attachmentReference));
-
     }
 }
