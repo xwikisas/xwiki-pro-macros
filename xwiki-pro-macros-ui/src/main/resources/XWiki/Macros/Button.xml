@@ -370,7 +370,14 @@ $services.localization.render('rendering.macro.button.description')
         width: $!width;
       "
       class="btn $escapetool.xml($macro.additionalClass)"&gt;
-      $!services.icon.renderHTML($!icon)
+      #if ("$!icon" != "")
+        #set ($iconHTML = "$!services.icon.renderHTML($icon)")
+        #if ($iconHTML == "")
+          &lt;span class="fa fa-$escapetool.xml($icon)"&gt;&lt;/span&gt;
+        #else
+          $iconHTML
+        #end
+      #end
       $label
     &lt;/button&gt;
   &lt;/a&gt;
