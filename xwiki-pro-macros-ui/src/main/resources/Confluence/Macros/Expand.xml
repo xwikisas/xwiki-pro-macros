@@ -139,7 +139,12 @@ Hello
       <cache>long</cache>
     </property>
     <property>
-      <code>require(['jquery'], function ($) {
+      <code>// The current versions of Safari don't bundle the latest version of WebKit, and because of this it lacks
+// a feature from the HTML standard where the details tag automatically expands when the URL fragment
+// targets an element inside it. Here is the WebKit bug report: https://bugs.webkit.org/show_bug.cgi?id=228843,
+// and we should follow it so we know when the fix reaches Safari. I also opened
+// https://github.com/xwikisas/xwiki-pro-macros/issues/682 on our side to keep track of the issue and avoid forgetting it.
+require(['jquery'], function ($) {
 	var isSafari = navigator.vendor &amp;&amp; navigator.vendor.indexOf('Apple') &gt; -1 &amp;&amp;
 		navigator.userAgent &amp;&amp;
 		navigator.userAgent.indexOf('CriOS') == -1 &amp;&amp;
