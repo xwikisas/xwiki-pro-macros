@@ -53,6 +53,18 @@ rendering.macro.button.parameter.newTab.name=Ouvrir dans un nouvel onglet
 ### Missing: rendering.macro.button.parameter.newTab.description=Denotes whether the page will be opened in a new page or not.
 ### Missing: rendering.macro.button.parameter.icon.name=Icon
 ### Missing: rendering.macro.button.parameter.icon.description=Icon associated with the button, placed before the label.
+### Missing: rendering.macro.button.parameter.type.name=Type
+### Missing: rendering.macro.button.parameter.type.description=Type of the button.
+### Missing: com.xwiki.macros.button.ButtonType.DEFAULT=Default
+### Missing: com.xwiki.macros.button.ButtonType.PRIMARY=Primary
+### Missing: com.xwiki.macros.button.ButtonType.SUCCESS=Success
+### Missing: com.xwiki.macros.button.ButtonType.INFO=Info
+### Missing: com.xwiki.macros.button.ButtonType.WARNING=Warning
+### Missing: com.xwiki.macros.button.ButtonType.DANGER=Danger
+### Missing: rendering.macro.button.parameter.id.name=ID
+### Missing: rendering.macro.button.parameter.id.description=ID of the button element.
+### Missing: rendering.macro.button.parameter.class.name=Class
+### Missing: rendering.macro.button.parameter.class.description=A custom CSS class to apply on the button.
 
 ## Panel macro
 ### Missing: rendering.macro.panel.name=Panel Macro
@@ -264,6 +276,7 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.excerpt-include.description=Includes excerpts from other documents into the current page. The included pages need to contain the simple `excerpt` macro.
 ### Missing: rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
 ### Missing: rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
+### Missing: rendering.macro.excerptinclude.recursiondetected=Recursion detected. Please check the excerpt-include macro parameters so it does not try to include itself.
 
 ##Hide if macro
 ### Missing: rendering.macro.hide-if.name=Hide if
@@ -326,11 +339,11 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.tab-group.parameter.effectType.description=The transition animation between each tab
 ### Missing: rendering.macro.tab-group.parameter.height.name=Height
 ### Missing: rendering.macro.tab-group.parameter.height.description=The height of the main element with the CSS unit
-### Missing: rendering.macro.tab-group.parameter.loopCards.name=Loop cards
+### Missing: rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
 ### Missing: rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
 ### Missing: rendering.macro.tab-group.parameter.nextAfter.name=Next after
 ### Missing: rendering.macro.tab-group.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
-### Missing: rendering.macro.tab-group.parameter.width.name=Height
+rendering.macro.tab-group.parameter.width.name=Height
 ### Missing: rendering.macro.tab-group.parameter.width.description=The width of the main element with the CSS unit
 
 ## User Profile macro
@@ -378,11 +391,11 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.recently-updated.parameter.max.name=max
 ### Missing: rendering.macro.recently-updated.parameter.max.description=Specify the maximum number of results to be displayed. If this parameter is omitted, then a maximum of 15 results are displayed.
 ### Missing: rendering.macro.recently-updated.parameter.theme.name=theme
-### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the appearance of this macro: "concise" - the default list, showing the names of pages which were updated or commented on, the users who made the page modifications and time when the modifications occurred. "social" - lists recent modifications in reverse chronological order, but groups them by user into short time segments. A 'sub' list appears within each user''s time segment, showing the names of pages which they updated or commented on and time when these modifications occurred. "sidebar" - lists recent updates in reverse chronological order, showing the names of pages which were updated or commented on and time when the page modifications occurred. This theme does not show authorship.
+### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the display format of this macro.
 ### Missing: rendering.macro.recently-updated.parameter.showProfilePic.name=showProfilePic
-### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Specify "showProfilePic=true" to display the profile pictures of the users who updated the content.
+### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Check this box to display the profile pictures of the users who updated the content.
 ### Missing: rendering.macro.recently-updated.parameter.hideHeading.name=hideHeading
-### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Determines whether the macro hides or displays the text 'Recently Updated' as a title above the list of content. Only available in wikimarkup and storage format. Accepted values: "true" - Title is hidden, "false" - Title is shown.
+### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.
 ### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the display format of this macro.
 ### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Check this box to display the profile pictures of the users who updated the content.
 ### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.
@@ -411,6 +424,9 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.view-file.parameter.width.description=The viewer width, accepts values in pixels or in percentage. Default value set at 100%.
 ### Missing: rendering.macro.viewFile.modal.title=Content view
 ### Missing: rendering.macro.viewFile.thumbnail.button.title=View file content
+### Missing: rendering.macro.viewFile.thumbnail.button.overlay=View file
+### Missing: rendering.macro.viewFile.thumbnail.button.image.alt=Thumbnail image
 ### Missing: rendering.macro.viewFile.attachmentrequired=Please provide a file to show in the name parameter.
+### Missing: rendering.macro.viewFile.norights=Missing view rights for file
 </content>
 </xwikidoc>
