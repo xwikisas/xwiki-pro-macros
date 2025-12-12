@@ -54,6 +54,134 @@ Hello
   <object>
     <name>Confluence.Macros.Expand</name>
     <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>5c86f503-3027-43ff-9cbe-239cd123c1bd</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <restricted>0</restricted>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <freeText>forbidden</freeText>
+        <largeStorage>0</largeStorage>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>// The current versions of Safari don't bundle the latest version of WebKit, and because of this it lacks
+// a feature from the HTML standard where the details tag automatically expands when the URL fragment
+// targets an element inside it. Here is the WebKit bug report: https://bugs.webkit.org/show_bug.cgi?id=228843,
+// and we should follow it so we know when the fix reaches Safari. I also opened
+// https://github.com/xwikisas/xwiki-pro-macros/issues/682 on our side to keep track of the issue and avoid forgetting it.
+require(['jquery'], function ($) {
+	var isSafari = navigator.vendor &amp;&amp; navigator.vendor.includes('Apple');
+
+	function handleFragment() {
+		let hash = window.location.hash;
+		if (!hash) return;
+
+		let target = $(hash);
+		if (target.length === 0) return;
+
+		target.parents("details").each(function () {
+			this.open = true;
+		});
+
+		target[0].scrollIntoView({ behavior: "auto", block: "start" });
+	}
+	if (isSafari) {
+		console.log("Applying Safari fragment workaround");
+		// On initial load
+		$(document).ready(handleFragment);
+		// On fragment updates
+		$(window).on("hashchange", handleFragment);
+	}
+});</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <object>
+    <name>Confluence.Macros.Expand</name>
+    <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
     <guid>f0033524-8b36-48d8-860c-d8f017f65656</guid>
     <class>
@@ -458,6 +586,7 @@ Hello
 #macro (executeMacro)
 
   #set ($discard = $xwiki.ssx.use('Confluence.Macros.Expand'))
+  #set ($discard = $xwiki.jsx.use('Confluence.Macros.Expand'))
   #set ($title = $wikimacro.parameters.title)
   #if ("$!title" == "")
     #set ($title = $services.promacroexpand.getAutoTitle($wikimacro.content, $xwiki.currentContentSyntaxId))
