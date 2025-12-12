@@ -150,6 +150,9 @@
             #displayConfluenceDiagramModal($id $diagram)
           #end
         #end
+      #elseif ($displayDiagram &amp;&amp; "$!xcontext.macro.params.diagramUrl" != '')
+        ## Use the externalDiagramUrl parameter from the diagram macro instead.
+        {{diagram externalDiagramUrl="$services.rendering.escape($!xcontext.macro.params.diagramUrl, $xwiki.currentContentSyntaxId)"/}}
       #else
         #set($displayDiagram = false)
       #end
