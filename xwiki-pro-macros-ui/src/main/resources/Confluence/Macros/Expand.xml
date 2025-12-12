@@ -145,10 +145,7 @@ Hello
 // and we should follow it so we know when the fix reaches Safari. I also opened
 // https://github.com/xwikisas/xwiki-pro-macros/issues/682 on our side to keep track of the issue and avoid forgetting it.
 require(['jquery'], function ($) {
-	var isSafari = navigator.vendor &amp;&amp; navigator.vendor.indexOf('Apple') &gt; -1 &amp;&amp;
-		navigator.userAgent &amp;&amp;
-		navigator.userAgent.indexOf('CriOS') == -1 &amp;&amp;
-		navigator.userAgent.indexOf('FxiOS') == -1;
+	var isSafari = navigator.vendor &amp;&amp; navigator.vendor.includes('Apple');
 
 	function handleFragment() {
 		let hash = window.location.hash;
@@ -161,7 +158,7 @@ require(['jquery'], function ($) {
 			this.open = true;
 		});
 
-		target[0].scrollIntoView({ behavior: "smooth", block: "start" });
+		target[0].scrollIntoView({ behavior: "auto", block: "start" });
 	}
 	if (isSafari) {
 		console.log("Applying Safari fragment workaround");
