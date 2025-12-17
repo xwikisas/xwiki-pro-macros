@@ -29,7 +29,6 @@
   </parent>
 
   <artifactId>xwiki-pro-macros-test</artifactId>
-  <version>1.29.0-RC-1</version>
   <name>Pro Macros - Tests - Parent POM</name>
   <description>Pro Macros - Tests - Parent POM</description>
   <packaging>pom</packaging>
