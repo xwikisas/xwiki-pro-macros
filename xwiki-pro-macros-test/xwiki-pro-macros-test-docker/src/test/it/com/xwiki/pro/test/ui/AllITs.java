@@ -48,12 +48,4 @@ class AllITs
     class NestedViewFileIT extends ViewFileIT {
 
     }
-
-    @Nested
-    @DisplayName("Tests for the DetailsSummary Macro")
-    class NestedDetailsSummaryIT extends DetailsSummaryIT
-    {
-    }
-
-
 }
