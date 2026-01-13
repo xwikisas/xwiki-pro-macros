@@ -138,9 +138,12 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
             }
             StringBuilder cssStyle = new StringBuilder();
             if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
-                cssStyle.append(parameters.getCssStyle());
+                cssStyle.append(parameters.getCssStyle().trim());
             }
             if (parameters.getEffectDuration() != 0) {
+                if (!cssStyle.isEmpty() && cssStyle.charAt(cssStyle.length() - 1) != ';') {
+                    cssStyle.append(";");
+                }
                 cssStyle.append("transition-duration: ");
                 cssStyle.append(parameters.getEffectDuration());
                 cssStyle.append("s;");
