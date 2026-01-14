@@ -19,6 +19,11 @@
  */
 package com.xwiki.macros.viewfile.internal.macro.async;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,13 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 
+import com.xpn.xwiki.XWikiException;
+import com.xpn.xwiki.doc.XWikiAttachment;
+import com.xpn.xwiki.doc.XWikiAttachmentContent;
+import com.xpn.xwiki.doc.XWikiDocument;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.component.manager.ComponentManager;
@@ -38,10 +50,16 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.TableCellBlock;
+import org.xwiki.rendering.block.TableHeadCellBlock;
+import org.xwiki.rendering.block.TableRowBlock;
+import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.Macro;
 import org.xwiki.rendering.macro.office.OfficeMacroParameters;
+import org.xwiki.rendering.parser.ParseException;
+import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 
@@ -52,6 +70,7 @@ import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
 import com.xwiki.pdfviewer.macro.PDFViewerMacroParameters;
 
 import static com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks.CLASS;
+import static com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks.CSV_FILE_EXTENSIONS;
 import static com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks.OFFICE_FILE_EXTENSIONS;
 import static com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks.PRESENTATION_FILE_EXTENSIONS;
 import static com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks.STYLE;
@@ -106,11 +125,21 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
 
     private HttpSession session;
 
+    private boolean csvFirstLineIsHeader = true;
+
+    private String csvDelimiter;
+
+    private String csvFormat;
+
     @Inject
     private ComponentManager componentManager;
 
     @Inject
     private Provider<XWikiContext> wikiContextProvider;
+
+    @Inject
+    @Named("plain/1.0")
+    private Parser plainTextParser;
 
     @Override
     public void initialize(MacroTransformationContext context, AttachmentReference attachmentReference,
@@ -125,6 +154,9 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         this.transformationContext = context;
         this.targetSyntax = context.getTransformationContext().getTargetSyntax();
         this.attachmentReference = attachmentReference;
+        this.csvFirstLineIsHeader = Boolean.parseBoolean(parameters.getOrDefault("csvFirstLineIsHeader", "true"));
+        this.csvDelimiter = parameters.get("csvDelimiter");
+        this.csvFormat = parameters.get("csvFormat");
         id =
             createId("rendering", "macro", "viewfile", HINT, String.valueOf(attachmentReference.toString().hashCode()));
     }
@@ -174,9 +206,61 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     {
         if (OFFICE_FILE_EXTENSIONS.contains(fileExtension)) {
             return prepareOfficeFile();
-        } else {
+        }
+
+        if (CSV_FILE_EXTENSIONS.contains(fileExtension)) {
+            return prepareCSV();
+        }
+
+        if ("pdf".equals(fileExtension)) {
             return preparePDF();
         }
+
+        return List.of();
+    }
+
+    private List<Block> prepareCSV() throws IOException, XWikiException, ParseException
+    {
+        CSVFormat format = CSVFormat.DEFAULT;
+        if (StringUtils.isNotEmpty(this.csvFormat)) {
+            format = CSVFormat.valueOf(this.csvFormat);
+        }
+
+        CSVFormat.Builder builder = format.builder().setTrim(true);
+        if (StringUtils.isNotEmpty(this.csvDelimiter)) {
+            builder = builder.setDelimiter(this.csvDelimiter);
+        } else if ("tsv".equals(this.fileExtension)) {
+            builder = builder.setDelimiter("\t");
+        }
+
+        if (this.csvFirstLineIsHeader) {
+            builder.setHeader().setSkipHeaderRecord(true);
+        }
+        XWikiContext context = wikiContextProvider.get();
+        XWikiDocument attachDoc = context.getWiki().getDocument(attachmentReference.getDocumentReference(), context);
+        XWikiAttachment attachment = attachDoc.getAttachment(attachmentReference.getName());
+        XWikiAttachmentContent attachmentContent = attachment.getAttachmentContent(context);
+        InputStream attachmentContentIS = attachmentContent.getContentInputStream();
+        CSVParser parser = builder.build().parse(new InputStreamReader(attachmentContentIS));
+        List<String> headerNames = parser.getHeaderNames();
+        List<Block> rows = new ArrayList<>();
+        if (!headerNames.isEmpty()) {
+            List<Block> headers = new ArrayList<>(headerNames.size());
+            for (String header : headerNames) {
+                headers.add(new TableHeadCellBlock(plainTextParser.parse(new StringReader(header)).getChildren()));
+            }
+            rows.add(new TableRowBlock(headers));
+        }
+
+        for (CSVRecord rec : parser) {
+            List<Block> cells = new ArrayList<>(rec.size());
+            for (String val : rec) {
+                cells.add(new TableCellBlock(plainTextParser.parse(new StringReader(val)).getChildren()));
+            }
+
+            rows.add(new TableRowBlock(cells));
+        }
+        return wrapWithFullViewFormat(List.of(new TableBlock(rows)));
     }
 
     private List<Block> prepareOfficeFile() throws Exception
@@ -199,12 +283,16 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session));
         List<Block> officeMacroResult = displayerMacro.execute(macroParameters, "", transformationContext);
         this.wikiContextProvider.get().setRequest(wikiRequest);
+        return wrapWithFullViewFormat(officeMacroResult);
+    }
 
+    private List<Block> wrapWithFullViewFormat(List<Block> wrapped)
+    {
         String processedWidth = processDimensionsUnit(this.width, DEFAULT_WIDTH, true);
         String processedHeight = processDimensionsUnit(this.height, DEFAULT_HEIGHT + PX, true);
         String style = String.format("width:%s; height:%s; overflow:auto", processedWidth, processedHeight);
         String elementClass = "viewFileFull " + (PRESENTATION_FILE_EXTENSIONS.contains(fileExtension) ? "box" : "");
-        Block groupBlock = new GroupBlock(officeMacroResult, Map.of(CLASS, elementClass, STYLE, style));
+        Block groupBlock = new GroupBlock(wrapped, Map.of(CLASS, elementClass, STYLE, style));
         return List.of(groupBlock);
     }
 

@@ -11,8 +11,10 @@
             files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
   <suppress checks="CyclomaticComplexity|NPathComplexity|NCSS|ExecutableStatementCount"
             files="src/main/java/com/xwiki/macros/showhideif/internal/macro/AbstractShowHideIfMacro\.java"/>
-  <suppress checks="NPathComplexity|CyclomaticComplexity|TodoComment"
+  <suppress checks="NPathComplexity|CyclomaticComplexity|TodoComment|JavaNCSS|ExecutableStatementCount"
             files="src/main/java/com/xwiki/macros/tab/internal/TabGroupMacro\.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity"
             files="src/main/java/com/xwiki/macros/tab/internal/TabMacro\.java"/>
+  <suppress checks="ClassFanOutComplexity"
+            files="src/main/java/com/xwiki/macros/viewfile/internal/macro/async/ViewFileAsyncFullRenderer\.java"/>
 </suppressions>

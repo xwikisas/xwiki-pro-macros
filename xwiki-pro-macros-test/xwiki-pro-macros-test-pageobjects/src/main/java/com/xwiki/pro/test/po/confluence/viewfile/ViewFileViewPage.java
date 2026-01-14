@@ -27,6 +27,9 @@ import org.xwiki.test.ui.po.ViewPage;
 
 public class ViewFileViewPage extends ViewPage
 {
+
+    public static final String CSS_SELECTOR_VIEW_FILE_FULL = ".pdfviewer,.viewFileFull";
+
     public String getErrorMessage()
     {
         return getDriver().findElement(By.cssSelector(".box.errormessage")).getText();
@@ -68,8 +71,8 @@ public class ViewFileViewPage extends ViewPage
 
     public boolean hasLoadedInFullViewMode()
     {
-        getDriver().waitUntilElementIsVisible(By.cssSelector(".pdfviewer"),100);
-        List<WebElement> fullView = getDriver().findElements(By.cssSelector(".pdfviewer"));
+        getDriver().waitUntilElementIsVisible(By.cssSelector(CSS_SELECTOR_VIEW_FILE_FULL), 100);
+        List<WebElement> fullView = getDriver().findElements(By.cssSelector(CSS_SELECTOR_VIEW_FILE_FULL));
         return fullView.size() > 0;
     }
 }

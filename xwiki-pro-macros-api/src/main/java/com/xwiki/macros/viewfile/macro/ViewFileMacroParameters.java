@@ -19,6 +19,7 @@
  */
 package com.xwiki.macros.viewfile.macro;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayHidden;
@@ -47,6 +48,12 @@ public class ViewFileMacroParameters
     private String height;
 
     private String attFilename;
+
+    private String csvFormat;
+
+    private String csvDelimiter;
+
+    private boolean csvFirstLineIsHeader = true;
 
     /**
      * @return the name of the attachment.
@@ -161,5 +168,75 @@ public class ViewFileMacroParameters
     public void setAttFilename(String attFilename)
     {
         this.attFilename = attFilename;
+    }
+
+    /**
+     * Set the CSV format to use for CSV files.
+     * @param csvFormat the CSV format
+     * @since 1.30.0
+     */
+    @PropertyId("csvFormat")
+    @PropertyName("CSV Format")
+    @PropertyDescription("Which format to use when displaying a CSV file (possible values: "
+        + "Default, Excel, InformixUnload, InformixUnloadCsv, MongoDBCsv, "
+        + "MongoDBTsv, MySQL, Oracle, PostgreSQLCsv, PostgreSQLText, RFC4180, TDF"
+        + ")")
+    public void setCSVFormat(String csvFormat)
+    {
+        this.csvFormat = csvFormat;
+    }
+
+    /**
+     * @return the format to use for CSV files
+     * @since 1.30.0
+     */
+    public String getCSVFormat()
+    {
+        return StringUtils.defaultString(csvFormat);
+    }
+
+    /**
+     * @return the delimiter to use for CSV files
+     * @since 1.30.0
+     */
+    public String getCSVDelimiter()
+    {
+        return StringUtils.defaultString(csvDelimiter);
+    }
+
+    /**
+     * Set the CSV delimiter to use for CSV files.
+     * @param csvDelimiter the CSV delimiter
+     * @since 1.30.0
+     */
+    @PropertyId("csvDelimiter")
+    @PropertyName("CSV Delimiter")
+    @PropertyDescription("Which delimiter to use when displaying a CSV file. "
+            + "Overrides the CSV format if provided as well. If nothing is provided, ',' is used.")
+    public void setCSVDelimiter(String csvDelimiter)
+    {
+        this.csvDelimiter = csvDelimiter;
+    }
+
+    /**
+     * @return whether the first line is to be considered the header for CSV files
+     * @since 1.30.0
+     */
+    public boolean getCSVFirstLineIsHeader()
+    {
+        return this.csvFirstLineIsHeader;
+    }
+
+    /**
+     * Set whether the first line is to be considered the header for CSV files.
+     * @param csvFirstLineIsHeader the CSV delimiter
+     * @since 1.30.0
+     */
+    @PropertyId("csvFirstLineIsHeader")
+    @PropertyName("CSV first line is header")
+    @PropertyDescription("Whether the first line is to be considered the header when displaying a CSV file")
+    public void setCSVFirstLineIsHeader(boolean csvFirstLineIsHeader)
+    {
+        this.csvFirstLineIsHeader = csvFirstLineIsHeader;
     }
 }

@@ -131,15 +131,39 @@ public class ViewFileIT
 
     @Test
     @Order(6)
-    void testFullView(TestUtils setup, TestConfiguration testConfiguration)
+    void testFullViewPDF(TestUtils setup, TestConfiguration testConfiguration)
     {
         ViewPage currentPage =
-            createPage(setup, "{{view-file display=\"full\" name=\"TestPDF.pdf\"/}}", "fullViewPage");
+            createPage(setup, "{{view-file display=\"full\" name=\"TestPDF.pdf\"/}}", "fullViewPagePDF");
         // We use a PDF file instead of an Office document for this test because only the newer LibreOffice versions
         // are available on the official stable download location. Newer LibreOffice builds cannot be executed in the
         // test Docker environment, as it is missing libraries. The PDF view uses the same view-file async full
         // display, so it can reliably test the feature. This can be replaced once XWiki parent version is >= 16.6.
         uploadFile("TestPDF.pdf", testConfiguration);
+        currentPage.reloadPage();
+        ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
+        assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
+    }
+
+    @Test
+    @Order(7)
+    void testFullViewCSV(TestUtils setup, TestConfiguration testConfiguration)
+    {
+        ViewPage currentPage =
+                createPage(setup, "{{view-file display=\"full\" name=\"test.csv\"/}}", "fullViewPageCSV");
+        uploadFile("test.csv", testConfiguration);
+        currentPage.reloadPage();
+        ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
+        assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
+    }
+
+    @Test
+    @Order(8)
+    void testFullViewTSV(TestUtils setup, TestConfiguration testConfiguration)
+    {
+        ViewPage currentPage =
+                createPage(setup, "{{view-file display=\"full\" name=\"test.tsv\"/}}", "fullViewPageTSV");
+        uploadFile("test.tsv", testConfiguration);
         currentPage.reloadPage();
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
