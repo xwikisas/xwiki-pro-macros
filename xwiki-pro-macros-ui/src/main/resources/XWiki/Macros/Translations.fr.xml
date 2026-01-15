@@ -383,7 +383,6 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Specify "showProfilePic=true" to display the profile pictures of the users who updated the content.
 ### Missing: rendering.macro.recently-updated.parameter.hideHeading.name=hideHeading
 ### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Determines whether the macro hides or displays the text 'Recently Updated' as a title above the list of content. Only available in wikimarkup and storage format. Accepted values: "true" - Title is hidden, "false" - Title is shown.
-### Missing: rendering.macro.recently-updated.parameter.theme.description=Choose the display format of this macro.
 ### Missing: rendering.macro.recently-updated.parameter.showProfilePic.description=Check this box to display the profile pictures of the users who updated the content.
 ### Missing: rendering.macro.recently-updated.parameter.hideHeading.description=Check this box if you would like to hide the text 'Recently Updated' displayed by default as a title above the list of content.
 ### Missing: com.xwiki.macros.internal.recentlyupdated.RecentlyUpdatedThemeEnum.concise=Title, username, time
