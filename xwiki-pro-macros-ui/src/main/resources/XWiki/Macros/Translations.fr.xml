@@ -330,7 +330,7 @@ rendering.macro.team.content.noUsers=Il n'y a personne à afficher.
 ### Missing: rendering.macro.tab-group.parameter.loopCards.name=If true, the tab will loop back to the beginning from the last tab
 ### Missing: rendering.macro.tab-group.parameter.nextAfter.name=Next after
 ### Missing: rendering.macro.tab-group.parameter.nextAfter.description=The number of seconds this tab will stay visible before moving to the next one. If not set, no transition will be done automatically
-### Missing: rendering.macro.tab-group.parameter.width.name=Height
+### Missing: rendering.macro.tab-group.parameter.width.name=Width
 ### Missing: rendering.macro.tab-group.parameter.width.description=The width of the main element with the CSS unit
 
 ## User Profile macro
