@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.xwiki.pro</groupId>
     <artifactId>xwiki-pro-macros-test</artifactId>
-    <version>1.29.1</version>
+    <version>1.29.2-SNAPSHOT</version>
   </parent>
   <artifactId>xwiki-pro-macros-test-docker</artifactId>
   <name>Pro Macros - Tests - Docker</name>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros-ui</artifactId>
-      <version>1.29.1</version>
+      <version>1.29.2-SNAPSHOT</version>
       <type>xar</type>
       <exclusions>
         <!-- Run the functional tests without a license. -->
@@ -101,7 +101,7 @@
     <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
-      <version>1.29.1</version>
+      <version>1.29.2-SNAPSHOT</version>
       <type>xar</type>
       <exclusions>
         <!-- Run the functional tests without a license. -->
