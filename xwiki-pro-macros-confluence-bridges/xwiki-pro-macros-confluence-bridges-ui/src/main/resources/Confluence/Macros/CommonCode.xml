@@ -36,7 +36,19 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity output="false"}}
+  <content>{{groovy output=false}}
+  proMacroCQLQueryExecutor = { query -&gt;
+    def resultList = [];
+    try {
+      def res = query.execute();
+      return [res, null];
+    } catch (Exception e) {
+      return [null, e];
+    }
+  }
+{{/groovy}}
+
+{{velocity output="false"}}
 
 ## See https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html#escaping-special-characters
 ## And https://jira.xwiki.org/browse/XCOMMONS-2926
@@ -130,14 +142,24 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
     #set ($sortAsc = "asc")
   #end
   #set ($discard = $query.bindValue("sort", "$sortField $sortAsc"))
-  #set ($resultList = [])
   #set ($alreadyListed = $collectiontool.getSet())
-  #foreach ($r in $query.execute()[0].results)
-    #set ($ref = "$r.wiki:$r.fullname")
-    #if (!$alreadyListed.contains($ref))
-      #set ($discard = $resultList.add($r))
-      #set ($discard = $alreadyListed.add($ref))
+  #set ($exec = $proMacroCQLQueryExecutor.call($query))
+  #set ($resultList = [])
+  #if ($objecttool.isNull($exec[1]))
+    #foreach ($r in $exec[0][0].results)
+      #set ($ref = "$r.wiki:$r.fullname")
+      #if (!$alreadyListed.contains($ref))
+        #set ($discard = $resultList.add($r))
+        #set ($discard = $alreadyListed.add($ref))
+      #end
     #end
+  #else
+
+    {{html}}
+    #displayException($services.localization.render('rendering.macro.cqlmacro.queryerror'), $exec[1])
+    {{/html}}
+
+    #set ($resultList = $NULL)
   #end
   #setVariable("$results" $resultList)
 #end

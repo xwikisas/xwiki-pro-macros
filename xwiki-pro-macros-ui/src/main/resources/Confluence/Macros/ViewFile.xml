@@ -198,7 +198,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
   });
 
   function initUI(collabora) {
-    const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf';
+    const acceptedExtensions = '.ppt,.pptx,.odp,.doc,.docx,.odt,.xls,.xlsx,.ods,.pdf,.csv,.tsv';
     const styleObserver = new MutationObserver(function(mutations) {
       for (const mutation of mutations) {
         if (mutation.target.style.display === 'none') {

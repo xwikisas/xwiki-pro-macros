@@ -137,13 +137,13 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
                 groupBlock.setParameter("id", slugEntityNameValidation.transform(parameters.getId()));
             }
             StringBuilder cssStyle = new StringBuilder();
-            if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
-                cssStyle.append(parameters.getCssStyle());
-            }
             if (parameters.getEffectDuration() != 0) {
                 cssStyle.append("transition-duration: ");
                 cssStyle.append(parameters.getEffectDuration());
                 cssStyle.append("s;");
+            }
+            if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
+                cssStyle.append(parameters.getCssStyle().trim());
             }
             if (StringUtils.isNotEmpty(cssStyle.toString())) {
                 groupBlock.setParameter("style", cssStyle.toString());

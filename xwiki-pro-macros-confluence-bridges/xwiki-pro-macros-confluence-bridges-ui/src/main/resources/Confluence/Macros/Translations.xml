@@ -116,6 +116,9 @@ rendering.macro.confluence_detailssummary.parameter.headings.description=Which c
 rendering.macro.confluence_detailssummary.parameter.id.name=ID
 rendering.macro.confluence_detailssummary.parameter.id.description=The group of properties to show. If empty, will show page properties without identifiers.
 
+## CQL Macros
+rendering.macro.cqlmacro.queryerror=The CQL query failed. Please check that the query is correct and doesn't reference non-existing documents. Click for details.
+
 # Children macro
 rendering.macro.confluence_children.name=Confluence bridge for Children
 rendering.macro.confluence_children.description=Confluence bridge for the Children macro using the XWiki document tree macro.
