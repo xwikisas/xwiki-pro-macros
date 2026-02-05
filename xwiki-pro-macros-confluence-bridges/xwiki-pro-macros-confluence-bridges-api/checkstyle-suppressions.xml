@@ -11,4 +11,6 @@
             files="src/main/java/com/xwiki/macros/confluence/detailssummary/internal/macro/DetailsSummaryMacro\.java"/>
   <suppress checks="ClassFanOutComplexity"
             files="src/main/java/com/xwiki/macros/confluence/ConfluenceTocZoneMacro\.java"/>
+  <suppress checks="ClassFanOutComplexity"
+            files="src/main/java/com/xwiki/macros/confluence/ConfluenceMetadataOverviewMacro\.java"/>
 </suppressions>

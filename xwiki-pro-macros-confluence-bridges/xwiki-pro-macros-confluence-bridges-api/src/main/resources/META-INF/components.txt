@@ -1,5 +1,6 @@
 com.xwiki.macros.confluence.detailssummary.internal.macro.ConfluenceSummaryProcessor
 com.xwiki.macros.confluence.ConfluenceJiraChartMacro
+com.xwiki.macros.confluence.ConfluenceMetadataOverviewMacro
 com.xwiki.macros.confluence.ConfluenceOutgoingLinksMacro
 com.xwiki.macros.confluence.ConfluenceSpacesScriptService
 com.xwiki.macros.confluence.ConfluenceScriptService
@@ -9,4 +10,6 @@ com.xwiki.macros.confluence.confluencepagetree.internal.macro.ConfluencePageTree
 com.xwiki.macros.confluence.FilterAttachmentsScriptService
 com.xwiki.macros.confluence.GliffyScriptService
 com.xwiki.macros.confluence.internal.cql.CQLUtils
+com.xwiki.macros.confluence.internal.cql.MetadataFieldCQLToSolrConverter
+com.xwiki.macros.confluence.internal.cql.MetadatasetCQLToSolrConverter
 com.xwiki.macros.confluence.detailssummary.internal.macro.DetailsSummaryMacro
