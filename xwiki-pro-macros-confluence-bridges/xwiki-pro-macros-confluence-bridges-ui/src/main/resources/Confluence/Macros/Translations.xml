@@ -116,6 +116,16 @@ rendering.macro.confluence_detailssummary.parameter.headings.description=Which c
 rendering.macro.confluence_detailssummary.parameter.id.name=ID
 rendering.macro.confluence_detailssummary.parameter.id.description=The group of properties to show. If empty, will show page properties without identifiers.
 
+## Metadata Overview macro
+rendering.macro.metadataOverview.failedtogetproperties=Failed to get the properties of the metadata set {0}
+rendering.macro.metadataOverview.failedtoparsecql=Failed to parse the CQL expression. Please double check it.
+rendering.macro.metadataOverview.failedtoexecutecql=Failed to execute the CQL query
+rendering.macro.metadataOverview.noresults=No results.
+rendering.macro.metadataOverview.doc.title=Title
+rendering.macro.metadataOverview.failedtofetchmetadataset=Failed to fetch the metadata set
+rendering.macro.metadataOverview.unexpectedfilterfield=Unexpected filter field {0}.
+rendering.macro.metadataOverview.emptyvalue=-
+
 ## CQL Macros
 rendering.macro.cqlmacro.queryerror=The CQL query failed. Please check that the query is correct and doesn't reference non-existing documents. Click for details.
 
