@@ -5,7 +5,7 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="CyclomaticComplexity|ClassFanOutComplexity|NPathComplexity|ExecutableStatementCount"
+  <suppress checks="ClassFanOutComplexity"
             files="src/main/java/com/xwiki/macros/excerptinclude/internal/macro/ExcerptIncludeMacro\.java"/>
   <suppress checks="NPathComplexity|CyclomaticComplexity|ReturnCount"
             files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
