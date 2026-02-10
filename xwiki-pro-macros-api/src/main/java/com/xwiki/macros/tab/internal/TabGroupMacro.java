@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.validation.EntityNameValidation;
 import org.xwiki.rendering.block.Block;
@@ -47,7 +48,6 @@ import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.skinx.SkinExtension;
-import org.xwiki.text.StringUtils;
 import org.xwiki.xml.XMLUtils;
 
 import com.xwiki.macros.AbstractProMacro;
@@ -130,12 +130,7 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
     {
         ssrx.use("css/tabmacro.css");
         jsrx.use("js/tabmacro.js");
-        String macroId = parameters.getId();
-
-        if (StringUtils.isEmpty(macroId)) {
-            macroId = context.getXDOM().getIdGenerator().generateUniqueId("tab-group");
-        }
-        macroId = slugEntityNameValidation.transform(macroId);
+        String macroId = getMacroId(parameters, context);
 
         Block contentBlocks = this.contentParser.parse(content, context, false, context.isInline());
 
@@ -144,55 +139,95 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
         Optional<Block> defaultTabBlock = macroBlocks.stream()
             .filter(i -> TRUE.equals(i.getParameter(TabMacroParameters.PARAM_NAME_DEFAULT)))
             .findFirst();
-        int defaultTabIndex = defaultTabBlock.isPresent() ? macroBlocks.indexOf(defaultTabBlock.get()) : 0;
+        int defaultTabIndex = defaultTabBlock.map(macroBlocks::indexOf).orElse(0);
 
         int inc = 0;
         for (Block mb : macroBlocks) {
-            boolean isActive = inc == defaultTabIndex;
-            mb.setParameter(TabMacroParameters.PARAM_NAME_DEFAULT, isActive ? TRUE : FALSE);
-            String id = mb.getParameter(ID);
-            if (id == null) {
-                id = macroId + "_" + inc;
-                mb.setParameter(ID, id);
-            }
-            // Set animation parameter for sub macro block
-            if (parameters.getEffectType() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
-                mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffectType().name());
-            }
-            if (parameters.getEffectDuration() != 0 && mb.getParameter(PARAM_NAME_EFFECT_DURATION) == null) {
-                mb.setParameter(PARAM_NAME_EFFECT_DURATION, Integer.toString(parameters.getEffectDuration()));
-            }
-
-            Map<String, String> lbParam = new HashMap<>();
-            lbParam.put(BLOCK_PARAM_ROLE, "presentation");
-            if (isActive) {
-                lbParam.put(BLOCK_PARAM_CLASS, "active");
-            }
-            // We use the raw block because the LinkBlock generate a span element which break bootstrap tabs CSS
-            String escapedId = XMLUtils.escape(slugEntityNameValidation.transform(id));
-            RawBlock linkBlock = new RawBlock(
-                String.format("<a href=\"#%s\" aria-controls=\"%s\" role=\"tab\" data-toggle=\"tab\">%s</a>",
-                    escapedId, escapedId, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),
-                Syntax.HTML_5_0);
-            ulBlocks.add(new ListItemBlock(Collections.singletonList(linkBlock), lbParam));
+            handleBlock(parameters, mb, inc, defaultTabIndex, macroId, ulBlocks);
             inc++;
         }
         Map<String, String> mainBlockParam = new HashMap<>();
-        StringBuilder style = new StringBuilder();
         List<String> mainDivClasses = new LinkedList<>();
         mainDivClasses.add("xwikitabmacro");
+        if (StringUtils.isNotEmpty(parameters.getCssClass())) {
+            mainDivClasses.add(parameters.getCssClass());
+        }
         if (StringUtils.isNotEmpty(parameters.getId())) {
             mainBlockParam.put(ID, parameters.getId());
         }
+        handleSizeParameters(parameters, mainBlockParam);
+        addClassFromTabLocation(parameters, mainDivClasses);
+        mainBlockParam.put(BLOCK_PARAM_CLASS, String.join(" ", mainDivClasses));
+        mainBlockParam.put("data-next-after", Integer.toString(parameters.getNextAfter()));
+        mainBlockParam.put("data-loop-cards", Boolean.toString(parameters.isLoopCards()));
+        List<Block> blockList = getBlockList(parameters, macroBlocks, ulBlocks);
+        Block result = new GroupBlock(blockList, mainBlockParam);
+        return Collections.singletonList(result);
+    }
+
+    private static List<Block> getBlockList(TabGroupMacroParameters parameters, List<Block> macroBlocks,
+        List<Block> ulBlocks)
+    {
+        Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
+        List<Block> blockList;
+        Block tabElementBlock = new BulletedListBlock(ulBlocks, Map.of(
+            BLOCK_PARAM_CLASS, "nav nav-tabs",
+            BLOCK_PARAM_ROLE, "tablist")
+        );
+        if (parameters.getTabLocation() == TabGroupMacroParameters.Location.BOTTOM) {
+            blockList = Arrays.asList(tabContentBlock, tabElementBlock);
+        } else {
+            blockList = Arrays.asList(tabElementBlock, tabContentBlock);
+        }
+        return blockList;
+    }
+
+    private void handleBlock(TabGroupMacroParameters parameters, Block mb, int inc, int defaultTabIndex, String macroId,
+        List<Block> ulBlocks)
+    {
+        boolean isActive = inc == defaultTabIndex;
+        mb.setParameter(TabMacroParameters.PARAM_NAME_DEFAULT, isActive ? TRUE : FALSE);
+        String id = mb.getParameter(ID);
+        if (id == null) {
+            id = macroId + "_" + inc;
+            mb.setParameter(ID, id);
+        }
+        // Set animation parameter for sub macro block
+        if (parameters.getEffectType() != null && mb.getParameter(PARAM_NAME_EFFECT) == null) {
+            mb.setParameter(PARAM_NAME_EFFECT, parameters.getEffectType().name());
+        }
+        if (parameters.getEffectDuration() != 0 && mb.getParameter(PARAM_NAME_EFFECT_DURATION) == null) {
+            mb.setParameter(PARAM_NAME_EFFECT_DURATION, Integer.toString(parameters.getEffectDuration()));
+        }
+
+        Map<String, String> lbParam = new HashMap<>();
+        lbParam.put(BLOCK_PARAM_ROLE, "presentation");
+        if (isActive) {
+            lbParam.put(BLOCK_PARAM_CLASS, "active");
+        }
+        // We use the raw block because the LinkBlock generate a span element which break bootstrap tabs CSS
+        String escapedId = XMLUtils.escape(slugEntityNameValidation.transform(id));
+        RawBlock linkBlock = new RawBlock(
+            String.format("<a href=\"#%s\" aria-controls=\"%s\" role=\"tab\" data-toggle=\"tab\">%s</a>",
+                escapedId, escapedId, XMLUtils.escape(mb.getParameter(TAB_MACRO_PARAM_LABEL))),
+            Syntax.HTML_5_0);
+        ulBlocks.add(new ListItemBlock(Collections.singletonList(linkBlock), lbParam));
+    }
+
+    private static void handleSizeParameters(TabGroupMacroParameters parameters, Map<String, String> mainBlockParam)
+    {
+        StringBuilder style = new StringBuilder();
         if (StringUtils.isNotEmpty(parameters.getWidth())) {
             style.append("width: ").append(parameters.getWidth()).append(CSS_DELIMITER);
         }
         if (StringUtils.isNotEmpty(parameters.getHeight())) {
             style.append("height: ").append(parameters.getHeight()).append(CSS_DELIMITER);
         }
-        if (StringUtils.isNotEmpty(parameters.getCssClass())) {
-            mainDivClasses.add(parameters.getCssClass());
-        }
+        mainBlockParam.put("style", style.toString());
+    }
+
+    private static void addClassFromTabLocation(TabGroupMacroParameters parameters, List<String> mainDivClasses)
+    {
         if (parameters.getTabLocation() != null
             && parameters.getTabLocation() != TabGroupMacroParameters.Location.TOP)
         {
@@ -213,23 +248,17 @@ public class TabGroupMacro extends AbstractProMacro<TabGroupMacroParameters>
                     break;
             }
         }
-        mainBlockParam.put("style", style.toString());
-        mainBlockParam.put(BLOCK_PARAM_CLASS, String.join(" ", mainDivClasses));
-        Block tabElementBlock = new BulletedListBlock(ulBlocks, Map.of(
-            BLOCK_PARAM_CLASS, "nav nav-tabs",
-            BLOCK_PARAM_ROLE, "tablist")
-        );
-        mainBlockParam.put("data-next-after", Integer.toString(parameters.getNextAfter()));
-        mainBlockParam.put("data-loop-cards", Boolean.toString(parameters.isLoopCards()));
-        Block tabContentBlock = new GroupBlock(macroBlocks, Map.of(BLOCK_PARAM_CLASS, "tab-content"));
-        List<Block> blockList;
-        if (parameters.getTabLocation() == TabGroupMacroParameters.Location.BOTTOM) {
-            blockList = Arrays.asList(tabContentBlock, tabElementBlock);
-        } else {
-            blockList = Arrays.asList(tabElementBlock, tabContentBlock);
+    }
+
+    private String getMacroId(TabGroupMacroParameters parameters, MacroTransformationContext context)
+    {
+        String macroId = parameters.getId();
+
+        if (StringUtils.isEmpty(macroId)) {
+            macroId = context.getXDOM().getIdGenerator().generateUniqueId("tab-group");
         }
-        Block result = new GroupBlock(blockList, mainBlockParam);
-        return Collections.singletonList(result);
+        macroId = slugEntityNameValidation.transform(macroId);
+        return macroId;
     }
 
     @Override
