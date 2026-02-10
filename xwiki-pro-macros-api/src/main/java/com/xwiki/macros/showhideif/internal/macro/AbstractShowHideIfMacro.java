@@ -83,7 +83,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
      * @param name name of the macro.
      * @param description description of the macro.
      */
-    public AbstractShowHideIfMacro(String name, String description)
+    protected AbstractShowHideIfMacro(String name, String description)
     {
         super(name, description,
             new DefaultContentDescriptor(CONTENT_DESCRIPTION, false, Block.LIST_BLOCK_TYPE),
@@ -96,21 +96,87 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
         return true;
     }
 
+    private static final class ShowIfEvaluation
+    {
+        private boolean any;
+        private boolean all = true;
+    }
+
     protected boolean doesMatch(ShowHideIfMacroParameters parameters)
         throws MacroExecutionException
     {
-        boolean matchAnyRes = false;
-        boolean matchAllRes = true;
-        XWikiContext xcontext = xwikiContextProvider.get();
-        DocumentReference userReference = xcontext.getUserReference();
+        ShowIfEvaluation ev = new ShowIfEvaluation();
+        DocumentReference userReference = xwikiContextProvider.get().getUserReference();
+        evaluateUserAndGroupParams(parameters, userReference, ev);
+        evaluateAuthParam(parameters, userReference, ev);
+        evaluateDisplayTypeParam(parameters, ev);
+        ShowHideIfMacroParameters.Matcher matchUsing = parameters.getMatchUsing();
+        return (matchUsing == ShowHideIfMacroParameters.Matcher.ANY && ev.any)
+            || (matchUsing == ShowHideIfMacroParameters.Matcher.ALL && ev.all);
+    }
+
+    private void evaluateDisplayTypeParam(ShowHideIfMacroParameters parameters, ShowIfEvaluation r)
+    {
+        if (parameters.getDisplayType() != null
+            && parameters.getDisplayType() != ShowHideIfMacroParameters.DisplayType.NONE)
+        {
+            XWikiContext xcontext = xwikiContextProvider.get();
+            boolean isExportPrintable = "export".equalsIgnoreCase(xcontext.getAction());
+            switch (parameters.getDisplayType()) {
+                case DEFAULT:
+                    if (isExportPrintable) {
+                        r.all = false;
+                    } else {
+                        r.any = true;
+                    }
+                    break;
+                case PRINTABLE:
+                    if (isExportPrintable) {
+                        r.any = true;
+                    } else {
+                        r.all = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private static void evaluateAuthParam(ShowHideIfMacroParameters parameters, DocumentReference userReference,
+        ShowIfEvaluation ev)
+    {
         ShowHideIfMacroParameters.AuthType authTypeParam = parameters.getAuthenticationType();
+        switch (authTypeParam) {
+            case AUTHENTICATED:
+                if (userReference == null) {
+                    ev.all = false;
+                } else {
+                    ev.any = true;
+                }
+                break;
+            case ANONYMOUS:
+                if (userReference == null) {
+                    ev.any = true;
+                } else {
+                    ev.all = false;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void evaluateUserAndGroupParams(ShowHideIfMacroParameters parameters, DocumentReference userReference,
+        ShowIfEvaluation ev) throws MacroExecutionException
+    {
         if (userReference != null) {
             UserReferenceList usersParam = parameters.getUsers();
             if (!CollectionUtils.isEmpty(usersParam)) {
                 boolean res = usersParam.stream()
                     .anyMatch(u -> u.equals(userReference));
-                matchAnyRes |= res;
-                matchAllRes &= res;
+                ev.any |= res;
+                ev.all &= res;
             }
             GroupReferenceList groupsParam = parameters.getGroups();
             if (!CollectionUtils.isEmpty(groupsParam)) {
@@ -122,54 +188,10 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
                         "Can't check for group member", e);
                 }
                 boolean res = !CollectionUtils.intersection(userGroupsMember, groupsParam).isEmpty();
-                matchAnyRes |= res;
-                matchAllRes &= res;
+                ev.any |= res;
+                ev.all &= res;
             }
         }
-        switch (authTypeParam) {
-            case AUTHENTICATED:
-                if (userReference == null) {
-                    matchAllRes = false;
-                } else {
-                    matchAnyRes = true;
-                }
-                break;
-            case ANONYMOUS:
-                if (userReference == null) {
-                    matchAnyRes = true;
-                } else {
-                    matchAllRes = false;
-                }
-                break;
-            default:
-                break;
-        }
-
-        if (parameters.getDisplayType() != null
-            && parameters.getDisplayType() != ShowHideIfMacroParameters.DisplayType.NONE)
-        {
-            boolean isExportPrintable = "export".equalsIgnoreCase(xcontext.getAction());
-            switch (parameters.getDisplayType()) {
-                case DEFAULT:
-                    if (isExportPrintable) {
-                        matchAllRes = false;
-                    } else {
-                        matchAnyRes = true;
-                    }
-                    break;
-                case PRINTABLE:
-                    if (isExportPrintable) {
-                        matchAnyRes = true;
-                    } else {
-                        matchAllRes = false;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        return (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ANY && matchAnyRes)
-            || (parameters.getMatchUsing() == ShowHideIfMacroParameters.Matcher.ALL && matchAllRes);
     }
 
     /**
