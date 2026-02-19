@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
- * TOOD DELETE ME WHEN UPGRADING THE PARENT TO 17.10
+ * TODO DELETE ME WHEN UPGRADING THE PARENT TO 17.10
  * Handles the loading of the PDF file. We use reflection because the newer versions of the platform (17+) upgraded the
  * PDF box to 3+ and in this version the load is done through a loader instead of the PDDocument.
  *
