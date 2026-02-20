@@ -25,7 +25,8 @@ import java.lang.reflect.Method;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
- * TODO DELETE ME WHEN UPGRADING THE PARENT TO 17.10
+ * TODO This class should be deleted once we upgrade to a XWiki parent version >= 17.10.1, which includes
+ * XWIKI-21258:Upgrade to Apache PDFBox 3.0.6. This class should be then replaced by {org.apache.pdfbox.Loader}
  * Handles the loading of the PDF file. We use reflection because the newer versions of the platform (17+) upgraded the
  * PDF box to 3+ and in this version the load is done through a loader instead of the PDDocument.
  *
