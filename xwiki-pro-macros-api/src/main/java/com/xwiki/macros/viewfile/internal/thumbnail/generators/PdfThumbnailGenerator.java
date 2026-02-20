@@ -57,7 +57,7 @@ public class PdfThumbnailGenerator extends AbstractOfficePdfThumbnailGenerator
             wikiContext.getWiki().getDocument(attachmentReference.getDocumentReference(), wikiContext);
         InputStream is = document.getAttachment(attachmentReference.getName()).getContentInputStream(wikiContext);
         // Load the PDF document.
-        try (PDDocument pdDoc = PDDocument.load(is)) {
+        try (PDDocument pdDoc = PDDocumentFactory.load(is)) {
             PDFRenderer pdfRenderer = new PDFRenderer(pdDoc);
             // Select the first page (index starts at 0).
             return saveThumbnail(pdfRenderer.renderImageWithDPI(0, 150), attachmentReference);
