@@ -99,6 +99,12 @@ public class ExpandScriptService implements ScriptService
             logger.error("Could not parse content", e);
             return null;
         }
+
+        return getAutoTitle(syntaxId, xdom);
+    }
+
+    private String getAutoTitle(String syntaxId, XDOM xdom)
+    {
         List<Block> candidates = xdom.getBlocks(
             new OrBlockMatcher(
                 new ClassBlockMatcher(HeaderBlock.class),

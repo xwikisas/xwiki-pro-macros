@@ -5,16 +5,15 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-  <suppress checks="CyclomaticComplexity|ClassFanOutComplexity|NPathComplexity|ExecutableStatementCount"
+  <!-- ClassFanOutComplexity is mostly triggered because manipulating both XDOM and macros produces a lot of imports.
+   Splitting the code into several files to address the warning probably complexifies it, which would be
+  counter-productive -->
+  <suppress checks="ClassFanOutComplexity"
             files="src/main/java/com/xwiki/macros/excerptinclude/internal/macro/ExcerptIncludeMacro\.java"/>
-  <suppress checks="NPathComplexity|CyclomaticComplexity|ReturnCount"
-            files="src/main/java/com/xwiki/macros/script/ExpandScriptService\.java"/>
-  <suppress checks="CyclomaticComplexity|NPathComplexity|NCSS|ExecutableStatementCount"
-            files="src/main/java/com/xwiki/macros/showhideif/internal/macro/AbstractShowHideIfMacro\.java"/>
-  <suppress checks="NPathComplexity|CyclomaticComplexity|TodoComment|JavaNCSS|ExecutableStatementCount"
-            files="src/main/java/com/xwiki/macros/tab/internal/TabGroupMacro\.java"/>
-  <suppress checks="NPathComplexity|CyclomaticComplexity"
-            files="src/main/java/com/xwiki/macros/tab/internal/TabMacro\.java"/>
+
+  <!-- ClassFanOutComplexity is mostly triggered because manipulating both XDOM and macros produces a lot of imports.
+   Splitting the code into several files to address the warning probably complexifies it, which would be
+  counter-productive -->
   <suppress checks="ClassFanOutComplexity"
             files="src/main/java/com/xwiki/macros/viewfile/internal/macro/async/ViewFileAsyncFullRenderer\.java"/>
 </suppressions>
