@@ -263,6 +263,34 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         return wrapWithFullViewFormat(List.of(new TableBlock(rows)));
     }
 
+    /**
+     * Since the async block renderer can't handle macro blocks, manually remove the macro block and replace it with the
+     * gallery div. This is a workaround for:
+     * <a href="https://github.com/xwikisas/xwiki-pro-macros/issues/703">#703: View-File macro displays empty div for
+     * pptx files in full mode</a>
+     */
+    private void removeMacroBlock(List<Block> officeMacroResult)
+    {
+        int maxDepth = 5;
+        Block maybeExpandedMacroBlock = officeMacroResult.get(0);
+        for (int i = 0; i < maxDepth; i++) {
+            if (maybeExpandedMacroBlock instanceof MacroBlock) {
+                Block galleryContent = maybeExpandedMacroBlock.getChildren().get(0);
+                Block fakeGalleryBlock = new GroupBlock(List.of(galleryContent), Map.of(CLASS, "gallery"));
+                galleryContent.setParent(fakeGalleryBlock);
+                if (maybeExpandedMacroBlock == officeMacroResult.get(0)) {
+                    officeMacroResult.remove(0);
+                    officeMacroResult.add(fakeGalleryBlock);
+                    fakeGalleryBlock.setParent(maybeExpandedMacroBlock.getParent());
+                } else {
+                    maybeExpandedMacroBlock.getParent().setChildren(List.of(fakeGalleryBlock));
+                }
+                break;
+            }
+            maybeExpandedMacroBlock = maybeExpandedMacroBlock.getChildren().get(0);
+        }
+    }
+
     private List<Block> prepareOfficeFile() throws Exception
     {
         AbstractMacro<OfficeMacroParameters> displayerMacro = componentManager.getInstance(Macro.class, OFFICE_HINT);
@@ -283,6 +311,7 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session));
         List<Block> officeMacroResult = displayerMacro.execute(macroParameters, "", transformationContext);
         this.wikiContextProvider.get().setRequest(wikiRequest);
+        removeMacroBlock(officeMacroResult);
         return wrapWithFullViewFormat(officeMacroResult);
     }
 

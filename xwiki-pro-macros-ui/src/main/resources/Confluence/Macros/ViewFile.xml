@@ -363,6 +363,8 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     });
   }
+
+  $('.viewFileFull .gallery').each((index, el) =&gt; new XWiki.Gallery(el));
 });</code>
     </property>
     <property>
