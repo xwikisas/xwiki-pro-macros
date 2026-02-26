@@ -264,7 +264,7 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     }
 
     /**
-     * Since the async block renderer can't handle macro blocks, manually remove the macro block and replace it with the
+     * Since the html renderer ignores macro blocks, manually remove the macro block and replace it with the
      * gallery div. This is a workaround for:
      * <a href="https://github.com/xwikisas/xwiki-pro-macros/issues/703">#703: View-File macro displays empty div for
      * pptx files in full mode</a>
