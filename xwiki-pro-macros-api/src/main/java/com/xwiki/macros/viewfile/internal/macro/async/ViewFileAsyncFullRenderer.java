@@ -33,10 +33,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 
-import com.xpn.xwiki.XWikiException;
-import com.xpn.xwiki.doc.XWikiAttachment;
-import com.xpn.xwiki.doc.XWikiAttachmentContent;
-import com.xpn.xwiki.doc.XWikiDocument;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -50,10 +46,12 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.TableBlock;
+import org.xwiki.rendering.block.XDOM;
+import org.xwiki.rendering.internal.util.DefaultErrorBlockGenerator;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.Macro;
@@ -62,8 +60,14 @@ import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.rendering.transformation.TransformationContext;
+import org.xwiki.rendering.transformation.TransformationException;
 
 import com.xpn.xwiki.XWikiContext;
+import com.xpn.xwiki.XWikiException;
+import com.xpn.xwiki.doc.XWikiAttachment;
+import com.xpn.xwiki.doc.XWikiAttachmentContent;
+import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.web.XWikiRequest;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
 import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
@@ -196,10 +200,38 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     {
         try {
             List<Block> result = prepareFullDisplay();
+            fixRenderingSyntax(result.get(0));
             return new CompositeBlock(result);
         } catch (Exception e) {
-            throw new RenderingException("Failed to render asynchronously the work items displayer.", e);
+            return new CompositeBlock(
+                new DefaultErrorBlockGenerator().generateErrorBlocks(this.isInline(), "rendering.async.error.failed",
+                    "Failed to execute asynchronous content", null, null, e));
         }
+    }
+
+    /**
+     * Ensure that the block is rendered in the right syntax.
+     * <br>
+     * See <a href="https://github.com/xwikisas/xwiki-pro-macros/issues/703">View-File macro displays empty div for pptx
+     * files in full mode #703</a>
+     *
+     * @param block the block to set the target syntax of
+     */
+    private void fixRenderingSyntax(Block block) throws TransformationException
+    {
+        XDOM xdom = null;
+        if (block instanceof XDOM) {
+            xdom = (XDOM) block;
+        } else {
+            xdom = new XDOM(Collections.singletonList(block));
+        }
+        TransformationContext tempTransformationContext =
+            new TransformationContext(xdom, this.transformationContext.getSyntax(),
+                this.transformationContext.getTransformationContext().isRestricted());
+        tempTransformationContext.setTargetSyntax(
+            this.transformationContext.getTransformationContext().getTargetSyntax());
+        tempTransformationContext.setId(this.transformationContext.getTransformationContext().getId());
+        transform(block, tempTransformationContext);
     }
 
     private List<Block> prepareFullDisplay() throws Exception
@@ -263,34 +295,6 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         return wrapWithFullViewFormat(List.of(new TableBlock(rows)));
     }
 
-    /**
-     * Since the html renderer ignores macro blocks, manually remove the macro block and replace it with the
-     * gallery div. This is a workaround for:
-     * <a href="https://github.com/xwikisas/xwiki-pro-macros/issues/703">#703: View-File macro displays empty div for
-     * pptx files in full mode</a>
-     */
-    private void removeMacroBlock(List<Block> officeMacroResult)
-    {
-        int maxDepth = 5;
-        Block maybeExpandedMacroBlock = officeMacroResult.get(0);
-        for (int i = 0; i < maxDepth; i++) {
-            if (maybeExpandedMacroBlock instanceof MacroBlock) {
-                Block galleryContent = maybeExpandedMacroBlock.getChildren().get(0);
-                Block fakeGalleryBlock = new GroupBlock(List.of(galleryContent), Map.of(CLASS, "gallery"));
-                galleryContent.setParent(fakeGalleryBlock);
-                if (maybeExpandedMacroBlock == officeMacroResult.get(0)) {
-                    officeMacroResult.remove(0);
-                    officeMacroResult.add(fakeGalleryBlock);
-                    fakeGalleryBlock.setParent(maybeExpandedMacroBlock.getParent());
-                } else {
-                    maybeExpandedMacroBlock.getParent().setChildren(List.of(fakeGalleryBlock));
-                }
-                break;
-            }
-            maybeExpandedMacroBlock = maybeExpandedMacroBlock.getChildren().get(0);
-        }
-    }
-
     private List<Block> prepareOfficeFile() throws Exception
     {
         AbstractMacro<OfficeMacroParameters> displayerMacro = componentManager.getInstance(Macro.class, OFFICE_HINT);
@@ -311,7 +315,6 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session));
         List<Block> officeMacroResult = displayerMacro.execute(macroParameters, "", transformationContext);
         this.wikiContextProvider.get().setRequest(wikiRequest);
-        removeMacroBlock(officeMacroResult);
         return wrapWithFullViewFormat(officeMacroResult);
     }
 
