@@ -200,7 +200,7 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     {
         try {
             List<Block> result = prepareFullDisplay();
-            fixRenderingSyntax(result.get(0));
+            renderingTransform(result.get(0));
             return new CompositeBlock(result);
         } catch (Exception e) {
             return new CompositeBlock(
@@ -210,14 +210,12 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     }
 
     /**
-     * Ensure that the block is rendered in the right syntax.
-     * <br>
-     * See <a href="https://github.com/xwikisas/xwiki-pro-macros/issues/703">View-File macro displays empty div for pptx
-     * files in full mode #703</a>
+     * This transformation is needed because the renderer expects a HTML type block; otherwise the content will be
+     * dropped.
      *
-     * @param block the block to set the target syntax of
+     * @param block the block to apply the transformation to
      */
-    private void fixRenderingSyntax(Block block) throws TransformationException
+    private void renderingTransform(Block block) throws TransformationException
     {
         XDOM xdom = null;
         if (block instanceof XDOM) {
