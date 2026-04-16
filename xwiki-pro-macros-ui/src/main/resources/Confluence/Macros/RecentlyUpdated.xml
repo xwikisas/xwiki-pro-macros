@@ -173,7 +173,11 @@ There are only a few things that are not supported compared to the Confluence ma
 require(['jquery'], $ =&gt; {
   const MACRO_SERVICE_URL = new XWiki.Document(
     XWiki.Model.resolve('Confluence.Macros.RecentlyUpdatedService', XWiki.EntityType.DOCUMENT)
-  ).getURL('get');
+  ).getURL('get', $.param({
+    xpage: 'plain',
+    outputSyntax: 'plain',
+    fromAjax: true
+  })) + '&amp;';
 
   /*
    * Query new results and append them to the page
@@ -185,14 +189,7 @@ require(['jquery'], $ =&gt; {
       return;
     }
 
-    const urlParams = [
-      'xpage=plain',
-      'outputSyntax=plain',
-      'fromAjax=true',
-      'macroOptions=' + encodeURIComponent(macro.dataset.options),
-    ].join('&amp;');
-    const url = MACRO_SERVICE_URL + '?' + urlParams;
-    fetch(url)
+    fetch(MACRO_SERVICE_URL + macro.dataset.options)
     .then(function (response) {
       if (!response.ok) {
         throw new Error('An error occured fetching new results.');
@@ -926,14 +923,10 @@ require(['jquery'], $ =&gt; {
 #macro (initOptionsFromParameters $return)
   ## Gather every parameter in an option object that will be returned
   #set ($options = {})
-  ## Gather some data to be send to the client to be cached
-  #set ($options.typesMetadata = {})
-  #foreach ($type in $TYPES)
-    #set ($discard = $options.typesMetadata.put("$type", {}))
-  #end
 
   ## Authors
   #set ($options.authors = "$!stringtool.strip($!stringtool.join($!wikimacro.parameters.author, ','))")
+
   ## Wiki &amp; Spaces
   #set ($excludedSpaces = "$!xcontext.macro.params.excludedSpaces")
   #set ($confluenceSpacesString = "$!stringtool.strip($!xcontext.macro.params.spaces)")
@@ -979,10 +972,8 @@ require(['jquery'], $ =&gt; {
   #set ($options.types = $types)
 
   ## Offset &amp; Limit
-  #set ($offset = 0)
-  #set ($options.offset = $offset)
-  #set ($limit = $!wikimacro.parameters.max)
-  #set ($options.limit = $limit)
+  #set ($options.offset = 0)
+  #set ($options.limit = $wikimacro.parameters.max)
 
   ## Theme
   #set ($availableTheme = ['concise', 'social', 'sidebar'])

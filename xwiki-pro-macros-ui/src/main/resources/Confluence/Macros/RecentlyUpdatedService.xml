@@ -96,7 +96,7 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   #end
 #end
 
-#macro (queryElements $type $options $return)
+#macro (queryElements $type $limit $offset $options $return)
   #set ($fq = [])
   #if ($type == "attachment")
     #set($typeField = "ATTACHMENT")
@@ -143,8 +143,8 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   ## Query params
   #set ($discard = $query.bindValue('fq', $fq))
   #set ($discard = $query.bindValue('sort', "$versionField desc"))
-  #set ($discard = $query.setOffset($options.offset))
-  #set ($discard = $query.setLimit($options.limit))
+  #set ($discard = $query.setOffset($offset))
+  #set ($discard = $query.setLimit($limit))
   #set ($results = $query.execute())
   #if ($results.isEmpty())
     ## Return
@@ -201,27 +201,25 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 ## For each possible type of result,
 ## fetch new results by executing the associated query
 #macro (fetchResults_queries $queryResults $options)
+  ## Set the limit to (limit + 1), so that we are able to tell
+  ## whether the query has more results to come after the set limit
+  #set ($limit = $options.limit + 1)
   #foreach ($type in $TYPES)
-    #set ($typeMetadata = $options.typesMetadata.get("$type"))
-    ## Customize options for query
-    #set ($typeOptions = $options.clone())
     ## Update offset based on previous used results count
     ## If this is the first time fetching results, init some values
-    #if ("$!typeMetadata.offset" == '')
-      #set ($typeMetadata.offset = 0)
-      #set ($typeMetadata.hasNext = true)
+    #if ($options["${type}-offset"] == $NULL)
+      #set ($options["${type}-offset"] = 0)
+      #set ($options["${type}-hasNext"] = true)
     #end
-    ## Set the limit to (limit + 1), so that we are able to tell
-    ## whether the query has more results to come after the set limit
-    #set ($typeOptions.offset = $typeMetadata.offset)
-    #set ($typeOptions.limit = $options.limit + 1)
+    #set ($offset = $options["${type}-offset"])
+    #set ($hasNext = $options["${type}-hasNext"])
     ## Fetch results if needed
-    #if ($options.types.contains($type) &amp;&amp; $typeMetadata.hasNext)
-      #queryElements($type $typeOptions $results)
-      #set ($typeMetadata.fetchedCountTotal = $results.size())
+    #if ($options.types.contains($type) &amp;&amp; $hasNext)
+      #queryElements($type $limit $offset $options $results)
+      #set ($options["${type}-fetchedCountTotal"] = $results.size())
       #set ($discard = $queryResults.add($results))
     #else
-      #set ($typeMetadata.fetchedCountTotal = 0)
+      #set ($options["${type}-fetchedCountTotal"] = 0)
     #end
   #end
 #end
@@ -289,31 +287,32 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
 #macro (fetchResults_updateMetadata $results $options)
   ## Init needed metadata
   #foreach ($type in $TYPES)
-    #set ($typeMetadata = $options.typesMetadata.get("$type"))
-    #set ($typeMetadata.fetchedCountUsed = 0)
+    #set ($options["${type}-fetchedCountUsed"] = 0)
   #end
   ## Find how many results of each type were used in the end
   #foreach ($result in $results)
-    #set ($typeMetadata = $options.typesMetadata.get("$result.type"))
-    #set ($typeMetadata.fetchedCountUsed = $typeMetadata.fetchedCountUsed + 1)
+    #set ($k = "${result.type}-fetchedCountUsed")
+    #set ($options[$k] = $options[$k] + 1)
   #end
   ## Update type metadata
-  #set ($options.typesMetadata.hasNext = false)
+  #set ($options.hasNext = false)
   #foreach ($type in $TYPES)
-    #set ($typeMetadata = $options.typesMetadata.get("$type"))
-    #set ($typeMetadata.offset = $typeMetadata.offset + $typeMetadata.fetchedCountUsed)
+    #set ($options["${type}-offset"] = $options["${type}-offset"] + $options["${type}-fetchedCountUsed"])
     ## Compute if there are next results
-    #set ($hasReachedLimit = $typeMetadata.fetchedCountTotal &lt;= $options.limit)
-    #set ($hasUsedAllCurrentResults = $typeMetadata.fetchedCountTotal == $typeMetadata.fetchedCountUsed)
+    #set ($hasReachedLimit = $options["${type}-fetchedCountTotal"] &lt; $options.limit)
+    #set ($hasUsedAllCurrentResults = $options["${type}-fetchedCountTotal"] == $options["${type}-fetchedCountUsed"])
     #set ($hasUsedEveryResults = $hasReachedLimit &amp;&amp; $hasUsedAllCurrentResults)
-    #set ($typeMetadata.hasNext = !$hasUsedEveryResults)
-    #if ($typeMetadata.hasNext)
-      #set ($options.typesMetadata.hasNext = true)
+    #if (!$hasUsedEveryResults)
+      #set ($options.hasNext = true)
     #end
   #end
 #end
 
 #macro (fetchResults $options $return)
+  #if ($options.limit == $NULL)
+    #set ($options.limit = 15)
+  #end
+  #set ($options.limit = $mathtool.min($options.limit, 1000))
   #set ($queryResults = [])
   #fetchResults_queries($queryResults, $options)
   #fetchResults_mergeSortLimit($queryResults $options $results)
@@ -451,17 +450,37 @@ $stringtool.replaceEach($v, $solrSpecialChars, $escapedSolrSpecialChars)##
   ## that will be passed back to the service when clicking the "show more" button
   &lt;div
     class="recently-updated-options hidden"
-    data-options="$!escapetool.xml($jsontool.serialize($options))"
-    data-has-next="$!escapetool.xml($options.typesMetadata.hasNext)"&gt;
+    data-options="$!escapetool.xml($!escapetool.url($options))"
+    data-has-next="$!escapetool.xml($options.hasNext)"&gt;
   &lt;/div&gt;
 #end
 {{/velocity}}
 
 {{velocity}}
 #if ("$!request.fromAjax" == "true")
-  #set ($options = $jsontool.fromString($request.macroOptions))
+  #set ($options = {
+    "limit": $numbertool.toNumber($request.limit).intValue(),
+    "types": $request.getParameterValues("types"),
+    "theme": $request.theme,
+    "socialThemePreviousAuthor": $request.socialThemePreviousAuthor,
+    "showProfilePic": $showProfilePic,
+    "wiki": $request.wiki,
+    "tags": $request.tags,
+    "spaces": $request.spaces,
+    "authors": $request.authors,
+    "page-offset": $numbertool.toNumber($request["page-offset"]).intValue(),
+    "blogpost-offset": $numbertool.toNumber($request["blogpost-offset"]).intValue(),
+    "attachment-offset": $numbertool.toNumber($request["attachment-offset"]).intValue(),
+    "comment-offset": $numbertool.toNumber($request["comment-offset"]).intValue()
+  })
+  ## Boolean parameters
+  #foreach ($k in ["showProfilePic", "page-hasNext", "blogpost-hasNext", "attachment-hasNext", "comment-hasNext"])
+    #if ("$!request[$k]" != "")
+      #set ($options[$k] = $request[$k] == "true")
+    #end
+  #end
   #fetchResults($options, $results)
-  #displayResults($results $options)
+  #displayResults($results, $options)
 #end
 {{/velocity}}
 </content>
