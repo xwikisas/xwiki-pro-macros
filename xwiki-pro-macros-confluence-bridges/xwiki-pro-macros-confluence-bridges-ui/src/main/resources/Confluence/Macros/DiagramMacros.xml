@@ -57,6 +57,7 @@
             &lt;form action="" method="post"&gt;
               &lt;input name="action" value="createDiagram" type="hidden" /&gt;
               &lt;input name="diagram" class="delete-diagram-page" type="hidden" value="$escapetool.xml($diagram)"/&gt;
+              &lt;input type="hidden" name="form_token" value="$escapetool.xml($services.csrf.token)" /&gt;
               &lt;button type="submit" class="btn btn-primary delete-diagram-btn"&gt;$escapetool.xml($services.localization.render("confluencediagram.modal.btn.confirm"))&lt;/button&gt;
             &lt;/form&gt;
           &lt;/div&gt;
@@ -176,6 +177,7 @@
                   &lt;input name="pageReferenceSerialized" class="create-diagram-page" value="$escapetool.xml($diagramDocumentReferenceSerialized)" type="hidden" /&gt;
                   &lt;input name="diagramName" class="create-diagram-name" value="$escapetool.xml($diagramName)" type="hidden" /&gt;
                   &lt;input name="diagramPNGName" class="create-diagram-png-name" value="$escapetool.xml($previewImageName)" type="hidden" /&gt;
+                  &lt;input type="hidden" name="form_token" value="$escapetool.xml($services.csrf.token)" /&gt;
                   &lt;button type="submit" class="btn btn-primary create-diagram-btn"&gt;$escapetool.xml($services.localization.render('confluencediagram.create.confirm'))&lt;/button&gt;
                 &lt;/form&gt;
               {{/html}}
@@ -306,6 +308,7 @@
         url: serviceURL,
         data: {
           'action' : 'create',
+          'form_token': $(this).prevAll('[name="form_token"]').val(),
           'page' : pageReferenceSerialized,
           'diagramName' : diagramName,
           'diagramPNGName' : diagramPNGName
@@ -330,6 +333,7 @@
         url: serviceURL,
         data: {
           'action' : 'delete',
+          'form_token': $(this).prevAll('[name="form_token"]').val(),
           'page' : pageReferenceSerialized
         },
         success: function(data, status) {
