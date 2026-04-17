@@ -35,7 +35,7 @@ import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
     // used, leading to a configurations merge conflict.
     servletEngine = ServletEngine.TOMCAT
 )
-class AllITs
+class AllIT
 {
     @Nested
     @DisplayName("Tests for the generic Pro Macros.")

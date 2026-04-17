@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -38,12 +37,11 @@ import org.xwiki.properties.BeanDescriptor;
 import org.xwiki.properties.PropertyDescriptor;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.internal.util.XWikiSyntaxEscaper;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
-import org.xwiki.rendering.script.RenderingScriptService;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.script.service.ScriptService;
 import org.xwiki.user.group.GroupException;
 import org.xwiki.user.group.GroupManager;
 import org.xwiki.user.group.WikiTarget;
@@ -74,8 +72,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
     private GroupManager groupManager;
 
     @Inject
-    @Named("rendering")
-    private ScriptService renderingScriptService;
+    private XWikiSyntaxEscaper escaper;
 
     /**
      * Create and initialize the descriptor of the macro.
@@ -224,9 +221,7 @@ public abstract class AbstractShowHideIfMacro extends AbstractProMacro<ShowHideI
         if (!unsupportedParameters.isEmpty()) {
             return Optional.of(
                 new MacroBlock("error", Collections.emptyMap(),
-                    // TODO XWikiSyntaxEscaper instead of RenderingScriptService
-                    // after upgrading the parent of the app to >= 14.10.6
-                    ((RenderingScriptService) renderingScriptService).escape(
+                    escaper.escape(
                         "Unsupported parameter(s) for macro " + context.getCurrentMacroBlock().getId() + ": "
                         + String.join(", ", unsupportedParameters) + ".", context.getSyntax()) 
                         + " Due to this, the macro might have unexpected results.", false));

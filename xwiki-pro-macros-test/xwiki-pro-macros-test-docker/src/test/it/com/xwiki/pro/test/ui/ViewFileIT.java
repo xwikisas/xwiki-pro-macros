@@ -24,6 +24,8 @@ import java.io.File;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.xwiki.administration.test.po.AdministrationPage;
 import org.xwiki.flamingo.skin.test.po.AttachmentsPane;
 import org.xwiki.flamingo.skin.test.po.AttachmentsViewPage;
@@ -41,24 +43,30 @@ import com.xwiki.pro.test.po.confluence.viewfile.ViewFileViewPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@UITest(office = true, servletEngine = ServletEngine.TOMCAT, servletEngineTag = "8", forbiddenEngines = {
-    // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
-    // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
-    // host machine.
-    ServletEngine.JETTY_STANDALONE }, properties = {
-    // Add the FileUploadPlugin which is needed by the test to upload attachment files
-    "xwikiCfgPlugins=com.xpn.xwiki.plugin.fileupload.FileUploadPlugin" }, extensionOverrides = {
-    @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
-        "features=com.google.code.findbugs:annotations" }),
-    // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
-    // parent upgrade if this is still needed.
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcprov-jdk18on", overrides = {
-        "features=org.bouncycastle:bcprov-jdk15on" }),
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcpkix-jdk18on", overrides = {
-        "features=org.bouncycastle:bcpkix-jdk15on" }),
-    @ExtensionOverride(extensionId = "org.bouncycastle:bcmail-jdk18on", overrides = {
-        "features=org.bouncycastle:bcmail-jdk15on" }) })
-public class ViewFileIT
+@UITest(office = true, servletEngine = ServletEngine.TOMCAT, servletEngineTag = "8",
+    forbiddenEngines = {
+        // These tests need to have XWiki running inside a Docker container (we chose Tomcat since it's the most
+        // used one), because they need LibreOffice to be installed, and we cannot guarantee that it is installed on the
+        // host machine.
+        ServletEngine.JETTY_STANDALONE },
+    properties = {
+        // Add the FileUploadPlugin which is needed by the test to upload attachment files
+        "xwikiCfgPlugins=com.xpn.xwiki.plugin.fileupload.FileUploadPlugin",
+        "xwikiPropertiesAdditionalProperties=test.prchecker.excludePattern=.*:XWiki\\.OfficeImporterAdmin",
+    },
+    extensionOverrides = {
+        @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
+            "features=com.google.code.findbugs:annotations" }),
+        // Right id of the Bouncy Castle package. Build fails since the wrong dependency is resolved. Check after XWiki
+        // parent upgrade if this is still needed.
+        @ExtensionOverride(extensionId = "org.bouncycastle:bcprov-jdk18on", overrides = {
+            "features=org.bouncycastle:bcprov-jdk15on" }),
+        @ExtensionOverride(extensionId = "org.bouncycastle:bcpkix-jdk18on", overrides = {
+            "features=org.bouncycastle:bcpkix-jdk15on" }),
+        @ExtensionOverride(extensionId = "org.bouncycastle:bcmail-jdk18on", overrides = {
+            "features=org.bouncycastle:bcmail-jdk15on" })
+    })
+class ViewFileIT
 {
     @BeforeAll
     void setup(TestUtils setup)
@@ -74,7 +82,7 @@ public class ViewFileIT
         // file is provided.
         createPage(setup, "{{view-file/}}", "invalidCall");
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
-        assertEquals(viewFileViewPage.getErrorMessage(), "Please provide a file to show in the name parameter.");
+        assertEquals("Please provide a file to show in the name parameter.", viewFileViewPage.getErrorMessage());
     }
 
     @Test
@@ -129,41 +137,19 @@ public class ViewFileIT
         assertTrue(viewFileViewPage.isPreviewThumbnail());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"TestPDF.pdf", "test.csv", "test.tsv"})
     @Order(6)
-    void testFullViewPDF(TestUtils setup, TestConfiguration testConfiguration)
+    void testFullView(String filename, TestUtils setup, TestConfiguration testConfiguration)
     {
         ViewPage currentPage =
-            createPage(setup, "{{view-file display=\"full\" name=\"TestPDF.pdf\"/}}", "fullViewPagePDF");
+            createPage(setup, "{{view-file display='full' name='" + filename + "'/}}",
+                "fullViewPage" + filename.split("\\.")[1]);
         // We use a PDF file instead of an Office document for this test because only the newer LibreOffice versions
         // are available on the official stable download location. Newer LibreOffice builds cannot be executed in the
         // test Docker environment, as it is missing libraries. The PDF view uses the same view-file async full
         // display, so it can reliably test the feature. This can be replaced once XWiki parent version is >= 16.6.
-        uploadFile("TestPDF.pdf", testConfiguration);
-        currentPage.reloadPage();
-        ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
-        assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
-    }
-
-    @Test
-    @Order(7)
-    void testFullViewCSV(TestUtils setup, TestConfiguration testConfiguration)
-    {
-        ViewPage currentPage =
-                createPage(setup, "{{view-file display=\"full\" name=\"test.csv\"/}}", "fullViewPageCSV");
-        uploadFile("test.csv", testConfiguration);
-        currentPage.reloadPage();
-        ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
-        assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
-    }
-
-    @Test
-    @Order(8)
-    void testFullViewTSV(TestUtils setup, TestConfiguration testConfiguration)
-    {
-        ViewPage currentPage =
-                createPage(setup, "{{view-file display=\"full\" name=\"test.tsv\"/}}", "fullViewPageTSV");
-        uploadFile("test.tsv", testConfiguration);
+        uploadFile(filename, testConfiguration);
         currentPage.reloadPage();
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         assertTrue(viewFileViewPage.hasLoadedInFullViewMode());

@@ -88,6 +88,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.tag.TagPlugin, "
             + "com.xpn.xwiki.plugin.skinx.JsResourceSkinExtensionPlugin, "
             + "com.xpn.xwiki.plugin.skinx.CssResourceSkinExtensionPlugin",
+        "xwikiPropertiesAdditionalProperties=test.prchecker.excludePattern=.*:"
+            + "((XWiki\\.Macros\\.Team)|(Confluence\\.Macros\\.(ContentReportTableMacro|Contributors)))",
     },
     extensionOverrides = {
         @ExtensionOverride(
