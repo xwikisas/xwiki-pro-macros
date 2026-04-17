@@ -33,10 +33,6 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.servlet.http.HttpSession;
 
-import com.xpn.xwiki.XWikiException;
-import com.xpn.xwiki.doc.XWikiAttachment;
-import com.xpn.xwiki.doc.XWikiAttachmentContent;
-import com.xpn.xwiki.doc.XWikiDocument;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -50,10 +46,12 @@ import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.rendering.block.GroupBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.TableBlock;
 import org.xwiki.rendering.block.TableCellBlock;
 import org.xwiki.rendering.block.TableHeadCellBlock;
 import org.xwiki.rendering.block.TableRowBlock;
-import org.xwiki.rendering.block.TableBlock;
+import org.xwiki.rendering.block.XDOM;
+import org.xwiki.rendering.internal.util.DefaultErrorBlockGenerator;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.macro.AbstractMacro;
 import org.xwiki.rendering.macro.Macro;
@@ -62,8 +60,14 @@ import org.xwiki.rendering.parser.ParseException;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
+import org.xwiki.rendering.transformation.TransformationContext;
+import org.xwiki.rendering.transformation.TransformationException;
 
 import com.xpn.xwiki.XWikiContext;
+import com.xpn.xwiki.XWikiException;
+import com.xpn.xwiki.doc.XWikiAttachment;
+import com.xpn.xwiki.doc.XWikiAttachmentContent;
+import com.xpn.xwiki.doc.XWikiDocument;
 import com.xpn.xwiki.web.XWikiRequest;
 import com.xwiki.macros.viewfile.internal.macro.ViewFileMacro;
 import com.xwiki.macros.viewfile.macro.async.AbstractViewFileAsyncRenderer;
@@ -196,10 +200,36 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
     {
         try {
             List<Block> result = prepareFullDisplay();
+            renderingTransform(result.get(0));
             return new CompositeBlock(result);
         } catch (Exception e) {
-            throw new RenderingException("Failed to render asynchronously the work items displayer.", e);
+            return new CompositeBlock(
+                new DefaultErrorBlockGenerator().generateErrorBlocks(this.isInline(), "rendering.async.error.failed",
+                    "Failed to execute asynchronous content", null, null, e));
         }
+    }
+
+    /**
+     * This transformation is needed because the renderer expects a HTML type block; otherwise the content will be
+     * dropped.
+     *
+     * @param block the block to apply the transformation to
+     */
+    private void renderingTransform(Block block) throws TransformationException
+    {
+        XDOM xdom = null;
+        if (block instanceof XDOM) {
+            xdom = (XDOM) block;
+        } else {
+            xdom = new XDOM(Collections.singletonList(block));
+        }
+        TransformationContext tempTransformationContext =
+            new TransformationContext(xdom, this.transformationContext.getSyntax(),
+                this.transformationContext.getTransformationContext().isRestricted());
+        tempTransformationContext.setTargetSyntax(
+            this.transformationContext.getTransformationContext().getTargetSyntax());
+        tempTransformationContext.setId(this.transformationContext.getTransformationContext().getId());
+        transform(block, tempTransformationContext);
     }
 
     private List<Block> prepareFullDisplay() throws Exception

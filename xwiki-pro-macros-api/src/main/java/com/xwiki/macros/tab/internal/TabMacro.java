@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.model.validation.EntityNameValidation;
 import org.xwiki.rendering.block.Block;
@@ -40,7 +41,6 @@ import org.xwiki.rendering.macro.descriptor.DefaultContentDescriptor;
 import org.xwiki.rendering.parser.Parser;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
 import org.xwiki.skinx.SkinExtension;
-import org.xwiki.text.StringUtils;
 
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.tab.macro.TabMacroParameters;
@@ -102,53 +102,86 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
         MacroTransformationContext context) throws MacroExecutionException
     {
         // Don't show tab in edit mode.
-        if (isEditMode(context)) {
-            // Handle edit mode
-            ssrx.use("css/tabmacro.css");
-            List<Block> tabLabelBlock;
-            try {
-                tabLabelBlock = plainTextParser.parse(new StringReader(parameters.getLabel())).getChildren();
-            } catch (Exception e) {
-                throw new MacroExecutionException("Can't get tab label", e);
-            }
-            if (!tabLabelBlock.isEmpty()) {
-                tabLabelBlock.get(0).setParameter(BLOCK_PARAM_CLASS, "tabs-edit-title");
-            }
-            List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
-            Block editableContent = new MetaDataBlock(children, getNonGeneratedContentMetaData());
-            List<Block> result = new LinkedList<>();
-            result.add(new GroupBlock(
-                tabLabelBlock, Map.of(BLOCK_PARAM_CLASS, "tabs-edit-title-block")));
-            result.add(editableContent);
-            return result;
-        } else {
-            List<Block> macroContent = contentParser.parse(content, context, false, context.isInline()).getChildren();
-            String divClass = "tab-pane"
-                + (StringUtils.isEmpty(parameters.getCssClass()) ? "" : " " + parameters.getCssClass())
-                + (parameters.isShowByDefault() ? " active" : "")
-                + (parameters.getEffectType() == TransitionEffect.FADE
-                ? (parameters.isShowByDefault() ? " fade in" : " fade") : "");
-            Block groupBlock = new GroupBlock(macroContent, Map.of(
-                "role", "tabpanel",
-                BLOCK_PARAM_CLASS, divClass,
-                "data-next-after", Integer.toString(parameters.getNextAfter()))
-            );
-            if (StringUtils.isNotEmpty(parameters.getId())) {
-                groupBlock.setParameter("id", slugEntityNameValidation.transform(parameters.getId()));
-            }
-            StringBuilder cssStyle = new StringBuilder();
-            if (parameters.getEffectDuration() != 0) {
-                cssStyle.append("transition-duration: ");
-                cssStyle.append(parameters.getEffectDuration());
-                cssStyle.append("s;");
-            }
-            if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
-                cssStyle.append(parameters.getCssStyle().trim());
-            }
-            if (StringUtils.isNotEmpty(cssStyle.toString())) {
-                groupBlock.setParameter("style", cssStyle.toString());
-            }
-            return Collections.singletonList(groupBlock);
+        return isEditMode(context)
+            ? executeEdit(parameters, content, context)
+            : executeView(parameters, content, context);
+    }
+
+    private List<Block> executeView(TabMacroParameters parameters, String content, MacroTransformationContext context)
+        throws MacroExecutionException
+    {
+        List<Block> macroContent = contentParser.parse(content, context, false, context.isInline()).getChildren();
+        String divClass = getDivClass(parameters);
+
+        Block groupBlock = new GroupBlock(macroContent, Map.of(
+            "role", "tabpanel",
+            BLOCK_PARAM_CLASS, divClass,
+            "data-next-after", Integer.toString(parameters.getNextAfter()))
+        );
+
+        if (StringUtils.isNotEmpty(parameters.getId())) {
+            groupBlock.setParameter("id", slugEntityNameValidation.transform(parameters.getId()));
         }
+
+        setCSSStyle(parameters, groupBlock);
+
+        return Collections.singletonList(groupBlock);
+    }
+
+    private static String getDivClass(TabMacroParameters parameters)
+    {
+        String divClass = "tab-pane";
+
+        if (StringUtils.isNotEmpty(parameters.getCssClass())) {
+            divClass += " " + parameters.getCssClass();
+        }
+
+        if (parameters.isShowByDefault()) {
+            divClass += " active";
+        }
+
+        if (parameters.getEffectType() == TransitionEffect.FADE) {
+            divClass += parameters.isShowByDefault() ? " fade in" : " fade";
+        }
+
+        return divClass;
+    }
+
+    private static void setCSSStyle(TabMacroParameters parameters, Block groupBlock)
+    {
+        StringBuilder cssStyle = new StringBuilder();
+        if (parameters.getEffectDuration() != 0) {
+            cssStyle.append("transition-duration: ");
+            cssStyle.append(parameters.getEffectDuration());
+            cssStyle.append("s;");
+        }
+        if (StringUtils.isNotEmpty(parameters.getCssStyle())) {
+            cssStyle.append(parameters.getCssStyle().trim());
+        }
+        if (StringUtils.isNotEmpty(cssStyle.toString())) {
+            groupBlock.setParameter("style", cssStyle.toString());
+        }
+    }
+
+    private List<Block> executeEdit(TabMacroParameters parameters, String content, MacroTransformationContext context)
+        throws MacroExecutionException
+    {
+        ssrx.use("css/tabmacro.css");
+        List<Block> tabLabelBlock;
+        try {
+            tabLabelBlock = plainTextParser.parse(new StringReader(parameters.getLabel())).getChildren();
+        } catch (Exception e) {
+            throw new MacroExecutionException("Can't get tab label", e);
+        }
+        if (!tabLabelBlock.isEmpty()) {
+            tabLabelBlock.get(0).setParameter(BLOCK_PARAM_CLASS, "tabs-edit-title");
+        }
+        List<Block> children = this.contentParser.parse(content, context, false, context.isInline()).getChildren();
+        Block editableContent = new MetaDataBlock(children, getNonGeneratedContentMetaData());
+        List<Block> result = new LinkedList<>();
+        result.add(new GroupBlock(
+            tabLabelBlock, Map.of(BLOCK_PARAM_CLASS, "tabs-edit-title-block")));
+        result.add(editableContent);
+        return result;
     }
 }

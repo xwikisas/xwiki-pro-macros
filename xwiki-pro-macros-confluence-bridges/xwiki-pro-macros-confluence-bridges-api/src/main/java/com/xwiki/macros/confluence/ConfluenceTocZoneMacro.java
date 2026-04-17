@@ -59,7 +59,7 @@ import org.xwiki.stability.Unstable;
 import com.xwiki.macros.AbstractProMacro;
 
 /**
- * The Confluence outgoing-links bridge macro.
+ * The Confluence toc-zone bridge macro.
  * 
  * @since 1.23.0
  * @version $Id$
