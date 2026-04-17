@@ -31,6 +31,8 @@ import org.xwiki.test.ui.po.BaseElement;
  */
 public class ProfilePictureMacro extends BaseElement
 {
+    private static final String XWIKITEAM_AVATAR = ".xwikiteam-avatar";
+
     private final WebElement profilePicture;
 
     public ProfilePictureMacro(WebElement profilePicture)
@@ -51,20 +53,20 @@ public class ProfilePictureMacro extends BaseElement
 
     public String getAvatarSize()
     {
-        WebElement avatarElement = profilePicture.findElement(By.cssSelector(".xwikiteam-avatar"));
+        WebElement avatarElement = profilePicture.findElement(By.cssSelector(XWIKITEAM_AVATAR));
         return avatarElement.getCssValue("height");
     }
 
     public boolean hasProfileImage()
     {
-        WebElement avatarElement = profilePicture.findElement(By.cssSelector(".xwikiteam-avatar"));
+        WebElement avatarElement = profilePicture.findElement(By.cssSelector(XWIKITEAM_AVATAR));
         return "img".equals(avatarElement.getTagName());
     }
 
     public boolean hasAvatarInitials()
     {
 
-        WebElement avatarElement = profilePicture.findElement(By.cssSelector(".xwikiteam-avatar"));
+        WebElement avatarElement = profilePicture.findElement(By.cssSelector(XWIKITEAM_AVATAR));
         return avatarElement.getAttribute("class").contains("xwikiteam-avatar-initials");
     }
 }

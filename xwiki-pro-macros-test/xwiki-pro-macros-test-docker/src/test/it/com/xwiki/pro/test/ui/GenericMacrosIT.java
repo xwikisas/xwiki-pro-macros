@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -344,10 +343,10 @@ public class GenericMacrosIT
         assertEquals(3, tagListPage.getMacroCount(".glossaryListRoot"));
 
         // Checks the 1st tagList macro, which should contain all the tags.
-        List<String> expectedTitles1 = Arrays.asList("A-B", "G");
+        List<String> expectedTitles1 = List.of("A-B", "G");
         assertEquals(expectedTitles1, tagList0.getGlossaryTitles());
 
-        List<String> expectedTagNames1 = Arrays.asList("alpha", "beta", "gamma");
+        List<String> expectedTagNames1 = List.of("alpha", "beta", "gamma");
         assertEquals(expectedTagNames1, tagList0.getTagNames());
 
         // Checks the links associated with the tags.
@@ -356,19 +355,19 @@ public class GenericMacrosIT
         }
 
         // Checks the 2nd tagList macro, which excludes the "beta" tag.
-        List<String> expectedTitles2 = Arrays.asList("A-G");
+        List<String> expectedTitles2 = List.of("A-G");
         assertEquals(expectedTitles2, tagList1.getGlossaryTitles());
-        List<String> expectedTagNames2 = Arrays.asList("alpha", "gamma");
+        List<String> expectedTagNames2 = List.of("alpha", "gamma");
         assertEquals(expectedTagNames2, tagList1.getTagNames());
         for (String i : expectedTagNames2) {
             assertTrue(tagList1.hasLink(i));
         }
 
         // Checks the 3rd tagList macro, which targets specific spaces and excludes the "gamma" tag.
-        List<String> expectedTitles3 = Arrays.asList("A-X", "Y-Z");
+        List<String> expectedTitles3 = List.of("A-X", "Y-Z");
         assertEquals(expectedTitles3, tagList2.getGlossaryTitles());
 
-        List<String> expectedTagNames3 = Arrays.asList("alpha", "beta", "testTag", "x", "y", "z");
+        List<String> expectedTagNames3 = List.of("alpha", "beta", "testTag", "x", "y", "z");
         assertEquals(expectedTagNames3, tagList2.getTagNames());
 
         for (String i : expectedTagNames3) {
@@ -640,7 +639,7 @@ public class GenericMacrosIT
         assertTrue(expand0.hasIcon());
 
         // Expanded = true.
-        List<String> expectedContent = Arrays.asList("test0\ntest1", "test2");
+        List<String> expectedContent = List.of("test0\ntest1", "test2");
         assertEquals(expectedContent, expand0.getTextContent());
         assertTrue(expand0.containsImage("example.jpg"));
 
@@ -658,7 +657,7 @@ public class GenericMacrosIT
         assertEquals("ExpandTest2", expand1.getTitle());
         assertTrue(expand1.hasIcon());
 
-        List<String> expectedContent2 = Arrays.asList("test0\ntest1");
+        List<String> expectedContent2 = List.of("test0\ntest1");
         // Closed macro, content not visible.
         assertNotEquals(expectedContent2, expand1.getTextContent());
 
@@ -849,14 +848,14 @@ public class GenericMacrosIT
         TabGroupMacro tabGroup2 = new TabGroupMacro("tabGroup_2");
         TabGroupMacro tabGroup3 = new TabGroupMacro("tabGroup_3");
 
-        List<String> expectedLabels1 = Arrays.asList("tab0", "tab1", "tab2");
-        List<String> expectedLabels2 = Arrays.asList("tab0", "tab1");
+        List<String> expectedLabels1 = List.of("tab0", "tab1", "tab2");
+        List<String> expectedLabels2 = List.of("tab0", "tab1");
 
         // Checks the tabGroup_0 macro, with 3 tabs, tabLocation="TOP", fade effect, CSS class, effectDuration and
         // a set nextAfter.
         assertEquals(3, tabGroup0.getTabCount());
         assertEquals(expectedLabels1, tabGroup0.getTabLabels());
-        assertEquals(Arrays.asList("tab_0", "tab_1", "tab_2"), tabGroup0.getTabIds());
+        assertEquals(List.of("tab_0", "tab_1", "tab_2"), tabGroup0.getTabIds());
         TabMacro tab0 = tabGroup0.getTabMacro("tab_0");
         // default="true".
         assertTrue(tab0.isContentDisplayed("tab0-content"));
@@ -874,7 +873,7 @@ public class GenericMacrosIT
         // personalized height and width, loopCards ="true" and a set nextAfter.
         assertEquals(3, tabGroup1.getTabCount());
         assertEquals(expectedLabels1, tabGroup1.getTabLabels());
-        assertEquals(Arrays.asList("tab_3", "tab_4", "tab_5"), tabGroup1.getTabIds());
+        assertEquals(List.of("tab_3", "tab_4", "tab_5"), tabGroup1.getTabIds());
 
         assertEquals("BOTTOM", tabGroup1.getLocation());
         assertFalse(tabGroup1.isTabListFirst());
@@ -918,7 +917,7 @@ public class GenericMacrosIT
         // Checks the tabGroup_2 macro, with 2 tabs, tabLocation="RIGHT", loopCards="true" and a set nextAfter.
         assertEquals(2, tabGroup2.getTabCount());
         assertEquals(expectedLabels2, tabGroup2.getTabLabels());
-        assertEquals(Arrays.asList("tab_6", "tab_7"), tabGroup2.getTabIds());
+        assertEquals(List.of("tab_6", "tab_7"), tabGroup2.getTabIds());
 
         assertEquals("RIGHT", tabGroup2.getLocation());
         assertFalse(tabGroup2.hasFadeEffect());
@@ -944,7 +943,7 @@ public class GenericMacrosIT
         // Checks the tabGroup_3 macro, with 2 tabs and tabLocation="LEFT".
         assertEquals(2, tabGroup3.getTabCount());
         assertEquals(expectedLabels2, tabGroup3.getTabLabels());
-        assertEquals(Arrays.asList("tab_8", "tab_9"), tabGroup3.getTabIds());
+        assertEquals(List.of("tab_8", "tab_9"), tabGroup3.getTabIds());
 
         assertEquals("LEFT", tabGroup3.getLocation());
         assertFalse(tabGroup3.hasFadeEffect());
@@ -1034,20 +1033,20 @@ public class GenericMacrosIT
 
         // Checks the 1st content-report-table macro, with the tags "alpha,x" and the spaces "Main, XWiki".
         assertEquals(2, report0.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), report0.getTitles());
-        assertEquals(Arrays.asList("superadmin", "superadmin"), report0.getCreators());
+        assertEquals(List.of("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), report0.getTitles());
+        assertEquals(List.of("superadmin", "superadmin"), report0.getCreators());
         assertEquals(2, report0.getModifiedDateCount());
 
         // Checks the 2nd content-report-table macro, with the tags "alpha,x", the spaces "Main, XWiki" and max = 1.
         assertEquals(1, report1.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"), report1.getTitles());
-        assertEquals(Arrays.asList("superadmin"), report1.getCreators());
+        assertEquals(List.of("xwiki:XWiki.pageWithTags2"), report1.getTitles());
+        assertEquals(List.of("superadmin"), report1.getCreators());
         assertEquals(1, report1.getModifiedDateCount());
 
         // Checks the 3rd content-report-table macro, with the tag "x".
         assertEquals(1, report2.getResultsCount());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2"), report2.getTitles());
-        assertEquals(Arrays.asList("superadmin"), report2.getCreators());
+        assertEquals(List.of("xwiki:XWiki.pageWithTags2"), report2.getTitles());
+        assertEquals(List.of("superadmin"), report2.getCreators());
         assertEquals(1, report2.getModifiedDateCount());
 
         // Checks the 4th content-report-table macro, with the tag "nonExistingTag".
@@ -1078,7 +1077,7 @@ public class GenericMacrosIT
 
         // Checks the 1st macro, with default properties.
         assertEquals(1, contrib0.getNames().size());
-        assertEquals(Arrays.asList("superadmin"), contrib0.getNames());
+        assertEquals(List.of("superadmin"), contrib0.getNames());
         assertFalse(contrib0.isListMode());
         assertFalse(contrib0.hasLastModifiedDates());
         assertFalse(contrib0.hasPages());
@@ -1086,7 +1085,7 @@ public class GenericMacrosIT
 
         // Checks the 2nd macro with include="authors", limit="3", mode="inline", showCount="true" and global="true".
         assertEquals(3, contrib1.getNames().size());
-        assertEquals(Arrays.asList("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
+        assertEquals(List.of("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
         assertTrue(contrib1.isListMode());
         assertTrue(contrib1.hasLastModifiedDates());
         assertFalse(contrib1.hasPages());
@@ -1094,20 +1093,20 @@ public class GenericMacrosIT
 
         // Checks the 3rd macro with limit="3", mode="inline", showCount="true" and global="true".
         assertEquals(3, contrib2.getNames().size());
-        assertEquals(Arrays.asList("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
+        assertEquals(List.of("superadmin", "UserTest3", "UserTest2"), contrib1.getNames());
         assertFalse(contrib2.isListMode());
         assertFalse(contrib2.hasLastModifiedDates());
         assertFalse(contrib2.hasPages());
         assertTrue(contrib2.hasContributionCount());
-        assertEquals(Arrays.asList(1, 1, 1), contrib2.getContributionCounts());
+        assertEquals(List.of(1, 1, 1), contrib2.getContributionCounts());
 
         // Checks the 4th macro with spaces="XWiki" and limit="1".
         assertEquals(1, contrib3.getNames().size());
-        assertEquals(Arrays.asList("superadmin"), contrib3.getNames());
+        assertEquals(List.of("superadmin"), contrib3.getNames());
         assertTrue(contrib3.hasContributionCount());
-        assertEquals(Arrays.asList(1), contrib3.getContributionCounts());
+        assertEquals(List.of(1), contrib3.getContributionCounts());
         assertTrue(contrib3.hasPages());
-        assertEquals(Arrays.asList("Profile of UserTest", "Profile of UserTest2", "Profile of UserTest3",
+        assertEquals(List.of("Profile of UserTest", "Profile of UserTest2", "Profile of UserTest3",
             "xwiki:XWiki.pageWithTags2"), contrib3.getPages());
 
         // Checks the 5th macro with spaces="NonExistingSpace", noneFoundMessage="None found :(" and showPages="true".
@@ -1119,15 +1118,15 @@ public class GenericMacrosIT
 
         // Checks the 6th macro with scope="Descendants".
         assertEquals(1, contrib5.getNames().size());
-        assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
+        assertEquals(List.of("superadmin"), contrib5.getNames());
         assertTrue(contrib5.hasPages());
-        assertEquals(Arrays.asList("ContributorsTest"), contrib5.getPages());
+        assertEquals(List.of("ContributorsTest"), contrib5.getPages());
 
         // Checks the 6th macro with include ="authors, comments" and scope="Specified".
         assertEquals(1, contrib6.getNames().size());
-        assertEquals(Arrays.asList("superadmin"), contrib5.getNames());
+        assertEquals(List.of("superadmin"), contrib5.getNames());
         assertTrue(contrib6.hasPages());
-        assertEquals(Arrays.asList("ContributorsTest"), contrib6.getPages());
+        assertEquals(List.of("ContributorsTest"), contrib6.getPages());
     }
 
     @Test
@@ -1156,7 +1155,7 @@ public class GenericMacrosIT
         // Checks the 1st macro, with a personalized width, which shows pages, with attachments and comments, from the
         // space "Main" and with the tag "recent". The default theme is concise.
         setup.getDriver().waitUntilCondition(driver -> recent0.getItemTitles().size() == 4);
-        assertEquals(Arrays.asList("xwiki:Main.testPage2", "image1.png", "xwiki:Main.testPage2", "xwiki:Main.testPage"),
+        assertEquals(List.of("xwiki:Main.testPage2", "image1.png", "xwiki:Main.testPage2", "xwiki:Main.testPage"),
             recent0.getItemTitles());
         assertEquals("concise", recent0.getResultsTheme());
         assertTrue(recent0.themeStructureIsCorrect("concise"));
@@ -1166,11 +1165,11 @@ public class GenericMacrosIT
         // Checks the 2nd macro, with a personalized width, the theme concise, a max of 2 results, which shows pages,
         // from global space and with the tags "recent", "alpha" and "x".
         assertEquals(2, recent1.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), recent1.getItemTitles());
+        assertEquals(List.of("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags"), recent1.getItemTitles());
         assertTrue(recent1.hasShowMoreButton());
         recent1.clickShowMore();
         setup.getDriver().waitUntilCondition(driver -> recent1.getItemTitles().size() == 4);
-        assertEquals(Arrays.asList("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags", "xwiki:Main.testPage2",
+        assertEquals(List.of("xwiki:XWiki.pageWithTags2", "xwiki:Main.pageWithTags", "xwiki:Main.testPage2",
             "xwiki:Main.testPage"), recent1.getItemTitles());
         assertEquals("concise", recent1.getResultsTheme());
         assertTrue(recent1.themeStructureIsCorrect("concise"));
@@ -1179,7 +1178,7 @@ public class GenericMacrosIT
         // Checks the 3rd macro, which shows pages from global space and with the tag "recent", but not with the tag
         // "recent2". The default width is 100.
         assertEquals(1, recent2.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.testPage2"), recent2.getItemTitles());
+        assertEquals(List.of("xwiki:Main.testPage2"), recent2.getItemTitles());
         assertEquals("100", recent2.getMacroWidth());
 
         // Checks the 4th macro, which shows pages with the tag "recent".
@@ -1193,7 +1192,7 @@ public class GenericMacrosIT
         // Checks the 6th macro, with theme social and showProfilePic="false", which shows pages from global space,
         // with "Main" excluded and with the tag "alpha".
         assertEquals(1, recent5.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.pageWithTags"), recent5.getItemTitles());
+        assertEquals(List.of("xwiki:Main.pageWithTags"), recent5.getItemTitles());
         assertEquals("social", recent5.getResultsTheme());
         assertTrue(recent5.themeStructureIsCorrect("social"));
         assertEquals("superadmin", recent5.getAuthorName(0));
@@ -1202,20 +1201,20 @@ public class GenericMacrosIT
         // Checks the 7th macro, with showProfilePic="true", which shows pages from the current Wiki and with the tag
         // "recent".
         assertEquals(2, recent6.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent6.getItemTitles());
+        assertEquals(List.of("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent6.getItemTitles());
         assertTrue(recent6.hasAvatars());
 
         // Checks the 8th macro, with theme sidebar, which shows pages from global space and the current Wiki,
         // with the tag "recent".
         assertEquals(2, recent7.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent7.getItemTitles());
+        assertEquals(List.of("xwiki:Main.testPage2", "xwiki:Main.testPage"), recent7.getItemTitles());
         assertEquals("sidebar", recent7.getResultsTheme());
         assertTrue(recent7.themeStructureIsCorrect("sidebar"));
 
         // Checks the 9th macro, with theme sidebar, which shows pages from global space and the current Wiki,
         // with the tag "recent".
         assertEquals(1, recent8.getItemTitles().size());
-        assertEquals(Arrays.asList("xwiki:Main.testPage"), recent8.getItemTitles());
+        assertEquals(List.of("xwiki:Main.testPage"), recent8.getItemTitles());
         assertEquals("social", recent8.getResultsTheme());
         assertTrue(recent8.themeStructureIsCorrect("social"));
         assertEquals("UserTest3", recent8.getAuthorName(0));

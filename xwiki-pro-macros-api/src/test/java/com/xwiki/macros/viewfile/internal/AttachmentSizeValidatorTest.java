@@ -57,7 +57,7 @@ import static org.mockito.Mockito.when;
  * @version $Id$
  */
 @ComponentTest
-public class AttachmentSizeValidatorTest
+class AttachmentSizeValidatorTest
 {
     @InjectMockComponents
     private AttachmentSizeValidator attachmentSizeValidator;
@@ -78,23 +78,24 @@ public class AttachmentSizeValidatorTest
     private XWikiDocument document;
 
     @RegisterExtension
-    private LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.WARN);
+    private static final LogCaptureExtension LOG_CAPTURE = new LogCaptureExtension(LogLevel.WARN);
 
-    private DocumentReference documentReference = new DocumentReference("testWiki", "testSpace", "testPage");
+    private static final DocumentReference DOCUMENT_REFERENCE =
+        new DocumentReference("testWiki", "testSpace", "testPage");
 
     @BeforeEach
     void beforeEach() throws XWikiException
     {
         when(wikiContextProvider.get()).thenReturn(wikiContext);
         when(wikiContext.getWiki()).thenReturn(wiki);
-        when(wiki.getDocument(documentReference, wikiContext)).thenReturn(document);
+        when(wiki.getDocument(DOCUMENT_REFERENCE, wikiContext)).thenReturn(document);
     }
 
     @Test
     void isAttachmentOversizeNull() throws IOException, XWikiException
     {
         String attachmentName = "test.pdf";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(null);
         assertTrue(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
     }
@@ -103,7 +104,7 @@ public class AttachmentSizeValidatorTest
     void isAttachmentOversizeOldOffice() throws IOException, XWikiException
     {
         String attachmentName = "test.doc";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         assertFalse(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
     }
@@ -112,7 +113,7 @@ public class AttachmentSizeValidatorTest
     void isAttachmentOversizeFalse() throws IOException, XWikiException
     {
         String attachmentName = "test.docx";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         ByteArrayInputStream zipInput = getAttachmentInputStream(attachmentName, "some content");
         when(attachment.getContentInputStream(wikiContext)).thenReturn(zipInput);
@@ -124,7 +125,7 @@ public class AttachmentSizeValidatorTest
     void isAttachmentOversizeTrue() throws IOException, XWikiException
     {
         String attachmentName = "test.docx";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         ByteArrayInputStream zipInput = getAttachmentInputStream(attachmentName, "some content");
         when(attachment.getContentInputStream(wikiContext)).thenReturn(zipInput);
@@ -132,7 +133,7 @@ public class AttachmentSizeValidatorTest
         IOUtils.setMaxByteArrayInitSize(1);
         assertTrue(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
         assertEquals("File entry size is larger then the maximum length for this record type set at [1].",
-            logCapture.getMessage(0));
+            LOG_CAPTURE.getMessage(0));
         IOUtils.setMaxByteArrayInitSize(defaultValue);
     }
 
@@ -140,38 +141,38 @@ public class AttachmentSizeValidatorTest
     void isAttachmentOversizeTrueParagraphsMeta() throws IOException, XWikiException
     {
         String attachmentName = "meta.xml";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         ByteArrayInputStream zipInput = getAttachmentInputStream(attachmentName, "meta:paragraph-count=\"2000001\"");
         when(attachment.getContentInputStream(wikiContext)).thenReturn(zipInput);
         assertTrue(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
-        assertEquals("File oversize: too many paragraphs (2000001).", logCapture.getMessage(0));
+        assertEquals("File oversize: too many paragraphs (2000001).", LOG_CAPTURE.getMessage(0));
     }
 
     @Test
     void isAttachmentOversizeTrueParagraphsDocProps() throws IOException, XWikiException
     {
         String attachmentName = "docProps/app.xml";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         ByteArrayInputStream zipInput = getAttachmentInputStream(attachmentName, "<Paragraphs>20000000</Paragraphs>");
         when(attachment.getContentInputStream(wikiContext)).thenReturn(zipInput);
         assertTrue(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
-        assertEquals("File oversize: too many paragraphs (20000000).", logCapture.getMessage(0));
+        assertEquals("File oversize: too many paragraphs (20000000).", LOG_CAPTURE.getMessage(0));
     }
 
     @Test
     void isAttachmentOversizeTrueParagraphsDocPropsFail() throws IOException, XWikiException
     {
         String attachmentName = "docProps/app.xml";
-        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, documentReference);
+        AttachmentReference attachmentReference = new AttachmentReference(attachmentName, DOCUMENT_REFERENCE);
         when(document.getAttachment(attachmentName)).thenReturn(attachment);
         ByteArrayInputStream zipInput =
             getAttachmentInputStream(attachmentName, "<Paragraphs>999999999999999999999999</Paragraphs>");
         when(attachment.getContentInputStream(wikiContext)).thenReturn(zipInput);
         assertFalse(attachmentSizeValidator.isAttachmentOversize(attachmentReference));
         assertEquals("Failed to subtract the number of paragraphs. Root cause is: [NumberFormatException: For input "
-            + "string: \"999999999999999999999999\"]", logCapture.getMessage(0));
+            + "string: \"999999999999999999999999\"]", LOG_CAPTURE.getMessage(0));
     }
 
     private static ByteArrayInputStream getAttachmentInputStream(String attachmentName, String content)
