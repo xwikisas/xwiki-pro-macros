@@ -311,7 +311,6 @@ $services.localization.render('rendering.macro.button.description')
   #set ($title = $escapetool.xml($wikimacro.parameters.title))
   #set ($url = $escapetool.xml($wikimacro.parameters.url))
   #set ($color = $wikimacro.parameters.color)
-  ## CSS string color version
   #set ($colorCss = $wikimacro.parameters.get("color"))
   #if (!$colorCss)
     #set ($colorCss = $xcontext.macro.params.get("color"))
@@ -338,6 +337,7 @@ $services.localization.render('rendering.macro.button.description')
     #darken($colors, $darkenedColors)
     #set ($bgColor = "rgb($colors[0],$colors[1],$colors[2])")
     #set ($borderColor = "rgb($darkenedColors[0],$darkenedColors[1],$darkenedColors[2])")
+    ## Compute perceived brightness using standard RGB weighting (WCAG formula).
     #set ($intensity = $colors[0]*0.299 + $colors[1]*0.587 + $colors[2]*0.114)
     #if ($intensity &gt; 186)
       #set ($textColor = "#333")
@@ -377,6 +377,7 @@ $services.localization.render('rendering.macro.button.description')
         border-color: $borderColor;
         color: $textColor;
         #if (!$isColorObject)
+        ## The factor value was found empirically.
           filter: brightness(0.85);
         #end
       #end
