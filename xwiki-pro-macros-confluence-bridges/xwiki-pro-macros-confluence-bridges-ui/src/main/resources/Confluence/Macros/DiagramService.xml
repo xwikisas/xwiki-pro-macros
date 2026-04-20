@@ -50,6 +50,11 @@
 {{/velocity}}
 
 {{velocity}}
+#if (!$services.csrf.isTokenValid($!request.form_token))
+  Invalid CSRF Token.
+  $response.setStatus(400)
+  #stop
+#end
 #set($createDiagram = "$!request.action" == 'create')
 #set($deleteDiagram = "$!request.action" == 'delete')
 #set($page = $request.page)
