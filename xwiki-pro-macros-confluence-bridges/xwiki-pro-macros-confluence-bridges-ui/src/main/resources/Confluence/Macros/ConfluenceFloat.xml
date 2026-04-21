@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc xmlns:xwiki="http://www.xwiki.org" version="1.5" reference="Confluence.Macros.ConfluenceFloat" locale="">
+<xwikidoc version="1.5" reference="Confluence.Macros.ConfluenceFloat" locale="">
   <web>Confluence.Macros</web>
   <name>ConfluenceFloat</name>
   <language/>
@@ -514,13 +514,24 @@ Vel deserunt voluptas ut molestiae porro ut accusantium consequatur quo aspernat
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -593,13 +604,24 @@ Vel deserunt voluptas ut molestiae porro ut accusantium consequatur quo aspernat
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>

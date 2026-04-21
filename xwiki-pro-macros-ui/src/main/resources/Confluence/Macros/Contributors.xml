@@ -161,7 +161,7 @@ Result:
         <separators>|, </separators>
         <size>5</size>
         <unmodifiable>0</unmodifiable>
-        <values>action=Action|doc.reference=Document|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.url=Request URL|request.wiki=Request wiki|user=User|wiki=Wiki</values>
+        <values>action=Action|doc.reference=Document|doc.revision|icon.theme=Icon theme|locale=Language|rendering.defaultsyntax=Default syntax|rendering.restricted=Restricted|rendering.targetsyntax=Target syntax|request.base=Request base URL|request.cookies|request.headers|request.parameters=Request parameters|request.remoteAddr|request.session|request.url=Request URL|request.wiki=Request wiki|sheet|user=User|wiki=Wiki</values>
         <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </async_context>
       <async_enabled>
@@ -600,13 +600,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -679,13 +690,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -758,13 +780,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -837,13 +870,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -916,13 +960,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -995,13 +1050,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1074,13 +1140,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1153,13 +1230,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1232,13 +1320,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1311,13 +1410,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1390,13 +1500,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1469,13 +1590,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
@@ -1548,13 +1680,24 @@ Result:
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <type>
+        <cache>0</cache>
+        <defaultValue>Unknown</defaultValue>
         <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <largeStorage>1</largeStorage>
+        <multiSelect>0</multiSelect>
         <name>type</name>
         <number>5</number>
+        <picker>1</picker>
         <prettyName>Parameter type</prettyName>
-        <size>60</size>
+        <relationalStorage>0</relationalStorage>
+        <separator>|</separator>
+        <separators>|</separators>
+        <size>1</size>
         <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <values>Unknown|Wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
       </type>
     </class>
     <property>
