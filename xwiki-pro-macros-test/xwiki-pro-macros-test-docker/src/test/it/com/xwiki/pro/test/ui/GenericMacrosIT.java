@@ -295,6 +295,18 @@ public class GenericMacrosIT
         assertEquals("", btn5.getParentTarget());
         assertTrue(btn5.getCssClass().endsWith("-default"));
         assertFalse(btn5.hasIcon());
+
+        // Checks named colors for buttons.
+        ButtonMacro btn6 = new ButtonMacro("testbtn6");
+        ButtonMacro btn7 = new ButtonMacro("testbtn7");
+        ButtonMacro btn8 = new ButtonMacro("testbtn8");
+
+        // color="Blue".
+        assertEquals("rgb(0, 0, 255)", btn6.getColor());
+        // color="yellow".
+        assertEquals("rgb(255, 255, 0)", btn7.getColor());
+        // color="pInK".
+        assertEquals("rgb(255, 192, 203)", btn8.getColor());
     }
 
     @Test
