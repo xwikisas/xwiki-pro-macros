@@ -379,6 +379,8 @@ $services.localization.render('rendering.macro.button.description')
         #if (!$isColorObject)
         ## The factor value was found empirically.
           filter: brightness(0.85);
+          color: white;
+          color: oklch(from $bgColor round(1.21 - L) 0 0);
         #end
       #end
       width: $!width;
