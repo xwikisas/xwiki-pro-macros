@@ -28,11 +28,13 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mock;
 import org.xwiki.model.reference.AttachmentReference;
 import org.xwiki.model.reference.DocumentReference;
+import org.xwiki.test.LogLevel;
+import org.xwiki.test.junit5.LogCaptureExtension;
 import org.xwiki.test.junit5.mockito.ComponentTest;
 import org.xwiki.test.junit5.mockito.InjectMockComponents;
 import org.xwiki.test.junit5.mockito.MockComponent;
@@ -47,9 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import org.slf4j.LoggerFactory;
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+
 /**
  * Unit test for {@link PdfThumbnailGenerator}
  *
@@ -83,16 +83,10 @@ class PdfThumbnailGeneratorTest
 
     private DocumentReference documentReference = new DocumentReference("testWiki", "testSpace", "testPage");
 
-    AttachmentReference attachmentReference = new AttachmentReference(FILENAME, documentReference);
+    private AttachmentReference attachmentReference = new AttachmentReference(FILENAME, documentReference);
 
-    @BeforeAll
-    static void silenceFontWarnings() {
-        // There might be missing font on the machine that runs the test and pdfbox will auto fallback to another
-        // font, but it will throw an error in the console and the test will break. The line bellow just silences the
-        // console logs.
-        Logger fontLogger = (Logger) LoggerFactory.getLogger("org.apache.pdfbox.pdmodel.font.PDType1Font");
-        fontLogger.setLevel(Level.ERROR);
-    }
+    @RegisterExtension
+    private LogCaptureExtension logCapture = new LogCaptureExtension(LogLevel.ERROR);
 
     @Test
     void generateThumbnail() throws Exception
