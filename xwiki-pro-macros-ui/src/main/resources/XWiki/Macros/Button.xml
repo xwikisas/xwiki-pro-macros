@@ -305,26 +305,16 @@ $services.localization.render('rendering.macro.button.description')
     #end
   #end
 #end
-## Given a color in array format [r, g, b], get a CSS valid form of it.
-#macro (toCssRGB $colorArray)
-  #set ($color = "rgb($colorArray[0],$colorArray[1],$colorArray[2])")
-  $color
-#end
-## Given a color in array format [r, g, b], determine the color that has the best contrast.
-#macro (fontColor $colorArray)
-  #set ($intensity = $colorArray[0]*0.299 + $colorArray[1]*0.587 + $colorArray[2]*0.114)
-  #if ($intensity &gt; 186)
-    #333
-  #else
-    #fff
-  #end
-#end
 #macro (executeMacro)
   ## Retrieve macro parameters
   #set ($label = $escapetool.xml($wikimacro.parameters.label))
   #set ($title = $escapetool.xml($wikimacro.parameters.title))
   #set ($url = $escapetool.xml($wikimacro.parameters.url))
   #set ($color = $wikimacro.parameters.color)
+  #set ($colorCss = $wikimacro.parameters.get("color"))
+  #if (!$colorCss)
+    #set ($colorCss = $xcontext.macro.params.get("color"))
+  #end
   #set ($width = $escapetool.xml($wikimacro.parameters.width))
   #set ($newTab = $escapetool.xml($wikimacro.parameters.newTab))
   #set ($icon = $escapetool.xml($xcontext.macro.params.icon))
@@ -337,10 +327,27 @@ $services.localization.render('rendering.macro.button.description')
   #end
   ## The color will be a java.awt.Color object
   ## Transform it into an array of Integers for better malleability: [x, y, z]
-  #if ($color)
+  #set ($isColorObject = false)
+  #if ($color &amp;&amp; $color.class.name == "java.awt.Color")
+    #set ($isColorObject = true)
+  #end
+  #if ($isColorObject)
     #set ($colors = [$color.Red, $color.Green, $color.Blue])
+    #set ($darkenedColors = [])
+    #darken($colors, $darkenedColors)
+    #set ($bgColor = "rgb($colors[0],$colors[1],$colors[2])")
+    #set ($borderColor = "rgb($darkenedColors[0],$darkenedColors[1],$darkenedColors[2])")
+    ## Compute perceived brightness using standard RGB weighting (WCAG formula).
+    #set ($intensity = $colors[0]*0.299 + $colors[1]*0.587 + $colors[2]*0.114)
+    #if ($intensity &gt; 186)
+      #set ($textColor = "#333")
+    #else
+      #set ($textColor = "#fff")
+    #end
   #else
-    #set ($colors = [255, 255, 255])
+    #set ($bgColor = $colorCss)
+    #set ($borderColor = $colorCss)
+    #set ($textColor = "white")
   #end
   #set ($macro.additionalClass = '')
   #if ("$!macro.classParam" != '')
@@ -349,8 +356,6 @@ $services.localization.render('rendering.macro.button.description')
   #if ("$!macro.type" != '')
     #set ($macro.additionalClass = "$macro.additionalClass btn-$macro.type.name().toLowerCase()")
   #end
-  #set ($darkenedColors = [])
-  #darken($colors, $darkenedColors)
   {{html clean=false}}
   ## #124: The Button macro deletes followup content when inserted from wysiwyg
   ## Wrap the macro output inside a block element if the context where the macro is inserted is not inline, e.g. if the
@@ -367,13 +372,20 @@ $services.localization.render('rendering.macro.button.description')
         title="$escapetool.xml($title)"
       #end
       style="
-        #if ("$!color" != '')
-        background-color: #toCssRGB($colors);
-        border-color: #toCssRGB($darkenedColors);
-        color: #fontColor($colors);
+      #if ("$!bgColor" != '')
+        background-color: $bgColor;
+        border-color: $borderColor;
+        color: $textColor;
+        #if (!$isColorObject)
+        ## The factor value was found empirically.
+          filter: brightness(0.85);
+          color: white;
+          ## See https://css-tricks.com/approximating-contrast-color-with-other-css-features/
+          color: oklch(from $bgColor round(1.21 - L) 0 0);
         #end
-        width: $!width;
-      "
+      #end
+      width: $!width;
+    "
       class="btn $escapetool.xml($macro.additionalClass)"&gt;
       #if ("$!icon" != "")
         #set ($iconHTML = "$!services.icon.renderHTML($icon)")

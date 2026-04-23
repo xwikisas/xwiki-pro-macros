@@ -296,6 +296,29 @@ public class GenericMacrosIT
         assertEquals("", btn5.getParentTarget());
         assertTrue(btn5.getCssClass().endsWith("-default"));
         assertFalse(btn5.hasIcon());
+
+        // Checks named colors for buttons.
+        ButtonMacro btn6 = new ButtonMacro("testbtn6");
+        ButtonMacro btn7 = new ButtonMacro("testbtn7");
+        ButtonMacro btn8 = new ButtonMacro("testbtn8");
+        ButtonMacro btn9 = new ButtonMacro("testbtn9");
+
+        // color="Blue", dark background - white text (L low rounds to 1).
+        // See https://css-tricks.com/approximating-contrast-color-with-other-css-features/.
+        assertEquals("rgb(0, 0, 255)", btn6.getColor());
+        assertEquals("oklch(1 0 0)", btn6.getFontColor());
+
+        // color="yellow", light background - black text (L high rounds to 0).
+        assertEquals("rgb(255, 255, 0)", btn7.getColor());
+        assertEquals("oklch(0 0 0)", btn7.getFontColor());
+
+        // color="pInK".
+        assertEquals("rgb(255, 192, 203)", btn8.getColor());
+        assertEquals("oklch(0 0 0)", btn8.getFontColor());
+
+        // color="GreeN".
+        assertEquals("rgb(0, 128, 0)", btn9.getColor());
+        assertEquals("oklch(1 0 0)", btn9.getFontColor());
     }
 
     @Test
