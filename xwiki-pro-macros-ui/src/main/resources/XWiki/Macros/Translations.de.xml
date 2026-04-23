@@ -217,7 +217,7 @@ rendering.macro.button.name=Macro bouton
 ### Missing: rendering.macro.contributors.parameter.showPages.name=Show pages
 ### Missing: rendering.macro.contributors.parameter.showPages.description=Should the list of used pages be shown?
 ### Missing: rendering.macro.contributors.parameter.noneFoundMessage.name=None found message
-### Missing: rendering.macro.contributors.parameter.noneFoundMessage.description=Message to show when pages are not shown
+### Missing: rendering.macro.contributors.parameter.noneFoundMessage.description=The message to show when no contributors are found
 ### Missing: rendering.macro.contributors.parameter.global.name=Global
 ### Missing: rendering.macro.contributors.parameter.global.description=rendering.macro.contributors.parameter.global.description=Searches at the global level, across all wikis. When this parameter is marked, the space parameter is ignored.
 
