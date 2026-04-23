@@ -55,7 +55,7 @@
     <connection>scm:git:git://github.com/xwikisas/xwiki-pro-macros.git</connection>
     <developerConnection>scm:git:git@github.com:xwikisas/xwiki-pro-macros.git</developerConnection>
     <url>https://github.com/xwikisas/xwiki-pro-macros/tree/master</url>
-    <tag>xwiki-pro-macros-parent-1.31.0</tag>
+    <tag>HEAD</tag>
   </scm>
   <!-- Even though this repository is already declared in the parent POM, we still explicitly redeclare it for
    convenience. This makes it simpler to build this project without having to declare this repository in one's own
