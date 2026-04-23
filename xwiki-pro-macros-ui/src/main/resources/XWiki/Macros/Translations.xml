@@ -233,7 +233,7 @@ rendering.macro.contributors.parameter.showPages.description=Should the list of 
 rendering.macro.contributors.parameter.noneFoundMessage.name=None found message
 rendering.macro.contributors.parameter.noneFoundMessage.description=The message to show when no contributors are found
 rendering.macro.contributors.parameter.global.name=Global
-rendering.macro.contributors.parameter.global.description=rendering.macro.contributors.parameter.global.description=Searches at the global level, across all wikis. When this parameter is marked, the space parameter is ignored.
+rendering.macro.contributors.parameter.global.description=Searches at the global level, across all wikis. When this parameter is marked, the space parameter is ignored.
 
 
 confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
