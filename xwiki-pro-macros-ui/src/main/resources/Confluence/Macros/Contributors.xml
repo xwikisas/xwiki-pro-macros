@@ -345,12 +345,12 @@ Result:
   #end
 #end
 #macro (showContribution $contribution)
-  &lt;a class="contributor-name" href="$escapetool.xml($xwiki.getURL($contribution['name']))"&gt;$xwiki.getUserName($contribution['name'], false)&lt;/a&gt;
+  &lt;a class="contributor-name" href="$escapetool.xml($xwiki.getURL($contribution['name']))"&gt;$xwiki.getUserName($contribution['name'], false)&lt;/a&gt;##
   #if ($showCount)
-    &lt;span class="contributor-contribution-count"&gt; $contribution['count'] &lt;/span&gt;
+    &lt;span class="contributor-contribution-count"&gt; $contribution['count'] &lt;/span&gt;##
   #end
   #if ($showLastTime)
-    &lt;span class="contributor-last-contribution-date"&gt;($xwiki.formatDate($contribution['update']))&lt;/span&gt;
+    &lt;span class="contributor-last-contribution-date"&gt; ($xwiki.formatDate($contribution['update']))&lt;/span&gt;##
   #end
 #end
 #macro (addContributions $query $pages)
@@ -488,8 +488,8 @@ Result:
         &lt;/ul&gt;
       #else
         #foreach($contribution in $contributions)
-          #if(!$foreach.first),#end
-          #showContribution($contribution)
+          #showContribution($contribution)##
+          #if(!$foreach.last), #end
         #end
       #end
       #if ($include.contains('labels'))
