@@ -21,8 +21,6 @@ package com.xwiki.macros.script;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,21 +56,30 @@ public class ContributorsScriptService implements ScriptService
     public List<Map<String, Object>> sortContributors(Collection<Map<String, Object>> contributors, String key,
         boolean reverse, int limit)
     {
+        int s = reverse ? -1 : 1;
+
         List<Map<String, Object>> result = new ArrayList<>(contributors);
 
-        Collections.sort(result, new Comparator<Map<String, Object>>()
-        {
-            @Override
-            public int compare(Map<String, Object> v1, Map<String, Object> v2)
-            {
+        result.sort((contributorX, contributorY) -> {
+            Object vX = contributorX.get(key);
+            Object vY = contributorY.get(key);
 
-                int cmp = ((Comparable<Object>) v1.get(key)).compareTo(v2.get(key));
-                return reverse ? -cmp : cmp;
+            if (vX instanceof Number && vY instanceof Number) {
+                // a bit contrived, but one of the numbers can be an Integer and the other a Long. We normalize to long.
+                return s * (Long.compare(((Number) vX).longValue(), ((Number) vY).longValue()));
             }
+
+            if (vX instanceof String) {
+                // we hope vY is a String
+                return s * ((String) vX).compareTo(vY.toString());
+            }
+
+            // Should not happen
+            return s * ((Comparable<Object>) vX).compareTo(vY);
         });
 
         if (0 < limit) {
-            return result.subList(0, limit < result.size() ? limit : result.size());
+            return result.subList(0, Math.min(limit, result.size()));
         }
         return result;
     }
