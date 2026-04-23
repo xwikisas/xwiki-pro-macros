@@ -78,6 +78,11 @@ public final class ButtonMacro extends BaseElement
         return expectedUrl.equals(getParentLink().getAttribute("href"));
     }
 
+    public String getFontColor()
+    {
+        return button.getCssValue("color");
+    }
+
     private WebElement getParentLink()
     {
         return button.findElement(By.xpath("ancestor::a"));

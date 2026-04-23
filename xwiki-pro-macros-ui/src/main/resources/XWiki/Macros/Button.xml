@@ -380,6 +380,7 @@ $services.localization.render('rendering.macro.button.description')
         ## The factor value was found empirically.
           filter: brightness(0.85);
           color: white;
+          ## See https://css-tricks.com/approximating-contrast-color-with-other-css-features/
           color: oklch(from $bgColor round(1.21 - L) 0 0);
         #end
       #end
