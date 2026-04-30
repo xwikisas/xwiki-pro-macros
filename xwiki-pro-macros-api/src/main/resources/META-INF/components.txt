@@ -29,3 +29,4 @@ com.xwiki.macros.viewfile.internal.macro.ViewFileMacroPrepareBlocks
 com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncThumbnailRenderer
 com.xwiki.macros.viewfile.internal.macro.async.MacroAsyncManager
 com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncFullRenderer
+com.xwiki.macros.status.internal.StatusMacro
