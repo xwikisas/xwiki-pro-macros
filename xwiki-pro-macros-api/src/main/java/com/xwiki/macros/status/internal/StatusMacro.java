@@ -26,11 +26,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.CompositeBlock;
 import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.MacroBlock;
+import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.macro.MacroContentParser;
@@ -80,6 +82,16 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
         return true;
     }
 
+    /**
+     * @param parameters the macro parameters
+     * @param content the macro content
+     * @return {@code true} to mark the execution as isolated
+     */
+    public boolean isExecutionIsolated(StatusMacroParameters parameters, String content)
+    {
+        return true;
+    }
+
     @Override
     protected List<Block> internalExecute(StatusMacroParameters parameters, String content,
         MacroTransformationContext context) throws MacroExecutionException
@@ -87,8 +99,8 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
         if (!context.isInline() && isEditMode(context)) {
             // Construct a new macro block to replace the old one with the inline flag set to true.
             MacroBlock oldMacroBlock = context.getCurrentMacroBlock();
-            MacroBlock replacement =
-                new MacroBlock(oldMacroBlock.getId(), oldMacroBlock.getParameters(), oldMacroBlock.getContent(), true);
+            MacroMarkerBlock replacement = new MacroMarkerBlock(oldMacroBlock.getId(), oldMacroBlock.getParameters(),
+                generateInlineBlocks(parameters, context), true);
             oldMacroBlock.getParent().replaceChild(new ParagraphBlock(List.of(replacement)), oldMacroBlock);
 
             // Add a parent to the old macro block as otherwise the MacroTransformation fails in XWiki < 16.5.0.
@@ -98,8 +110,13 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
             return List.of();
         }
 
-        StringBuilder cssClass = prepareCSS(parameters);
+        return generateInlineBlocks(parameters, context);
+    }
 
+    private List<Block> generateInlineBlocks(StatusMacroParameters parameters, MacroTransformationContext context)
+        throws MacroExecutionException
+    {
+        StringBuilder cssClass = prepareCSS(parameters);
         Map<String, String> blockParameters = Map.of("class", cssClass.toString());
         List<Block> blocks =
             this.contentParser.parse(getTitle(parameters), Syntax.PLAIN_1_0, context, false, null, true).getChildren();
@@ -110,7 +127,7 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
     private String getTitle(StatusMacroParameters parameters)
     {
         String title = parameters.getTitle();
-        if (title == null || title.isEmpty()) {
+        if (StringUtils.isBlank(title)) {
             title = parameters.getColour();
         }
         return title;
