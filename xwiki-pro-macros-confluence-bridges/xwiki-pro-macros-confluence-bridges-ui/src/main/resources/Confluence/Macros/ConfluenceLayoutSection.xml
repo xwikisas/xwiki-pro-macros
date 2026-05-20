@@ -158,6 +158,12 @@ This is a bridge for the Confluence Layout Section macro. It is usually used wit
   flex-direction: row;
   word-break: break-word;
 }
+
+.macro-layout-section table {
+  width: 100%;
+  table-layout: fixed;
+}
+
 .macro-layout-section &gt; .xwiki-metadata-container.cke_widget_editable {
   flex-basis: 100%;
 }
