@@ -34,6 +34,7 @@ import org.xwiki.rendering.block.FormatBlock;
 import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.MacroMarkerBlock;
 import org.xwiki.rendering.block.ParagraphBlock;
+import org.xwiki.rendering.block.WordBlock;
 import org.xwiki.rendering.listener.Format;
 import org.xwiki.rendering.macro.MacroContentParser;
 import org.xwiki.rendering.macro.MacroExecutionException;
@@ -84,7 +85,7 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
 
     /**
      * @param parameters the macro parameters
-     * @param content the macro content
+     * @param content    the macro content
      * @return {@code true} to mark the execution as isolated
      */
     public boolean isExecutionIsolated(StatusMacroParameters parameters, String content)
@@ -99,8 +100,9 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
         if (!context.isInline() && isEditMode(context)) {
             // Construct a new macro block to replace the old one with the inline flag set to true.
             MacroBlock oldMacroBlock = context.getCurrentMacroBlock();
+            context.setInline(true);
             MacroMarkerBlock replacement = new MacroMarkerBlock(oldMacroBlock.getId(), oldMacroBlock.getParameters(),
-                generateInlineBlocks(parameters, context), true);
+                generateBlocks(parameters, context), true);
             oldMacroBlock.getParent().replaceChild(new ParagraphBlock(List.of(replacement)), oldMacroBlock);
 
             // Add a parent to the old macro block as otherwise the MacroTransformation fails in XWiki < 16.5.0.
@@ -110,18 +112,24 @@ public class StatusMacro extends AbstractProMacro<StatusMacroParameters>
             return List.of();
         }
 
-        return generateInlineBlocks(parameters, context);
+        return generateBlocks(parameters, context);
     }
 
-    private List<Block> generateInlineBlocks(StatusMacroParameters parameters, MacroTransformationContext context)
+    private List<Block> generateBlocks(StatusMacroParameters parameters, MacroTransformationContext context)
         throws MacroExecutionException
     {
         StringBuilder cssClass = prepareCSS(parameters);
-        Map<String, String> blockParameters = Map.of("class", cssClass.toString());
-        List<Block> blocks =
-            this.contentParser.parse(getTitle(parameters), Syntax.PLAIN_1_0, context, false, null, true).getChildren();
-        blocks = List.of(new FormatBlock(blocks, Format.NONE, blockParameters));
-        return blocks;
+        String title = getTitle(parameters);
+        Map<String, String> blockParameters = Map.of("class", cssClass.toString(), "title", title);
+        if (context.isInline()) {
+            List<Block> blocks = this.contentParser.parse(getTitle(parameters), Syntax.PLAIN_1_0, context, false, null,
+                context.isInline()).getChildren();
+            return List.of(new FormatBlock(blocks, Format.NONE, blockParameters));
+        } else {
+            Block wordBlock = new WordBlock(title);
+            List<Block> spanBlock = List.of(new FormatBlock(List.of(wordBlock), Format.NONE, blockParameters));
+            return List.of(new ParagraphBlock(spanBlock));
+        }
     }
 
     private String getTitle(StatusMacroParameters parameters)
