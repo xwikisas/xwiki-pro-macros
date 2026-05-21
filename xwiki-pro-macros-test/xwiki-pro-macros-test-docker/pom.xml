@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros-ui</artifactId>
-      <version>${platform.version}</version>
+      <version>${project.version}</version>
       <type>xar</type>
       <exclusions>
         <!-- Run the functional tests without a license. -->
