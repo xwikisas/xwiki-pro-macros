@@ -36,11 +36,14 @@ import javax.inject.Singleton;
 import org.apache.solr.common.SolrDocument;
 import org.slf4j.Logger;
 import org.xwiki.component.annotation.Component;
+import org.xwiki.contrib.cql.aqlparser.exceptions.ParserException;
 import org.xwiki.localization.ContextualLocalizationManager;
+import org.xwiki.query.QueryException;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererConfiguration;
 import org.xwiki.rendering.async.internal.block.BlockAsyncRendererExecutor;
 import org.xwiki.rendering.block.Block;
 import org.xwiki.rendering.block.LinkBlock;
+import org.xwiki.rendering.block.MacroBlock;
 import org.xwiki.rendering.block.MetaDataBlock;
 import org.xwiki.rendering.block.SpaceBlock;
 import org.xwiki.rendering.block.TableBlock;
@@ -120,7 +123,18 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         MacroTransformationContext context)
     {
 
-        List<SolrDocument> documents = cqlUtils.buildAndExecute(buildQueryMap(parameters));
+        List<SolrDocument> documents;
+        try {
+            documents = cqlUtils.buildAndExecute(buildQueryMap(parameters));
+        } catch (QueryException e) {
+            String message = e.getMessage();
+            if (e.getCause() instanceof ParserException) {
+                // The CQL parser has nice and useful error messages
+                message += "\n" + e.getCause().getMessage();
+            }
+            return List.of(new MacroBlock(
+                "error", Map.of(), message, context.isInline()));
+        }
         List<String> headings = confluenceSummaryProcessor.parseHeadings(parameters.getHeadings());
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
