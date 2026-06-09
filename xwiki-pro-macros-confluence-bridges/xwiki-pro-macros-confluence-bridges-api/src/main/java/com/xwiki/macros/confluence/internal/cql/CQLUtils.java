@@ -107,9 +107,8 @@ public class CQLUtils
      * @param macroParameters parameters of the macro.
      * @return list of SolrDocuments matching the CQL.
      */
-    public List<SolrDocument> buildAndExecute(Map<String, Object> macroParameters)
+    public List<SolrDocument> buildAndExecute(Map<String, Object> macroParameters) throws QueryException
     {
-
         String cql = (String) macroParameters.getOrDefault(CQL, "");
         String fq = "";
         // If the CQL is not already present as a parameter we try to build it.
@@ -129,24 +128,20 @@ public class CQLUtils
         List<SolrDocument> docs = new ArrayList<>();
         Set<String> alreadyFound = new HashSet<>();
         // Everything is prepared, and we attempt to execute the query.
-        try {
-            Query query = queryManager.createQuery(cql, CQL);
-            if (StringUtils.isNotBlank(fq)) {
-                query.bindValue("fq", fq.trim());
+        Query query = queryManager.createQuery(cql, CQL);
+        if (StringUtils.isNotBlank(fq)) {
+            query.bindValue("fq", fq.trim());
+        }
+        query.setLimit(limit);
+        query.bindValue(SORT, String.format("%s %s", sortField, sortDirection));
+        QueryResponse queryResponse = (QueryResponse) query.execute().get(0);
+        SolrDocumentList documents = queryResponse.getResults();
+        for (SolrDocument document : documents) {
+            String fullRef = String.format("%s:%s", document.get("wiki"), document.get("fullname"));
+            if (!alreadyFound.contains(fullRef)) {
+                docs.add(document);
+                alreadyFound.add(fullRef);
             }
-            query.setLimit(limit);
-            query.bindValue(SORT, String.format("%s %s", sortField, sortDirection));
-            QueryResponse queryResponse = (QueryResponse) query.execute().get(0);
-            SolrDocumentList documents = queryResponse.getResults();
-            for (SolrDocument document : documents) {
-                String fullRef = String.format("%s:%s", document.get("wiki"), document.get("fullname"));
-                if (!alreadyFound.contains(fullRef)) {
-                    docs.add(document);
-                    alreadyFound.add(fullRef);
-                }
-            }
-        } catch (QueryException e) {
-            logger.error("Failed to execute the CQL", e);
         }
 
         return docs;
