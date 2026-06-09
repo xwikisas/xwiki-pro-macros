@@ -35,14 +35,18 @@ public class AsyncRequest extends WrappingXWikiRequest
 {
     private final HttpSession session;
 
+    private final String servletPath;
+
     /**
      * @param originalRequest the main thread request.
      * @param session the main thread session.
+     * @param servletPath the main thread servletPath.
      */
-    public AsyncRequest(XWikiRequest originalRequest, HttpSession session)
+    public AsyncRequest(XWikiRequest originalRequest, HttpSession session, String servletPath)
     {
         super(originalRequest);
         this.session = session;
+        this.servletPath = servletPath;
     }
 
     @Override
@@ -55,5 +59,11 @@ public class AsyncRequest extends WrappingXWikiRequest
     public HttpSession getSession(boolean create)
     {
         return this.session;
+    }
+
+    @Override
+    public String getServletPath()
+    {
+        return this.servletPath;
     }
 }

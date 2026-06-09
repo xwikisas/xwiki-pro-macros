@@ -129,6 +129,8 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
 
     private HttpSession session;
 
+    private String servletPath;
+
     private boolean csvFirstLineIsHeader = true;
 
     private String csvDelimiter;
@@ -152,6 +154,7 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         XWikiContext wikiContext = this.wikiContextProvider.get();
         this.wikiRequest = wikiContext.getRequest();
         this.session = this.wikiRequest.getSession();
+        this.servletPath = this.wikiRequest.getServletPath();
         this.height = parameters.getOrDefault(HEIGHT_KEY, DEFAULT_HEIGHT);
         this.width = parameters.getOrDefault(WIDTH_KEY, DEFAULT_WIDTH);
         this.fileExtension = parameters.get("fileExtension");
@@ -310,7 +313,7 @@ public class ViewFileAsyncFullRenderer extends AbstractViewFileAsyncRenderer
         // a session/SessionManager as there is no request, so we wrap the original thread request and session to
         // avoid a NullPointerException in DefaultTemporaryAttachmentSessionsManager. To be removed once XWiki parent
         // version is >= 17.4.1.
-        this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session));
+        this.wikiContextProvider.get().setRequest(new AsyncRequest(wikiRequest, session, servletPath));
         List<Block> officeMacroResult = displayerMacro.execute(macroParameters, "", transformationContext);
         this.wikiContextProvider.get().setRequest(wikiRequest);
         return wrapWithFullViewFormat(officeMacroResult);
