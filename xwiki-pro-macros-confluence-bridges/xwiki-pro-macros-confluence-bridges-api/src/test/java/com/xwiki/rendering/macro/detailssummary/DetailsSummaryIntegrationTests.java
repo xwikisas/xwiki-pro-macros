@@ -70,12 +70,11 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@AllComponents
 /**
- * Where the tests are located.
+ * Details Summary tests.
  */
+@AllComponents
 @RenderingTestSuite.Scope(value = "macros.detailssummary")
-
 public class DetailsSummaryIntegrationTests implements RenderingTests
 {
     private XWikiContext xcontext;
@@ -163,8 +162,6 @@ public class DetailsSummaryIntegrationTests implements RenderingTests
                 2119889257L, List.of("multiple"), true);
         when(cqlUtils.buildAndExecute(argThat(map -> map != null && map.get("label").equals("multi2")))).thenReturn(
             List.of(normalDocumentWithViewRights, multimpleDetailsCallsOnTheSamePage, missingColumns));
-
-
 
         SolrDocument sortableColumns =
             mockFullDoc(componentManager, "macros/detailssummary/content/sortableColumns", "sortableColumns", "Yoda",
