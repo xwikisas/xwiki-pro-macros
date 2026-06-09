@@ -124,27 +124,30 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
         List<String> headings = confluenceSummaryProcessor.parseHeadings(parameters.getHeadings());
         // We create the columns here and give the object as a parameter so we can collect the column names as we go in
         // case the user didn't provide them already.
-        List<Block> columns = new ArrayList<>();
         // The first column will always be the document name, but it may be translated to a different name.
         String titleColumnName = parameters.getFirstcolumn().isEmpty()
-                                 ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
-                                 : parameters.getFirstcolumn();
-        columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
-        if (!headings.isEmpty()) {
-            for (String heading : headings) {
-                Block cell = new TableHeadCellBlock(parsePlainText(heading));
-                columns.add(cell);
-            }
-        }
-        List<String> columnsLower = new ArrayList<>();
-        // Always add the name of the column that holds the document name.
-        columnsLower.add(titleColumnName.toLowerCase());
-        if (!headings.isEmpty()) {
-            for (String heading : headings) {
-                columnsLower.add(heading.toLowerCase());
-            }
+                ? localizationManager.getTranslationPlain("rendering.macro.detailssummary.firstcolumn")
+                : parameters.getFirstcolumn();
+        List<Block> columns = getColumns(titleColumnName, headings);
+        List<String> columnsLower = getColumnsLower(titleColumnName, headings);
+        List<Block> tableRows = getRows(parameters, context, documents, headings, columns, columnsLower);
+
+        enhanceHeader(parameters, columns, columnsLower);
+        // Before adding the header row sort the rows.
+        confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
+        tableRows.add(0, new TableRowBlock(columns));
+        // If the table rows has only one row then it means that there were no details macro found, and we should add
+        // a message to make this clear to the user.
+        if (tableRows.size() == 1) {
+            rowsNotFound(tableRows);
         }
 
+        return List.of(new TableBlock(tableRows));
+    }
+
+    private List<Block> getRows(DetailsSummaryMacroParameters parameters, MacroTransformationContext context,
+             List<SolrDocument> documents, List<String> headings, List<Block> columns, List<String> columnsLower)
+    {
         List<Block> tableRows = new ArrayList<>();
         List<RowContext> rawRows = new ArrayList<>();
         for (SolrDocument document : documents) {
@@ -168,18 +171,33 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
                 logger.warn("Failed to render the row with the permissions of the author.", e);
             }
         });
+        return tableRows;
+    }
 
-        enhanceHeader(parameters, columns, columnsLower);
-        // Before adding the header row sort the rows.
-        confluenceSummaryProcessor.maybeSort(parameters.getSort(), parameters.getReverse(), columnsLower, tableRows);
-        tableRows.add(0, new TableRowBlock(columns));
-        // If the table rows has only one row then it means that there were no details macro found, and we should add
-        // a message to make this clear to the user.
-        if (tableRows.size() == 1) {
-            rowsNotFound(tableRows);
+    private List<Block> getColumns(String titleColumnName, List<String> headings)
+    {
+        List<Block> columns = new ArrayList<>();
+        columns.add(0, new TableHeadCellBlock(parsePlainText(titleColumnName)));
+        if (!headings.isEmpty()) {
+            for (String heading : headings) {
+                Block cell = new TableHeadCellBlock(parsePlainText(heading));
+                columns.add(cell);
+            }
         }
+        return columns;
+    }
 
-        return List.of(new TableBlock(tableRows));
+    private static List<String> getColumnsLower(String titleColumnName, List<String> headings)
+    {
+        List<String> columnsLower = new ArrayList<>();
+        // Always add the name of the column that holds the document name.
+        columnsLower.add(titleColumnName.toLowerCase());
+        if (!headings.isEmpty()) {
+            for (String heading : headings) {
+                columnsLower.add(heading.toLowerCase());
+            }
+        }
+        return columnsLower;
     }
 
     protected Map<String, Object> buildQueryMap(DetailsSummaryMacroParameters parameters)
