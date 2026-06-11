@@ -237,20 +237,20 @@ rendering.macro.contributors.parameter.noneFoundMessage.description=Message à a
 rendering.macro.contributors.parameter.global.description=Recherche au niveau global, à travers tous les wikis. Quand ce paramètre est coché, le paramètre "Espaces" est ignoré.
 
 
-### Missing: confluencecontributors.labelsnotsupported=Note: listing label authors is not supported
-### Missing: confluencecontributors.watchesnotsupported=Note: listing people watching pages is not supported
+confluencecontributors.labelsnotsupported=Note : lister les auteurs des tags n'est pas supporté
+confluencecontributors.watchesnotsupported=Note : lister les personnes suivant les pages n'est pas supporté
 ### Missing: confluencecontributors.pages=Pages:
 ### Missing: confluencecontributors.nopages=(none)
-### Missing: confluencecontributors.param.include.authors=Authors
-### Missing: confluencecontributors.param.include.comments=Comments
-### Missing: confluencecontributors.param.include.labels=Labels(Not supported)
-### Missing: confluencecontributors.param.include.watches=Watches(Not supported)
+confluencecontributors.param.include.authors=Auteurs
+confluencecontributors.param.include.comments=Commentaires
+confluencecontributors.param.include.labels=Tags (non supporté)
+confluencecontributors.param.include.watches=Suiveurs (non supporté)
 ### Missing: com.xwiki.pickers.contributors.Mode.inline=Inline
 ### Missing: com.xwiki.pickers.contributors.Mode.list=List
-### Missing: com.xwiki.pickers.contributors.Order.count=Count
+com.xwiki.pickers.contributors.Order.count=Compteur
 ### Missing: com.xwiki.pickers.contributors.Order.name=Name
 ### Missing: com.xwiki.pickers.contributors.Order.update=Update
-### Missing: com.xwiki.pickers.contributors.Scope.children=Children
+com.xwiki.pickers.contributors.Scope.children=Enfants
 ### Missing: com.xwiki.pickers.contributors.Scope.descendants=Descendants
 ### Missing: com.xwiki.pickers.contributors.Scope.specified=Specified
 
