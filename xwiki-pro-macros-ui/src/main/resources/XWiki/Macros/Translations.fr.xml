@@ -239,7 +239,7 @@ rendering.macro.contributors.parameter.global.description=Recherche au niveau gl
 
 confluencecontributors.labelsnotsupported=Note : lister les auteurs des tags n'est pas supporté
 confluencecontributors.watchesnotsupported=Note : lister les personnes suivant les pages n'est pas supporté
-### Missing: confluencecontributors.pages=Pages:
+confluencecontributors.pages=Pages :
 ### Missing: confluencecontributors.nopages=(none)
 confluencecontributors.param.include.authors=Auteurs
 confluencecontributors.param.include.comments=Commentaires
@@ -252,42 +252,42 @@ com.xwiki.pickers.contributors.Order.count=Compteur
 ### Missing: com.xwiki.pickers.contributors.Order.update=Update
 com.xwiki.pickers.contributors.Scope.children=Enfants
 ### Missing: com.xwiki.pickers.contributors.Scope.descendants=Descendants
-### Missing: com.xwiki.pickers.contributors.Scope.specified=Specified
+com.xwiki.pickers.contributors.Scope.specified=Spécifié
 
 ## Excerpt macro
 ### Missing: rendering.macro.excerpt.name=Excerpt
-### Missing: rendering.macro.excerpt.description=Excerpt macro. It marks part of the page's content for use by other macros. It is compatible with the Confluence Excerpt macro.
-### Missing: rendering.macro.excerpt.parameter.hidden.name=Hidden
-### Missing: rendering.macro.excerpt.parameter.hidden.description=Whether the excerpt should be hidden from the page
+rendering.macro.excerpt.description=Macro Excerpt. Elle marque une partie du contenu de la page pour être utilisé par d'autres macros. Elle est compatible avec la macro Confluence Excerpt.
+rendering.macro.excerpt.parameter.hidden.name=Caché
+rendering.macro.excerpt.parameter.hidden.description=Si l'extrait doit être caché dans la page
 ### Missing: rendering.macro.excerpt.parameter.name.name=Name
-### Missing: rendering.macro.excerpt.parameter.name.description=The name of the excerpt, for named includes.
-### Missing: rendering.macro.excerpt.parameter.allowUnprivilegedInclude.name=Allow unprivileged include
-### Missing: rendering.macro.excerpt.parameter.allowUnprivilegedInclude.description=Allow this excerpt to be seen even for people who don't have view rights on this page when included
+rendering.macro.excerpt.parameter.name.description=Le nom de l'extrait, pour le nommer dans les inclusions.
+rendering.macro.excerpt.parameter.allowUnprivilegedInclude.name=Permettre l'inclusion sans droits
+rendering.macro.excerpt.parameter.allowUnprivilegedInclude.description=Autoriser la vue de cet extrait même pour les personnes qui n'ont pas les droits de vue sur la page, lorsque inclus
 
 
 ## Excerpt Include macro
 ### Missing: rendering.macro.excerpt-include.name=Excerpt include
-### Missing: rendering.macro.excerpt-include.parameter.reference.name=Reference
-### Missing: rendering.macro.excerpt-include.parameter.reference.description=The reference of the document containing the excerpt to display
+rendering.macro.excerpt-include.parameter.reference.name=Référence
+rendering.macro.excerpt-include.parameter.reference.description=La référence du document contenant l'extrait à afficher
 ### Missing: rendering.macro.excerpt-include.parameter.name.name=Name
-### Missing: rendering.macro.excerpt-include.parameter.name.description=The name of the excerpt to be displayed
+rendering.macro.excerpt-include.parameter.name.description=Le nom de l'extrait à afficher
 ### Missing: rendering.macro.excerpt-include.parameter.nopanel.name=No panel
-### Missing: rendering.macro.excerpt-include.parameter.nopanel.description=Disable the panel
+rendering.macro.excerpt-include.parameter.nopanel.description=Désactiver le panneau
 ### Missing: rendering.macro.excerpt-include.parameter.inline.name=Inline
-### Missing: rendering.macro.excerpt-include.parameter.inline.description=Use the macro in inline mode. When in inline mode, the panel parameter is ignored.
-### Missing: rendering.macro.excerpt-include.description=Includes excerpts from other documents into the current page. The included pages need to contain the simple `excerpt` macro.
-### Missing: rendering.macro.excerptinclude.namedexcerptnotfound=Excerpt named {0} was not found in document {1}.
-### Missing: rendering.macro.excerptinclude.referenceexcerptnotfound=The referenced document [{0}] was not found.
+rendering.macro.excerpt-include.parameter.inline.description=Utilise la macro en mode "en ligne". En mode en ligne, le paramètre du panneau est ignoré.
+rendering.macro.excerpt-include.description=Intègre un extrait provenant d'un autre document dans la page courante. Les pages incluses doivent contenir la macro simple "excerpt".
+rendering.macro.excerptinclude.namedexcerptnotfound=L''extrait nommé {0} n''a pas été trouvé dans le document {1}.
+rendering.macro.excerptinclude.referenceexcerptnotfound=Le document référencé [{0}] n''a pas été trouvé.
 rendering.macro.excerptinclude.recursiondetected=Boucle détectée. Veuillez vérifier les paramètres de la macro excerpt-include afin qu'elle n'essaie pas de s'inclure elle-même.
 
 ##Hide if macro
 ### Missing: rendering.macro.hide-if.name=Hide if
-### Missing: rendering.macro.hide-if.parameter.description=Hide the content of this macro if the condition set through the parameters is met.
-### Missing: rendering.macro.hide-if.parameter.matchUsing.name=Match using
-### Missing: rendering.macro.hide-if.parameter.matchUsing.description=Set if we must match all contraints or only one. If set to "all", then all items set must match.
+rendering.macro.hide-if.parameter.description=Cache le contenu de cette macro si les conditions paramétrées sont réunies.
+rendering.macro.hide-if.parameter.matchUsing.name=Vérifier en utilisant
+rendering.macro.hide-if.parameter.matchUsing.description=Définit si toutes les contraintes doivent être respectées, ou seulement une. Si configuré sur "tous" ("all"), alors tous les items doivent être respectés.
 ### Missing: rendering.macro.hide-if.parameter.authenticationType.name=Authentication type
 ### Missing: rendering.macro.hide-if.parameter.authenticationType.description=The type of user to match, using authentication type: * None - No authentication type is chosen. * Authenticated - The user is logged in. * Anonymous - The user is not logged in.
-### Missing: rendering.macro.hide-if.parameter.displayType.name=Display type
+rendering.macro.hide-if.parameter.displayType.name=Type d'affichage
 ### Missing: rendering.macro.hide-if.parameter.displayType.description=The type of display to show this content. I could be: * None: don't take into account for this parameter. * Default: Show on screen (when the content is not printed). * Printable: Show when it's printed. Will be enabled for PDF or ODT export.
 ### Missing: rendering.macro.hide-if.parameter.groups.name=groups
 ### Missing: rendering.macro.hide-if.parameter.groups.description=The list of user group(s) to match.
