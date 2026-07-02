@@ -292,6 +292,7 @@ The wireframe preview is an attachment added to the parent page. For example, fo
   #set($resourceID = $wikimacro.parameters.get('initialResourceID'))
   #set($initialBranchID = $wikimacro.parameters.get('initialBranchID'))
   #set($alignment = $wikimacro.parameters.get('Alignment'))
+  #set ($escapedAlignment = $services.rendering.escape($alignment.toLowerCase(), 'xwiki/2.1')))
   ## PNG attachment details
   #set($attachmentNamePrefix = 'balsamiq')
   #set($attachmentNameSuffix = 'Master')
@@ -300,7 +301,7 @@ The wireframe preview is an attachment added to the parent page. For example, fo
   #end
   #set($imageAlignment = 'center')
   #if("$!alignment" != '')
-    #set($imageAlignment = $alignment.toLowerCase())
+    #set ($imageAlignment = $escapedAlignment)
   #end
   #set($attachmentName = "${attachmentNamePrefix}_${resourceID}_${attachmentNameSuffix}.png")
   #set($attachment = $doc.getAttachment($attachmentName))

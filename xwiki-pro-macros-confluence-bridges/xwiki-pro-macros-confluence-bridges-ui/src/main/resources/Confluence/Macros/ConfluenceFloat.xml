@@ -418,8 +418,10 @@ Vel deserunt voluptas ut molestiae porro ut accusantium consequatur quo aspernat
   #else
     #set ($cssClass = 'confluence-float-inline-start')
   #end
-  {{box cssClass="$cssClass" width="$wikimacro.parameters.width"}}
-  {{wikimacrocontent/}}
+  #set ($width = $wikimacro.parameters.width)
+  #set ($escapedWidth = $services.rendering.escape("$!width", 'xwiki/2.1'))
+  {{box cssClass="$cssClass" width="$escapedWidth"}}
+    {{wikimacrocontent/}}
   {{/box}}
 #end
 #if ($services.promacrolicensing.hasLicensureForEntity($xcontext.macro.doc.documentReference))

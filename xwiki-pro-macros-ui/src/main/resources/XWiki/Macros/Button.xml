@@ -310,10 +310,15 @@ $services.localization.render('rendering.macro.button.description')
   #set ($label = $escapetool.xml($wikimacro.parameters.label))
   #set ($title = $escapetool.xml($wikimacro.parameters.title))
   #set ($url = $escapetool.xml($wikimacro.parameters.url))
+  #if (!$services.html.isAttributeSafe('a', 'href', $url))
+    #set ($warningLabel = $services.localization.render('rendering.macro.button.warning.checkURL'))
+    {{warning}}$services.rendering.escape($warningLabel, 'xwiki/2.1'){{/warning}}
+    #break
+  #end
   #set ($color = $wikimacro.parameters.color)
-  #set ($colorCss = $wikimacro.parameters.get("color"))
-  #if (!$colorCss)
-    #set ($colorCss = $xcontext.macro.params.get("color"))
+  #if (!$color)
+    ## If the color parameter is not set it means that the parameter values was given as a string and not as a java.awt.Color object.
+    #set ($color = $xcontext.macro.params.get("color"))
   #end
   #set ($width = $escapetool.xml($wikimacro.parameters.width))
   #set ($newTab = $escapetool.xml($wikimacro.parameters.newTab))
@@ -345,8 +350,9 @@ $services.localization.render('rendering.macro.button.description')
       #set ($textColor = "#fff")
     #end
   #else
-    #set ($bgColor = $colorCss)
-    #set ($borderColor = $colorCss)
+    #set ($escapedColor = $escapetool.xml($color))
+    #set ($bgColor = $escapedColor)
+    #set ($borderColor = $escapedColor)
     #set ($textColor = "white")
   #end
   #set ($macro.additionalClass = '')
