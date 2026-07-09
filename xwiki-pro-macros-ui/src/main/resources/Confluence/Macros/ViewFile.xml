@@ -583,12 +583,16 @@ span.viewFileThumbnailCard {
   position: absolute;
   inset: 0px;
   opacity: 0;
-  transition: .7s ease;
+  transition: .1s ease;
   background-color: $theme.buttonPrimaryBackgroundColor;
 }
 
 .image-container:hover .overlay {
   opacity: 1;
+}
+
+.viewfile-download-label {
+  font-family: Open Sans,sans-serif;
 }
 
 .overlay-text {
