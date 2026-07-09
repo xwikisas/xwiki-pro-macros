@@ -342,7 +342,10 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         const spanContainer = document.createElement('span');
         spanContainer.className = 'viewfile-actions-header';
         downloadLink.download = true;
-        downloadLink.textContent = ' ' + $(a).find('.viewFileName').text();
+        const downloadLabel = document.createElement('span');
+        downloadLabel.className = 'viewfile-download-label';
+        downloadLabel.textContent = ' ' + $(a).find('.viewFileName').text();
+        downloadLink.appendChild(downloadLabel);
         downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink viewfile-header-button';
         downloadLink.href = a.href;
         spanContainer.appendChild(downloadLink);
