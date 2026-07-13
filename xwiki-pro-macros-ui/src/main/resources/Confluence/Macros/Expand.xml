@@ -295,7 +295,7 @@ require(['jquery'], function ($) {
   transform: rotate(90deg);
 }
 
-.confluence-expand-macro .panel-title > .glyphicon {
+.confluence-expand-macro .panel-title &gt; .glyphicon {
   line-height: unset;
 }
 
