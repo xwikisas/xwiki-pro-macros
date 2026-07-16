@@ -19,28 +19,28 @@
  */
 package com.xwiki.macros.userlist.macro;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.xwiki.properties.annotation.PropertyAdvanced;
 import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyName;
 import org.xwiki.stability.Unstable;
 
 import com.xwiki.macros.internal.grouplist.GroupReferenceList;
 import com.xwiki.macros.internal.userlist.UserReferenceList;
+import com.xwiki.pickers.userList.UserListProperties;
 
 /**
  * Parameters for the {@link com.xwiki.macros.userlist.internal.macro.UserListMacro}.
  *
  * @version $Id$
+ * @since 1.31.4
  */
 public class UserListMacroParameters
 {
     private UserReferenceList users;
     private GroupReferenceList groups;
 
-    private List<String> properties = Arrays.asList("avatar", "username");
+    private String properties = "avatar,username";
 
     /**
      * User table layout style.
@@ -94,7 +94,7 @@ public class UserListMacroParameters
     /**
      * @return list of properties to be displayed
      */
-    public List<String> getProperties()
+    public String getProperties()
     {
         return this.properties;
     }
@@ -106,7 +106,8 @@ public class UserListMacroParameters
      */
     @PropertyName("Properties")
     @PropertyDescription("List of user properties to be displayed")
-    public void setProperties(List<String> properties)
+    @PropertyDisplayType(UserListProperties.class)
+    public void setProperties(String properties)
     {
         this.properties = properties;
     }
