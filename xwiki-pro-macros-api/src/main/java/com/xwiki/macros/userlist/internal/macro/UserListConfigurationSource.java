@@ -35,7 +35,7 @@ import org.xwiki.stability.Unstable;
  * The source of the user list configuration.
  *
  * @version $Id$
- * @since 1.31.4
+ * @since 1.32.0
  */
 @Component
 @Singleton

@@ -38,7 +38,7 @@ import org.xwiki.stability.Unstable;
  * The API needed to retrieve the configuration.
  *
  * @version $Id$
- * @since 1.31.4
+ * @since 1.32.0
  */
 @Component(roles = UserListConfiguration.class)
 @Singleton
@@ -55,13 +55,13 @@ public class UserListConfiguration
     /**
      * @return set of banned fields, or an empty set if the current user has admin rights.
      */
-    public Set<String> bannedFields()
+    public Set<String> getBannedFields()
     {
         if (this.authorizationManager.hasAccess(Right.ADMIN)) {
             return Collections.emptySet();
         }
 
         String stringField = this.configurationSource.getProperty("bannedFields", "");
-        return new HashSet<>(List.of(stringField.split(",")));
+        return stringField.isEmpty() ? new HashSet<>() : new HashSet<>(List.of(stringField.split(",")));
     }
 }

@@ -196,7 +196,7 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 
         List<String> propertiesList = Arrays.asList(properties.split(DELIMITER));
         List<String> result = new ArrayList<>(propertiesList.size());
-        Set<String> bannedFields = userListConfiguration.bannedFields();
+        Set<String> bannedFields = userListConfiguration.getBannedFields();
         for (String property : propertiesList) {
             if (!bannedFields.contains(property)) {
                 result.add(property);

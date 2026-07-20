@@ -35,7 +35,7 @@ import com.xwiki.macros.userlist.internal.macro.UserListConfiguration;
  * Expose the configuration to the velocity scripts.
  *
  * @version $Id$
- * @since 1.31.4
+ * @since 1.32.0
  */
 @Component
 @Named("userlist")
@@ -51,6 +51,6 @@ public class UserListScriptService implements ScriptService
      */
     public Set<String> getBannedFields()
     {
-        return userListConfiguration.bannedFields();
+        return userListConfiguration.getBannedFields();
     }
 }

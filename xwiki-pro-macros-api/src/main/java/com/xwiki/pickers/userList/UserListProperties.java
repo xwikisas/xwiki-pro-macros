@@ -22,7 +22,7 @@ package com.xwiki.pickers.userList;
 /**
  * Picker for the properties field of the user list macro.
  *
- * @since 1.31.4
+ * @since 1.32.0
  * @version $Id$
  */
 public class UserListProperties

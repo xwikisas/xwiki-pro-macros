@@ -33,7 +33,7 @@ import com.xwiki.pickers.userList.UserListProperties;
  * Parameters for the {@link com.xwiki.macros.userlist.internal.macro.UserListMacro}.
  *
  * @version $Id$
- * @since 1.31.4
+ * @since 1.4
  */
 public class UserListMacroParameters
 {
