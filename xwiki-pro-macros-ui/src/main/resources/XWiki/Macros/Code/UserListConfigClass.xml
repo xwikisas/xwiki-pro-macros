@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.6" reference="XWiki.Macros.Code.UserListConfigClass" locale="">
+<xwikidoc version="1.5" reference="XWiki.Macros.Code.UserListConfigClass" locale="">
   <web>XWiki.Macros.Code</web>
   <name>UserListConfigClass</name>
   <language/>
@@ -60,31 +60,6 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </bannedFields>
-    <test>
-      <cache>0</cache>
-      <customDisplay/>
-      <defaultValue/>
-      <disabled>0</disabled>
-      <displayType>select</displayType>
-      <freeText/>
-      <hint/>
-      <largeStorage>0</largeStorage>
-      <multiSelect>1</multiSelect>
-      <name>test</name>
-      <number>2</number>
-      <picker>1</picker>
-      <prettyName>test</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators>|, </separators>
-      <size>1</size>
-      <sort/>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <values>a|b</values>
-      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </test>
   </class>
   <object>
     <name>XWiki.Macros.Code.UserListConfigClass</name>

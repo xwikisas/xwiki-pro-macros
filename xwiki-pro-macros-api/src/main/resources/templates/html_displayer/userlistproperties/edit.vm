@@ -24,8 +24,10 @@
     #set($paramName = 'properties')
 #end
 #set ($paramValue = $displayer.value)
-#if (!$paramValue)
+#if (!$paramValue && !$selectedValues)
     #set($paramValue = [])
+#else
+    #set ($paramValue = $selectedValues)
 #end
 #set ($parameters = {
     'name': $paramName,
@@ -35,14 +37,13 @@
     'options': []
 })
 #set ($bannedFields = $services.userlist.getBannedFields())
-$bannedFields
 ## Generate the list of parameters
 #if ($classDoc && $classDoc.xWikiClass)
     #set ($targetClass = $classDoc.xWikiClass)
     #foreach ($property in $targetClass.properties)
         #if (!$bannedFields.contains($property.name))
             #set ($discard = $parameters.get('options').add(
-                {'name': $property.name, 'value': $property.name}
+            {'name': $property.name, 'value': $property.name}
             ))
         #end
     #end
@@ -50,7 +51,7 @@ $bannedFields
 #set ($usernamePropery = 'username')
 #if (!$bannedFields.contains($usernamePropery))
     #set ($discard = $parameters.get('options').add(
-        {'name': $usernamePropery, 'value': $usernamePropery}
+    {'name': $usernamePropery, 'value': $usernamePropery}
     ))
 #end
 #staticSelectPicker($parameters)
