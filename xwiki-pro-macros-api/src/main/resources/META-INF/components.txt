@@ -30,3 +30,6 @@ com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncThumbnailRenderer
 com.xwiki.macros.viewfile.internal.macro.async.MacroAsyncManager
 com.xwiki.macros.viewfile.internal.macro.async.ViewFileAsyncFullRenderer
 com.xwiki.macros.status.internal.StatusMacro
+com.xwiki.macros.userlist.internal.macro.UserListConfiguration
+com.xwiki.macros.userlist.internal.macro.UserListConfigurationSource
+com.xwiki.macros.script.UserListScriptService
