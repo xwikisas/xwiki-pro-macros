@@ -51,7 +51,7 @@
 #set ($usernamePropery = 'username')
 #if (!$bannedFields.contains($usernamePropery))
     #set ($discard = $parameters.get('options').add(
-    {'name': $usernamePropery, 'value': $usernamePropery}
+        {'name': $usernamePropery, 'value': $usernamePropery}
     ))
 #end
 #staticSelectPicker($parameters)
