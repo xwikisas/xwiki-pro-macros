@@ -121,6 +121,12 @@ rendering.macro.status.parameter.title.name=Titre
 rendering.macro.status.parameter.title.description=Le texte du statut. Si non spécifié, le nom de la couleur sera affiché (par ex. :"Grey").
 rendering.macro.status.parameter.subtle.name=Sobre
 rendering.macro.status.parameter.subtle.description=L'aspect du statut : soit texte blanc sur fond sombre, ou texte foncé sur fond clair. C'est un paramètre booléen, aussi, il doit être rempli avec "true" ou "false". Par défaut : "false" (texte blanc sur fond sombre).
+com.xwiki.pickers.status.StatusColor.blue=Bleu
+com.xwiki.pickers.status.StatusColor.green=Vert
+com.xwiki.pickers.status.StatusColor.grey=Gris
+com.xwiki.pickers.status.StatusColor.purple=Violet
+com.xwiki.pickers.status.StatusColor.red=Rouge
+com.xwiki.pickers.status.StatusColor.yellow=Jaune
 
 ## Microsoft Stream macro
 rendering.macro.msStream.name=Macro Microsoft Stream

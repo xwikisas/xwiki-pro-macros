@@ -323,6 +323,29 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
     };
 
+    // Closes the popup when the user clicks anywhere outside of the dialog box.
+    // Reuses popup.closeDialog() so it behaves exactly like the existing X button / Esc key close.
+    const bindOutsideClickClose = function(popup) {
+      const namespace = 'mousedown.viewFileModalOutsideClose';
+
+      // Make sure we never stack multiple handlers if a modal is opened more than once.
+      $(document).off(namespace);
+
+      $(document).on(namespace, function(event) {
+        if (!$(event.target).closest(popup.dialogBox).length) {
+          popup.closeDialog();
+        }
+      });
+
+      // Wrap closeDialog so the listener is cleaned up whenever the popup gets closed
+      // (X button, Esc key, or this outside click), avoiding uplicate handlers.
+      const originalCloseDialog = popup.closeDialog.bind(popup);
+      popup.closeDialog = function() {
+        $(document).off(namespace);
+        originalCloseDialog();
+      };
+    };
+
     $(document).on("click", async function (e) {
       if (("" + document.getElementById("xwikicontent")?.contentEditable) == "true") {
         return;
@@ -342,7 +365,10 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         const spanContainer = document.createElement('span');
         spanContainer.className = 'viewfile-actions-header';
         downloadLink.download = true;
-        downloadLink.textContent = ' ' + $(a).find('.viewFileName').text();
+        const downloadLabel = document.createElement('span');
+        downloadLabel.className = 'viewfile-download-label';
+        downloadLabel.textContent = ' ' + $(a).find('.viewFileName').text();
+        downloadLink.appendChild(downloadLabel);
         downloadLink.className = 'fa fa-download button button-primary viewFileModal-downloadLink viewfile-header-button';
         downloadLink.href = a.href;
         spanContainer.appendChild(downloadLink);
@@ -352,6 +378,7 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
         }
         $(popup.dialogBox).prepend(spanContainer);
         popup.showDialog();
+        bindOutsideClickClose(popup);
         e.preventDefault();
         const response = await fetch(XWiki.contextPath + '/wiki/' + XWiki.currentWiki +
           '/get/Confluence/Macros/ViewFileService?action=render&amp;attachment=' + encodeURIComponent(fileRef));
@@ -583,12 +610,16 @@ span.viewFileThumbnailCard {
   position: absolute;
   inset: 0px;
   opacity: 0;
-  transition: .7s ease;
+  transition: .1s ease;
   background-color: $theme.buttonPrimaryBackgroundColor;
 }
 
 .image-container:hover .overlay {
   opacity: 1;
+}
+
+.viewfile-download-label {
+  font-family: Open Sans,sans-serif;
 }
 
 .overlay-text {
