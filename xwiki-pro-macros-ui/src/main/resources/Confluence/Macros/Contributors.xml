@@ -460,17 +460,19 @@ Result:
             $services.localization.render("confluencecontributors.nopages")
           #else
             #foreach ($page in $pages)
-               #if (!$foreach.first), #end##
-               #set($d = $xwiki.getDocument($page))
-               &lt;a class="contributors-page" href="$escapetool.xml($d.getURL())"&gt;##
-               #set($title = "$!d.getRenderedTitle($xwiki.currentContentSyntaxId)")
-               #if ($title != "")
-                 $escapetool.xml($title)##
-               #elseif ("$!d.name" != "")
-                 $escapetool.xml($d.name)##
-               #else
-                 $escapetool.xml($page)##
-               #end&lt;/a&gt;##
+              #if ($xwiki.hasAccessLevel('view', $page))
+                #if (!$foreach.first), #end##
+                #set($d = $xwiki.getDocument($page))
+                &lt;a class="contributors-page" href="$escapetool.xml($d.getURL())"&gt;##
+                #set($title = "$!d.getRenderedTitle($xwiki.currentContentSyntaxId)")
+                #if ($title != "")
+                  $escapetool.xml($title)##
+                #elseif ("$!d.name" != "")
+                  $escapetool.xml($d.name)##
+                #else
+                  $escapetool.xml($page)##
+                #end&lt;/a&gt;##
+              #end
             #end
           #end
         &lt;/p&gt;
