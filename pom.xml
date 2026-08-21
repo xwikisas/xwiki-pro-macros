@@ -39,7 +39,7 @@
     <mathjax.version>1.1.8</mathjax.version>
     <diagram.version>2.0</diagram.version>
     <locationsearch.version>1.6.3</locationsearch.version>
-    <datemacro.version>3.10.2</datemacro.version><!-- when updating this, please check dependency management -->
+    <datemacro.version>3.11.2</datemacro.version>
     <confluence.version>9.96.2</confluence.version>
     <confluencepro.version>1.43.2</confluencepro.version>
     <cql.version>0.3.0</cql.version>
@@ -76,25 +76,6 @@
   </repositories>
   <dependencyManagement>
     <dependencies>
-      <!-- remove when application-task and date macro are updated to a 15.10 parent -->
-      <dependency>
-        <groupId>org.xwiki.platform</groupId>
-        <artifactId>xwiki-platform-sheet-ui</artifactId>
-        <type>xar</type>
-        <version>${platform.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.xwiki.platform</groupId>
-        <artifactId>xwiki-platform-uiextension-ui</artifactId>
-        <type>xar</type>
-        <version>${platform.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.xwiki.platform</groupId>
-        <artifactId>xwiki-platform-display-macro</artifactId>
-        <version>${platform.version}</version>
-      </dependency>
-      <!-- end remove -->
       <!-- when pro commons pickers are updated to parent 15.10, please remove the following dependency -->
       <dependency>
         <groupId>org.xwiki.platform</groupId>
