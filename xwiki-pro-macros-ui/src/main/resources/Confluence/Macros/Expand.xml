@@ -288,11 +288,15 @@ require(['jquery'], function ($) {
       <code>.confluence-expand-macro .glyphicon {
   margin-right: 0.5rem;
   transform: rotate(0deg);
-  transition: transform 0.3s;
+  transition: transform 0.1s;
 }
 
 .confluence-expand-macro[open] &gt; summary .glyphicon {
   transform: rotate(90deg);
+}
+
+.confluence-expand-macro .panel-title &gt; .glyphicon {
+  line-height: unset;
 }
 
 .confluence-expand-macro .panel-title{

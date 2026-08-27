@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,15 +44,14 @@ import org.xwiki.rendering.block.RawBlock;
 import org.xwiki.rendering.macro.MacroExecutionException;
 import org.xwiki.rendering.syntax.Syntax;
 import org.xwiki.rendering.transformation.MacroTransformationContext;
-import org.xwiki.text.StringUtils;
 import org.xwiki.wiki.user.UserScope;
 import org.xwiki.wiki.user.WikiUserManager;
 import org.xwiki.wiki.user.WikiUserManagerException;
 
 import com.xwiki.macros.AbstractProMacro;
 import com.xwiki.macros.internal.grouplist.GroupReferenceList;
-import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 import com.xwiki.macros.internal.userlist.UserReferenceList;
+import com.xwiki.macros.userlist.macro.UserListMacroParameters;
 
 /**
  * This macro displays a list of users with their name and avatar.
@@ -63,7 +63,10 @@ import com.xwiki.macros.internal.userlist.UserReferenceList;
 @Singleton
 public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
 {
+
     private static final String XWIKI_DOT = "XWiki.";
+
+    private static final String DELIMITER = ",";
 
     @Inject
     private HTMLDisplayerManager htmlDisplayerManager;
@@ -81,63 +84,25 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
     @Inject
     private DocumentReferenceResolver<String> resolver;
 
+    @Inject
+    private UserListConfiguration userListConfiguration;
+
     /**
      * Create and initialize the descriptor of the macro.
      */
     public UserListMacro()
     {
-        super("User list", "Displays a custom list of users with their avatar",
-            UserListMacroParameters.class);
-    }
-
-    private void addUsersFromWiki(UserReferenceList users, String wiki, List<String> groups)
-        throws QueryException
-    {
-        Query query;
-
-        if (groups.isEmpty()) {
-            query = queryManager.createQuery(
-                "select doc.fullName from Document doc, doc.object(XWiki.XWikiUsers) obj "
-                    + "order by doc.fullName",
-                Query.XWQL
-            );
-        } else {
-            query = queryManager.createQuery(
-                "select g.member from "
-                    + "Document doc, "
-                    + "doc.object(XWiki.XWikiGroups) g "
-                    + "where doc.fullName in (:groups) and g.member <> ''"
-                    + "order by g.member",
-                Query.XWQL
-            );
-            query.bindValue("groups", groups);
-        }
-        List<String> results = query.setWiki(wiki).execute();
-        for (String userName : results) {
-            users.add(resolver.resolve(ensureFullUserRef(wiki, userName)));
-        }
-    }
-
-    private static String ensureFullUserRef(String wiki, String userName)
-    {
-        String userRef = userName;
-        if (!userRef.contains(XWIKI_DOT)) {
-            userRef = XWIKI_DOT + userRef;
-        }
-        if (!userRef.contains(":XWiki.")) {
-            userRef = wiki + ':' + userRef;
-        }
-        return userRef;
+        super("User list", "Displays a custom list of users with their avatar", UserListMacroParameters.class);
     }
 
     @Override
     public List<Block> internalExecute(UserListMacroParameters parameters, String content,
-        MacroTransformationContext context)
-        throws MacroExecutionException
+        MacroTransformationContext context) throws MacroExecutionException
     {
         Map<String, String> params = new HashMap<>();
         try {
-            params.put("properties", StringUtils.join(parameters.getProperties(), ','));
+            String properties = handleProperties(parameters.getProperties());
+            params.put("properties", properties);
             params.put("fixedTableLayout", String.valueOf(parameters.isFixedTableLayout()));
 
             UserReferenceList users = parameters.getUsers();
@@ -182,7 +147,7 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
             }
 
             String html = htmlDisplayerManager.display(UserReferenceList.class, users, params, "view");
-            return Arrays.asList(new RawBlock(html, Syntax.HTML_5_0));
+            return List.of(new RawBlock(html, Syntax.HTML_5_0));
         } catch (HTMLDisplayerException | QueryException | WikiUserManagerException e) {
             throw new MacroExecutionException("Failed to render the userProfile viewer template.", e);
         }
@@ -192,5 +157,52 @@ public class UserListMacro extends AbstractProMacro<UserListMacroParameters>
     public boolean supportsInlineMode()
     {
         return false;
+    }
+
+    private void addUsersFromWiki(UserReferenceList users, String wiki, List<String> groups) throws QueryException
+    {
+        Query query;
+
+        if (groups.isEmpty()) {
+            query = queryManager.createQuery(
+                "select doc.fullName from Document doc, doc.object(XWiki.XWikiUsers) obj " + "order by doc.fullName",
+                Query.XWQL);
+        } else {
+            query = queryManager.createQuery(
+                "select g.member from " + "Document doc, " + "doc.object(XWiki.XWikiGroups) g "
+                    + "where doc.fullName in (:groups) and g.member <> ''" + "order by g.member", Query.XWQL);
+            query.bindValue("groups", groups);
+        }
+        List<String> results = query.setWiki(wiki).execute();
+        for (String userName : results) {
+            users.add(resolver.resolve(ensureFullUserRef(wiki, userName)));
+        }
+    }
+
+    private static String ensureFullUserRef(String wiki, String userName)
+    {
+        String userRef = userName;
+        if (!userRef.contains(XWIKI_DOT)) {
+            userRef = XWIKI_DOT + userRef;
+        }
+        if (!userRef.contains(":XWiki.")) {
+            userRef = wiki + ':' + userRef;
+        }
+        return userRef;
+    }
+
+    private String handleProperties(String properties)
+    {
+
+        List<String> propertiesList = Arrays.asList(properties.split(DELIMITER));
+        List<String> result = new ArrayList<>(propertiesList.size());
+        Set<String> bannedFields = userListConfiguration.getBannedFields();
+        for (String property : propertiesList) {
+            if (!bannedFields.contains(property)) {
+                result.add(property);
+            }
+        }
+
+        return String.join(DELIMITER, result);
     }
 }

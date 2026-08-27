@@ -19,7 +19,11 @@
  */
 package com.xwiki.macros.status.macro;
 
+import org.xwiki.properties.annotation.PropertyDisplayType;
+import org.xwiki.properties.annotation.PropertyMandatory;
+
 import com.xwiki.macros.status.internal.StatusMacro;
+import com.xwiki.pickers.status.StatusColor;
 
 /**
  * Parameter bean class for {@link StatusMacro}.
@@ -71,6 +75,7 @@ public class StatusMacroParameters
      *
      * @param colour the color of the status.
      */
+    @PropertyDisplayType(StatusColor.class)
     public void setColour(String colour)
     {
         this.colour = colour;
@@ -91,6 +96,7 @@ public class StatusMacroParameters
      *
      * @param title the text of the status.
      */
+    @PropertyMandatory
     public void setTitle(String title)
     {
         this.title = title;
