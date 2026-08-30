@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.LocalDocumentReference;
@@ -42,6 +43,9 @@ import org.xwiki.script.ScriptContextManager;
 import org.xwiki.stability.Unstable;
 import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
+import com.xpn.xwiki.XWikiContext;
+import com.xpn.xwiki.XWikiException;
+import com.xpn.xwiki.doc.XWikiDocument;
 import com.xwiki.licensing.LicensedExtensionManager;
 import com.xwiki.licensing.LicensedFeatureId;
 import com.xwiki.licensing.Licensor;
@@ -74,8 +78,12 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 
     @Inject
     private Licensor licensor;
+
     @Inject
     private LicensedExtensionManager extensionManager;
+
+    @Inject
+    private Provider<XWikiContext> xwikiContextProvider;
 
     @Inject
     private WikiDescriptorManager wikiDescriptorManager;
@@ -126,9 +134,7 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
         throws MacroExecutionException
     {
 
-        if (checkProMacrosPackageHasLicense() || licensor.hasLicensure(
-            new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()))))
-        {
+        if (checkProMacrosPackageHasLicense() || checkProMacrosWebHomeHasLicense()) {
             return internalExecute(parameters, content, context);
         }
 
@@ -175,6 +181,29 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
         return PRO_MACROS_FEATURE_IDS.stream().map(
             featureId -> extensionManager.getLicensedExtensions(new LicensedFeatureId(featureId, VERSION_CONSTRAINT))
                 .stream().findFirst().orElse(null)).filter(Objects::nonNull).anyMatch(licensor::hasLicensure);
+    }
+
+    /**
+     * Verify is there is a license covering the Pro Macros WebHome. Not all possible installations of the Pro Macros
+     * have a WebHome, so we first verify if the document is present because the licensor will return true for all
+     * null calls.
+     *
+     * @return true if there is a license covering the Pro Macros WebHome, false otherwise.
+     */
+    private boolean checkProMacrosWebHomeHasLicense()
+    {
+        DocumentReference macrosWebHome =
+            new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()));
+        XWikiContext xwikiContext = xwikiContextProvider.get();
+        try {
+            XWikiDocument xWikiDocument = xwikiContext.getWiki().getDocument(macrosWebHome, xwikiContext);
+            if (xWikiDocument.isNew()) {
+                return false;
+            }
+            return licensor.hasLicensure(macrosWebHome);
+        } catch (XWikiException e) {
+            return false;
+        }
     }
 
     private boolean inEditModeFallBack()
