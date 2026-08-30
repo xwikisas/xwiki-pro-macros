@@ -296,7 +296,7 @@ This is my note with title and a link [[XWiki Store&gt;&gt;https://store.xwiki.c
       **$services.rendering.escape($wikimacro.parameters.title, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))**
 
     #end
-    $!wikimacro.content
+      {{wikimacrocontent/}}
   {{/warning}}
 #end
 {{/velocity}}

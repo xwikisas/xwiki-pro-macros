@@ -436,7 +436,7 @@ class Simple{
       )))
     #end
     {{code language="$services.rendering.escape("$!language", $xwiki.currentContentSyntaxId)"}}
-      $!wikimacro.content
+      $services.rendering.escape("$!wikimacro.content", $xwiki.currentContentSyntaxId)
     {{/code}}
   )))
 #end

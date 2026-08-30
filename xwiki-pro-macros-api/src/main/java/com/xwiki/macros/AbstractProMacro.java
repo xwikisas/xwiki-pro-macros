@@ -22,12 +22,11 @@ package com.xwiki.macros;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.xwiki.bridge.DocumentAccessBridge;
-import org.xwiki.extension.ExtensionId;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.LocalDocumentReference;
 import org.xwiki.model.reference.WikiReference;
@@ -43,6 +42,8 @@ import org.xwiki.script.ScriptContextManager;
 import org.xwiki.stability.Unstable;
 import org.xwiki.wiki.descriptor.WikiDescriptorManager;
 
+import com.xwiki.licensing.LicensedExtensionManager;
+import com.xwiki.licensing.LicensedFeatureId;
 import com.xwiki.licensing.Licensor;
 
 /**
@@ -55,18 +56,26 @@ import com.xwiki.licensing.Licensor;
 @Unstable
 public abstract class AbstractProMacro<P> extends AbstractMacro<P>
 {
-    private static final ExtensionId PRO_MACROS_EXT_ID = new ExtensionId("com.xwiki.pro:xwiki-pro-macros");
+    private static final String PRO_MACROS_LEGACY = "com.xwiki.pro:xwiki-pro-macros";
 
-    private static final LocalDocumentReference APP_WEBHOME = new LocalDocumentReference(Arrays.asList("Confluence",
-        "Macros"), "WebHome");
+    private static final String PRO_MACROS_ID = "com.xwiki.pro:xwiki-pro-macros-ui";
+
+    private static final String PRO_MACROS_BRIDGES_ID = "com.xwiki.pro:xwiki-pro-macros-confluence-bridges-ui";
+
+    private static final List<String> PRO_MACROS_FEATURE_IDS =
+        List.of(PRO_MACROS_LEGACY, PRO_MACROS_BRIDGES_ID, PRO_MACROS_ID);
+
+    private static final LocalDocumentReference APP_WEBHOME =
+        new LocalDocumentReference(Arrays.asList("Confluence", "Macros"), "WebHome");
 
     private static final Set<String> DEFAULT_CATEGORIES = Collections.singleton(DEFAULT_CATEGORY_CONTENT);
 
-    @Inject
-    private Licensor licensor;
+    private static final String VERSION_CONSTRAINT = "(,)";
 
     @Inject
-    private DocumentAccessBridge accessBridge;
+    private Licensor licensor;
+    @Inject
+    private LicensedExtensionManager extensionManager;
 
     @Inject
     private WikiDescriptorManager wikiDescriptorManager;
@@ -82,8 +91,8 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
      * @param contentDescriptor the content descriptor of the macro.
      * @param parametersBeanClass the class of the parameters bean of this class.
      */
-    protected AbstractProMacro(String name, String description,
-        ContentDescriptor contentDescriptor, Class<?> parametersBeanClass)
+    protected AbstractProMacro(String name, String description, ContentDescriptor contentDescriptor,
+        Class<?> parametersBeanClass)
     {
         super(name, description, contentDescriptor, parametersBeanClass);
         setDefaultCategories(DEFAULT_CATEGORIES);
@@ -116,22 +125,16 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     public List<Block> execute(P parameters, String content, MacroTransformationContext context)
         throws MacroExecutionException
     {
-        if (licensor.hasLicensure(PRO_MACROS_EXT_ID) || licensor.hasLicensure(
+
+        if (checkProMacrosPackageHasLicense() || licensor.hasLicensure(
             new DocumentReference(APP_WEBHOME, new WikiReference(wikiDescriptorManager.getCurrentWikiId()))))
         {
             return internalExecute(parameters, content, context);
         }
 
-        return Collections.singletonList(new MacroBlock(
-            "missingLicenseMessage",
-            Collections.singletonMap("extensionName", "proMacros.extension.name"),
-            null,
-            context.isInline())
-        );
+        return Collections.singletonList(new MacroBlock("missingLicenseMessage",
+            Collections.singletonMap("extensionName", "proMacros.extension.name"), null, context.isInline()));
     }
-
-    protected abstract List<Block> internalExecute(P parameters, String content, MacroTransformationContext context)
-        throws MacroExecutionException;
 
     /**
      * @return the wiki descriptor manager
@@ -140,6 +143,9 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
     {
         return this.wikiDescriptorManager;
     }
+
+    protected abstract List<Block> internalExecute(P parameters, String content, MacroTransformationContext context)
+        throws MacroExecutionException;
 
     protected boolean isEditMode(MacroTransformationContext context)
     {
@@ -157,6 +163,18 @@ public abstract class AbstractProMacro<P> extends AbstractMacro<P>
                 targetSyntaxType);
         }
         return editMode;
+    }
+
+    /**
+     * Verify if the instance has a valid license for any of the pro macros packages.
+     *
+     * @return true if the instance has a license for any of the pro macros packages, false otherwise.
+     */
+    private boolean checkProMacrosPackageHasLicense()
+    {
+        return PRO_MACROS_FEATURE_IDS.stream().map(
+            featureId -> extensionManager.getLicensedExtensions(new LicensedFeatureId(featureId, VERSION_CONSTRAINT))
+                .stream().findFirst().orElse(null)).filter(Objects::nonNull).anyMatch(licensor::hasLicensure);
     }
 
     private boolean inEditModeFallBack()
