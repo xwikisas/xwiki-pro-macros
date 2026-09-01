@@ -24,7 +24,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.extension.ExtensionId;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.script.service.ScriptService;
 import org.xwiki.stability.Unstable;
@@ -46,8 +45,6 @@ import com.xwiki.licensing.Licensor;
 @Unstable
 public class ProMacroLicensingScriptService implements ScriptService
 {
-    private static final ExtensionId PRO_MACROS_EXT_ID = new ExtensionId("com.xwiki.pro:xwiki-pro-macros");
-
     @Inject
     private Licensor licensor;
 
@@ -57,6 +54,6 @@ public class ProMacroLicensingScriptService implements ScriptService
      */
     public boolean hasLicensureForEntity(EntityReference docRef)
     {
-        return licensor.hasLicensure(docRef) || licensor.hasLicensure(PRO_MACROS_EXT_ID);
+        return licensor.hasLicensure(docRef);
     }
 }
