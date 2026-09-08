@@ -41,13 +41,6 @@
       <artifactId>xwiki-pro-macros-ui</artifactId>
       <version>${project.version}</version>
       <type>xar</type>
-      <exclusions>
-        <!-- Run the functional tests without a license. -->
-        <exclusion>
-          <groupId>com.xwiki.licensing</groupId>
-          <artifactId>application-licensing-licensor-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -76,13 +69,6 @@
       <artifactId>xwiki-platform-wiki-user-default</artifactId>
       <version>${platform.version}</version>
     </dependency>
-    <!--  Until here.  -->
-    <dependency>
-      <groupId>com.xwiki.licensing</groupId>
-      <artifactId>application-licensing-test-api</artifactId>
-      <version>${licensing.version}</version>
-      <scope>runtime</scope>
-    </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-wiki-creationjob</artifactId>
@@ -101,15 +87,15 @@
     <dependency>
       <groupId>com.xwiki.pro</groupId>
       <artifactId>xwiki-pro-macros-confluence-bridges-ui</artifactId>
-      <version>1.32.3-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>xar</type>
-      <exclusions>
-        <!-- Run the functional tests without a license. -->
-        <exclusion>
-          <groupId>com.xwiki.licensing</groupId>
-          <artifactId>application-licensing-licensor-api</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <!-- Mock Licensor / LicensedExtensionManager. -->
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-test-licensing</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>

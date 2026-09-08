@@ -35,6 +35,7 @@ import org.xwiki.test.docker.junit5.ExtensionOverride;
 import org.xwiki.test.docker.junit5.TestConfiguration;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
+import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.ViewPage;
 
@@ -53,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         // Add the FileUploadPlugin which is needed by the test to upload attachment files
         "xwikiCfgPlugins=com.xpn.xwiki.plugin.fileupload.FileUploadPlugin",
         "xwikiPropertiesAdditionalProperties=test.prchecker.excludePattern=.*:XWiki\\.OfficeImporterAdmin",
+        "logging.deprecated.enabled=false"
     },
     extensionOverrides = {
         @ExtensionOverride(extensionId = "com.google.code.findbugs:jsr305", overrides = {
@@ -65,12 +67,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             "features=org.bouncycastle:bcpkix-jdk15on" }),
         @ExtensionOverride(extensionId = "org.bouncycastle:bcmail-jdk18on", overrides = {
             "features=org.bouncycastle:bcmail-jdk15on" })
+    },
+    // See GenericMacrosIT.
+    extraJARs = {
+        "com.xwiki.licensing:application-licensing-licensor-api:1.32.3",
+        "com.xwiki.pro:xwiki-pro-macros-test-licensing"
     })
 class ViewFileIT
 {
     @BeforeAll
-    void setup(TestUtils setup)
+    void setup(TestUtils setup, LogCaptureConfiguration logCaptureConfiguration)
     {
+        // For some reason the xcontext.action seems to be deprecated in the test instance even though is not
+        // deprecated in normal instances.
+        logCaptureConfiguration.registerExcludes(
+            "Deprecated usage of getter [com.xpn.xwiki.api.DeprecatedContext.getAction] in "
+                + "xwiki:XWikiProCommons.CKEPlugins.getMacroDescriptor");
+
         setup.loginAsSuperAdmin();
     }
 

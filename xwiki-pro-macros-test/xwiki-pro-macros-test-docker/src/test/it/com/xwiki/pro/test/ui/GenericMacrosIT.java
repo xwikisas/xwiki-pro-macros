@@ -41,6 +41,7 @@ import org.xwiki.test.docker.junit5.TestConfiguration;
 import org.xwiki.test.docker.junit5.TestReference;
 import org.xwiki.test.docker.junit5.UITest;
 import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
+import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.CommentsTab;
 
@@ -90,6 +91,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             + "com.xpn.xwiki.plugin.skinx.CssResourceSkinExtensionPlugin",
         "xwikiPropertiesAdditionalProperties=test.prchecker.excludePattern=.*:"
             + "((XWiki\\.Macros\\.Team)|(Confluence\\.Macros\\.(ContentReportTableMacro|Contributors)))",
+        "logging.deprecated.enabled=false"
     },
     extensionOverrides = {
         @ExtensionOverride(
@@ -118,7 +120,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                 "features=org.bouncycastle:bcmail-jdk15on"
             }
         )
-    })
+    },
+    // Load the mock licensing components (xwiki-pro-macros-test-licensing) and the licensing API they implement into
+    // WEB-INF/lib, so they are available at startup, before the Pro Macros extension is installed, and win the
+    // component lookup. This lets the macros render without a real license. Keep the
+    // application-licensing-licensor-api version in sync with licensing.version in the root POM.
+    extraJARs = {
+        "com.xwiki.licensing:application-licensing-licensor-api:1.32.3",
+        "com.xwiki.pro:xwiki-pro-macros-test-licensing"
+    }
+)
 public class GenericMacrosIT
 {
     private static final List<String> BASE_XWIKI_MACRO_SPACE = List.of("XWiki", "Macros");
@@ -141,8 +152,14 @@ public class GenericMacrosIT
     }
 
     @BeforeAll
-    void setup(TestUtils setup) throws Exception
+    void setup(TestUtils setup, LogCaptureConfiguration logCaptureConfiguration) throws Exception
     {
+       // For some reason the xcontext.action seems to be deprecated in the test instance even though is not
+        // deprecated in normal instances.
+        logCaptureConfiguration.registerExcludes(
+            "Deprecated usage of getter [com.xpn.xwiki.api.DeprecatedContext.getAction] in "
+                + "xwiki:XWikiProCommons.CKEPlugins.getMacroDescriptor");
+
         setup.loginAsSuperAdmin();
         setup.createUser("UserTest", "UserTest", "", "company", "xwiki", "phone", "07777777", "email",
             "usertest@example.com", "address", "userTestAddress", "comment", "test", "blog", "https://example.com/",

@@ -1,0 +1,2 @@
+800:com.xwiki.pro.test.licensing.TestLicensor
+800:com.xwiki.pro.test.licensing.TestLicensedExtensionManager
