@@ -36,40 +36,30 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity output="false"}}
-#macro(getUniquePageReference $space $return)
-  #set($id = $mathtool.random(1, 1000000000))
-  #set($uniquePageName = 'Diagram' + $id)
-  #if($xwiki.getDocument($services.model.resolveDocument("${space}.${uniquePageName}")).isNew())
-    #set($return = $NULL)
-    #setVariable("$return" "${space}.${uniquePageName}")
-  #else
-    #getUniquePageReference($space $return)
-  #end
-#end
-{{/velocity}}
-
-{{velocity}}
+  <content>{{velocity}}
 #if (!$services.csrf.isTokenValid($!request.form_token))
   Invalid CSRF Token.
   $response.setStatus(400)
   #stop
 #end
-#set($createDiagram = "$!request.action" == 'create')
-#set($deleteDiagram = "$!request.action" == 'delete')
-#set($page = $request.page)
-#set($diagramName = $request.diagramName)
-#if($createDiagram &amp;&amp; "$!page" != '' &amp;&amp; "$!diagramName" != '')
-  #set($pageReference = $services.model.resolveDocument($page))
-  #if($services.security.authorization.hasAccess('edit', $pageReference))
-    #set($pageDoc = $xwiki.getDocument($page))
-    #set($diagramAttach = $pageDoc.getAttachment($diagramName))
-    #set($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
+#if ("$!request.action" == 'create' &amp;&amp; $request.diagramName &amp;&amp; $request.docContainingDiagram)
+  #set ($diagramName = $request.diagramName)
+  #if ($diagramName.endsWith(".drawio"))
+    ## this branch should be removed if we fix https://github.com/xwikisas/application-diagram/issues/453
+    #set ($convertedDiagramFilenameWithoutExtension = $diagramName.substring(0, $diagramName.length - 7))
+  #else
+    #set ($convertedDiagramFilenameWithoutExtension = $diagramName)
+  #end
+  #set ($convertedDiagramFilename = $convertedDiagramFilenameWithoutExtension + ".diagram.xml")
+  #set ($docContainingDiagramReference = $services.model.resolveDocument($request.docContainingDiagram))
+  #if ($services.security.authorization.hasAccess('edit', $docContainingDiagramReference))
+    #set ($pageDoc = $xwiki.getDocument($docContainingDiagramReference))
+    #set ($diagramAttach = $pageDoc.getAttachment($diagramName))
+    #set ($diagramPreviewAttach = $pageDoc.getAttachment("${diagramName}.png"))
     #if (!$diagramPreviewAttach)
       #set($diagramPreviewAttach = $pageDoc.getAttachment($request.diagramPNGName))
     #end
     #if($diagramAttach)
-      #getUniquePageReference($xwiki.getDocument($page).space $uniquePageReference)
       #set($diagramContent = $diagramAttach.getContentAsString())
       #if(($diagramContent.contains('&lt;mxfile ') || $diagramContent.contains('&lt;mxfile&gt;')) &amp;&amp; ($diagramContent.contains('&lt;diagram ') || $diagramContent.contains('&lt;diagram&gt;')))
         ## Drawio
@@ -78,16 +68,15 @@
         #set($xml = $services.diagram.importDiagram($diagramContent, $diagramName))
       #end
       #if ("$!xml" != '')
-        #set($diagramDoc = $xwiki.getDocument($uniquePageReference))
-        #set($discard = $diagramDoc.addObject($diagramDoc.newObject('Diagram.DiagramClass')))
-        #set($discard = $diagramDoc.setContent($xml))
-        #set($discard = $diagramDoc.setTitle('Diagram'))
-        #set($diagramObj = $diagramDoc.newObject('Confluence.Macros.DiagramClass'))
-        #set($discard = $diagramObj.set('page', $page))
-        #set($discard = $diagramObj.set('diagramName', $diagramName))
-        #set($discard = $diagramDoc.addObject($diagramObj))
-        #set($diagramPreviewPNG = $diagramDoc.addAttachment('diagram.png', $diagramPreviewAttach.getContent()))
-        #set($discard = $diagramDoc.save($services.localization.render('confluencediagram.create.message')))
+        #if ($pageDoc.getAttachment($convertedDiagramFilename))
+          ## Bad Request
+          #set($logger = $services.logging.getLogger('com.xwiki.macros.diagram.DiagramService'))
+          #set($discard = $logger.warn("could not convert diagram from [{}]; target attachment [{}] already exists", $convertedDiagramFilename))
+          $response.setStatus(400)
+        #else
+          #set($discard = $pageDoc.addAttachment($convertedDiagramFilename, $xml.getBytes()))
+          #set($discard = $pageDoc.save($services.localization.render('confluencediagram.create.message')))
+        #end
       #else
         ## Bad Request
         #set($logger = $services.logging.getLogger('com.xwiki.macros.diagram.DiagramService'))
@@ -102,11 +91,25 @@
     ## Unauthorized
     $response.setStatus(401)
   #end
-#elseif($deleteDiagram &amp;&amp; "$!page" != '')
-  #set($pageReference = $services.model.resolveDocument($page))
-  #if($services.security.authorization.hasAccess('delete', $pageReference))
-    ## Delete
-    $xwiki.getDocument($pageReference).delete()
+#elseif("$!request.action" == 'delete')
+  #if ($request.convertedDiagramFilename)
+    #set ($docContainingDiagram = $request.docContainingDiagram)
+    #set ($docContainingDiagramReference = $services.model.resolveDocument($docContainingDiagram))
+    #if ($services.security.authorization.hasAccess('edit', $docContainingDiagramReference))
+      #set ($pageDoc = $xwiki.getDocument($docContainingDiagramReference))
+      $pageDoc.removeAttachment($request.convertedDiagramFilename)
+      $pageDoc.save("Revert diagram conversion by deleting $request.convertedDiagramFilename")
+    #else
+      ## Unauthorized
+      $response.setStatus(401)
+    #end
+  #elseif($request.diagramPage)
+    #set ($diagramPageReference = $services.model.resolveDocument($request.diagramPage))
+    #if($services.security.authorization.hasAccess('delete', $diagramPageReference))
+      ## Delete
+      #set($diagramPageDoc = $xwiki.getDocument($diagramPageReference))
+      $diagramPageDoc.delete()
+    #end
   #else
     ## Unauthorized
     $response.setStatus(401)

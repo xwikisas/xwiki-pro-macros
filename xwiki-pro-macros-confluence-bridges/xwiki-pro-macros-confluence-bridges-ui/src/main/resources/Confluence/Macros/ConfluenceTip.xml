@@ -280,7 +280,7 @@ This is my tip with a title.
       **$services.rendering.escape($wikimacro.parameters.title, $services.rendering.resolveSyntax($xwiki.getCurrentContentSyntaxId()))**
 
     #end
-    $!wikimacro.content
+     {{wikimacrocontent/}}
   {{/success}}
 #end
 {{/velocity}}

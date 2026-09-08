@@ -24,38 +24,31 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.xwiki.pro</groupId>
-    <artifactId>xwiki-pro-macros-confluence-bridges-legacy-parent</artifactId>
+    <artifactId>xwiki-pro-macros-test</artifactId>
     <version>1.32.3-SNAPSHOT</version>
   </parent>
+  <artifactId>xwiki-pro-macros-test-licensing</artifactId>
+  <name>Pro Macros - Tests - Licensing Mock</name>
+  <description>Mock licensing components so that the Pro Macros functional tests run without a real license.</description>
   <packaging>jar</packaging>
-  <artifactId>xwiki-pro-macros-confluence-bridges-legacy-api</artifactId>
-  <name>Pro Macros - Legacy Confluence bridges API</name>
-  <description>The API needed for XWiki Pro Macros legacy, unprefixed Confluence bridges</description>
   <dependencies>
+    <dependency>
+      <groupId>com.xwiki.licensing</groupId>
+      <artifactId>application-licensing-licensor-api</artifactId>
+      <version>${licensing.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.xwiki.commons</groupId>
       <artifactId>xwiki-commons-component-api</artifactId>
       <version>${commons.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-api</artifactId>
-      <version>${rendering.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.rendering</groupId>
-      <artifactId>xwiki-rendering-transformation-macro</artifactId>
-      <version>${rendering.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-rendering-wikimacro-api</artifactId>
-      <version>${platform.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-extension-api</artifactId>
+      <version>${commons.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
