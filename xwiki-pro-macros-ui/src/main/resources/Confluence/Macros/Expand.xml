@@ -36,19 +36,17 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>The expand macro is a bridge between Confluence and XWiki. It provides an expandable / collapsible section for writting content.
+  <content>The expand macro is a bridge between Confluence and XWiki. It provides an expandable / collapsible section for writing content.
 
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**title**|Text displayed on the collaspse toggle|No|(empty)
+|**title**|Text displayed on the collapse toggle|Yes|(empty)
 |**expanded**|If selected the expand will be opened automatically when loading the page.|No|False
-
-Note: if no title is provided, the title of the first panel or the first header appearing in the content will be used. if there is no such header or panel title, "Click here to expand…" will be used.
 
 = Example Usage =
 
-{{expand expanded="false"}}
+{{expand title="Hello" expanded="false"}}
 Hello
 {{/expand}}</content>
   <object>
@@ -769,7 +767,7 @@ require(['jquery'], function ($) {
       <description/>
     </property>
     <property>
-      <mandatory>0</mandatory>
+      <mandatory>1</mandatory>
     </property>
     <property>
       <name>title</name>
