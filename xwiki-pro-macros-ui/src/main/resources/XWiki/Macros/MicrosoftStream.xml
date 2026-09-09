@@ -489,31 +489,37 @@ $xwiki.currentContentSyntaxId)|No|true
 
 #macro (executeMacro)
   #set ($discard = $xwiki.ssx.use('XWiki.Macros.MicrosoftStream'))
-  #getStyle($stringtool.lowerCase($xcontext.macro.params.alignment) $xcontext.macro.params.textWrap $styleClass)
-  #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
-  ## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
-  #set ($autoplay = $xcontext.macro.params.autoplay)
-  #if ($autoplay)
-    #set ($discard = $queryParams.put('autoplay', $autoplay))
-  #end
-  #set ($showinfo = $xcontext.macro.params.showinfo)
-  #if ($showinfo)
-    #set ($discard = $queryParams.put('showinfo', $showinfo))
-  #end
-  #if ($xcontext.macro.params.start)
-    #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
-    #if ($queryParams.st != $startSeconds)
-      #set ($discard = $queryParams.put('st', $startSeconds))
+  ## Only embed if the URL is hosted on a trusted Microsoft domain (Stream, SharePoint or Clipchamp).
+  #set ($isAllowed = $services.msStream.isTrustedURL($xcontext.macro.params.url))
+  #if ($isAllowed)
+    #getStyle($stringtool.lowerCase($xcontext.macro.params.alignment) $xcontext.macro.params.textWrap $styleClass)
+    #getBaseURLAndQueryParams($xcontext.macro.params.url $baseURL $queryParams)
+    ## Update the query params, if needed, since macro parameters have priority over the parameters extracted from URL.
+    #set ($autoplay = $xcontext.macro.params.autoplay)
+    #if ($autoplay)
+      #set ($discard = $queryParams.put('autoplay', $autoplay))
     #end
+    #set ($showinfo = $xcontext.macro.params.showinfo)
+    #if ($showinfo)
+      #set ($discard = $queryParams.put('showinfo', $showinfo))
+    #end
+    #if ($xcontext.macro.params.start)
+      #getStartAsSeconds($xcontext.macro.params.start $startSeconds)
+      #if ($queryParams.st != $startSeconds)
+        #set ($discard = $queryParams.put('st', $startSeconds))
+      #end
+    #end
+    #set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
+    {{html clean=false}}
+      &lt;p class="msStreamMacro $!escapetool.xml($styleClass)"&gt;
+        &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
+          height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
+        &lt;/iframe&gt;
+      &lt;/p&gt;
+    {{/html}}
+  #else
+    {{warning}}{{translation key="rendering.macro.msStream.warning.notTrustedDomain"/}}{{/warning}}
   #end
-  #set ($videoURL = $baseURL + '?' + $escapetool.url($queryParams))
-  {{html clean=false}}
-    &lt;p class="msStreamMacro $!escapetool.xml($styleClass)"&gt;
-      &lt;iframe width="$escapetool.xml($xcontext.macro.params.width)"
-        height="$escapetool.xml($xcontext.macro.params.height)" src="$escapetool.xml($videoURL)" allowfullscreen&gt;
-      &lt;/iframe&gt;
-    &lt;/p&gt;
-  {{/html}}
 #end
 {{/velocity}}
 

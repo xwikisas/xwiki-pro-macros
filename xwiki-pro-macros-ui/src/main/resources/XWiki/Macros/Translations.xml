@@ -147,6 +147,7 @@ rendering.macro.msStream.parameter.autoplay.name=Auto Play
 rendering.macro.msStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
 rendering.macro.msStream.parameter.textWrap.name=Text Wrap
 rendering.macro.msStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
+rendering.macro.msStream.warning.notTrustedDomain=The macro URL must belong to one of the following trusted domains: *.microsoftstream.com, *.sharepoint.com, or *.clipchamp.com.
 
 ## Team macro
 rendering.macro.team.name=Team

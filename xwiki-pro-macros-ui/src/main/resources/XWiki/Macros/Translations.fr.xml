@@ -147,6 +147,7 @@ rendering.macro.msStream.parameter.autoplay.name=Lecture auto
 rendering.macro.msStream.parameter.autoplay.description=Indique si la vidéo doit démarrer automatiquement ou si l'utilisateur doit la déclencher.
 rendering.macro.msStream.parameter.textWrap.name=Adaptation au texte
 rendering.macro.msStream.parameter.textWrap.description=Encadrer la vidéo avec du texte. Ceci ne s'applique qu'aux alignements gauche et droit.
+rendering.macro.msStream.warning.notTrustedDomain=L’URL du macro doit appartenir à l’un des domaines approuvés suivants : *.microsoftstream.com, *.sharepoint.com ou *.clipchamp.com.
 
 ## Team macro
 ### Missing: rendering.macro.team.name=Team

@@ -33,3 +33,4 @@ com.xwiki.macros.status.internal.StatusMacro
 com.xwiki.macros.userlist.internal.macro.UserListConfiguration
 com.xwiki.macros.userlist.internal.macro.UserListConfigurationSource
 com.xwiki.macros.script.UserListScriptService
+com.xwiki.macros.script.MicrosoftStreamScriptService

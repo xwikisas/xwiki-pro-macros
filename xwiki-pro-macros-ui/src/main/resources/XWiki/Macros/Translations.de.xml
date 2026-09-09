@@ -127,6 +127,7 @@ rendering.macro.button.name=Macro bouton
 ### Missing: rendering.macro.msStream.parameter.autoplay.description=Whether the video should start automatically or if the user must play it.
 ### Missing: rendering.macro.msStream.parameter.textWrap.name=Text Wrap
 ### Missing: rendering.macro.msStream.parameter.textWrap.description=Wrap text around the video. This applies only to left and right alignment.
+### Missing: rendering.macro.msStream.warning.notTrustedDomain=The macro URL must belong to one of the following trusted domains: *.microsoftstream.com, *.sharepoint.com, or *.clipchamp.com.
 
 ## Team macro
 ### Missing: rendering.macro.team.name=Team

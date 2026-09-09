@@ -618,8 +618,12 @@ public class GenericMacrosIT
         MicrosoftStreamMacro mStream1 = streamPage.getMacro(".msStreamMacro", 1, MicrosoftStreamMacro::new);
         MicrosoftStreamMacro mStream2 = streamPage.getMacro(".msStreamMacro", 2, MicrosoftStreamMacro::new);
 
-        // There should be 3 MicrosoftStream macros.
+        // There should be 3 MicrosoftStream macros. The 4th macro uses an arbitrary domain on purpose and it shouldn't
+        // be rendered.
         assertEquals(3, streamPage.getMacroCount(".msStreamMacro"));
+
+        // A warning message should be displayed instead of the iframe for the last macro.
+        assertTrue(streamPage.containsText("The macro URL must belong to one of the following trusted domains:"));
 
         // Checks the alignment of the macro.
         assertEquals("right", mStream0.getAlignment());
@@ -638,8 +642,8 @@ public class GenericMacrosIT
         assertTrue(mStream0.hasStartTime());
         // Checks the StartTime property.
         assertEquals(LocalTime.parse("01:12:13").toSecondOfDay(), mStream0.getStartTime());
-        // Checks the actual URL of the microsoftStream.
-        assertTrue(mStream0.hasCorrectURL("www.stream.com"));
+        // Checks the actual URL of the MicrosoftStream macro (SharePoint host).
+        assertTrue(mStream0.hasCorrectURL("mytenant.sharepoint.com"));
 
         // Checks the 2nd MicrosoftStream macro, with left alignment, personalized dimensions and set StartTime.
         assertEquals("left", mStream1.getAlignment());
@@ -651,14 +655,14 @@ public class GenericMacrosIT
         assertEquals(LocalTime.parse("03:12:13").toSecondOfDay(), mStream1.getStartTime());
         assertTrue(mStream1.hasCorrectURL("https://web.microsoftstream.com"));
 
-        // Checks the 2nd MicrosoftStream macro, with center alignment
+        // Checks the 3rd MicrosoftStream macro, with center alignment.
         assertEquals("center", mStream2.getAlignment());
         assertEquals("500px", mStream2.getWidth());
         assertEquals("300px", mStream2.getHeight());
         assertFalse(mStream2.hasAutoplay());
         assertFalse(mStream2.hasShowInfo());
         assertFalse(mStream2.hasStartTime());
-        assertTrue(mStream2.hasCorrectURL("www.stream.com"));
+        assertTrue(mStream2.hasCorrectURL("app.clipchamp.com"));
     }
 
     @Test
