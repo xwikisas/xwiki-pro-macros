@@ -216,10 +216,12 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
       var inputElement = $('input[name="name"]');
       if (inputElement.length) {
-        let selectize = inputElement.siblings('.selectize-control');
-        if (selectize.length) {
-          selectize.remove();
-          inputElement.removeAttr("class tabindex style").val('');
+        // prop('selectize') refers to the Selectize or the Tom Select (XWiki 18.x+) widget instance
+        const widget = inputElement.prop('selectize');
+        if (widget) {
+          widget.destroy();
+          // Restore the original input, removing the DOM and the listeners added by the widget.
+          inputElement.val('');
           const clone = inputElement.clone().appendTo(inputElement.parent());
           inputElement.remove();
           inputElement = clone;
