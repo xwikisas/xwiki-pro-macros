@@ -216,10 +216,10 @@ require(['jquery', 'xwiki-meta', 'xwiki-suggestAttachments'], function($, xm) {
       }
       var inputElement = $('input[name="name"]');
       if (inputElement.length) {
-        // The widget instance is exposed through the 'selectize' property, no matter if the underlying implementation
-        // is Selectize or Tom Select (XWiki 18.x+), so we rely on it instead of the generated DOM.
+        // prop('selectize') refers to the Selectize or the Tom Select (XWiki 18.x+) widget instance
         const widget = inputElement.prop('selectize');
         if (widget) {
+          widget.destroy();
           // Restore the original input, removing the DOM and the listeners added by the widget.
           inputElement.val('');
           const clone = inputElement.clone().appendTo(inputElement.parent());
