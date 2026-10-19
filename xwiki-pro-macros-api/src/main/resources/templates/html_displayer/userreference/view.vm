@@ -38,9 +38,13 @@
         </div>
         <div class="media-body">
           <h2 class="media-heading">$xwiki.getUserName($userId)</h2>
-          <div class="xwiki-user-profile-comment">
-            #stripHTML($userPage.display('comment', 'view'))
-          </div>
+        <div class="xwiki-user-profile-comment">
+          #if ("$!userObj.getValue('comment')" != '')
+            #stripHTML($userObj.display('comment', 'view'))
+          #else
+            <em>$escapetool.xml($services.localization.render('rendering.macro.userProfile.user.description.missing'))</em>
+          #end
+        </div>
         </div>
       </div>
     </div>

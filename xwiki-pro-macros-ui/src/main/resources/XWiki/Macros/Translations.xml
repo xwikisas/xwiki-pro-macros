@@ -391,6 +391,7 @@ rendering.macro.userProfile.parameter.reference.description=Reference to a user 
 rendering.macro.userProfile.parameter.properties.name=User properties
 rendering.macro.userProfile.parameter.properties.description=List of user properties to be displayed, separated by a comma
 rendering.macro.userProfile.parameter.reference.isInvalid=The User Profile macro "reference" parameter is either missing or invalid.
+rendering.macro.userProfile.user.description.missing=No description provided.
 
 ## Profile Picture macro
 rendering.macro.profile-picture.name=Profile Picture
