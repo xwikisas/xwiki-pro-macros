@@ -36,7 +36,7 @@
   <properties>
     <licensing.version>1.33.1</licensing.version>
     <pdfviewer.version>2.8.0</pdfviewer.version>
-    <mathjax.version>1.1.8</mathjax.version>
+    <mathjax.version>1.1.10</mathjax.version>
     <diagram.version>2.0.1</diagram.version>
     <locationsearch.version>1.6.3</locationsearch.version>
     <datemacro.version>3.11.4</datemacro.version>
