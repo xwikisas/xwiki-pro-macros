@@ -270,13 +270,11 @@ public class DetailsSummaryMacro extends AbstractProMacro<DetailsSummaryMacroPar
     }
 
     private void enhanceRow(DetailsSummaryMacroParameters parameters, SolrDocument document, List<Block> row,
-        int baseLength)
+        int nbCols)
     {
-
-        if (row.size() < baseLength) {
-            for (int i = 0; i < baseLength - row.size(); i++) {
-                row.add(new TableCellBlock(List.of(new SpaceBlock())));
-            }
+        // Make sure the row has the right size.
+        while (row.size() < nbCols) {
+            row.add(new TableCellBlock(List.of(new SpaceBlock())));
         }
 
         if (parameters.showLastModified()) {
