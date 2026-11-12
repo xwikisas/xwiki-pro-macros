@@ -20,13 +20,20 @@
 package com.xwiki.pro.test.ui;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.Keys;
 import org.xwiki.administration.test.po.AdministrationPage;
+import org.xwiki.ckeditor.test.po.AutocompleteDropdown;
+import org.xwiki.ckeditor.test.po.CKEditor;
+import org.xwiki.ckeditor.test.po.RichTextAreaElement;
 import org.xwiki.flamingo.skin.test.po.AttachmentsPane;
 import org.xwiki.flamingo.skin.test.po.AttachmentsViewPage;
 import org.xwiki.model.reference.DocumentReference;
@@ -38,7 +45,9 @@ import org.xwiki.test.docker.junit5.servletengine.ServletEngine;
 import org.xwiki.test.integration.junit.LogCaptureConfiguration;
 import org.xwiki.test.ui.TestUtils;
 import org.xwiki.test.ui.po.ViewPage;
+import org.xwiki.test.ui.po.editor.WYSIWYGEditPage;
 
+import com.xwiki.pro.test.po.confluence.viewfile.ViewFileMacroEditModal;
 import com.xwiki.pro.test.po.confluence.viewfile.ViewFileViewPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +79,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     },
     // See GenericMacrosIT.
     extraJARs = {
-        "com.xwiki.licensing:application-licensing-licensor-api:1.32.3",
+        "com.xwiki.licensing:application-licensing-licensor-api:1.33.1",
         "com.xwiki.pro:xwiki-pro-macros-test-licensing"
     })
 class ViewFileIT
@@ -166,6 +175,67 @@ class ViewFileIT
         currentPage.reloadPage();
         ViewFileViewPage viewFileViewPage = new ViewFileViewPage();
         assertTrue(viewFileViewPage.hasLoadedInFullViewMode());
+    }
+
+    /**
+     * The attachment picker must suggest the attachments of the page selected in the page parameter, the first time
+     * the macro editor is opened.
+     *
+     */
+    @Test
+    @Order(7)
+    void attachmentPickerSuggestsAttachmentsOfSelectedPage(TestUtils setup) throws Exception
+    {
+        DocumentReference sourceReference = new DocumentReference("xwiki", "viewfile", "attachmentPickerSource");
+        setup.createPage(sourceReference, "", "Attachment Picker Source");
+        attachFile(setup, sourceReference, "TestPDF.pdf");
+        attachFile(setup, sourceReference, "test.csv");
+
+        DocumentReference targetReference = new DocumentReference("xwiki", "viewfile", "attachmentPickerTarget");
+        setup.deletePage(targetReference);
+        WYSIWYGEditPage editPage = WYSIWYGEditPage.gotoPage(targetReference);
+        RichTextAreaElement textArea = new CKEditor("content").waitToLoad().getRichTextArea();
+
+        // Insert the macro using the quick actions. It has no mandatory parameters so it is inserted directly.
+        textArea.sendKeys("/view file");
+        AutocompleteDropdown quickActions = new AutocompleteDropdown().waitForItemSelected("/view file", "View file");
+        textArea.sendKeys(Keys.ENTER);
+        quickActions.waitForItemSubmitted();
+        textArea.waitUntilContentContains("Please provide a file to show in the name parameter.");
+
+        // Open the macro editor for the first time, with the inserted macro selected.
+        textArea.sendKeys(Keys.ENTER);
+        ViewFileMacroEditModal macroEditModal = new ViewFileMacroEditModal().waitUntilReady();
+        macroEditModal.setPage("Attachment Picker Source", "Attachment Picker Source");
+        assertEquals(List.of("test.csv", "TestPDF.pdf"), sorted(macroEditModal.getFileNameSuggestions()));
+        macroEditModal.setFileName("TestPDF.pdf");
+        macroEditModal.clickSubmit();
+        textArea.waitUntilContentContains("TestPDF.pdf");
+
+        // Reopen the macro editor: the attachments of the selected page are still suggested.
+        textArea.sendKeys(Keys.ENTER);
+        macroEditModal = new ViewFileMacroEditModal().waitUntilReady();
+        assertEquals("TestPDF.pdf", macroEditModal.getFileName());
+        assertEquals(List.of("test.csv", "TestPDF.pdf"), sorted(macroEditModal.getFileNameSuggestions()));
+        macroEditModal.clickSubmit();
+
+        editPage.clickSaveAndView();
+        assertEquals(1, new ViewFileViewPage().getBlockViewFiles());
+    }
+
+    private List<String> sorted(List<String> values)
+    {
+        return values.stream().sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
+    }
+
+    private void attachFile(TestUtils setup, DocumentReference documentReference, String attachmentName)
+        throws Exception
+    {
+        // The attachment is uploaded through REST, so we read it from the test classpath (on the host) and not from
+        // the test resources path, which is the path inside the browser container.
+        try (InputStream content = getClass().getResourceAsStream("/viewfile/" + attachmentName)) {
+            setup.attachFile(documentReference, attachmentName, content, true);
+        }
     }
 
     private ViewPage createPage(TestUtils setup, String content, String pageName)
