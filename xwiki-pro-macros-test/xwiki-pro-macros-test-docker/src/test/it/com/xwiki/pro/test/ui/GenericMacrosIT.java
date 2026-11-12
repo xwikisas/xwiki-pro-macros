@@ -126,7 +126,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
     // component lookup. This lets the macros render without a real license. Keep the
     // application-licensing-licensor-api version in sync with licensing.version in the root POM.
     extraJARs = {
-        "com.xwiki.licensing:application-licensing-licensor-api:1.32.3",
+        "com.xwiki.licensing:application-licensing-licensor-api:1.33.1",
         "com.xwiki.pro:xwiki-pro-macros-test-licensing"
     }
 )
