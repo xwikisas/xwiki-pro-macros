@@ -464,11 +464,60 @@ Result:
     <property>
       <code>{{include reference="Confluence.Macros.CommonCode" /}}
 
-{{velocity output=false}}
+{{groovy output="false"}}
+  import org.apache.commons.lang3.tuple.ImmutablePair;
 
+  import org.xwiki.model.reference.EntityReference;
+  import org.xwiki.model.reference.DocumentReference;
+  import com.xpn.xwiki.api.Document;
+  import org.xwiki.model.EntityType;
+  def s = services;
+  def wiki = xwiki;
+  if (!binding.hasVariable("confluenceContentByLabelSpaceCache")) {
+    // We define a cache that resolves Confluence spaces when there's a cache miss. The cache might have already been
+    // defined by a previous use of the contentbylabel macro, hens the binding.hasVariable test, and we want to reuse
+    // the same cache in this case as it's higly likely that the same Confluence spaces are involved in this case.
+    //
+    // Resolving a space is a bit expensive. contentbylabel often lists documents from the same Confluence space,
+    // or possibly from a small number of spaces.
+    // We cache a small number of resolutions so we don't do the same ones over and over again.
+    // We use a linked list which keeps a specified maximum number of entries, and which puts the most recently used
+    // element first. This allows us to browse most recently used elements first,
+    // so we make the the common case, where we list documents from the same space, happy: we iterate only once.
+    // We keep a small (this is important) number of spaces in cache
+    confluenceContentByLabelSpaceCache = new LinkedList&lt;Document&gt;();
+    confluenceContentByLabelGetSpaceOf = { d -&gt;
+      DocumentReference ref = d.getDocumentReference();
+      def it = confluenceContentByLabelSpaceCache.listIterator(0);
+      while (it.hasNext()) {
+        Document spaceDocCandidate = it.next();
+        if (ref.hasParent(spaceDocCandidate.getDocumentReference().getParent())) {
+          println("OUIIIII");
+          if (it.hasPrevious()) {
+            it.remove();
+            confluenceContentByLabelSpaceCache.addFirst(spaceDocCandidate);
+          }
+          return spaceDocCandidate;
+        }
+      }
+      EntityReference space = s.confluence.spaces.getConfluenceSpace(d);
+      Document spaceDoc = wiki.getDocument(new DocumentReference("WebHome", space, null));
+      confluenceContentByLabelSpaceCache.addFirst(spaceDoc);
+      s.logging.getLogger("CBL").error("SPACE [{}]", spaceDoc);
+      if (confluenceContentByLabelSpaceCache.size() &gt; 5) {
+        // It is important to keep the cache small as we browse it potentially in its entirety for each lookup in case
+        // contentbylabel lists documents from many different spaces.
+        confluenceContentByLabelSpaceCache.removeLast();
+      }
+      return spaceDoc;
+    };
+  }
+{{/groovy}}
+
+{{velocity output=false}}
 #macro (contentbylabellink $d)
 &lt;a href="$escapetool.xml($d.getURL('view'))"&gt;##
-$escapetool.xml($d.title)##
+$escapetool.xml($stringtool.defaultIfBlank($d.title, $d.documentReference.name))##
 &lt;/a&gt;##
 #end
 
@@ -480,7 +529,7 @@ $escapetool.xml($d.title)##
   #getCQLMacroResults($xcontext.macro $results)
   #if ($results != $NULL)
     #if ($results.empty)
-      No results.
+      {{translation key="rendering.macro.detailssummary.noresults"/}}
     #else
       #set ($tagsDoc = $xwiki.getDocument("Main.Tags"))
 
@@ -493,9 +542,9 @@ $escapetool.xml($d.title)##
           #set ($d = $xwiki.getDocument("$r.wiki:$r.fullname"))
           #contentbylabellink($d)
           #if ($xcontext.macro.params.showSpace != "false")
-            #set ($confluenceSpace = $services.confluence.spaces.getConfluenceSpace($d))
-            #if ("$!confluenceSpace" != "")
-              &amp;nbsp;(#contentbylabellink($xwiki.getDocument($confluenceSpace)))
+            #set ($confluenceSpaceDoc = $confluenceContentByLabelGetSpaceOf.call($d))
+            #if ($objecttool.isNotNull($confluenceSpaceDoc))
+              &amp;nbsp;(#contentbylabellink($confluenceSpaceDoc))
             #end
           #end
           #if ($xcontext.macro.params.showLabels != "false")
