@@ -300,7 +300,7 @@ This is my tip with a title.
       <contentDescription/>
     </property>
     <property>
-      <contentJavaType/>
+      <contentJavaType>Wiki</contentJavaType>
     </property>
     <property>
       <contentType>Mandatory</contentType>
