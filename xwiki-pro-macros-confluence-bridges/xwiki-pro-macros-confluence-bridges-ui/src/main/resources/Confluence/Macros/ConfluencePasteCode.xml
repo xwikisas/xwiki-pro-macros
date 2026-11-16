@@ -55,7 +55,7 @@ class Simple{
         System.out.println("Hello World !");
     }
 }
-{{/paste-code-macro}}
+{{/confluence_paste-code-macro}}
 {{/code}}
 
 With the following result :
@@ -66,7 +66,7 @@ class Simple{
         System.out.println("Hello Java");
     }
 }
-{{/paste-code-macro}}</content>
+{{/confluence_paste-code-macro}}</content>
   <object>
     <name>Confluence.Macros.ConfluencePasteCode</name>
     <number>0</number>
