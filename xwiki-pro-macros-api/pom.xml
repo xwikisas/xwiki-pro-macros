@@ -37,6 +37,15 @@
     <xwiki.jacoco.instructionRatio>0.12</xwiki.jacoco.instructionRatio>
   </properties>
   <dependencies>
+    <!-- Compile-time only copy of PropertyOrder (xwiki-commons 17.5.0+). The annotation is ignored at runtime on older
+      XWiki versions. Remove this dependency (and the compile-stubs module) once the parent is >= 17.5.0. -->
+    <dependency>
+      <groupId>com.xwiki.pro</groupId>
+      <artifactId>xwiki-pro-macros-compile-stubs</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>com.xwiki.licensing</groupId>
       <artifactId>application-licensing-licensor-api</artifactId>

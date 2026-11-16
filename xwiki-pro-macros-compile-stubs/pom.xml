@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.xwiki.pro</groupId>
+    <artifactId>xwiki-pro-macros-parent</artifactId>
+    <version>1.33.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>xwiki-pro-macros-compile-stubs</artifactId>
+  <packaging>jar</packaging>
+  <name>Pro Macros - Compile Stubs</name>
+  <description>Compile time only copies of XWiki APIs that are newer than the parent version, so that code can use
+    them while still running on older XWiki versions. Must only be depended on with the provided scope. Remove this
+    module (and the provided dependencies on it) once the parent is upgraded to a version that has these APIs.
+  </description>
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <!-- Only needed at compile time, never published. -->
+    <maven.deploy.skip>true</maven.deploy.skip>
+    <!-- Not an API of this project: there is nothing to compare against. -->
+    <xwiki.revapi.skip>true</xwiki.revapi.skip>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.commons</groupId>
+      <artifactId>xwiki-commons-stability</artifactId>
+      <version>${commons.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
