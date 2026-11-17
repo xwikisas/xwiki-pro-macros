@@ -24,8 +24,10 @@ import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.properties.annotation.PropertyDescription;
 import org.xwiki.properties.annotation.PropertyDisplayHidden;
 import org.xwiki.properties.annotation.PropertyDisplayType;
+import org.xwiki.properties.annotation.PropertyGroup;
 import org.xwiki.properties.annotation.PropertyId;
 import org.xwiki.properties.annotation.PropertyName;
+import org.xwiki.properties.annotation.PropertyOrder;
 
 import com.xwiki.macros.viewfile.ViewFileResourceReference;
 
@@ -70,6 +72,8 @@ public class ViewFileMacroParameters
      */
     @PropertyDisplayType(ViewFileResourceReference.class)
     @PropertyName("File name")
+    @PropertyGroup("general")
+    @PropertyOrder(20)
     public void setName(String name)
     {
         this.name = name;
@@ -89,6 +93,8 @@ public class ViewFileMacroParameters
      * @param page the source document of the attachments.
      */
     @PropertyDisplayType(DocumentReference.class)
+    @PropertyGroup("general")
+    @PropertyOrder(10)
     public void setPage(String page)
     {
         this.page = page;
@@ -107,6 +113,8 @@ public class ViewFileMacroParameters
      *
      * @param display the display type.
      */
+    @PropertyGroup("general")
+    @PropertyOrder(30)
     public void setDisplay(ViewFileDisplay display)
     {
         this.display = display;
@@ -125,6 +133,8 @@ public class ViewFileMacroParameters
      *
      * @param width the width of the display window.
      */
+    @PropertyGroup("layout")
+    @PropertyOrder(50)
     public void setWidth(String width)
     {
         this.width = width;
@@ -143,6 +153,8 @@ public class ViewFileMacroParameters
      *
      * @param height the height of the display window.
      */
+    @PropertyGroup("layout")
+    @PropertyOrder(40)
     public void setHeight(String height)
     {
         this.height = height;
@@ -181,6 +193,8 @@ public class ViewFileMacroParameters
         + "Default, Excel, InformixUnload, InformixUnloadCsv, MongoDBCsv, "
         + "MongoDBTsv, MySQL, Oracle, PostgreSQLCsv, PostgreSQLText, RFC4180, TDF"
         + ")")
+    @PropertyGroup("csv")
+    @PropertyOrder(80)
     public void setCSVFormat(String csvFormat)
     {
         this.csvFormat = csvFormat;
@@ -213,6 +227,8 @@ public class ViewFileMacroParameters
     @PropertyName("CSV Delimiter")
     @PropertyDescription("Which delimiter to use when displaying a CSV file. "
             + "Overrides the CSV format if provided as well. If nothing is provided, ',' is used.")
+    @PropertyGroup("csv")
+    @PropertyOrder(70)
     public void setCSVDelimiter(String csvDelimiter)
     {
         this.csvDelimiter = csvDelimiter;
@@ -235,6 +251,8 @@ public class ViewFileMacroParameters
     @PropertyId("csvFirstLineIsHeader")
     @PropertyName("CSV first line is header")
     @PropertyDescription("Whether the first line is to be considered the header when displaying a CSV file")
+    @PropertyGroup("csv")
+    @PropertyOrder(60)
     public void setCSVFirstLineIsHeader(boolean csvFirstLineIsHeader)
     {
         this.csvFirstLineIsHeader = csvFirstLineIsHeader;

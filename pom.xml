@@ -102,6 +102,7 @@
     </dependencies>
   </dependencyManagement>
   <modules>
+    <module>xwiki-pro-macros-compile-stubs</module>
     <module>xwiki-pro-macros-confluence-bridges</module>
     <module>xwiki-pro-macros-ui</module>
     <module>xwiki-pro-macros-api</module>
