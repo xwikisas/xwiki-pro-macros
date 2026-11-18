@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ * 02110-1301 USA, or see the FSF site: https://www.fsf.org.
 -->
 
 <xwikidoc version="1.5" reference="XWiki.Macros.Translations" locale="fr">
@@ -392,6 +392,7 @@ rendering.macro.userProfile.parameter.reference.description=Référence de la pa
 ### Missing: rendering.macro.userProfile.parameter.properties.name=User properties
 rendering.macro.userProfile.parameter.properties.description=Liste des propriétés de l'utilisateur à afficher, séparées par des virgules
 rendering.macro.userProfile.parameter.reference.isInvalid=Le paramètre "reference" de la macro profit utilisateur est soit manquant, soit invalide.
+rendering.macro.userProfile.user.description.missing=Pas de description fournie.
 
 ## Profile Picture macro
 rendering.macro.profile-picture.name=Photo de profil
@@ -465,6 +466,9 @@ rendering.macro.view-file.parameter.csvDelimiter.name=Séparateur CSV
 rendering.macro.view-file.parameter.csvDelimiter.description=Quel séparateur utiliser lors de l'affichage d'un fichier CSV. Écrase le paramètre de format CSV si déjà sélectionné. Si rien n'est défini, "," est utilisé.
 rendering.macro.view-file.parameter.csvFirstLineIsHeader.name=La première ligne du CSV est un en-tête
 rendering.macro.view-file.parameter.csvFirstLineIsHeader.description=Si la première ligne doit être considérée comme un en-tête lors de l'affichage d'un fichier CSV
+### Missing: rendering.macro.view-file.group.general.name=General
+### Missing: rendering.macro.view-file.group.layout.name=Layout
+### Missing: rendering.macro.view-file.group.csv.name=CSV Settings
 ### Missing: rendering.macro.viewFile.modal.title=Content view
 ### Missing: rendering.macro.viewFile.thumbnail.button.title=View file content
 rendering.macro.viewFile.thumbnail.button.overlay=Voir le fichier
