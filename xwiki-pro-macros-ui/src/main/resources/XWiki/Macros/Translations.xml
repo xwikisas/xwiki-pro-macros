@@ -52,7 +52,7 @@ rendering.macro.button.parameter.color.description=The color of the button.
 rendering.macro.button.parameter.width.name=Width
 rendering.macro.button.parameter.width.description=The width of the button specified in pixels, percentage or other valid CSS value (ex. 30px, 30%, 30em). If no value is specified, the width will be determined by the length of the label.
 rendering.macro.button.parameter.newTab.name=Open in new tab
-rendering.macro.button.parameter.newTab.description=Denotes whether the page will be opened in a new page or not.
+rendering.macro.button.parameter.newTab.description=Denotes whether the button opens the link in a new tab or not.
 rendering.macro.button.parameter.icon.name=Icon
 rendering.macro.button.parameter.icon.description=Icon associated with the button, placed before the label.
 rendering.macro.button.parameter.type.name=Type
@@ -65,7 +65,7 @@ com.xwiki.macros.button.ButtonType.WARNING=Warning
 com.xwiki.macros.button.ButtonType.DANGER=Danger
 rendering.macro.button.parameter.id.name=ID
 rendering.macro.button.parameter.id.description=ID of the button element.
-rendering.macro.button.parameter.class.name=Class
+rendering.macro.button.parameter.class.name=CSS Class
 rendering.macro.button.parameter.class.description=A custom CSS class to apply on the button.
 
 ## Panel macro
