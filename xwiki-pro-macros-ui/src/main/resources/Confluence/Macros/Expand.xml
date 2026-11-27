@@ -664,7 +664,7 @@ require(['jquery'], function ($) {
       <contentJavaType>Wiki</contentJavaType>
     </property>
     <property>
-      <contentType>Mandatory</contentType>
+      <contentType>Optional</contentType>
     </property>
     <property>
       <defaultCategories/>

@@ -87,7 +87,7 @@ public class TabMacro extends AbstractProMacro<TabMacroParameters>
     public TabMacro()
     {
         super(NAME, DESCRIPTION,
-            new DefaultContentDescriptor(CONTENT_DESCRIPTION, true, Block.LIST_BLOCK_TYPE),
+            new DefaultContentDescriptor(CONTENT_DESCRIPTION, false, Block.LIST_BLOCK_TYPE),
             TabMacroParameters.class);
     }
 
