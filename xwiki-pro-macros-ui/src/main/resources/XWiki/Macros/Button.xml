@@ -430,7 +430,9 @@ $services.localization.render('rendering.macro.button.description')
       <contentType>No content</contentType>
     </property>
     <property>
-      <defaultCategories/>
+      <defaultCategories>
+        <value>Content</value>
+      </defaultCategories>
     </property>
     <property>
       <description/>
