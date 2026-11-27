@@ -20,6 +20,7 @@
 package com.xwiki.macros.confluence;
 
 import org.xwiki.properties.annotation.PropertyDescription;
+import org.xwiki.properties.annotation.PropertyMandatory;
 import org.xwiki.properties.annotation.PropertyName;
 
 /**
@@ -75,6 +76,7 @@ public class ConfluenceJiraChartMacroParameters
      */
     @PropertyDescription("The cart type to show")
     @PropertyName("Chart type")
+    @PropertyMandatory
     public void setChartType(String chartType)
     {
         this.chartType = chartType;
@@ -95,6 +97,7 @@ public class ConfluenceJiraChartMacroParameters
      */
     @PropertyDescription("The server ID from which the info is retrieved.")
     @PropertyName("Server ID")
+    @PropertyMandatory
     public void setServer(String server)
     {
         this.server = server;
@@ -115,6 +118,7 @@ public class ConfluenceJiraChartMacroParameters
      */
     @PropertyDescription("The JQL request used to get the info from Jira")
     @PropertyName("JQL")
+    @PropertyMandatory
     public void setJql(String jql)
     {
         this.jql = jql;
