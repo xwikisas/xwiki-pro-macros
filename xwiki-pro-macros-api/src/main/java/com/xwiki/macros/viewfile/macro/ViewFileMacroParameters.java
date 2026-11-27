@@ -26,6 +26,7 @@ import org.xwiki.properties.annotation.PropertyDisplayHidden;
 import org.xwiki.properties.annotation.PropertyDisplayType;
 import org.xwiki.properties.annotation.PropertyGroup;
 import org.xwiki.properties.annotation.PropertyId;
+import org.xwiki.properties.annotation.PropertyMandatory;
 import org.xwiki.properties.annotation.PropertyName;
 import org.xwiki.properties.annotation.PropertyOrder;
 
@@ -74,6 +75,7 @@ public class ViewFileMacroParameters
     @PropertyName("File name")
     @PropertyGroup("general")
     @PropertyOrder(20)
+    @PropertyMandatory
     public void setName(String name)
     {
         this.name = name;
