@@ -115,12 +115,12 @@ rendering.macro.expand.parameter.expanded.description=If selected the expand wil
 ## Status macro
 rendering.macro.status.name=Status
 rendering.macro.status.description=Insert a colored label in the text to highlight the status of an item.
-rendering.macro.status.parameter.colour.name=Color
+rendering.macro.status.parameter.colour.name=Colour
 rendering.macro.status.parameter.colour.description=The color of the status(text color and background color). The following colors are available: "Blue", "Green", "Grey", "Purple", "Red" and "Yellow". Default: "Grey".
 rendering.macro.status.parameter.title.name=Title
-rendering.macro.status.parameter.title.description=The text of the status. If not specified, the color name will be displayed (e.g.:"Grey").
+rendering.macro.status.parameter.title.description=The text of the status. This parameter is mandatory.
 rendering.macro.status.parameter.subtle.name=Subtle
-rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on dark color background or dark color text on light color background. This is a boolean parameter so it should be filled with "true" or "false". Default: "false" (white text on dark color background).
+rendering.macro.status.parameter.subtle.description=The aspect of the status: either white text on a dark background or dark text on a light background. Default: "false" (white text on dark background).
 com.xwiki.pickers.status.StatusColor.blue=Blue
 com.xwiki.pickers.status.StatusColor.green=Green
 com.xwiki.pickers.status.StatusColor.grey=Grey
