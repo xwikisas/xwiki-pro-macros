@@ -74,9 +74,11 @@ Possible values:
 * children - include direct children of the specified pages
 * descendants - include all children of the specified pages
 * (blank) - include only the specified pages
+
+The legacy spelling `descendents` is also accepted for `descendants`.
 )))
 |showPages|Show Pages|false|Show the list of pages used to build the list of contributors
-|noneFoundMessage|None Found Message|default message|(((
+|noneFoundMessage|None Found Message|None found|(((
 The message to show when no contributors are found.
 )))
 
@@ -105,22 +107,22 @@ Result:
 Code ([[Sandbox.WebHome]] space, inline):
 
 {{code}}
-{{contributors spaces="Sandbox" scope="descendents" mode="inline"/}}
+{{contributors spaces="Sandbox" scope="descendants" mode="inline"/}}
 {{/code}}
 
 Result:
 
-{{contributors spaces="Sandbox" scope="descendents" mode="inline"/}}
+{{contributors spaces="Sandbox" scope="descendants" mode="inline"/}}
 
 Code ([[Sandbox.WebHome]] space, list mode, show information):
 
 {{code}}
-{{contributors spaces="Sandbox" scope="descendents" mode="list" showCount="true" showLastTime="true" showPages="true"/}}
+{{contributors spaces="Sandbox" scope="descendants" mode="list" showCount="true" showLastTime="true" showPages="true"/}}
 {{/code}}
 
 Result:
 
-{{contributors spaces="Sandbox" scope="descendents" mode="list" showCount="true" showLastTime="true" showPages="true"/}}</content>
+{{contributors spaces="Sandbox" scope="descendants" mode="list" showCount="true" showLastTime="true" showPages="true"/}}</content>
   <object>
     <name>Confluence.Macros.Contributors</name>
     <number>0</number>
