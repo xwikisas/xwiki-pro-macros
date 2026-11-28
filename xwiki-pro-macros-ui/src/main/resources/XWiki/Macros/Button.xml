@@ -41,17 +41,17 @@ $services.localization.render('rendering.macro.button.description')
 
 == Parameters ==
 
-|=Name|=Description|=Default
-|label|$services.localization.render('rendering.macro.button.parameter.label.description')|-
-|url|$services.localization.render('rendering.macro.button.parameter.url.description')|-
-|color|$services.localization.render('rendering.macro.button.parameter.color.description')|White
-|title|$services.localization.render('rendering.macro.button.parameter.title.description')|-
-|width|$services.localization.render('rendering.macro.button.parameter.width.description')|-
-|newTab|$services.localization.render('rendering.macro.button.parameter.newTab.description')|false
-|icon|$services.localization.render('rendering.macro.button.parameter.icon.description')|-
-|type|$services.localization.render('rendering.macro.button.parameter.type.description')|Default
-|id|$services.localization.render('rendering.macro.button.parameter.id.description')|Default
-|class|$services.localization.render('rendering.macro.button.parameter.class.description')|Default
+|=Name|=Description|=Default|=Mandatory
+|label|$services.localization.render('rendering.macro.button.parameter.label.description')|-|Yes
+|url|$services.localization.render('rendering.macro.button.parameter.url.description')|-|Yes
+|color|$services.localization.render('rendering.macro.button.parameter.color.description')|-|No
+|title|$services.localization.render('rendering.macro.button.parameter.title.description')|-|No
+|width|$services.localization.render('rendering.macro.button.parameter.width.description')|-|No
+|newTab|$services.localization.render('rendering.macro.button.parameter.newTab.description')|false|No
+|icon|$services.localization.render('rendering.macro.button.parameter.icon.description')|-|No
+|type|$services.localization.render('rendering.macro.button.parameter.type.description')|Default|No
+|id|$services.localization.render('rendering.macro.button.parameter.id.description')|-|No
+|class|$services.localization.render('rendering.macro.button.parameter.class.description')|-|No
 
 == Examples ==
 
