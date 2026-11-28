@@ -41,10 +41,12 @@
 = Parameters =
 
 |=Parameter|=Description|=Required|=Default
-|**title**|Text displayed on the collaspse toggle|No|(empty)
+|**title**|Text displayed on the collapse toggle|No|Click here to expand...
 |**expanded**|If selected the expand will be opened automatically when loading the page.|No|False
 
-Note: if no title is provided, the title of the first panel or the first header appearing in the content will be used. if there is no such header or panel title, "Click here to expand…" will be used.
+The macro content is required: put the collapsed text between `{{expand}}` and `{{/expand}}`.
+
+Note: when no title is provided, "Click here to expand..." is displayed. The first heading or panel in the content is not used as the title automatically.
 
 = Example Usage =
 
