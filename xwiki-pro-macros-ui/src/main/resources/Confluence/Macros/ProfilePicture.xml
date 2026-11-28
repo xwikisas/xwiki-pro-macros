@@ -36,12 +36,13 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{translation key='rendering.macro.team.description' /}}
+  <content>{{translation key='rendering.macro.profile-picture.description' /}}
 
 == Parameters ==
 
-|= Parameter |= Name |= Description
-| User | {{translation key='rendering.macro.profilepicture.parameter.User.name'/}} | {{translation key='rendering.macro.profilepicture.parameter.User.description'/}}
+|= Parameter |= Name |= Description |= Mandatory
+| User | {{translation key='rendering.macro.profile-picture.parameter.User.name'/}} | {{translation key='rendering.macro.profile-picture.parameter.User.description'/}} | Yes
+| size | {{translation key='rendering.macro.profile-picture.parameter.size.name'/}} | {{translation key='rendering.macro.profile-picture.parameter.size.description'/}} (default: 60) | No
 
 == Examples ==
 

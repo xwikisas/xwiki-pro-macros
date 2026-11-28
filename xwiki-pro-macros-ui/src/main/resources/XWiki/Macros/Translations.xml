@@ -395,11 +395,11 @@ rendering.macro.userProfile.user.description.missing=No description provided.
 
 ## Profile Picture macro
 rendering.macro.profile-picture.name=Profile Picture
-rendering.macro.profile-picture.description=Display the profile picture of selected user
+rendering.macro.profile-picture.description=Display the profile picture of the selected user
 rendering.macro.profile-picture.parameter.User.name=The user to show
-rendering.macro.profile-picture.parameter.User.description =The user name to show (without prefixing with the wiki identifier)
+rendering.macro.profile-picture.parameter.User.description=The full user reference to show, for example XWiki.Admin
 rendering.macro.profile-picture.parameter.size.name=Size
-rendering.macro.profile-picture.parameter.size.description=The size of the user icon
+rendering.macro.profile-picture.parameter.size.description=The size of the user icon in pixels (default: 60)
 
 ## Recently Updated macro
 recentlyUpdatedMacro.title=Recently Updated
